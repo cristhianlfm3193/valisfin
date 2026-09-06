@@ -88,7 +88,9 @@ export default async function IngresosPage(props: {
   const plannedReceived = plannedIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
   const pending = hasPlannedData ? projected - plannedReceived : 0;
   const pendingCount = hasPlannedData ? projectedCount - plannedIncomes.filter(i => i.is_received).length : 0;
-  const percent = projected > 0 ? ((plannedReceived / projected) * 100).toFixed(1) : "0.0";
+  
+  // Efectividad takes into account all received income, so it can surpass 100%
+  const percent = projected > 0 ? ((received / projected) * 100).toFixed(1) : "0.0";
 
   const extraordinaryTotal = extraordinaryIncomes.reduce((acc, curr) => acc + curr.amount, 0);
   const extraordinaryReceived = extraordinaryIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
@@ -271,7 +273,7 @@ export default async function IngresosPage(props: {
             </div>
             <div className="mt-3">
               <div className="w-full bg-slate-100 h-1.5 xl:h-2 rounded-full overflow-hidden flex">
-                <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${dynamicMetrics.percent}%` }}></div>
+                <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(100, parseFloat(dynamicMetrics.percent))}%` }}></div>
               </div>
               <div className="flex flex-wrap justify-between items-center text-slate-500 text-[10px] xl:text-xs mt-2 gap-1">
                 <span className="truncate">Recibido: B/. {formatCurrency(dynamicMetrics.received)}</span>
