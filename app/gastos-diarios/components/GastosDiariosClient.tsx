@@ -10,7 +10,7 @@ interface GastosDiariosClientProps {
 }
 
 export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProps) {
-  const [expenses, setExpenses] = useState<DailyExpense[]>(initialExpenses);
+  const expenses = initialExpenses;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
