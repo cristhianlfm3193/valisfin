@@ -60,18 +60,22 @@ export default function VehiculosClient({
         {/* FICHAS BENTO PRINCIPALES */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {vehicles.map(vehicle => {
-            const isWarning = vehicle.next_service_km && (vehicle.next_service_km - vehicle.current_km <= 1000);
-            const remaining = vehicle.next_service_km ? vehicle.next_service_km - vehicle.current_km : 0;
-            const progress = vehicle.next_service_km ? Math.min(100, Math.max(0, 100 - (remaining / 5000) * 100)) : 100;
+            const latestMaintenance = maintenanceLogs.find(log => log.vehicle_id === vehicle.id);
+            const next_service_km = latestMaintenance?.next_km || null;
+            
+            const isWarning = next_service_km && (next_service_km - vehicle.current_km <= 1000);
+            const remaining = next_service_km ? next_service_km - vehicle.current_km : 0;
+            const progress = next_service_km ? Math.min(100, Math.max(0, 100 - (remaining / 5000) * 100)) : 100;
+            const isJennifer = vehicle.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
             
             return (
-              <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isWarning ? 'hover:border-amber-300' : 'hover:border-slate-300'}`}>
-                {isWarning && <div className="absolute top-0 left-0 right-0 h-1 bg-amber-400"></div>}
+              <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300'}`}>
+                {isWarning && <div className={`absolute top-0 left-0 right-0 h-1 ${isJennifer ? 'bg-pink-400' : 'bg-amber-400'}`}></div>}
                 
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div className="flex items-center gap-3.5">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isWarning ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-emerald-50 text-[#006655] border-emerald-100'}`}>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isJennifer ? 'bg-pink-50 text-pink-600 border-pink-100' : 'bg-emerald-50 text-[#006655] border-emerald-100'}`}>
                         <span className="material-symbols-outlined text-[26px]">
                           {vehicle.brand === 'Toyota' ? 'directions_car' : 'airport_shuttle'}
                         </span>
@@ -89,12 +93,12 @@ export default function VehiculosClient({
                       </div>
                     </div>
                     {isWarning ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-                        <span className="material-symbols-outlined text-[15px] text-amber-600">warning</span>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-100 text-pink-800 border border-pink-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
+                        <span className={`material-symbols-outlined text-[15px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'}`}>warning</span>
                         Atención requerida
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/80 text-[#006655]">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-100/80 text-pink-600' : 'bg-emerald-100/80 text-[#006655]'}`}>
                         <span className="material-symbols-outlined text-[14px]">check_circle</span>
                         Al día · En regla
                       </span>
@@ -113,22 +117,22 @@ export default function VehiculosClient({
                       <span className="font-mono text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">
                         {vehicle.current_km?.toLocaleString()}
                       </span>
-                      <span className={`font-mono text-lg font-bold ${isWarning ? 'text-amber-600' : 'text-[#006655]'}`}>km</span>
+                      <span className={`font-mono text-lg font-bold ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>km</span>
                     </div>
                     
                     <div className="mt-4 pt-2 border-t border-slate-200/60">
                       <div className="flex items-center justify-between text-xs mb-1.5">
-                        <span className="text-slate-600">Próximo servicio: <strong className="font-mono text-slate-900 font-semibold">{vehicle.next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
-                        <span className={`${isWarning ? 'text-amber-700 font-bold' : 'text-[#006655] font-semibold'} font-mono`}>
-                          {vehicle.next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
+                        <span className="text-slate-600">Próximo servicio: <strong className="font-mono text-slate-900 font-semibold">{next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
+                        <span className={`${isJennifer ? 'text-pink-600' : 'text-[#006655]'} font-semibold font-mono`}>
+                          {next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
                         </span>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                        <div className={`${isWarning ? 'bg-amber-500' : 'bg-[#006655]'} h-full rounded-full transition-all duration-500`} style={{ width: `${progress}%` }}></div>
+                        <div className={`${isJennifer ? 'bg-pink-500' : 'bg-[#006655]'} h-full rounded-full transition-all duration-500`} style={{ width: `${progress}%` }}></div>
                       </div>
                       {isWarning && (
-                        <div className="mt-2.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200/70 flex items-center gap-1.5 text-xs text-amber-800">
-                          <span className="material-symbols-outlined text-[16px] text-amber-600">error</span>
+                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
+                          <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'}`}>error</span>
                           <span><strong>¡Atención!</strong> Faltan {remaining} km para mantenimiento.</span>
                         </div>
                       )}
@@ -174,13 +178,13 @@ export default function VehiculosClient({
               <tbody className="divide-y divide-slate-100 text-sm">
                 {filteredMileage.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
-                  const isYaris = vehicle?.brand === 'Toyota';
+                  const isJennifer = vehicle?.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
                   return (
                     <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
                       <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{log.date}</td>
                       <td className="py-3.5 px-3 font-semibold text-on-surface">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${isYaris ? 'bg-[#006655]' : 'bg-amber-500'}`}></span>
+                          <span className={`w-2 h-2 rounded-full ${isJennifer ? 'bg-pink-500' : 'bg-[#006655]'}`}></span>
                           <span>{vehicle?.brand} {vehicle?.model}</span>
                         </div>
                       </td>
