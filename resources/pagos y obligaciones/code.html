@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50 antialiased" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pagos y Obligaciones Fijas - Finanzas Familia Fuentes Camaño</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            },
+            coral: {
+              500: '#ef4444',
+              600: '#dc2626'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Micro-Styles -->
+<style data-purpose="custom-transitions">
+    .smooth-toggle {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* Safe-area padding for modern mobile devices (iPhone 15, Galaxy S24) */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 1.25rem);
+    }
+  </style>
+<!-- END: Custom Micro-Styles -->
+</head>
+<body class="min-h-full font-sans text-slate-800 bg-[#F8FAFC] flex flex-col md:flex-row">
+<!-- BEGIN: SidebarDesktop -->
+<!-- Barra lateral para pantallas de escritorio (Desktop / Tablet horizontal) -->
+<aside class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-white border-r border-slate-200 z-30" data-purpose="desktop-sidebar">
+<div class="p-6 border-b border-slate-100 flex items-center space-x-3">
+<div class="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-sm shadow-emerald-200">
+        FF
+      </div>
+<div>
+<h1 class="text-sm font-bold text-slate-900 leading-tight">Familia Fuentes</h1>
+<p class="text-xs text-slate-600">Presupuesto Hogar</p>
+</div>
+</div>
+<!-- Menú de Navegación Principal -->
+<nav class="flex-1 p-4 space-y-1.5 overflow-y-auto">
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Inicio
+      </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M7 11l5-5m0 0l5 5m-5-5v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Ingresos
+      </a>
+<!-- Tab Activa: Pagos y Obligaciones -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100" href="#">
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Pagos Fijos
+      </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Gastos Variables
+      </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Metas y Ahorro
+      </a>
+</nav>
+<!-- Perfil de usuario abajo -->
+<div class="p-4 border-t border-slate-100 flex items-center gap-3 bg-slate-50/50">
+<div class="h-9 w-9 rounded-full bg-slate-200 text-slate-700 font-semibold flex items-center justify-center text-xs">
+        CF
+      </div>
+<div class="truncate text-xs">
+<p class="font-semibold text-slate-800">Cristhian &amp; Jenny</p>
+<p class="text-slate-600">Familia Fuentes</p>
+</div>
+</div>
+</aside>
+<!-- END: SidebarDesktop -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 md:pl-64 flex flex-col min-w-0">
+<!-- BEGIN: TopBar -->
+<!-- Encabezado con título limpio, campana de alertas solicitada (sin widgets de carros ni reporte PDF) -->
+<header class="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 py-3.5 flex items-center justify-between" data-purpose="app-topbar">
+<div class="flex items-center space-x-3">
+<span class="inline-flex md:hidden h-8 w-8 rounded-lg bg-emerald-600 text-white font-bold items-center justify-center text-xs shadow-sm">
+          FF
+        </span>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Finanzas Hogar</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-xs text-slate-600 font-medium">Mes en Curso</span>
+</div>
+<h2 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight leading-none mt-0.5">Pagos y Obligaciones</h2>
+</div>
+</div>
+<!-- Icono de Notificaciones / Campana limpia -->
+<div class="flex items-center space-x-2">
+<button aria-label="Notificaciones" class="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none" type="button">
+<!-- Campana -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+</button>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto pb-24 md:pb-12">
+<!-- BEGIN: DashboardMetrics -->
+<!-- Métricas esenciales compactas: Total Pagado, Pendiente por Pagar y Barra de Cumplimiento -->
+<section class="mb-6" data-purpose="metrics-summary">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+<!-- Card: Pagado al momento -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-slate-600">Total Pagado</p>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl sm:text-3xl font-extrabold text-emerald-600" id="totalPaidDisplay">B/. 144.00</span>
+</div>
+<p class="text-xs text-slate-600 mt-0.5">3 cuotas cubiertas</p>
+</div>
+<div class="h-11 w-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+<!-- Card: Pendiente Fijo -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-slate-600">Por Pagar (Fijo)</p>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl sm:text-3xl font-extrabold text-rose-600" id="totalPendingDisplay">B/. 786.00</span>
+</div>
+<p class="text-xs text-slate-600 mt-0.5"><span id="pendingCountBadge">7</span> compromisos pendientes</p>
+</div>
+<div class="h-11 w-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- Card: Progreso Mensual -->
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-center">
+<div class="flex justify-between items-center mb-1.5">
+<p class="text-xs font-semibold uppercase tracking-wider text-slate-600">Cumplimiento</p>
+<span class="text-xs font-bold text-slate-700" id="progressPercent">30% (3/10)</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+<div class="bg-emerald-600 h-2.5 rounded-full transition-all duration-300" id="progressBar" style="width: 30%;"></div>
+</div>
+<p class="text-xs text-slate-600 mt-2 flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-slate-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+</svg>
+              Montos predeterminados sin variaciones
+            </p>
+</div>
+</div>
+</section>
+<!-- END: DashboardMetrics -->
+<!-- BEGIN: SearchAndQuickFilters -->
+<!-- Barra de búsqueda ágil y botones de filtro en un solo toque -->
+<section class="mb-5 space-y-3" data-purpose="search-and-filters">
+<div class="flex flex-col sm:flex-row gap-3">
+<!-- Buscador directo -->
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow" id="paymentSearchInput" placeholder="Buscar pago fijo: luz, seguro, guardería, internet..." type="text"/>
+</div>
+<!-- Filtros de Estado tipo Pills -->
+<div class="flex items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-xl shrink-0 overflow-x-auto">
+<button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition-all" data-filter="all" type="button">
+              Todos (10)
+            </button>
+<button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition-all" data-filter="pending" type="button">
+              Pendientes (<span id="countPendingFilter">7</span>)
+            </button>
+<button class="filter-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 transition-all" data-filter="paid" type="button">
+              Pagados (<span id="countPaidFilter">3</span>)
+            </button>
+</div>
+</div>
+<!-- Banner informativo aclaratorio solicitado: Gasolina y Supermercado -->
+<div class="flex items-center justify-between bg-amber-50/70 border border-amber-200/60 rounded-xl px-3.5 py-2 text-xs text-amber-800">
+<div class="flex items-center gap-2">
+<span class="text-amber-600 font-bold">Nota:</span>
+<span>La <strong>Gasolina</strong> y el <strong>Supermercado</strong> son variables y se registran en la sección de Gastos Cotidianos.</span>
+</div>
+<a class="hidden sm:inline font-semibold underline text-amber-900 hover:text-black" href="#">Ir a variables →</a>
+</div>
+</section>
+<!-- END: SearchAndQuickFilters -->
+<!-- BEGIN: PaymentsListSection -->
+<!-- Listado ágil de pagos fijos en tarjetas optimizadas para 1 toque -->
+<section data-purpose="fixed-obligations-cards">
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            Obligaciones Predeterminadas
+          </h3>
+<span class="text-xs text-slate-600">Toque directo para registrar pago</span>
+</div>
+<!-- Rejilla responsiva: 1 columna en teléfonos (iPhone 15, Samsung Galaxy), 2 en tablets, 3 en escritorio grande -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5" id="paymentsContainer">
+<!-- ITEM 1: Luz Naturgy -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="servicios" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Cristhian Fuentes • Servicios</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Luz (Electricidad)</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="25.00">B/. 25.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 25.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 2: Internet Residencial (Ya pagado para ilustrar estado previo) -->
+<article class="payment-card bg-emerald-50/40 border border-emerald-200 rounded-2xl p-4 shadow-xs transition-all flex flex-col justify-between relative overflow-hidden" data-category="servicios" data-paid="true" data-purpose="payment-card">
+<div class="border-l-4 border-emerald-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">Cristhian Fuentes • Telecom</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Internet Residencial</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">Pagado ✓</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="44.00">B/. 44.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between gap-2">
+<span class="text-xs text-emerald-700 font-medium">Registrado este mes</span>
+<button class="pay-toggle-btn min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-300 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text text-emerald-800 font-semibold">Pagado (Deshacer)</span>
+</button>
+</div>
+</article>
+<!-- ITEM 3: Basura (Pagado en snapshot previo) -->
+<article class="payment-card bg-emerald-50/40 border border-emerald-200 rounded-2xl p-4 shadow-xs transition-all flex flex-col justify-between relative overflow-hidden" data-category="servicios" data-paid="true" data-purpose="payment-card">
+<div class="border-l-4 border-emerald-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">Cristhian Fuentes • Servicios</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Tasa de Basura</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">Pagado ✓</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="12.00">B/. 12.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between gap-2">
+<span class="text-xs text-emerald-700 font-medium">Registrado este mes</span>
+<button class="pay-toggle-btn min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-300 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text text-emerald-800 font-semibold">Pagado (Deshacer)</span>
+</button>
+</div>
+</article>
+<!-- ITEM 4: Seguro Carro Cristhian -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="autos" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Cristhian Fuentes • Auto</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Seguro Carro Cristhian</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="45.00">B/. 45.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 45.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 5: Guardería Valeria -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="educacion" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Jennifer Camaño • Niña</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Guardería Valeria</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="180.00">B/. 180.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 180.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 6: Cuota Carro Jenny -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="autos" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Jennifer Camaño • Financiamiento</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Cuota Carro Jenny</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="325.00">B/. 325.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 325.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 7: Seguro Carro Jenny -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="autos" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Jennifer Camaño • Auto</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Seguro Carro Jenny</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="60.00">B/. 60.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 60.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 8: Contrato Celular -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="telecom" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Plan Móvil • Mensual</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Contrato Celular</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="24.00">B/. 24.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 24.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 9: Tarjeta de Crédito (Mínimo / Fijo) -->
+<article class="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden" data-category="banco" data-paid="false" data-purpose="payment-card">
+<div class="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">Cristhian Fuentes • Deuda</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Tarjeta de Crédito</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">Pendiente</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="60.00">B/. 60.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+<span class="text-xs text-slate-600 font-medium">Predeterminado fijo</span>
+<button class="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon hidden" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text">Pagar B/. 60.00</span>
+</button>
+</div>
+</article>
+<!-- ITEM 10: Ahorro de Valeria (Pagado en snapshot) -->
+<article class="payment-card bg-emerald-50/40 border border-emerald-200 rounded-2xl p-4 shadow-xs transition-all flex flex-col justify-between relative overflow-hidden" data-category="ahorro" data-paid="true" data-purpose="payment-card">
+<div class="border-l-4 border-emerald-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-block text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">Jennifer Camaño • Futuro</span>
+<h4 class="text-base font-bold text-slate-900 mt-0.5 item-title">Ahorro de Valeria</h4>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">Pagado ✓</span>
+<p class="text-lg font-extrabold text-slate-900 mt-1 item-amount" data-value="50.00">B/. 50.00</p>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between gap-2">
+<span class="text-xs text-emerald-700 font-medium">Transferencia exitosa</span>
+<button class="pay-toggle-btn min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-300 focus:outline-none" data-purpose="quick-pay-action" type="button">
+<svg class="w-4 h-4 check-icon text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="btn-text text-emerald-800 font-semibold">Pagado (Deshacer)</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Estado vacío para búsquedas sin resultados -->
+<div class="hidden py-12 text-center bg-white rounded-2xl border border-slate-200 mt-2" id="noResultsState">
+<svg class="mx-auto h-12 w-12 text-slate-300" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+<h3 class="mt-2 text-sm font-semibold text-slate-900">No se encontraron pagos</h3>
+<p class="mt-1 text-xs text-slate-600">Intente buscar con otro término como 'luz', 'seguro' o 'guardería'.</p>
+</div>
+</section>
+<!-- END: PaymentsListSection -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MobileBottomNavigation -->
+<!-- Barra de navegación inferior optimizada para móviles (iPhone / Galaxy) con touch-targets de más de 48px -->
+<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-lg border-t border-slate-200 px-3 py-2 z-40 pb-safe shadow-lg" data-purpose="mobile-bottom-bar">
+<div class="flex justify-around items-center">
+<a class="flex flex-col items-center justify-center min-h-[48px] px-2 text-slate-600" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 font-medium">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center min-h-[48px] px-2 text-emerald-600 font-bold" href="#">
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1">Fijos</span>
+</a>
+<a class="flex flex-col items-center justify-center min-h-[48px] px-2 text-slate-600" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 font-medium">Variables</span>
+</a>
+<a class="flex flex-col items-center justify-center min-h-[48px] px-2 text-slate-600" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] mt-1 font-medium">Metas</span>
+</a>
+</div>
+</nav>
+<!-- END: MobileBottomNavigation -->
+</div>
+<!-- END: MainContentWrapper -->
+<!-- BEGIN: LogicScript -->
+<!-- Script para la interacción instantánea de 1 toque (pagar/deshacer) y filtros reactivos -->
+<script data-purpose="interactive-payments-logic">
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('paymentSearchInput');
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.payment-card');
+      const noResults = document.getElementById('noResultsState');
+      
+      const totalPaidEl = document.getElementById('totalPaidDisplay');
+      const totalPendingEl = document.getElementById('totalPendingDisplay');
+      const progressPercentEl = document.getElementById('progressPercent');
+      const progressBarEl = document.getElementById('progressBar');
+      const countPendingFilterEl = document.getElementById('countPendingFilter');
+      const countPaidFilterEl = document.getElementById('countPaidFilter');
+      const pendingCountBadgeEl = document.getElementById('pendingCountBadge');
+
+      let currentFilter = 'all';
+
+      // Función para recalcular métricas del dashboard automáticamente
+      function recalculateMetrics() {
+        let totalPaid = 0;
+        let totalPending = 0;
+        let paidCount = 0;
+        let pendingCount = 0;
+
+        cards.forEach(card => {
+          const isPaid = card.getAttribute('data-paid') === 'true';
+          const amountEl = card.querySelector('.item-amount');
+          const val = parseFloat(amountEl.getAttribute('data-value')) || 0;
+
+          if (isPaid) {
+            totalPaid += val;
+            paidCount++;
+          } else {
+            totalPending += val;
+            pendingCount++;
+          }
+        });
+
+        const totalItems = paidCount + pendingCount;
+        const percent = totalItems > 0 ? Math.round((paidCount / totalItems) * 100) : 0;
+
+        // Formatear montos
+        totalPaidEl.textContent = `B/. ${totalPaid.toFixed(2)}`;
+        totalPendingEl.textContent = `B/. ${totalPending.toFixed(2)}`;
+        progressPercentEl.textContent = `${percent}% (${paidCount}/${totalItems})`;
+        progressBarEl.style.width = `${percent}%`;
+
+        countPendingFilterEl.textContent = pendingCount;
+        countPaidFilterEl.textContent = paidCount;
+        pendingCountBadgeEl.textContent = pendingCount;
+      }
+
+      // Función para alternar el estado pagado/pendiente en 1 toque
+      function setupPayToggleButtons() {
+        cards.forEach(card => {
+          const btn = card.querySelector('.pay-toggle-btn');
+          const stripe = card.querySelector('.status-stripe');
+          const pill = card.querySelector('.status-pill');
+          const btnText = card.querySelector('.btn-text');
+          const checkIcon = card.querySelector('.check-icon');
+          const amountEl = card.querySelector('.item-amount');
+          const amountValue = amountEl.getAttribute('data-value');
+
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const currentlyPaid = card.getAttribute('data-paid') === 'true';
+
+            if (!currentlyPaid) {
+              // Marcar como Pagado
+              card.setAttribute('data-paid', 'true');
+              card.classList.remove('bg-white', 'border-slate-200');
+              card.classList.add('bg-emerald-50/40', 'border-emerald-200');
+
+              stripe.classList.remove('border-rose-500');
+              stripe.classList.add('border-emerald-500');
+
+              pill.className = 'text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill';
+              pill.textContent = 'Pagado ✓';
+
+              btn.className = 'pay-toggle-btn min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-300 focus:outline-none';
+              btnText.className = 'btn-text text-emerald-800 font-semibold';
+              btnText.textContent = 'Pagado (Deshacer)';
+              checkIcon.classList.remove('hidden');
+              checkIcon.classList.add('text-emerald-600');
+            } else {
+              // Deshacer y marcar como Pendiente
+              card.setAttribute('data-paid', 'false');
+              card.classList.remove('bg-emerald-50/40', 'border-emerald-200');
+              card.classList.add('bg-white', 'border-slate-200');
+
+              stripe.classList.remove('border-emerald-500');
+              stripe.classList.add('border-rose-500');
+
+              pill.className = 'text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill';
+              pill.textContent = 'Pendiente';
+
+              btn.className = 'pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-xs flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none';
+              btnText.className = 'btn-text';
+              btnText.textContent = `Pagar B/. ${amountValue}`;
+              checkIcon.classList.add('hidden');
+              checkIcon.classList.remove('text-emerald-600');
+            }
+
+            recalculateMetrics();
+            applyFilterAndSearch();
+          });
+        });
+      }
+
+      // Filtrado y búsqueda combinada en tiempo real
+      function applyFilterAndSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const title = card.querySelector('.item-title').textContent.toLowerCase();
+          const isPaid = card.getAttribute('data-paid') === 'true';
+
+          let matchesFilter = false;
+          if (currentFilter === 'all') {
+            matchesFilter = true;
+          } else if (currentFilter === 'pending' && !isPaid) {
+            matchesFilter = true;
+          } else if (currentFilter === 'paid' && isPaid) {
+            matchesFilter = true;
+          }
+
+          const matchesSearch = title.includes(query);
+
+          if (matchesFilter && matchesSearch) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      }
+
+      // Eventos de botones de filtro
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => {
+            b.classList.remove('bg-emerald-600', 'text-white');
+            b.classList.add('text-slate-600', 'hover:bg-slate-100');
+          });
+
+          btn.classList.add('bg-emerald-600', 'text-white');
+          btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+
+          currentFilter = btn.getAttribute('data-filter');
+          applyFilterAndSearch();
+        });
+      });
+
+      // Evento de búsqueda de texto
+      searchInput.addEventListener('input', applyFilterAndSearch);
+
+      // Iniciar configuración
+      setupPayToggleButtons();
+      recalculateMetrics();
+    });
+  </script>
+<!-- END: LogicScript -->
+</body></html>
