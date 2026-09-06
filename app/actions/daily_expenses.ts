@@ -1,0 +1,59 @@
+'use server';
+
+import { createClient } from '@/lib/supabase/server';
+import { revalidatePath } from 'next/cache';
+
+export interface DailyExpense {
+  id: string;
+  date: string;
+  category: string;
+  detail: string;
+  person: string;
+  amount: number;
+  created_at?: string;
+}
+
+export async function getDailyExpenses(): Promise<DailyExpense[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('daily_expenses')
+    .select('*')
+    .order('date', { ascending: false })
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching daily expenses:', error);
+    return [];
+  }
+
+  return data as DailyExpense[];
+}
+
+export async function addDailyExpense(formData: FormData) {
+  const supabase = await createClient();
+  
+  const date = formData.get('date') as string;
+  const category = formData.get('category') as string;
+  const detail = formData.get('detail') as string;
+  const person = formData.get('person') as string;
+  const amountStr = formData.get('amount') as string;
+  const amount = parseFloat(amountStr);
+
+  const { error } = await supabase
+    .from('daily_expenses')
+    .insert({
+      date,
+      category,
+      detail,
+      person,
+      amount
+    });
+
+  if (error) {
+    console.error('Error inserting daily expense:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/gastos-diarios');
+  return { success: true };
+}
