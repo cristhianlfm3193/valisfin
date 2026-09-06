@@ -40,9 +40,20 @@ export async function addIncome(formData: FormData) {
 export async function toggleIncomeStatus(id: string, currentStatus: boolean) {
   const supabase = await createClient();
   
+  const updates: any = { is_received: !currentStatus };
+  
+  // If we are confirming the income, update its date to today
+  if (!currentStatus) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    updates.date_expected = `${yyyy}-${mm}-${dd}`;
+  }
+
   const { error } = await supabase
     .from('incomes')
-    .update({ is_received: !currentStatus })
+    .update(updates)
     .eq('id', id);
     
   if (error) {
@@ -76,9 +87,9 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
     { person: 'jennifer', category: 'salario', period: 'q1', description: 'Salario Quincenal Jennifer', amount: 428.86, day: 15 },
     { person: 'jennifer', category: 'salario', period: 'q2', description: 'Salario Quincenal Jennifer', amount: 428.86, day: 30 },
     // Nuevos gastos solicitados
-    { person: 'jennifer', category: 'salario', period: 'q1', description: 'Gasto de Carro Jennifer', amount: 125.00, day: 15 },
-    { person: 'cristhian', category: 'salario', period: 'q1', description: 'Gastos de Representación', amount: 140.43, day: 12 },
-    { person: 'cristhian', category: 'salario', period: 'q2', description: 'Gastos de Representación', amount: 140.43, day: 27 },
+    { person: 'jennifer', category: 'carro', period: 'q1', description: 'Gasto de Carro Jennifer', amount: 125.00, day: 9 },
+    { person: 'cristhian', category: 'representacion', period: 'q1', description: 'Gastos de Representación', amount: 140.43, day: 12 },
+    { person: 'cristhian', category: 'representacion', period: 'q2', description: 'Gastos de Representación', amount: 140.43, day: 27 },
   ];
 
   // Get first and last day of target month to check existing records
@@ -88,7 +99,6 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
   const { data: existingIncomes, error } = await supabase
     .from('incomes')
     .select('*')
-    .eq('category', 'salario')
     .gte('date_expected', firstDay)
     .lte('date_expected', lastDay);
 

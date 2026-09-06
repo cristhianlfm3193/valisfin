@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck, ChevronDown, ChevronUp, Undo2 } from 'lucide-react';
 import { toggleIncomeStatus } from '@/app/actions/income';
 
 import { EditIncomeModal } from './EditIncomeModal';
@@ -81,7 +81,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500 text-xs sm:text-sm">
-              <span>Fecha prevista: {new Date(item.date_expected).toLocaleDateString('es-PA')}</span>
+              <span>Fecha prevista: {item.date_expected?.split('-').reverse().join('/')}</span>
               {isReceived ? (
                 <span className="text-emerald-700 font-medium flex items-center gap-1">
                   <CalendarCheck className="w-3.5 h-3.5" /> En cuenta
@@ -107,10 +107,17 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
             {isReceived ? (
               <button 
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-3 sm:px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60 shrink-0"
+                title="Deshacer confirmación"
+                className="group relative px-3 sm:px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200/60 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5 border border-emerald-200/60 shrink-0 overflow-hidden w-auto sm:w-[125px] justify-center"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Confirmado</span>
+                <div className="flex items-center gap-1.5 group-hover:hidden">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Confirmado</span>
+                </div>
+                <div className="hidden items-center gap-1.5 group-hover:flex">
+                  <Undo2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Deshacer</span>
+                </div>
               </button>
             ) : (
               <button 
