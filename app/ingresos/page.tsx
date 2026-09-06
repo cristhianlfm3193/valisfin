@@ -17,12 +17,32 @@ import { familyData, ingresosMetrics, ingresosBreakdown } from "@/lib/mockData";
 import { IncomeList } from "./components/IncomeList";
 import { AddIncomeModal } from "./components/AddIncomeModal";
 import { generateMonthlyIncomes } from "@/app/actions/income";
+import { MonthFilter } from "./components/MonthFilter";
 
-export default async function IngresosPage() {
+const MONTHS = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+
+export default async function IngresosPage({
+  searchParams,
+}: {
+  searchParams: { year?: string; month?: string };
+}) {
   const supabase = await createClient();
 
-  // 1. Auto-generate missing fixed incomes for the current month
-  await generateMonthlyIncomes();
+  // Determine selected year and month
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  const selectedYear = searchParams.year ? parseInt(searchParams.year) : currentYear;
+  const selectedMonth = searchParams.month ? parseInt(searchParams.month) : currentMonth;
+  
+  const displayMonthString = `${MONTHS[selectedMonth]} ${selectedYear}`;
+
+  // 1. Auto-generate missing fixed incomes for the selected month
+  await generateMonthlyIncomes(selectedYear, selectedMonth);
 
   // 2. Fetch all incomes for calculations
   const { data: { user } } = await supabase.auth.getUser();
@@ -30,10 +50,16 @@ export default async function IngresosPage() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  // Fetch real incomes from Supabase
+  // Calculate first and last day of the selected month
+  const firstDay = new Date(selectedYear, selectedMonth, 1).toISOString().split('T')[0];
+  const lastDay = new Date(selectedYear, selectedMonth + 1, 0).toISOString().split('T')[0];
+
+  // Fetch real incomes from Supabase filtered by the selected month
   const { data: incomes = [], error } = await supabase
     .from('incomes')
     .select('*')
+    .gte('date_expected', firstDay)
+    .lte('date_expected', lastDay)
     .order('date_expected', { ascending: true });
 
   if (error) {
@@ -47,7 +73,7 @@ export default async function IngresosPage() {
   const receivedCount = incomes?.filter(i => i.is_received).length || 0;
   const pending = projected - received;
   const pendingCount = projectedCount - receivedCount;
-  const percent = projected > 0 ? (received / projected * 100).toFixed(1) : "0.0";
+  const percent = projected > 0 ? ((received / projected) * 100).toFixed(1) : "0.0";
 
   const dynamicMetrics = {
     projected,
@@ -80,7 +106,7 @@ export default async function IngresosPage() {
       received: cfReceived,
       pending: cfProjected - cfReceived,
       footer: "Ingresos programados",
-      footerDates: "Mes actual",
+      footerDates: displayMonthString,
       dotColor: "bg-emerald-500"
     },
     {
@@ -94,7 +120,7 @@ export default async function IngresosPage() {
       received: jcReceived,
       pending: jcProjected - jcReceived,
       footer: "Ingresos programados",
-      footerDates: "Mes actual",
+      footerDates: displayMonthString,
       dotColor: "bg-indigo-500"
     }
   ];
@@ -119,7 +145,7 @@ export default async function IngresosPage() {
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-1.5 bg-slate-100/90 border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-700">
             <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            <span>{familyData.month}</span>
+            <span className="capitalize">{displayMonthString}</span>
           </div>
           <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-1.5 rounded-full text-xs font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -145,18 +171,7 @@ export default async function IngresosPage() {
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center bg-white shadow-sm rounded-full p-1 border border-slate-200">
-              <button aria-label="Mes anterior" className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 transition">
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <div className="px-3 flex items-center gap-1.5 text-sm text-slate-700 font-medium">
-                <CalendarDays className="text-emerald-700 w-4 h-4" />
-                <span className="font-semibold">{familyData.month}</span>
-              </div>
-              <button aria-label="Mes siguiente" className="w-8 h-8 flex items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 transition">
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+            <MonthFilter currentYear={selectedYear} currentMonth={selectedMonth} />
             <AddIncomeModal />
           </div>
         </header>
@@ -271,7 +286,7 @@ export default async function IngresosPage() {
                 <span className="inline-flex items-center gap-1.5">
                   <span className={`w-2 h-2 rounded-full ${person.dotColor}`}></span> {person.footer}
                 </span>
-                <span className="font-medium text-emerald-700">{person.footerDates}</span>
+                <span className="font-medium text-emerald-700 capitalize">{person.footerDates}</span>
               </div>
             </div>
           ))}

@@ -53,12 +53,21 @@ export async function toggleIncomeStatus(id: string, currentStatus: boolean) {
   revalidatePath('/ingresos');
 }
 
-export async function generateMonthlyIncomes() {
+export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: number) {
   const supabase = await createClient();
   
   const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth(); // 0-11
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth(); // 0-11
+  
+  const year = targetYear !== undefined ? targetYear : currentYear;
+  const month = targetMonth !== undefined ? targetMonth : currentMonth;
+
+  // Si estamos consultando un mes del pasado, NO auto-generamos salarios.
+  // El usuario pidió que se muestre 0 (vacío) si no hay registros.
+  if (year < currentYear || (year === currentYear && month < currentMonth)) {
+    return;
+  }
   
   // Define expected salaries
   const expectedSalaries = [
@@ -68,7 +77,7 @@ export async function generateMonthlyIncomes() {
     { person: 'jennifer', category: 'salario', period: 'q2', description: 'Salario Quincenal Jennifer', amount: 428.86, day: 30 },
   ];
 
-  // Get first and last day of current month to check existing records
+  // Get first and last day of target month to check existing records
   const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
   const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
