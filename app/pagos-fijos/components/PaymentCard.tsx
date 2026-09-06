@@ -5,7 +5,7 @@ import { Check } from 'lucide-react';
 export interface FixedPayment {
   id: string;
   category: string;
-  isPaid: boolean;
+  is_paid: boolean;
   responsible: string;
   title: string;
   amount: number;
@@ -14,20 +14,20 @@ export interface FixedPayment {
 
 interface PaymentCardProps {
   payment: FixedPayment;
-  onToggleStatus: (id: string) => void;
+  onToggleStatus: (id: string, currentStatus: boolean) => void;
 }
 
 export function PaymentCard({ payment, onToggleStatus }: PaymentCardProps) {
-  const { id, isPaid, responsible, title, amount, subtitle } = payment;
+  const { id, is_paid, responsible, title, amount, subtitle } = payment;
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleStatus(id);
+    onToggleStatus(id, is_paid);
   };
 
   const formattedAmount = `B/. ${amount.toFixed(2)}`;
 
-  if (isPaid) {
+  if (is_paid) {
     return (
       <article className="payment-card bg-emerald-50/40 border border-emerald-200 rounded-2xl p-4 shadow-sm transition-all flex flex-col justify-between relative overflow-hidden">
         <div className="border-l-4 border-emerald-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">

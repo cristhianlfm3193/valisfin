@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { MetricsSummary } from './MetricsSummary';
 import { SearchAndFilters, FilterType } from './SearchAndFilters';
 import { PaymentCard, FixedPayment } from './PaymentCard';
+import { togglePaymentStatus } from '@/app/actions/fixed_payments';
 
 interface PagosFijosClientProps {
   initialPayments: FixedPayment[];
@@ -14,12 +15,23 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
 
-  const handleToggleStatus = (id: string) => {
+  const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+    // Optimistic update
     setPayments((prev) =>
       prev.map((payment) =>
-        payment.id === id ? { ...payment, isPaid: !payment.isPaid } : payment
+        payment.id === id ? { ...payment, is_paid: !payment.is_paid } : payment
       )
     );
+    try {
+      await togglePaymentStatus(id, currentStatus);
+    } catch (e) {
+      // Revert if error
+      setPayments((prev) =>
+        prev.map((payment) =>
+          payment.id === id ? { ...payment, is_paid: currentStatus } : payment
+        )
+      );
+    }
   };
 
   // Metrics calculation
@@ -30,7 +42,7 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
     let pendCount = 0;
 
     payments.forEach((payment) => {
-      if (payment.isPaid) {
+      if (payment.is_paid) {
         tPaid += payment.amount;
         pCount++;
       } else {
@@ -54,8 +66,8 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
   const filteredPayments = useMemo(() => {
     return payments.filter((payment) => {
       // Filter by status
-      if (currentFilter === 'pending' && payment.isPaid) return false;
-      if (currentFilter === 'paid' && !payment.isPaid) return false;
+      if (currentFilter === 'pending' && payment.is_paid) return false;
+      if (currentFilter === 'paid' && !payment.is_paid) return false;
 
       // Filter by search query
       if (searchQuery.trim() !== '') {
