@@ -134,8 +134,6 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
 
     if (insertError) {
       console.error('Error auto-generating salaries:', insertError);
-    } else {
-      revalidatePath('/ingresos');
     }
   }
 }

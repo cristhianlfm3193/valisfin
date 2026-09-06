@@ -22,6 +22,25 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
   const q1Items = incomes.filter(i => i.period === 'q1');
   const q2Items = incomes.filter(i => i.period === 'q2' || i.period === 'eventual');
 
+  const q1PendingCount = q1Items.filter(i => !i.is_received).length;
+  const q2PendingCount = q2Items.filter(i => !i.is_received).length;
+
+  const renderBadge = (pendingCount: number, totalCount: number) => {
+    if (totalCount === 0) return null;
+    if (pendingCount === 0) {
+      return (
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-teal-50 text-teal-700 font-semibold text-xs w-fit border border-teal-200/60">
+          <CheckCircle2 className="w-4 h-4" /> 100% Completada
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold text-xs w-fit border border-slate-200">
+        <Clock className="w-4 h-4" /> {pendingCount} {pendingCount === 1 ? 'Cobro' : 'Cobros'} en Espera
+      </span>
+    );
+  };
+
   const renderItem = (item: any) => {
     const isReceived = item.is_received;
     const initials = item.person === 'cristhian' ? 'CF' : 'JC';
@@ -63,8 +82,8 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
           </div>
         </div>
         
-        <div className="flex items-center justify-between md:justify-end gap-5">
-          <div className="text-right">
+        <div className="flex flex-wrap items-center justify-between md:justify-end gap-3 sm:gap-5 mt-2 md:mt-0 w-full md:w-auto">
+          <div className="text-left md:text-right">
             <div className={`text-lg sm:text-xl font-bold font-mono whitespace-nowrap ${isReceived ? 'text-emerald-700' : 'text-slate-900'}`}>
               +B/. {item.amount.toFixed(2)}
             </div>
@@ -77,7 +96,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
             {isReceived ? (
               <button 
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60 shrink-0"
+                className="px-3 sm:px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60 shrink-0"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span className="hidden sm:inline">Confirmado</span>
@@ -85,10 +104,11 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
             ) : (
               <button 
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-5 py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0"
               >
                 <Check className="w-4 h-4" />
-                <span>Confirmar recibido</span>
+                <span className="hidden sm:inline">Confirmar recibido</span>
+                <span className="sm:hidden">Confirmar</span>
               </button>
             )}
           </div>
@@ -109,9 +129,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
               <p className="text-xs sm:text-sm text-slate-500">Pagos de inicio de mes, colegiatura y primera ronda de compromisos familiares.</p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-teal-50 text-teal-700 font-semibold text-xs w-fit border border-teal-200/60">
-            <CheckCircle2 className="w-4 h-4" /> 100% Completada
-          </span>
+          {renderBadge(q1PendingCount, q1Items.length)}
         </div>
         <div className="space-y-3">
           {q1Items.map(renderItem)}
@@ -128,9 +146,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
               <p className="text-xs sm:text-sm text-slate-500">Cierres de mes, servicios del hogar, ahorros y amortizaciones.</p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold text-xs w-fit border border-slate-200">
-            <Clock className="w-4 h-4" /> 5 Cobros en Espera
-          </span>
+          {renderBadge(q2PendingCount, q2Items.length)}
         </div>
         <div className="space-y-3">
           {q2Items.map(renderItem)}

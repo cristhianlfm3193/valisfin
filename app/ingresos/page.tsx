@@ -75,6 +75,11 @@ export default async function IngresosPage({
   const pendingCount = projectedCount - receivedCount;
   const percent = projected > 0 ? ((received / projected) * 100).toFixed(1) : "0.0";
 
+  const extraordinaryIncomes = incomes?.filter(i => !['salario', 'representacion', 'carro'].includes(i.category)) || [];
+  const extraordinaryTotal = extraordinaryIncomes.reduce((acc, curr) => acc + curr.amount, 0);
+  const extraordinaryReceived = extraordinaryIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+  const extraordinaryCount = extraordinaryIncomes.length;
+
   const dynamicMetrics = {
     projected,
     projectedCount,
@@ -82,7 +87,10 @@ export default async function IngresosPage({
     receivedCount,
     pending,
     pendingCount,
-    percent
+    percent,
+    extraordinaryTotal,
+    extraordinaryReceived,
+    extraordinaryCount
   };
 
   // Calculate Breakdown
@@ -165,9 +173,6 @@ export default async function IngresosPage({
               <span className="text-xs uppercase tracking-widest text-emerald-700 font-semibold">Calendario Real de Cobro</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Ingresos Familiares</h1>
-            <p className="text-sm text-slate-500 max-w-2xl mt-1">
-              Planificación y confirmación de depósitos para <span className="font-semibold text-slate-700">Cristhian Fuentes</span> y <span className="font-semibold text-slate-700">Jennifer Camaño</span>. Al confirmar, el saldo se acredita al instante en el flujo real del hogar.
-            </p>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
@@ -176,74 +181,81 @@ export default async function IngresosPage({
           </div>
         </header>
 
-        {/* Info Banner */}
-        <div className="flex items-start sm:items-center gap-3 bg-teal-50/80 border border-teal-100 text-teal-800 px-4 py-3 rounded-xl">
-          <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5 sm:mt-0" />
-          <p className="text-sm text-slate-600">
-            Tu salario y gastos de representación usan calendarios quincenales ajustados. Al marcar <strong className="text-emerald-700 font-semibold">“Confirmar recibido”</strong> el monto pasa al fondo disponible garantizado.
-          </p>
-        </div>
-
         {/* Master Monthly Metrics */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs uppercase tracking-wider font-semibold">Ingresos Proyectados</span>
-              <span className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-emerald-700">
-                <TrendingUp className="w-4 h-4" />
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5">
+          <div className="bg-white rounded-2xl p-4 xl:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div className="flex items-start justify-between text-slate-500 gap-2">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Ingresos Proyectados</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-emerald-700 shrink-0">
+                <TrendingUp className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.projected.toFixed(2)}</div>
-              <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" /> {dynamicMetrics.projectedCount} conceptos planificados
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.projected.toFixed(2)}</div>
+              <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
+                <Clock className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-emerald-600 shrink-0" /> {dynamicMetrics.projectedCount} planificados
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition relative overflow-hidden">
+          <div className="bg-white rounded-2xl p-4 xl:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent pointer-events-none"></div>
-            <div className="relative z-10 flex items-center justify-between text-slate-500">
-              <span className="text-xs uppercase tracking-wider font-bold text-emerald-700">Efectivo en Cuenta</span>
-              <span className="w-8 h-8 rounded-lg bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-700">
-                <CheckCircle2 className="w-4 h-4" />
+            <div className="relative z-10 flex items-start justify-between text-slate-500 gap-2">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-bold text-emerald-700 leading-tight mt-0.5">Efectivo en Cuenta</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0">
+                <CheckCircle2 className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
             <div className="relative z-10 mt-4">
-              <div className="text-xl sm:text-2xl font-bold font-mono text-emerald-700 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.received.toFixed(2)}</div>
-              <span className="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> {dynamicMetrics.receivedCount} depósitos confirmados
+              <div className="text-lg xl:text-xl font-bold font-mono text-emerald-700 tracking-tight">B/. {dynamicMetrics.received.toFixed(2)}</div>
+              <span className="text-[10px] xl:text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1 leading-tight">
+                <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" /> {dynamicMetrics.receivedCount} confirmados
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs uppercase tracking-wider font-semibold">Pendiente por Cobrar</span>
-              <span className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
-                <Hourglass className="w-4 h-4" />
+          <div className="bg-white rounded-2xl p-4 xl:p-5 border border-amber-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div className="flex items-start justify-between text-slate-500 gap-2">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold text-amber-700 leading-tight mt-0.5">Extraordinarios</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                <PlusCircle className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.pending.toFixed(2)}</div>
-              <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> {dynamicMetrics.pendingCount} por acreditarse
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.extraordinaryTotal.toFixed(2)}</div>
+              <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
+                <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-amber-500 shrink-0" /> B/. {dynamicMetrics.extraordinaryReceived.toFixed(2)} recibidos
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs uppercase tracking-wider font-semibold">Efectividad del Mes</span>
-              <span className="text-sm font-bold text-emerald-700">{dynamicMetrics.percent}%</span>
+          <div className="bg-white rounded-2xl p-4 xl:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div className="flex items-start justify-between text-slate-500 gap-2">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Pendiente por Cobrar</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+                <Hourglass className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
+              </span>
+            </div>
+            <div className="mt-4">
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.pending.toFixed(2)}</div>
+              <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
+                <CalendarDays className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-slate-400 shrink-0" /> {dynamicMetrics.pendingCount} por acreditarse
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-4 xl:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div className="flex items-start justify-between text-slate-500 gap-2">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Efectividad del Mes</span>
+              <span className="text-xs xl:text-sm font-bold text-emerald-700 shrink-0">{dynamicMetrics.percent}%</span>
             </div>
             <div className="mt-3">
-              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
+              <div className="w-full bg-slate-100 h-1.5 xl:h-2 rounded-full overflow-hidden flex">
                 <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${dynamicMetrics.percent}%` }}></div>
               </div>
-              <div className="flex justify-between items-center text-slate-500 text-xs mt-2">
-                <span className="whitespace-nowrap">Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
-                <span className="text-emerald-700 font-medium">Meta: 100%</span>
+              <div className="flex flex-wrap justify-between items-center text-slate-500 text-[10px] xl:text-xs mt-2 gap-1">
+                <span className="truncate">Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
+                <span className="text-emerald-700 font-medium whitespace-nowrap">Meta: 100%</span>
               </div>
             </div>
           </div>
