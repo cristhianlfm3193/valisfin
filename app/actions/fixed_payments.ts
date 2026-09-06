@@ -55,22 +55,46 @@ export async function addVariablePayment(formData: FormData) {
     responsible = 'Compras • Variable';
   }
 
-  const { error } = await supabase
+  // Check if there is already an unpaid record for this title and period
+  const { data: existing } = await supabase
     .from('fixed_payments')
-    .insert({
-      category,
-      is_paid: false,
-      responsible,
-      title,
-      amount,
-      subtitle: 'Servicio variable',
-      period,
-      type: 'variable'
-    });
+    .select('id')
+    .eq('title', title)
+    .eq('period', period)
+    .eq('is_paid', false)
+    .limit(1)
+    .single();
 
-  if (error) {
-    console.error('Error inserting variable payment:', error);
-    return { success: false, error: error.message };
+  if (existing) {
+    // Update existing
+    const { error: updateError } = await supabase
+      .from('fixed_payments')
+      .update({ amount })
+      .eq('id', existing.id);
+
+    if (updateError) {
+      console.error('Error updating variable payment:', updateError);
+      return { success: false, error: updateError.message };
+    }
+  } else {
+    // Insert new
+    const { error: insertError } = await supabase
+      .from('fixed_payments')
+      .insert({
+        category,
+        is_paid: false,
+        responsible,
+        title,
+        amount,
+        subtitle: 'Servicio variable',
+        period,
+        type: 'variable'
+      });
+
+    if (insertError) {
+      console.error('Error inserting variable payment:', insertError);
+      return { success: false, error: insertError.message };
+    }
   }
 
   revalidatePath('/pagos-fijos');

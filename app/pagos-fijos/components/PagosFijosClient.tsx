@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MetricsSummary } from './MetricsSummary';
 import { SearchAndFilters, FilterType } from './SearchAndFilters';
 import { PaymentCard, FixedPayment } from './PaymentCard';
@@ -12,20 +12,45 @@ interface PagosFijosClientProps {
 
 export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
   const [payments, setPayments] = useState<FixedPayment[]>(initialPayments);
+  
+  // Sync state with server prop on revalidation
+  useEffect(() => {
+    setPayments(initialPayments);
+  }, [initialPayments]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
+  
+  // Default to current month YYYY-MM
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    return `${d.getFullYear()}-${m}`;
+  });
 
-  // Group payments by title
+  // Filter payments by selectedMonth (rollover logic)
+  const monthFilteredPayments = useMemo(() => {
+    return payments.filter(p => {
+      if (!p.period) return true; // If no period, include it always just in case
+      // Include if it belongs to selected month
+      if (p.period === selectedMonth) return true;
+      // Rollover: Include if it belongs to a past month AND is unpaid
+      if (p.period < selectedMonth && !p.is_paid) return true;
+      return false;
+    });
+  }, [payments, selectedMonth]);
+
+  // Group payments by title (using only the month-filtered ones)
   const groupedPayments = useMemo(() => {
     const groups = new Map<string, FixedPayment[]>();
-    payments.forEach(p => {
+    monthFilteredPayments.forEach(p => {
       if (!groups.has(p.title)) {
         groups.set(p.title, []);
       }
       groups.get(p.title)!.push(p);
     });
 
-    return Array.from(groups.values()).map(group => {
+    const grouped = Array.from(groups.values()).map(group => {
       const unpaid = group.filter(p => !p.is_paid);
       const isPaid = unpaid.length === 0;
       
@@ -51,7 +76,13 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
           : (isPaid ? group[group.length - 1].period : unpaid[0].period)
       };
     });
-  }, [payments]);
+    
+    // Sort so pending items (is_paid === false) appear first
+    return grouped.sort((a, b) => {
+      if (a.is_paid === b.is_paid) return 0;
+      return a.is_paid ? 1 : -1;
+    });
+  }, [monthFilteredPayments]);
 
   const handleToggleStatus = async (compositeId: string, currentStatus: boolean, originalIds?: string[]) => {
     const idsToToggle = originalIds || [compositeId];
@@ -120,8 +151,46 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
     });
   }, [groupedPayments, currentFilter, searchQuery]);
 
+  // Helper for Month Selector UI
+  const handleMonthChange = (increment: number) => {
+    const [y, m] = selectedMonth.split('-').map(Number);
+    const d = new Date(y, m - 1 + increment, 1);
+    const newM = String(d.getMonth() + 1).padStart(2, '0');
+    setSelectedMonth(`${d.getFullYear()}-${newM}`);
+  };
+
+  const getMonthLabel = () => {
+    const [y, m] = selectedMonth.split('-').map(Number);
+    const d = new Date(y, m - 1, 1);
+    const name = d.toLocaleString('es-ES', { month: 'long' });
+    return `${name.charAt(0).toUpperCase() + name.slice(1)} ${y}`;
+  };
+
   return (
     <>
+      {/* Month Selector */}
+      <div className="flex justify-center mb-6">
+        <div className="inline-flex items-center bg-white border border-slate-200 rounded-full shadow-sm p-1">
+          <button 
+            onClick={() => handleMonthChange(-1)}
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none"
+            type="button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <span className="w-40 text-center text-sm font-bold text-slate-800">
+            {getMonthLabel()}
+          </span>
+          <button 
+            onClick={() => handleMonthChange(1)}
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none"
+            type="button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
       <MetricsSummary
         totalPaid={totalPaid}
         totalPending={totalPending}
