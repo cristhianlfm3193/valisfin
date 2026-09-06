@@ -6,6 +6,12 @@ import { toggleIncomeStatus } from '@/app/actions/income';
 
 import { EditIncomeModal } from './EditIncomeModal';
 
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
 export function IncomeList({ incomes }: { incomes: any[] }) {
   const [isPending, startTransition] = useTransition();
 
@@ -96,7 +102,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
         <div className="flex items-center justify-between w-full md:w-auto gap-4 md:gap-6 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-0 border-slate-100/80 shrink-0">
           <div className="text-left md:text-right">
             <div className={`text-lg sm:text-xl font-bold font-mono whitespace-nowrap ${isReceived ? 'text-emerald-700' : 'text-slate-900'}`}>
-              +B/. {item.amount.toFixed(2)}
+              +B/. {formatCurrency(item.amount)}
             </div>
             <div className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">
               {isReceived ? 'Efectivo en cuenta' : 'Por confirmar'}

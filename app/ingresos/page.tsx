@@ -24,11 +24,17 @@ const MONTHS = [
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 
-export default async function IngresosPage({
-  searchParams,
-}: {
-  searchParams: { year?: string; month?: string };
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
+
+export default async function IngresosPage(props: {
+  searchParams: Promise<{ year?: string; month?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const supabase = await createClient();
 
   // Determine selected year and month
@@ -66,16 +72,24 @@ export default async function IngresosPage({
     // console.warn('Error fetching incomes:', error.message);
   }
 
-  // Calculate metrics
-  const projected = incomes?.reduce((acc, curr) => acc + curr.amount, 0) || 0;
-  const projectedCount = incomes?.length || 0;
+  // Split incomes into planned and extraordinary
+  const plannedIncomes = incomes?.filter(i => ['salario', 'representacion', 'carro'].includes(i.category)) || [];
+  const extraordinaryIncomes = incomes?.filter(i => !['salario', 'representacion', 'carro'].includes(i.category)) || [];
+
+  // Global Metrics
+  const hasPlannedData = plannedIncomes.length > 0;
+
+  const projected = hasPlannedData ? plannedIncomes.reduce((acc, curr) => acc + curr.amount, 0) : 2172.40;
+  const projectedCount = hasPlannedData ? plannedIncomes.length : 7;
+  
   const received = incomes?.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0) || 0;
   const receivedCount = incomes?.filter(i => i.is_received).length || 0;
-  const pending = projected - received;
-  const pendingCount = projectedCount - receivedCount;
-  const percent = projected > 0 ? ((received / projected) * 100).toFixed(1) : "0.0";
+  
+  const plannedReceived = plannedIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+  const pending = hasPlannedData ? projected - plannedReceived : 0;
+  const pendingCount = hasPlannedData ? projectedCount - plannedIncomes.filter(i => i.is_received).length : 0;
+  const percent = projected > 0 ? ((plannedReceived / projected) * 100).toFixed(1) : "0.0";
 
-  const extraordinaryIncomes = incomes?.filter(i => !['salario', 'representacion', 'carro'].includes(i.category)) || [];
   const extraordinaryTotal = extraordinaryIncomes.reduce((acc, curr) => acc + curr.amount, 0);
   const extraordinaryReceived = extraordinaryIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
   const extraordinaryCount = extraordinaryIncomes.length;
@@ -95,12 +109,18 @@ export default async function IngresosPage({
 
   // Calculate Breakdown
   const cfIncomes = incomes?.filter(i => i.person === 'cristhian') || [];
-  const cfProjected = cfIncomes.reduce((acc, curr) => acc + curr.amount, 0);
+  const cfPlanned = cfIncomes.filter(i => ['salario', 'representacion', 'carro'].includes(i.category));
+  const hasCfData = cfPlanned.length > 0;
+  const cfProjected = hasCfData ? cfPlanned.reduce((acc, curr) => acc + curr.amount, 0) : 1189.68;
   const cfReceived = cfIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+  const cfPending = hasCfData ? cfProjected - cfReceived : 0;
   
   const jcIncomes = incomes?.filter(i => i.person === 'jennifer') || [];
-  const jcProjected = jcIncomes.reduce((acc, curr) => acc + curr.amount, 0);
+  const jcPlanned = jcIncomes.filter(i => ['salario', 'representacion', 'carro'].includes(i.category));
+  const hasJcData = jcPlanned.length > 0;
+  const jcProjected = hasJcData ? jcPlanned.reduce((acc, curr) => acc + curr.amount, 0) : 982.72;
   const jcReceived = jcIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+  const jcPending = hasJcData ? jcProjected - jcReceived : 0;
 
   const dynamicBreakdown = [
     {
@@ -112,7 +132,7 @@ export default async function IngresosPage({
       abonos: cfIncomes.length,
       projected: cfProjected,
       received: cfReceived,
-      pending: cfProjected - cfReceived,
+      pending: cfPending,
       footer: "Ingresos programados",
       footerDates: displayMonthString,
       dotColor: "bg-emerald-500"
@@ -126,7 +146,7 @@ export default async function IngresosPage({
       abonos: jcIncomes.length,
       projected: jcProjected,
       received: jcReceived,
-      pending: jcProjected - jcReceived,
+      pending: jcPending,
       footer: "Ingresos programados",
       footerDates: displayMonthString,
       dotColor: "bg-indigo-500"
@@ -191,7 +211,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.projected.toFixed(2)}</div>
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.projected)}</div>
               <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
                 <Clock className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-emerald-600 shrink-0" /> {dynamicMetrics.projectedCount} planificados
               </span>
@@ -207,7 +227,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="relative z-10 mt-4">
-              <div className="text-lg xl:text-xl font-bold font-mono text-emerald-700 tracking-tight">B/. {dynamicMetrics.received.toFixed(2)}</div>
+              <div className="text-lg xl:text-xl font-bold font-mono text-emerald-700 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.received)}</div>
               <span className="text-[10px] xl:text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1 leading-tight">
                 <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" /> {dynamicMetrics.receivedCount} confirmados
               </span>
@@ -222,9 +242,9 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.extraordinaryTotal.toFixed(2)}</div>
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.extraordinaryTotal)}</div>
               <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
-                <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-amber-500 shrink-0" /> B/. {dynamicMetrics.extraordinaryReceived.toFixed(2)} recibidos
+                <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-amber-500 shrink-0" /> B/. {formatCurrency(dynamicMetrics.extraordinaryReceived)} recibidos
               </span>
             </div>
           </div>
@@ -237,7 +257,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.pending.toFixed(2)}</div>
+              <div className="text-lg xl:text-xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.pending)}</div>
               <span className="text-[10px] xl:text-xs text-slate-500 flex items-center gap-1 mt-1 leading-tight">
                 <CalendarDays className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-slate-400 shrink-0" /> {dynamicMetrics.pendingCount} por acreditarse
               </span>
@@ -254,7 +274,7 @@ export default async function IngresosPage({
                 <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${dynamicMetrics.percent}%` }}></div>
               </div>
               <div className="flex flex-wrap justify-between items-center text-slate-500 text-[10px] xl:text-xs mt-2 gap-1">
-                <span className="truncate">Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
+                <span className="truncate">Recibido: B/. {formatCurrency(dynamicMetrics.received)}</span>
                 <span className="text-emerald-700 font-medium whitespace-nowrap">Meta: 100%</span>
               </div>
             </div>
@@ -266,31 +286,31 @@ export default async function IngresosPage({
           {dynamicBreakdown.map((person) => (
             <div key={person.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700">
+                <div className="flex items-start sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 shrink-0">
                       {person.initials}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-900 text-sm sm:text-base leading-tight">{person.name}</h3>
-                      <span className="text-xs text-slate-500">{person.subtitle}</span>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-slate-900 text-sm sm:text-base leading-tight truncate">{person.name}</h3>
+                      <span className="text-[10px] sm:text-xs text-slate-500 line-clamp-2 sm:truncate">{person.subtitle}</span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-slate-100 text-xs text-slate-700 font-semibold">{person.abonos} Abonos</span>
+                  <span className="px-2.5 py-1.5 rounded-full bg-slate-100 text-[10px] sm:text-xs text-slate-700 font-semibold whitespace-nowrap shrink-0">{person.abonos} Abonos</span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 mt-5 p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
-                  <div>
-                    <div className="text-[11px] font-medium text-slate-500">Proyectado</div>
-                    <div className="text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap">B/. {person.projected.toFixed(2)}</div>
+                <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
+                  <div className="px-0.5 sm:px-1">
+                    <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Proyectado</div>
+                    <div className="text-[11px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.projected)}</div>
                   </div>
-                  <div className="bg-white rounded-lg py-1 shadow-sm border border-emerald-100">
-                    <div className="text-[11px] font-medium text-emerald-700">Efectivo</div>
-                    <div className="text-sm font-bold font-mono text-emerald-700 mt-0.5 whitespace-nowrap">B/. {person.received.toFixed(2)}</div>
+                  <div className="bg-white rounded-lg py-1 shadow-sm border border-emerald-100 px-0.5 sm:px-1">
+                    <div className="text-[9px] sm:text-[11px] font-medium text-emerald-700">Efectivo</div>
+                    <div className="text-[11px] sm:text-sm font-bold font-mono text-emerald-700 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.received)}</div>
                   </div>
-                  <div>
-                    <div className="text-[11px] font-medium text-slate-500">Pendiente</div>
-                    <div className="text-sm font-medium font-mono text-slate-500 mt-0.5 whitespace-nowrap">B/. {person.pending.toFixed(2)}</div>
+                  <div className="px-0.5 sm:px-1">
+                    <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Pendiente</div>
+                    <div className="text-[11px] sm:text-sm font-medium font-mono text-slate-500 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.pending)}</div>
                   </div>
                 </div>
               </div>
