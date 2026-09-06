@@ -339,7 +339,7 @@ export default async function Home() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-4"
           data-purpose="upcoming-obligations"
         >
-          <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
+<div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3.5">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -370,7 +370,7 @@ export default async function Home() {
                       </p>
                     </div>
                   </div>
-                  <span className="font-bold text-xs sm:text-sm text-slate-900 font-mono">
+                  <span className="font-bold text-xs sm:text-sm text-slate-900 font-mono whitespace-nowrap">
                     -B/.{bill.amount.toFixed(2)}
                   </span>
                 </div>

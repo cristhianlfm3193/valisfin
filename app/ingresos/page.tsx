@@ -194,7 +194,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.projected.toFixed(2)}</div>
+              <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.projected.toFixed(2)}</div>
               <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                 <Clock className="w-3.5 h-3.5 text-emerald-600" /> {dynamicMetrics.projectedCount} conceptos planificados
               </span>
@@ -210,7 +210,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="relative z-10 mt-4">
-              <div className="text-2xl font-bold font-mono text-emerald-700 tracking-tight">B/. {dynamicMetrics.received.toFixed(2)}</div>
+              <div className="text-xl sm:text-2xl font-bold font-mono text-emerald-700 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.received.toFixed(2)}</div>
               <span className="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {dynamicMetrics.receivedCount} depósitos confirmados
               </span>
@@ -225,7 +225,7 @@ export default async function IngresosPage({
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.pending.toFixed(2)}</div>
+              <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 tracking-tight whitespace-nowrap">B/. {dynamicMetrics.pending.toFixed(2)}</div>
               <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                 <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> {dynamicMetrics.pendingCount} por acreditarse
               </span>
@@ -242,7 +242,7 @@ export default async function IngresosPage({
                 <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${dynamicMetrics.percent}%` }}></div>
               </div>
               <div className="flex justify-between items-center text-slate-500 text-xs mt-2">
-                <span>Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
+                <span className="whitespace-nowrap">Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
                 <span className="text-emerald-700 font-medium">Meta: 100%</span>
               </div>
             </div>
@@ -270,15 +270,15 @@ export default async function IngresosPage({
                 <div className="grid grid-cols-3 gap-2 mt-5 p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
                   <div>
                     <div className="text-[11px] font-medium text-slate-500">Proyectado</div>
-                    <div className="text-sm font-semibold font-mono text-slate-900 mt-0.5">B/. {person.projected.toFixed(2)}</div>
+                    <div className="text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap">B/. {person.projected.toFixed(2)}</div>
                   </div>
                   <div className="bg-white rounded-lg py-1 shadow-sm border border-emerald-100">
                     <div className="text-[11px] font-medium text-emerald-700">Efectivo</div>
-                    <div className="text-sm font-bold font-mono text-emerald-700 mt-0.5">B/. {person.received.toFixed(2)}</div>
+                    <div className="text-sm font-bold font-mono text-emerald-700 mt-0.5 whitespace-nowrap">B/. {person.received.toFixed(2)}</div>
                   </div>
                   <div>
                     <div className="text-[11px] font-medium text-slate-500">Pendiente</div>
-                    <div className="text-sm font-medium font-mono text-slate-500 mt-0.5">B/. {person.pending.toFixed(2)}</div>
+                    <div className="text-sm font-medium font-mono text-slate-500 mt-0.5 whitespace-nowrap">B/. {person.pending.toFixed(2)}</div>
                   </div>
                 </div>
               </div>

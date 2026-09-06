@@ -69,12 +69,16 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
     return;
   }
   
-  // Define expected salaries
+  // Define expected salaries and fixed incomes
   const expectedSalaries = [
     { person: 'cristhian', category: 'salario', period: 'q1', description: 'Salario Quincenal Cristhian', amount: 454.41, day: 12 },
     { person: 'cristhian', category: 'salario', period: 'q2', description: 'Salario Quincenal Cristhian', amount: 454.41, day: 27 },
     { person: 'jennifer', category: 'salario', period: 'q1', description: 'Salario Quincenal Jennifer', amount: 428.86, day: 15 },
     { person: 'jennifer', category: 'salario', period: 'q2', description: 'Salario Quincenal Jennifer', amount: 428.86, day: 30 },
+    // Nuevos gastos solicitados
+    { person: 'jennifer', category: 'salario', period: 'q1', description: 'Gasto de Carro Jennifer', amount: 125.00, day: 15 },
+    { person: 'cristhian', category: 'salario', period: 'q1', description: 'Gastos de Representación', amount: 140.43, day: 12 },
+    { person: 'cristhian', category: 'salario', period: 'q2', description: 'Gastos de Representación', amount: 140.43, day: 27 },
   ];
 
   // Get first and last day of target month to check existing records
@@ -94,9 +98,9 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
   }
 
   const missingSalaries = expectedSalaries.filter(expected => {
-    // Check if there is an existing income for this person and period in this month
+    // Check if there is an existing income for this person, period, and description in this month
     const exists = existingIncomes?.some(
-      inc => inc.person === expected.person && inc.period === expected.period
+      inc => inc.person === expected.person && inc.period === expected.period && inc.description === expected.description
     );
     return !exists;
   });
@@ -134,4 +138,47 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
       revalidatePath('/ingresos');
     }
   }
+}
+
+export async function deleteIncome(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from('incomes').delete().eq('id', id);
+  if (error) {
+    console.error('Error deleting income:', error);
+    return { success: false, error: error.message };
+  }
+  revalidatePath('/ingresos');
+  return { success: true };
+}
+
+export async function editIncome(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const person = formData.get('person') as string;
+  const category = formData.get('income-category') as string;
+  const period = formData.get('income-period') as string;
+  const description = formData.get('income-title') as string;
+  const amountStr = formData.get('income-amount') as string;
+  const dateExpected = formData.get('income-date') as string;
+  
+  const amount = parseFloat(amountStr);
+
+  const { error } = await supabase
+    .from('incomes')
+    .update({
+      person,
+      category,
+      period,
+      description,
+      amount,
+      date_expected: dateExpected
+    })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error editing income:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/ingresos');
+  return { success: true };
 }

@@ -4,6 +4,8 @@ import { useTransition } from 'react';
 import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck } from 'lucide-react';
 import { toggleIncomeStatus } from '@/app/actions/income';
 
+import { EditIncomeModal } from './EditIncomeModal';
+
 export function IncomeList({ incomes }: { incomes: any[] }) {
   const [isPending, startTransition] = useTransition();
 
@@ -63,26 +65,27 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
         
         <div className="flex items-center justify-between md:justify-end gap-5">
           <div className="text-right">
-            <div className={`text-lg sm:text-xl font-bold font-mono ${isReceived ? 'text-emerald-700' : 'text-slate-900'}`}>
+            <div className={`text-lg sm:text-xl font-bold font-mono whitespace-nowrap ${isReceived ? 'text-emerald-700' : 'text-slate-900'}`}>
               +B/. {item.amount.toFixed(2)}
             </div>
-            <div className="text-[11px] sm:text-xs text-slate-500 font-medium">
+            <div className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">
               {isReceived ? 'Efectivo en cuenta' : 'Por confirmar'}
             </div>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
+            <EditIncomeModal item={item} />
             {isReceived ? (
               <button 
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60"
+                className="px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60 shrink-0"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Confirmado</span>
+                <span className="hidden sm:inline">Confirmado</span>
               </button>
             ) : (
               <button 
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-5 py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0"
               >
                 <Check className="w-4 h-4" />
                 <span>Confirmar recibido</span>
