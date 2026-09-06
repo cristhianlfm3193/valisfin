@@ -1,7 +1,7 @@
 'use client';
 
-import { useTransition } from 'react';
-import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck } from 'lucide-react';
+import { useState, useTransition } from 'react';
+import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { toggleIncomeStatus } from '@/app/actions/income';
 
 import { EditIncomeModal } from './EditIncomeModal';
@@ -24,6 +24,17 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
 
   const q1PendingCount = q1Items.filter(i => !i.is_received).length;
   const q2PendingCount = q2Items.filter(i => !i.is_received).length;
+
+  const [q1Expanded, setQ1Expanded] = useState(q1PendingCount > 0 || q1Items.length === 0);
+  const [q2Expanded, setQ2Expanded] = useState(true);
+  
+  const [q1ShowAll, setQ1ShowAll] = useState(false);
+  const [q2ShowAll, setQ2ShowAll] = useState(false);
+
+  const ITEMS_LIMIT = 3;
+
+  const q1VisibleItems = q1ShowAll ? q1Items : q1Items.slice(0, ITEMS_LIMIT);
+  const q2VisibleItems = q2ShowAll ? q2Items : q2Items.slice(0, ITEMS_LIMIT);
 
   const renderBadge = (pendingCount: number, totalCount: number) => {
     if (totalCount === 0) return null;
@@ -120,37 +131,77 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
   return (
     <div className="space-y-8">
       {/* 1ra Quincena */}
-      <div className="space-y-3.5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+      <div className="space-y-1">
+        <button 
+          onClick={() => setQ1Expanded(!q1Expanded)}
+          className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 py-2 rounded-xl hover:bg-slate-50 transition text-left group"
+        >
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm">1</div>
+            <div className="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900">Primera Quincena (1 al 15 de Septiembre)</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Primera Quincena (1 al 15 de Septiembre)</h2>
               <p className="text-xs sm:text-sm text-slate-500">Pagos de inicio de mes, colegiatura y primera ronda de compromisos familiares.</p>
             </div>
           </div>
-          {renderBadge(q1PendingCount, q1Items.length)}
-        </div>
-        <div className="space-y-3">
-          {q1Items.map(renderItem)}
-        </div>
+          <div className="flex items-center gap-3 self-end sm:self-auto mt-2 sm:mt-0">
+            {renderBadge(q1PendingCount, q1Items.length)}
+            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-slate-200 transition">
+              {q1Expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </div>
+        </button>
+        
+        {q1Expanded && (
+          <div className="space-y-3 pt-2">
+            {q1VisibleItems.map(renderItem)}
+            
+            {q1Items.length > ITEMS_LIMIT && (
+              <button 
+                onClick={() => setQ1ShowAll(!q1ShowAll)}
+                className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 text-slate-500 font-semibold text-sm hover:bg-slate-50 hover:text-slate-700 hover:border-slate-400 transition"
+              >
+                {q1ShowAll ? 'Ocultar detalles' : `Ver ${q1Items.length - ITEMS_LIMIT} ingresos más`}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 2da Quincena */}
-      <div className="space-y-3.5 pt-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+      <div className="space-y-1 pt-4">
+        <button 
+          onClick={() => setQ2Expanded(!q2Expanded)}
+          className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 py-2 rounded-xl hover:bg-slate-50 transition text-left group"
+        >
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm">2</div>
+            <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm shrink-0">2</div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900">Segunda Quincena (16 al 30 de Septiembre)</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Segunda Quincena (16 al 30 de Septiembre)</h2>
               <p className="text-xs sm:text-sm text-slate-500">Cierres de mes, servicios del hogar, ahorros y amortizaciones.</p>
             </div>
           </div>
-          {renderBadge(q2PendingCount, q2Items.length)}
-        </div>
-        <div className="space-y-3">
-          {q2Items.map(renderItem)}
-        </div>
+          <div className="flex items-center gap-3 self-end sm:self-auto mt-2 sm:mt-0">
+            {renderBadge(q2PendingCount, q2Items.length)}
+            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-slate-200 transition">
+              {q2Expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </div>
+        </button>
+
+        {q2Expanded && (
+          <div className="space-y-3 pt-2">
+            {q2VisibleItems.map(renderItem)}
+            
+            {q2Items.length > ITEMS_LIMIT && (
+              <button 
+                onClick={() => setQ2ShowAll(!q2ShowAll)}
+                className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 text-slate-500 font-semibold text-sm hover:bg-slate-50 hover:text-slate-700 hover:border-slate-400 transition"
+              >
+                {q2ShowAll ? 'Ocultar detalles' : `Ver ${q2Items.length - ITEMS_LIMIT} ingresos más`}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
