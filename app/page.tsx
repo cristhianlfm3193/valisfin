@@ -84,6 +84,7 @@ export default async function Home() {
                   src={familyData.heroImage}
                   alt="Orgullo de la Familia"
                   fill
+                  sizes="(max-width: 640px) 96px, 112px"
                   className="object-cover object-top transition duration-500 group-hover:scale-105"
                 />
               </div>
