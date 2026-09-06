@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo suave (Hint of Green) con bordes redondeados -->
+  <rect width="512" height="512" rx="128" fill="#D9ECC8"/>
+  
+  <!-- Símbolo 'V' de crecimiento (Mosque) -->
+  <path d="M140 220 L240 360 L390 150" stroke="#006655" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Punta de flecha de la 'V' -->
+  <path d="M390 150 L390 240 M390 150 L300 150" stroke="#006655" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

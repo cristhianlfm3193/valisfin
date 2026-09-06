@@ -1,0 +1,18 @@
+<svg width="1024" height="512" viewBox="0 0 1024 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo de fondo para el icono (Hint of Green) -->
+  <circle cx="200" cy="256" r="140" fill="#D9ECC8"/>
+  
+  <!-- Símbolo 'V' de crecimiento (Mosque) -->
+  <path d="M130 236 L190 320 L280 194" stroke="#006655" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M280 194 L280 244 M280 194 L230 194" stroke="#006655" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Texto ValisFin (Tipografía del sistema / SF Pro) -->
+  <text x="380" y="300" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="140" font-weight="800" letter-spacing="-2">
+    <tspan fill="#19322F">Valis</tspan><tspan fill="#006655">Fin</tspan>
+  </text>
+  
+  <!-- Lema Viral: Énfasis en la familia -->
+  <text x="390" y="360" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="28" font-weight="600" fill="#19322F" letter-spacing="6">
+    FINANZAS. FAMILIA. FUTURO.
+  </text>
+</svg>

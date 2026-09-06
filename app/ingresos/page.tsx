@@ -12,6 +12,7 @@ import {
   Clock
 } from 'lucide-react';
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { familyData, ingresosMetrics, ingresosBreakdown } from "@/lib/mockData";
 import { IncomeList } from "./components/IncomeList";
@@ -162,11 +163,11 @@ export default async function IngresosPage(props: {
       >
         <div className="flex items-center gap-3">
           <MobileMenuDrawer avatarUrl={avatarUrl} fullName={fullName} initial={initial} />
-          <div>
-            <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-700 block">
-              Finanzas Familiares
-            </span>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <img src="/logo.svg" alt="ValisFin Logo" className="h-10 sm:h-12 w-auto lg:hidden drop-shadow-sm hover:opacity-90 transition-opacity" />
+            </Link>
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight hidden sm:block border-l border-slate-200 pl-3 ml-1">
               Ingresos
             </h2>
           </div>

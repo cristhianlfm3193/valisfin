@@ -36,18 +36,10 @@ export function DesktopSidebar({ user }: { user?: User }) {
       data-purpose="desktop-navigation"
     >
       <div>
-        <div className="flex items-center gap-3 px-2 py-3 mb-6">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-emerald-700/20">
-            FC
-          </div>
-          <div className="leading-tight">
-            <h1 className="text-sm font-bold text-slate-900 tracking-tight">
-              Familia Fuentes Camaño
-            </h1>
-            <span className="text-xs text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5">
-              Finanzas del Hogar
-            </span>
-          </div>
+        <div className="flex justify-center px-2 py-4 mb-4">
+          <Link href="/">
+            <img src="/logo.svg" alt="ValisFin Logo" className="w-40 h-auto drop-shadow-sm hover:opacity-90 transition-opacity" />
+          </Link>
         </div>
         <nav aria-label="Navegación principal" className="space-y-1.5">
           {navItems.map((item) => {
