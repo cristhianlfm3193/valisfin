@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#faf8ff","surface-dim":"#d2d9f4","tertiary-fixed":"#e1e0ff","inverse-primary":"#68dba9","inverse-on-surface":"#eef0ff","on-surface":"#131b2e","on-error-container":"#93000a","surface-container":"#eaedff","on-tertiary-fixed":"#07006c","on-error":"#ffffff","secondary-fixed":"#b0f0d6","on-tertiary-fixed-variant":"#2f2ebe","on-tertiary":"#ffffff","on-secondary":"#ffffff","tertiary-container":"#6063ee","primary-fixed":"#85f8c4","surface-container-low":"#f2f3ff","primary-fixed-dim":"#68dba9","outline-variant":"#bccac0","on-primary-fixed-variant":"#005137","surface-bright":"#faf8ff","on-primary-container":"#f5fff7","primary":"#006948","inverse-surface":"#283044","tertiary":"#4648d4","on-background":"#131b2e","surface-variant":"#dae2fd","surface-container-high":"#e2e7ff","background":"#faf8ff","on-secondary-fixed":"#002117","secondary":"#2b6954","on-secondary-fixed-variant":"#0b513d","surface-tint":"#006c4a","surface-container-lowest":"#ffffff","on-primary-fixed":"#002114","primary-container":"#00855d","outline":"#6d7a72","on-tertiary-container":"#fffbff","on-primary":"#ffffff","on-secondary-container":"#306d58","on-surface-variant":"#3d4a42","error-container":"#ffdad6","tertiary-fixed-dim":"#c0c1ff","error":"#ba1a1a","surface-container-highest":"#dae2fd","secondary-container":"#adedd3","secondary-fixed-dim":"#95d3ba"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"layout-margin-mobile":"1rem","space-lg":"1.5rem","space-sm":"0.75rem","space-md":"1rem","space-3xl":"4rem","space-xs":"0.5rem","bento-gap-desktop":"1.5rem","bento-gap-mobile":"0.875rem","space-2xs":"0.25rem","space-2xl":"3rem","layout-margin-desktop":"2rem","space-xl":"2rem"},"fontFamily":{"financial-body":["JetBrains Mono"],"body-lg":["Plus Jakarta Sans"],"financial-display":["JetBrains Mono"],"body-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"financial-body":["0.9375rem",{"lineHeight":"1.4","letterSpacing":"-0.01em","fontWeight":"500"}],"body-lg":["1.125rem",{"lineHeight":"1.5","letterSpacing":"-0.01em","fontWeight":"400"}],"financial-display":["2rem",{"lineHeight":"1.2","letterSpacing":"-0.03em","fontWeight":"600"}],"body-sm":["0.8125rem",{"lineHeight":"1.45","letterSpacing":"0.005em","fontWeight":"400"}],"label-sm":["0.75rem",{"lineHeight":"1.2","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["0.9375rem",{"lineHeight":"1.5","letterSpacing":"0em","fontWeight":"400"}],"headline-md":["1.5rem",{"lineHeight":"1.3","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg-mobile":["1.75rem",{"lineHeight":"1.25","letterSpacing":"-0.02em","fontWeight":"700"}],"display-lg":["3.5rem",{"lineHeight":"1.1","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-lg":["2.25rem",{"lineHeight":"1.2","letterSpacing":"-0.025em","fontWeight":"700"}],"headline-sm":["1.25rem",{"lineHeight":"1.35","letterSpacing":"-0.015em","fontWeight":"600"}],"label-md":["0.875rem",{"lineHeight":"1.25","letterSpacing":"0.01em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="hidden lg:flex fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-50 flex-col justify-between py-space-lg"><div class="flex flex-col"><div class="px-space-lg mb-space-xl flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary font-headline-sm font-bold shadow-[0_2px_8px_rgba(0,105,72,0.25)]">FC</div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">Fuentes Camaño</span><span class="font-label-sm text-label-sm text-outline mt-space-2xs">Patrimonio Familiar</span></div></div><span class="px-space-xs py-space-2xs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm tracking-wide">v2.0</span></div><div class="px-space-md mb-space-sm"><span class="px-space-sm font-label-sm text-label-sm text-outline tracking-wider uppercase">Módulos Principales</span></div><nav class="flex flex-col gap-space-2xs px-space-md" data-active-classes="bg-primary-container text-on-primary-container shadow-[0_4px_12px_rgba(0,105,72,0.15)] font-semibold"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl transition-all bg-primary-container text-on-primary-container shadow-[0_4px_12px_rgba(0,105,72,0.15)] font-semibold" data-path="inicio" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Inicio</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="ingresos" href="#"><span class="material-symbols-outlined text-[20px]">account_balance_wallet</span><span>Ingresos</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="pagos" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Pagos</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="gastos" href="#"><span class="material-symbols-outlined text-[20px]">monitoring</span><span>Gastos</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="vehiculos" href="#"><span class="material-symbols-outlined text-[20px]">directions_car</span><span>Vehículos</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="metas" href="#"><span class="material-symbols-outlined text-[20px]">savings</span><span>Metas</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-body-md text-body-md hover:bg-surface-container hover:text-on-surface transition-all" data-path="consultas" href="#"><span class="material-symbols-outlined text-[20px]">manage_search</span><span>Consultas</span></a></nav></div><div class="px-space-md pt-space-md"><div class="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-low"><div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col flex-1 min-w-0"><span class="font-label-md text-label-md text-on-surface truncate">Usuario ADMIN</span><span class="font-label-sm text-label-sm text-outline truncate">admin@fuentescamano.pa</span></div><button aria-label="Opciones de sesión" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button></div></div></aside><div class="lg:pl-72 flex flex-col min-h-screen"><header class="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] z-40 flex items-center justify-between px-layout-margin-mobile lg:px-layout-margin-desktop"><div class="flex items-center gap-space-md flex-1"><div class="flex items-center gap-space-xs px-space-sm py-space-2xs rounded-full bg-surface-container-low text-on-surface font-label-md text-label-md shadow-[0_1px_2px_rgba(0,0,0,0.02)]"><span class="material-symbols-outlined text-[18px] text-primary">calendar_month</span><span>Septiembre 2026</span><span class="material-symbols-outlined text-[16px] text-outline">expand_more</span></div><div class="hidden md:flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container-low text-outline w-72"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm flex-1 truncate">Buscar transacción, placa o gasto...</span><kbd class="px-space-2xs py-0.5 rounded bg-surface-container-lowest font-financial-body text-label-sm text-outline shadow-sm">⌘K</kbd></div></div><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm"><span class="w-2 h-2 rounded-full bg-primary"></span><span>Yaris &amp; Tucson Activos</span></div><button aria-label="Notificaciones y alertas familiares" class="relative w-9 h-9 rounded-xl flex items-center justify-center bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-tertiary"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 pb-24 lg:pb-space-2xl px-layout-margin-mobile lg:px-layout-margin-desktop bg-surface"><div class="flex flex-col w-full">
+<!-- Script para activar ítem de navegación "Pagos" en el App Shell -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const desktopNav = document.querySelectorAll("aside nav a");
+      desktopNav.forEach(link => {
+        if (link.getAttribute("data-path") === "pagos") {
+          link.className = "flex items-center gap-space-sm px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary-container shadow-[0_4px_12px_rgba(0,105,72,0.15)] font-semibold transition-all";
+        } else {
+          link.classList.remove("bg-primary-container", "text-on-primary-container", "shadow-[0_4px_12px_rgba(0,105,72,0.15)]", "font-semibold");
+          link.classList.add("text-on-surface-variant", "hover:bg-surface-container", "hover:text-on-surface");
+        }
+      });
+      const mobileNav = document.querySelectorAll("nav[data-active-classes] a");
+      mobileNav.forEach(link => {
+        if (link.getAttribute("data-path") === "pagos") {
+          link.className = "flex flex-col items-center justify-center text-primary font-bold py-space-2xs px-space-xs";
+        } else {
+          link.className = "flex flex-col items-center justify-center text-on-surface-variant py-space-2xs px-space-xs font-normal";
+        }
+      });
+    });
+  </script>
+<!-- 1. HEADER DE VISTA & ACCIONES ESTRATÉGICAS -->
+<header class="flex flex-col gap-space-md pt-space-xs pb-space-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Pagos y Obligaciones</h1>
+<span class="inline-flex items-center gap-1.5 px-space-sm py-space-2xs rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+            11 vencimientos por cubrir
+          </span>
+<span class="inline-flex items-center gap-1 px-space-sm py-space-2xs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock_clock</span>
+            Cierre estimado: 30 Sep
+          </span>
+</div>
+<p class="font-body-md text-body-md text-outline mt-space-2xs">
+          Auditoría y conciliación mensual de compromisos familiares — Fuentes Camaño
+        </p>
+</div>
+<!-- Botón Primario Emerald Soft UI -->
+<div class="flex items-center gap-space-sm">
+<button class="hidden sm:inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">download</span>
+<span>Reporte PDF</span>
+</button>
+<button class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-md text-label-md shadow-[0_8px_20px_-4px_rgba(0,105,72,0.35)] hover:shadow-[0_12px_28px_-6px_rgba(0,105,72,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all" id="btn-nuevo-pago" type="button">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>+ Registrar Pago</span>
+</button>
+</div>
+</div>
+<!-- Barra de Filtros Rápidos, Responsables y Búsqueda -->
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md pt-space-xs">
+<!-- Pestañas de Estado (Segmented Pills) -->
+<div class="flex items-center p-1 rounded-full bg-surface-container overflow-x-auto">
+<button class="filter-tab px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm whitespace-nowrap transition-all" data-filter="all" type="button">
+          Todos <span class="ml-1 opacity-70 font-financial-body text-xs">14</span>
+</button>
+<button class="filter-tab px-space-md py-space-xs rounded-full text-outline hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-all" data-filter="pending" type="button">
+          Pendientes <span class="ml-1 px-1.5 py-0.5 rounded-full bg-error-container text-on-error-container font-financial-body text-[10px]">10</span>
+</button>
+<button class="filter-tab px-space-md py-space-xs rounded-full text-outline hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-all" data-filter="partial" type="button">
+          Parciales <span class="ml-1 px-1.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-financial-body text-[10px]">1</span>
+</button>
+<button class="filter-tab px-space-md py-space-xs rounded-full text-outline hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap transition-all" data-filter="completed" type="button">
+          Cubiertos <span class="ml-1 px-1.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-financial-body text-[10px]">3</span>
+</button>
+</div>
+<!-- Selector de Miembro de la Familia + Búsqueda por Tipo -->
+<div class="flex items-center gap-space-sm flex-wrap sm:flex-nowrap">
+<!-- Selector de Miembro -->
+<div class="inline-flex items-center p-1 rounded-full bg-surface-container-low shadow-sm">
+<button class="member-chip px-space-sm py-space-2xs rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm transition-all" data-member="all" type="button">
+            Familia
+          </button>
+<button class="member-chip flex items-center gap-1.5 px-space-sm py-space-2xs rounded-full text-outline hover:text-on-surface font-label-sm text-label-sm transition-all" data-member="cristhian" type="button">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Cristhian</span>
+</button>
+<button class="member-chip flex items-center gap-1.5 px-space-sm py-space-2xs rounded-full text-outline hover:text-on-surface font-label-sm text-label-sm transition-all" data-member="jennifer" type="button">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Jennifer</span>
+</button>
+</div>
+<!-- Filtro Rápido Tipo de Gasto -->
+<div class="relative flex-1 sm:w-48">
+<select class="w-full appearance-none px-space-md py-space-xs pr-8 rounded-xl bg-surface-container-lowest font-body-sm text-body-sm text-on-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer" id="tipo-filtro">
+<option value="all">Todas las Categorías</option>
+<option value="fijo">Fijo Mensual</option>
+<option value="deuda">Deuda &amp; Cuota</option>
+<option value="servicios">Servicios Básicos</option>
+<option value="aporte">Aporte &amp; Ahorro</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-[18px] text-outline pointer-events-none">unfold_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- 2. BENTO GRID SUPERIOR - PANORÁMICA FINANCIERA -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-space-md lg:gap-bento-gap-desktop pb-space-lg">
+<!-- Bento Hero Card (12 cols mobile, 6 cols desktop): Comprometido vs Pendiente -->
+<div class="md:col-span-12 lg:col-span-6 rounded-2xl bg-surface-container-lowest p-space-lg lg:p-space-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<!-- Acento visual decorativo -->
+<div class="absolute -right-16 -bottom-16 w-56 h-56 rounded-full bg-gradient-to-tr from-primary-fixed/30 to-secondary-container/20 blur-3xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">pie_chart</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Balance de Compromisos Fijos</span>
+</div>
+<span class="px-space-xs py-space-2xs rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">
+            Septiembre 2026
+          </span>
+</div>
+<div class="mt-space-md flex flex-col sm:flex-row sm:items-baseline gap-space-xs sm:gap-space-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Saldo Pendiente por Liquidar</span>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-financial-body text-headline-sm text-outline">B/.</span>
+<span class="font-financial-display text-display-lg text-on-surface">836.00</span>
+</div>
+</div>
+<div class="sm:border-l border-surface-variant sm:pl-space-md flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Meta Total del Mes</span>
+<span class="font-financial-body text-headline-sm text-on-surface-variant font-semibold">B/. 980.00</span>
+</div>
+</div>
+<!-- Barra de Progreso con Micro-indicadores -->
+<div class="mt-space-lg">
+<div class="flex items-center justify-between font-label-sm text-label-sm mb-space-2xs">
+<span class="text-on-surface font-medium flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+              21% Cumplido (B/. 144.00)
+            </span>
+<span class="text-outline font-financial-body">79% Restante (B/. 836.00)</span>
+</div>
+<div class="h-3 w-full rounded-full bg-surface-container overflow-hidden p-0.5 flex">
+<!-- Pagado -->
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 21%;"></div>
+<!-- Parcial -->
+<div class="h-full bg-tertiary-container rounded-full ml-0.5" style="width: 4%;"></div>
+</div>
+</div>
+</div>
+<!-- Micro-desglose inferior de Vencimientos Clave -->
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between flex-wrap gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-error">priority_high</span>
+<span class="font-body-sm text-body-sm text-on-surface">
+<strong>3 pagos críticos</strong> antes del 15 de Septiembre
+          </span>
+</div>
+<span class="font-financial-body text-body-sm text-primary font-semibold">B/. 565.00 en riesgo</span>
+</div>
+</div>
+<!-- Bento Card (3 cols desktop): Pagos Realizados este mes -->
+<div class="md:col-span-6 lg:col-span-3 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Pagos Realizados</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-label-sm text-label-sm text-outline">Total Amortizado</span>
+<div class="flex items-baseline gap-space-2xs">
+<span class="font-financial-body text-headline-sm text-primary">B/.</span>
+<span class="font-financial-display text-financial-display text-primary font-bold">144.00</span>
+</div>
+</div>
+<!-- Mini Sparkline / Estado -->
+<div class="mt-space-md p-space-xs rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">3 de 14 Cubiertos</span>
+<span class="font-body-sm text-label-sm text-outline">Sin mora registrada</span>
+</div>
+<!-- Mini SVG Check Circle -->
+<svg class="w-10 h-10 text-primary" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="21, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>Variable Estimado</span>
+<span class="font-financial-body font-semibold text-on-surface">B/. 0.00</span>
+</div>
+</div>
+<!-- Bento Card (3 cols desktop): Responsabilidad por Miembro -->
+<div class="md:col-span-6 lg:col-span-3 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Reparto Familiar</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</div>
+</div>
+<div class="mt-space-md flex flex-col gap-space-sm">
+<!-- Jennifer Camaño -->
+<div class="p-space-xs rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-xs">JC</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Jennifer</span>
+<span class="font-body-sm text-[11px] text-outline">Carro, Guardería, Ahorro</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-financial-body text-label-md font-semibold text-on-surface">B/. 615.00</span>
+<span class="font-label-sm text-[11px] text-secondary font-medium">B/. 75 pagados</span>
+</div>
+</div>
+<!-- Cristhian Fuentes -->
+<div class="p-space-xs rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs">CF</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Cristhian</span>
+<span class="font-body-sm text-[11px] text-outline">TC, Servicios, Seguro</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-financial-body text-label-md font-semibold text-on-surface">B/. 221.00</span>
+<span class="font-label-sm text-[11px] text-secondary font-medium">B/. 69 pagados</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-xs pt-space-xs flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>Obligaciones Totales</span>
+<span class="font-financial-body text-on-surface">14 registros</span>
+</div>
+</div>
+</section>
+<!-- 3. SECCIÓN BENTO: ALERTA CRÍTICA & PAGOS PARCIALES -->
+<section class="pb-space-lg">
+<div class="rounded-2xl bg-gradient-to-r from-surface-container-lowest via-surface-container-lowest to-tertiary-fixed/30 p-space-md lg:p-space-lg shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-start sm:items-center gap-space-md">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">pending_actions</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="px-space-xs py-0.5 rounded bg-tertiary text-on-tertiary font-label-sm text-[11px] uppercase tracking-wider font-semibold">Parcial Activo</span>
+<span class="font-label-md text-label-md text-outline">Cristhian Fuentes • FIJO CONDOMINIO</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mt-0.5">S. Administración PH</h2>
+<div class="flex items-center gap-space-sm mt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+              Pagado: <strong class="font-financial-body text-primary">B/. 20.00</strong> de B/. 40.00 (50%)
+            </span>
+<span class="text-outline">•</span>
+<span class="font-body-sm text-body-sm text-error font-semibold">
+              Resta por pagar: <span class="font-financial-body">B/. 20.00</span>
+</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto justify-end">
+<button class="w-full md:w-auto inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-full bg-tertiary text-on-tertiary font-label-md text-label-md shadow-sm hover:opacity-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Completar Pago (B/. 20.00)</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 4. BENTO GRID CENTRAL - COMPROMISOS PENDIENTES (10 OBLIGACIONES) -->
+<section class="flex flex-col gap-space-md pb-space-2xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">schedule</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Obligaciones Pendientes del Mes</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline">
+        Ordenado por fecha de vencimiento y prioridad
+      </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md" id="grid-pendientes">
+<!-- 1. Carro Jenny -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="deuda" data-member="jennifer">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              DEUDA • CRÍTICO
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 12 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Carro Jenny</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Cuota mensual financiamiento</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 325.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center justify-center">JC</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jennifer C.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 2. Guardería Valeria -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="fijo" data-member="jennifer">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              FIJO • CRÍTICO
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 15 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Guardería Valeria</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Mensualidad escolar maternal</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 180.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center justify-center">JC</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jennifer C.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 3. Tarjeta de Crédito Cristhian -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="deuda" data-member="cristhian">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              DEUDA • CUOTA
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 18 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Tarjeta de Crédito</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Pago acordado BG Panamá</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 60.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold flex items-center justify-center">CF</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cristhian F.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 4. Seguro Carro Jenny -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="fijo" data-member="jennifer">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              FIJO • PÓLIZA
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 20 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Seguro Carro Jenny</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Cobertura completa ASSA</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 60.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center justify-center">JC</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jennifer C.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 5. Ahorro de Valeria -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="aporte" data-member="jennifer">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              APORTE • FUTURO
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 25 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Ahorro de Valeria</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Fondo universitario programado</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Aporte Comprometido</span>
+<span class="font-financial-body text-headline-md font-bold text-primary">B/. 50.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold flex items-center justify-center">JC</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jennifer C.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Aportar</span>
+<span class="material-symbols-outlined text-[14px]">savings</span>
+</button>
+</div>
+</div>
+<!-- 6. Seguro Carro Cristhian -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="fijo" data-member="cristhian">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              FIJO • PÓLIZA
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 25 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Seguro Carro Cristhian</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Póliza anual fraccionada</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 45.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold flex items-center justify-center">CF</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cristhian F.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 7. Internet y Telecomunicaciones -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="servicios" data-member="cristhian">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              SERVICIOS • FIJO
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 27 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Internet Fibra</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Plan residencial + TV</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 44.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold flex items-center justify-center">CF</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cristhian F.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- 8. Basura y Tasa Municipal -->
+<div class="bento-card-obligation rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group" data-category="servicios" data-member="cristhian">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-bold tracking-wider">
+              SERVICIOS • MUNICIPAL
+            </span>
+<span class="font-label-sm text-label-sm text-outline">Vence: 30 Sep</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Tasa Aseo Urbano</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Recolección de basura PH</p>
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low flex items-baseline justify-between">
+<span class="font-label-sm text-label-sm text-outline">Monto Pendiente</span>
+<span class="font-financial-body text-headline-md font-bold text-on-surface">B/. 12.00</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed text-[10px] font-bold flex items-center justify-center">CF</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cristhian F.</span>
+</div>
+<button class="inline-flex items-center gap-1 px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm hover:scale-105 transition-all" type="button">
+<span>Pagar</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. SECCIÓN BENTO INFERIOR - OBLIGACIONES CUBIERTAS & AUDITORÍA DE RECIBOS -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-md lg:gap-bento-gap-desktop">
+<!-- Columna Izquierda: Tarjetas de Pagos Cubiertos (3 obligaciones) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">check_circle</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Cubiertos Este Mes (3)</h2>
+</div>
+<span class="font-financial-body text-label-md font-semibold text-primary">B/. 144.00</span>
+</div>
+<!-- Item 1 Cubierto: Lavadora Mamá (Cuota con abono extra) -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">local_laundry_service</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Lavadora Mamá</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-[10px] font-bold">CUOTA</span>
+</div>
+<span class="font-body-sm text-[11px] text-outline">Jennifer Camaño • Incluye abono extra B/. 25.00</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-financial-body text-headline-sm font-bold text-primary">B/. 75.00</span>
+<span class="font-label-sm text-[10px] text-secondary font-medium">Pagado 05 Sep</span>
+</div>
+</div>
+<!-- Item 2 Cubierto: Servicio Eléctrico (Luz ENSA) -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Electricidad ENSA</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-bold">VARIABLE</span>
+</div>
+<span class="font-body-sm text-[11px] text-outline">Cristhian Fuentes • Factura conciliada</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-financial-body text-headline-sm font-bold text-primary">B/. 25.00</span>
+<span class="font-label-sm text-[10px] text-secondary font-medium">Pagado 03 Sep</span>
+</div>
+</div>
+<!-- Item 3 Cubierto: Celular Postpago -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">phone_android</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Contrato Celular +Móvil</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-bold">FIJO</span>
+</div>
+<span class="font-body-sm text-[11px] text-outline">Cristhian Fuentes • Débito automático ACH</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-financial-body text-headline-sm font-bold text-primary">B/. 24.00</span>
+<span class="font-label-sm text-[10px] text-secondary font-medium">Pagado 02 Sep</span>
+</div>
+</div>
+</div>
+<!-- Columna Derecha: Libro de Auditoría y Comprobantes Recientes (7 cols) -->
+<div class="lg:col-span-7 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">receipt_long</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Comprobantes y Recibos Validados</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline">3 Transacciones conciliadas</span>
+</div>
+<!-- Tabla Estilizada Sin Bordes (Depth por color) -->
+<div class="overflow-x-auto mt-space-sm">
+<table class="w-full text-left font-body-sm">
+<thead>
+<tr class="bg-surface-container-low text-outline font-label-sm text-[11px] uppercase tracking-wider">
+<th class="py-space-xs px-space-sm rounded-l-lg">Fecha &amp; Recibo</th>
+<th class="py-space-xs px-space-sm">Concepto</th>
+<th class="py-space-xs px-space-sm">Responsable</th>
+<th class="py-space-xs px-space-sm text-right">Monto</th>
+<th class="py-space-xs px-space-sm text-center rounded-r-lg">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface">
+<!-- Fila 1 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm font-semibold">05 Sep 2026</span>
+<span class="font-financial-body text-[10px] text-outline">REC-2026-094</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Lavadora mamá</span>
+<span class="text-[11px] text-secondary">Transferencia Banco General</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px]">Jennifer</span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-financial-body font-bold text-primary">
+                  B/. 75.00
+                </td>
+<td class="py-space-sm px-space-sm text-center">
+<button aria-label="Ver comprobante" class="w-8 h-8 rounded-lg inline-flex items-center justify-center text-outline hover:text-primary hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">attachment</span>
+</button>
+</td>
+</tr>
+<!-- Fila 2 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm font-semibold">03 Sep 2026</span>
+<span class="font-financial-body text-[10px] text-outline">REC-2026-088</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Luz Eléctrica ENSA</span>
+<span class="text-[11px] text-outline">Pago en línea Clave</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px]">Cristhian</span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-financial-body font-bold text-primary">
+                  B/. 25.00
+                </td>
+<td class="py-space-sm px-space-sm text-center">
+<button aria-label="Ver comprobante" class="w-8 h-8 rounded-lg inline-flex items-center justify-center text-outline hover:text-primary hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">attachment</span>
+</button>
+</td>
+</tr>
+<!-- Fila 3 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-sm font-semibold">02 Sep 2026</span>
+<span class="font-financial-body text-[10px] text-outline">REC-2026-081</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Contrato Celular</span>
+<span class="text-[11px] text-outline">Débito Automático ACH</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px]">Cristhian</span>
+</td>
+<td class="py-space-sm px-space-sm text-right font-financial-body font-bold text-primary">
+                  B/. 24.00
+                </td>
+<td class="py-space-sm px-space-sm text-center">
+<button aria-label="Ver comprobante" class="w-8 h-8 rounded-lg inline-flex items-center justify-center text-outline hover:text-primary hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">attachment</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Pie de auditoría con conciliación bancaria -->
+<div class="mt-space-md pt-space-sm bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified_user</span>
+<span class="font-label-sm text-label-sm text-on-surface">Conciliado con saldos de Banco General y Banistmo</span>
+</div>
+<a class="font-label-sm text-label-sm text-primary font-semibold hover:underline" href="#">Ver Historial Completo →</a>
+</div>
+</div>
+</section>
+<!-- MODAL FLOTANTE / DIÁLOGO BENTO: REGISTRO RÁPIDO DE PAGO -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-layout-margin-mobile bg-on-surface/40 backdrop-blur-md" id="modal-registro">
+<div class="w-full max-w-lg rounded-3xl bg-surface-container-lowest p-space-xl shadow-2xl flex flex-col gap-space-md relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">add_task</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Registrar Cumplimiento</h3>
+<p class="font-body-sm text-body-sm text-outline">Asignar comprobante y cancelar obligación</p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-outline hover:text-on-surface" id="btn-cerrar-modal" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Formulario Soft UI -->
+<div class="flex flex-col gap-space-sm mt-space-xs">
+<div>
+<label class="font-label-sm text-label-sm text-outline mb-1 block">Seleccionar Obligación</label>
+<select class="w-full px-space-md py-space-sm rounded-xl bg-surface-container-low font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary">
+<option value="1">Carro Jenny — B/. 325.00 (Vence 12 Sep)</option>
+<option value="2">Guardería Valeria — B/. 180.00 (Vence 15 Sep)</option>
+<option value="3">S. Administración PH (Abono saldo) — B/. 20.00</option>
+<option value="4">Tarjeta de Crédito — B/. 60.00</option>
+<option value="5">Seguro Carro Jenny — B/. 60.00</option>
+<option value="6">Ahorro Valeria — B/. 50.00</option>
+<option value="7">Seguro Carro Cristhian — B/. 45.00</option>
+<option value="8">Internet Fibra — B/. 44.00</option>
+<option value="9">Tasa Basura — B/. 12.00</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div>
+<label class="font-label-sm text-label-sm text-outline mb-1 block">Monto Pagado (B/.)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-financial-body text-outline font-semibold">B/.</span>
+<input class="w-full pl-10 pr-space-md py-space-sm rounded-xl bg-surface-container-low font-financial-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary font-semibold" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-outline mb-1 block">Fecha de Ejecución</label>
+<input class="w-full px-space-md py-space-sm rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" type="date" value="2026-09-08"/>
+</div>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-outline mb-1 block">Pagado por</label>
+<div class="grid grid-cols-2 gap-space-xs">
+<label class="flex items-center gap-2 p-space-xs rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+<input checked="" class="accent-primary" name="modal-member" type="radio" value="cristhian"/>
+<span class="font-label-sm text-label-sm text-on-surface">Cristhian Fuentes</span>
+</label>
+<label class="flex items-center gap-2 p-space-xs rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+<input class="accent-primary" name="modal-member" type="radio" value="jennifer"/>
+<span class="font-label-sm text-label-sm text-on-surface">Jennifer Camaño</span>
+</label>
+</div>
+</div>
+<div>
+<label class="font-label-sm text-label-sm text-outline mb-1 block">Método / Cuenta de Débito</label>
+<select class="w-full px-space-md py-space-sm rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary">
+<option>Cuenta Corriente BG (Conjunta)</option>
+<option>Cuenta de Ahorros Banistmo (Cristhian)</option>
+<option>Yappy / ACH Directo</option>
+<option>Efectivo en Caja Familiar</option>
+</select>
+</div>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs mt-space-xs">
+<button class="px-space-md py-space-sm rounded-full bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" id="btn-cancelar-modal" type="button">
+          Cancelar
+        </button>
+<button class="px-space-lg py-space-sm rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-md hover:opacity-95 transition-all" id="btn-confirmar-pago" type="button">
+          Guardar Comprobante
+        </button>
+</div>
+</div>
+</div>
+<!-- Microinteractividad en Vanilla JS para Filtros y Modales -->
+<script>
+    (function() {
+      // Manejo de Modal
+      const modal = document.getElementById("modal-registro");
+      const btnNuevo = document.getElementById("btn-nuevo-pago");
+      const btnCerrar = document.getElementById("btn-cerrar-modal");
+      const btnCancelar = document.getElementById("btn-cancelar-modal");
+      const btnConfirmar = document.getElementById("btn-confirmar-pago");
+
+      const toggleModal = (show) => {
+        if (show) {
+          modal.classList.remove("hidden");
+        } else {
+          modal.classList.add("hidden");
+        }
+      };
+
+      if (btnNuevo) btnNuevo.addEventListener("click", () => toggleModal(true));
+      if (btnCerrar) btnCerrar.addEventListener("click", () => toggleModal(false));
+      if (btnCancelar) btnCancelar.addEventListener("click", () => toggleModal(false));
+      if (btnConfirmar) {
+        btnConfirmar.addEventListener("click", () => {
+          toggleModal(false);
+        });
+      }
+
+      // Filtro por Estado (Pestañas)
+      const tabs = document.querySelectorAll(".filter-tab");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => {
+            t.classList.remove("bg-surface-container-lowest", "text-on-surface", "shadow-sm");
+            t.classList.add("text-outline");
+          });
+          tab.classList.add("bg-surface-container-lowest", "text-on-surface", "shadow-sm");
+          tab.classList.remove("text-outline");
+        });
+      });
+
+      // Filtro por Miembro Familiar
+      const memberChips = document.querySelectorAll(".member-chip");
+      const cards = document.querySelectorAll(".bento-card-obligation");
+
+      memberChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          memberChips.forEach(c => {
+            c.classList.remove("bg-surface-container-lowest", "text-on-surface", "shadow-sm");
+            c.classList.add("text-outline");
+          });
+          chip.classList.add("bg-surface-container-lowest", "text-on-surface", "shadow-sm");
+          chip.classList.remove("text-outline");
+
+          const selected = chip.getAttribute("data-member");
+          cards.forEach(card => {
+            if (selected === "all" || card.getAttribute("data-member") === selected) {
+              card.style.display = "flex";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Filtro por Categoría / Tipo Select
+      const selectTipo = document.getElementById("tipo-filtro");
+      if (selectTipo) {
+        selectTipo.addEventListener("change", (e) => {
+          const val = e.target.value.toLowerCase();
+          cards.forEach(card => {
+            const cardCat = card.getAttribute("data-category");
+            if (val === "all" || cardCat === val) {
+              card.style.display = "flex";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      }
+    })();
+  </script>
+</div></main></div><nav class="lg:hidden fixed bottom-4 left-4 right-4 h-16 rounded-full bg-surface-container-lowest/90 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] z-50 flex items-center justify-around px-space-sm" data-active-classes="text-primary font-bold"><a aria-current="page" class="flex flex-col items-center justify-center py-space-2xs px-space-xs text-primary font-bold" data-path="inicio" href="#"><span class="material-symbols-outlined text-[22px]">grid_view</span><span class="font-label-sm text-[10px] mt-0.5">Inicio</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant py-space-2xs px-space-xs" data-path="ingresos" href="#"><span class="material-symbols-outlined text-[22px]">account_balance_wallet</span><span class="font-label-sm text-[10px] mt-0.5">Ingresos</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant py-space-2xs px-space-xs" data-path="pagos" href="#"><span class="material-symbols-outlined text-[22px]">receipt_long</span><span class="font-label-sm text-[10px] mt-0.5">Pagos</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant py-space-2xs px-space-xs" data-path="gastos" href="#"><span class="material-symbols-outlined text-[22px]">monitoring</span><span class="font-label-sm text-[10px] mt-0.5">Gastos</span></a><a class="flex flex-col items-center justify-center text-on-surface-variant py-space-2xs px-space-xs" data-path="consultas" href="#"><span class="material-symbols-outlined text-[22px]">more_horiz</span><span class="font-label-sm text-[10px] mt-0.5">Más</span></a></nav></body></html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline": "#6d7a72",
+          "background": "#faf8ff",
+          "on-primary-fixed": "#002114",
+          "surface-tint": "#006c4a",
+          "on-secondary-container": "#306d58",
+          "on-surface-variant": "#3d4a42",
+          "inverse-on-surface": "#eef0ff",
+          "secondary-container": "#adedd3",
+          "primary": "#006948",
+          "on-primary-container": "#f5fff7",
+          "inverse-surface": "#283044",
+          "secondary-fixed-dim": "#95d3ba",
+          "on-background": "#131b2e",
+          "tertiary": "#4648d4",
+          "surface-container-lowest": "#ffffff",
+          "outline-variant": "#bccac0",
+          "on-error": "#ffffff",
+          "on-error-container": "#93000a",
+          "on-primary": "#ffffff",
+          "primary-container": "#00855d",
+          "primary-fixed-dim": "#68dba9",
+          "tertiary-fixed": "#e1e0ff",
+          "on-tertiary-fixed": "#07006c",
+          "surface-container": "#eaedff",
+          "surface-container-low": "#f2f3ff",
+          "secondary": "#2b6954",
+          "inverse-primary": "#68dba9",
+          "surface": "#faf8ff",
+          "secondary-fixed": "#b0f0d6",
+          "error-container": "#ffdad6",
+          "on-secondary": "#ffffff",
+          "on-tertiary-fixed-variant": "#2f2ebe",
+          "surface-variant": "#dae2fd",
+          "tertiary-container": "#6063ee",
+          "surface-dim": "#d2d9f4",
+          "on-surface": "#131b2e",
+          "on-tertiary": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "surface-bright": "#faf8ff",
+          "on-tertiary-container": "#fffbff",
+          "on-primary-fixed-variant": "#005137",
+          "tertiary-fixed-dim": "#c0c1ff",
+          "surface-container-high": "#e2e7ff",
+          "on-secondary-fixed-variant": "#0b513d",
+          "primary-fixed": "#85f8c4",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#002117"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "bento-gap-mobile": "0.875rem",
+          "layout-margin-desktop": "2rem",
+          "space-md": "1rem",
+          "layout-margin-mobile": "1rem",
+          "space-xl": "2rem",
+          "space-xs": "0.5rem",
+          "space-sm": "0.75rem",
+          "space-2xs": "0.25rem",
+          "bento-gap-desktop": "1.5rem",
+          "space-2xl": "3rem",
+          "space-3xl": "4rem"
+        },
+        "fontFamily": {
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-body": [
+            "JetBrains Mono"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-display": [
+            "JetBrains Mono"
+          ]
+        },
+        "fontSize": {
+          "headline-lg": [
+            "2.25rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-sm": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.45",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "1.3",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "0.875rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.35",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "financial-body": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.4",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "1.75rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "1.1",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.75rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "financial-display": [
+            "2rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container"><main class="w-full flex-1 flex flex-col justify-center"><div class="flex flex-col w-full">
+<!-- Interactive Ambient Notification / Status Toast Container -->
+<div class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" id="toast-container"></div>
+<!-- Primary Page Canvas: Padding & Max Width Constraints adhering to Soft UI Bento -->
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 space-y-8">
+<!-- Top Action Bar: Header Info & Quick Actions -->
+<header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2">
+<div>
+<div class="flex items-center gap-2.5">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">Calendario Real de Cobro</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">Ingresos Familiares</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl mt-0.5">
+          Planificación y confirmación de depósitos para <span class="font-semibold text-on-surface">Cristhian Fuentes</span> y <span class="font-semibold text-on-surface">Jennifer Camaño</span>. Al confirmar, el saldo se acredita al instante en el flujo real del hogar.
+        </p>
+</div>
+<!-- Quick Actions and Period Switcher -->
+<div class="flex flex-wrap items-center gap-3">
+<!-- Month Navigator Segmented Island -->
+<div class="flex items-center bg-surface-container-lowest shadow-sm rounded-full p-1 border-0">
+<button aria-label="Mes anterior" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition" id="btn-prev-month">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<div class="px-3 flex items-center gap-1.5 font-label-md text-label-md text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+<span class="font-semibold tracking-tight" id="current-month-display">Septiembre 2026</span>
+</div>
+<button aria-label="Mes siguiente" class="w-8 h-8 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition" id="btn-next-month">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+<!-- Add Extra Income Modal Trigger -->
+<button class="inline-flex items-center gap-2 bg-primary text-on-primary hover:bg-primary-container px-4 py-2.5 rounded-full font-label-md text-label-md shadow-sm transition hover:shadow-md active:scale-95" id="btn-open-new-income">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>+ Registrar ingreso eventual</span>
+</button>
+</div>
+</header>
+<!-- Info banner: Behavioral note without technical jargon -->
+<div class="flex items-start sm:items-center gap-3 bg-secondary-container/40 text-on-secondary-container px-4 py-3 rounded-xl">
+<span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5 sm:mt-0">verified_user</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Tu salario y gastos de representación usan calendarios quincenales ajustados. Al marcar <strong class="text-primary font-semibold">“Confirmar Efectivo”</strong> el monto pasa al fondo disponible garantizado para los pagos familiares del mes.
+      </p>
+</div>
+<!-- Bento Grid Tier 1: Master Monthly Metrics (4 Cards Fluid Layout) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+<!-- Total Proyectado -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Ingresos Proyectados</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">insights</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="font-financial-display text-financial-display text-on-surface tracking-tight" id="metric-projected">B/. 2,242.14</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">schedule</span> 8 conceptos planificados
+          </span>
+</div>
+</div>
+<!-- Efectivo Recibido -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold text-primary">Efectivo en Cuenta</span>
+<span class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="font-financial-display text-financial-display text-primary tracking-tight" id="metric-received">B/. 1,023.70</div>
+<span class="font-body-sm text-body-sm text-primary font-medium flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">task_alt</span> 3 depósitos confirmados
+          </span>
+</div>
+</div>
+<!-- Pendiente por Cobrar -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Pendiente por Cobrar</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+</span>
+</div>
+<div class="mt-4">
+<div class="font-financial-display text-financial-display text-on-surface tracking-tight" id="metric-pending">B/. 1,218.44</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">event_repeat</span> 5 por acreditarse
+          </span>
+</div>
+</div>
+<!-- Tasa de Cumplimiento / Progreso -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex flex-col justify-between transition hover:shadow-md">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Efectividad del Mes</span>
+<span class="font-label-md text-label-md font-bold text-primary" id="metric-percent-text">45.6%</span>
+</div>
+<div class="mt-3">
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden flex">
+<div class="bg-primary h-full rounded-full transition-all duration-700" id="progress-bar-fill" style="width: 45.6%;"></div>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm mt-2">
+<span>Recibido: B/. 1,023.70</span>
+<span class="text-secondary font-medium">Meta: 100%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Tier 2: Resumen Compartido por Cónyuge (2 Balanced Cards) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+<!-- Cristhian Fuentes Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-headline-sm font-bold text-on-surface">
+                CF
+              </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Cristhian Fuentes</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Salarios &amp; Gastos de Representación</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">4 Abonos</span>
+</div>
+<!-- Breakdown Metrics -->
+<div class="grid grid-cols-3 gap-2 mt-5 p-3 rounded-lg bg-surface-container-low">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Proyectado</div>
+<div class="font-financial-body text-financial-body text-on-surface font-semibold mt-0.5">B/. 1,189.68</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-primary">Efectivo</div>
+<div class="font-financial-body text-financial-body text-primary font-bold mt-0.5">B/. 594.84</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Pendiente</div>
+<div class="font-financial-body text-financial-body text-on-surface-variant font-medium mt-0.5">B/. 594.84</div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-2 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span> 50% recaudado a la fecha
+          </span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Cortes 02, 11, 17 y 25</span>
+</div>
+</div>
+<!-- Jennifer Camaño Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-headline-sm text-headline-sm font-bold text-on-secondary-container">
+                JC
+              </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Jennifer Camaño</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Salario base, Carro &amp; Comisión Meta</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface font-semibold">4 Abonos</span>
+</div>
+<!-- Breakdown Metrics -->
+<div class="grid grid-cols-3 gap-2 mt-5 p-3 rounded-lg bg-surface-container-low">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Proyectado</div>
+<div class="font-financial-body text-financial-body text-on-surface font-semibold mt-0.5">B/. 1,052.46</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-primary">Efectivo</div>
+<div class="font-financial-body text-financial-body text-primary font-bold mt-0.5">B/. 428.86</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Pendiente</div>
+<div class="font-financial-body text-financial-body text-on-surface-variant font-medium mt-0.5">B/. 623.60</div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-2 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span> Incluye bono sujeto a meta (B/. 120.00)
+          </span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Cortes 15 y 30</span>
+</div>
+</div>
+</section>
+<!-- Quincena Schedule Sections (1ra Quincena & 2da Quincena) -->
+<section class="space-y-8">
+<!-- ================= 1RA QUINCENA (1 al 15 del Mes) ================= -->
+<div class="space-y-3.5">
+<!-- Section Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md font-bold">1</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Primera Quincena (1 al 15 de Septiembre)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pagos de inicio de mes, colegiatura y primera ronda de compromisos familiares.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold w-fit">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> 100% Completada
+          </span>
+</div>
+<!-- Income Stream Cards Container -->
+<div class="space-y-3">
+<!-- Item 1: Gasto Representación Cristhian (Recibido) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-1">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface font-label-md text-label-md font-bold">
+                CF
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Gasto de representación</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cristhian Fuentes</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">done_all</span> Recibido
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 02/09/2026</span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">event_available</span> Recibido: 02/09/2026
+                  </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 140.43</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Efectivo en cuenta</div>
+</div>
+<div>
+<button class="confirm-btn px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-variant font-label-md text-label-md transition flex items-center gap-1.5 shadow-none" onclick="toggleConfirmStatus('card-inc-1', 140.43, 'Cristhian Fuentes', 'Gasto de representación')">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Confirmado</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2: Salario Cristhian (Recibido) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-2">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface font-label-md text-label-md font-bold">
+                CF
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Salario Cristhian (Quincena 1)</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cristhian Fuentes</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">done_all</span> Recibido
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 11/09/2026</span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">event_available</span> Recibido: 03/09/2026
+                  </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 454.41</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Efectivo en cuenta</div>
+</div>
+<div>
+<button class="confirm-btn px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-variant font-label-md text-label-md transition flex items-center gap-1.5 shadow-none" onclick="toggleConfirmStatus('card-inc-2', 454.41, 'Cristhian Fuentes', 'Salario Cristhian')">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Confirmado</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3: Salario Jennifer 15 (Recibido) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-3">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-secondary-container flex items-center justify-center shrink-0 text-on-secondary-container font-label-md text-label-md font-bold">
+                JC
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Salario Jennifer (Quincena 15)</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Jennifer Camaño</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">done_all</span> Recibido
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 15/09/2026</span>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">event_available</span> Recibido: 03/09/2026
+                  </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 428.86</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Efectivo en cuenta</div>
+</div>
+<div>
+<button class="confirm-btn px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-variant font-label-md text-label-md transition flex items-center gap-1.5 shadow-none" onclick="toggleConfirmStatus('card-inc-3', 428.86, 'Jennifer Camaño', 'Salario Jennifer')">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Confirmado</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= 2DA QUINCENA (16 al 30 de Septiembre) ================= -->
+<div class="space-y-3.5 pt-2">
+<!-- Section Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-md text-label-md font-bold">2</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Segunda Quincena (16 al 30 de Septiembre)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cierres de mes, servicios del hogar, ahorros y amortizaciones.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold w-fit">
+<span class="material-symbols-outlined text-[16px]">schedule</span> 5 Cobros en Espera
+          </span>
+</div>
+<!-- Income Stream Cards Container -->
+<div class="space-y-3">
+<!-- Item 4: Gasto de representación Cristhian (Pendiente) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-4">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface font-label-md text-label-md font-bold">
+                CF
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Gasto de representación</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cristhian Fuentes</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timelapse</span> Pendiente
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 17/09/2026</span>
+<span class="text-on-surface-variant">Programado regular</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 140.43</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Por confirmar</div>
+</div>
+<div>
+<button class="confirm-btn px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5" onclick="toggleConfirmStatus('card-inc-4', 140.43, 'Cristhian Fuentes', 'Gasto de representación')">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Confirmar recibido</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 5: Salario Cristhian (Pendiente) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-5">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface font-label-md text-label-md font-bold">
+                CF
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Salario Cristhian (Quincena 2)</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Cristhian Fuentes</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timelapse</span> Pendiente
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 25/09/2026</span>
+<span class="text-on-surface-variant">Programado regular</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 454.41</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Por confirmar</div>
+</div>
+<div>
+<button class="confirm-btn px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5" onclick="toggleConfirmStatus('card-inc-5', 454.41, 'Cristhian Fuentes', 'Salario Cristhian')">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Confirmar recibido</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 6: Salario Jennifer 30 (Pendiente) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-6">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-secondary-container flex items-center justify-center shrink-0 text-on-secondary-container font-label-md text-label-md font-bold">
+                JC
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Salario Jennifer (Quincena 30)</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Jennifer Camaño</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timelapse</span> Pendiente
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 30/09/2026</span>
+<span class="text-on-surface-variant">Programado regular</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 428.86</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Por confirmar</div>
+</div>
+<div>
+<button class="confirm-btn px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5" onclick="toggleConfirmStatus('card-inc-6', 428.86, 'Jennifer Camaño', 'Salario Jennifer')">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Confirmar recibido</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 7: Gasto de Carro Jennifer (Asignación mensual de transporte) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-7">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-secondary-container flex items-center justify-center shrink-0 text-on-secondary-container font-label-md text-label-md font-bold">
+                JC
+              </div>
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Gasto de carro / Asignación de movilidad</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Jennifer Camaño</span>
+<span class="income-badge px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timelapse</span> Pendiente
+                  </span>
+</div>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-on-surface-variant font-body-sm text-body-sm">
+<span>Fecha prevista: 30/09/2026</span>
+<span class="text-secondary font-medium">Asignación fija mensual</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-5">
+<div class="text-right">
+<div class="font-financial-display text-financial-display text-primary font-bold">+B/. 74.74</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Por confirmar</div>
+</div>
+<div>
+<button class="confirm-btn px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5" onclick="toggleConfirmStatus('card-inc-7', 74.74, 'Jennifer Camaño', 'Gasto de carro')">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Confirmar recibido</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 8: Bono o Comisión Jennifer (CONDICIONAL / VARIABLE) -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-5 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4" id="card-inc-8">
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 font-label-md text-label-md font-bold">
+                JC
+              </div>
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Bono por cumplimiento de objetivos</h3>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Jennifer Camaño</span>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">flag</span> Condicional / Sujeto a Meta
+                  </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+                  Solo se computa al flujo real si se formaliza el cumplimiento trimestral antes del 30 de Septiembre.
+                </p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between md:justify-end gap-4">
+<div class="text-left sm:text-right">
+<div class="font-financial-display text-financial-display text-tertiary font-bold">+B/. 120.00</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Estimado variable</div>
+</div>
+<!-- Dedicated Decision Buttons for Variable Income -->
+<div class="flex items-center gap-2" id="conditional-actions-8">
+<button class="px-4 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md transition shadow-sm flex items-center gap-1.5" onclick="applyConditionalBonus(true)">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Se hizo efectivo</span>
+</button>
+<button class="px-3.5 py-2.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md transition flex items-center gap-1" onclick="applyConditionalBonus(false)">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span>No aplica</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Bottom Drawer / Modal: Registrar Ingreso Eventual / No Programado -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="modal-backdrop">
+<div class="bg-surface-container-lowest rounded-xl max-w-lg w-full p-6 shadow-xl space-y-5 animate-in fade-in zoom-in duration-200">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="w-8 h-8 rounded-full bg-secondary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Registrar Ingreso Eventual</h3>
+</div>
+<button class="w-8 h-8 rounded-full text-on-surface-variant hover:bg-surface-container flex items-center justify-center" id="btn-close-modal">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-4" id="form-new-income" onsubmit="handleCreateIncome(event)">
+<!-- Cónyuge Selector -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1.5">Titular del ingreso</label>
+<div class="grid grid-cols-2 gap-3">
+<label class="flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition">
+<input checked="" class="accent-primary w-4 h-4" name="spouse" type="radio" value="Cristhian Fuentes"/>
+<span class="font-label-md text-label-md text-on-surface">Cristhian F.</span>
+</label>
+<label class="flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition">
+<input class="accent-primary w-4 h-4" name="spouse" type="radio" value="Jennifer Camaño"/>
+<span class="font-label-md text-label-md text-on-surface">Jennifer C.</span>
+</label>
+</div>
+</div>
+<!-- Description -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="input-concept">Concepto o Fuente</label>
+<input class="w-full bg-surface-container-lowest px-4 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-low shadow-sm transition" id="input-concept" placeholder="Ej. Consultoría de sistemas, Venta de artículo, Bono extra" required="" type="text"/>
+</div>
+<!-- Grid: Amount & Date -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="input-amount">Monto en Balboas (B/.)</label>
+<div class="relative">
+<span class="absolute left-3.5 top-2.5 font-financial-body text-financial-body text-on-surface-variant">B/.</span>
+<input class="w-full bg-surface-container-lowest pl-11 pr-4 py-2.5 rounded-lg text-on-surface font-financial-body text-financial-body focus:outline-none focus:bg-surface-container-low shadow-sm transition" id="input-amount" placeholder="0.00" required="" step="0.01" type="number"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1" for="input-date">Fecha de cobro</label>
+<input class="w-full bg-surface-container-lowest px-4 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-low shadow-sm transition" id="input-date" required="" type="date" value="2026-09-18"/>
+</div>
+</div>
+<!-- Immediate credit toggle -->
+<div class="p-3.5 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div>
+<span class="block font-label-md text-label-md text-on-surface">¿Ya está disponible en mano/cuenta?</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Acreditar al saldo disponible inmediatamente</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="input-is-confirmed" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Buttons -->
+<div class="flex items-center justify-end gap-3 pt-2">
+<button class="px-4 py-2 rounded-full text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition" id="btn-cancel-modal" type="button">
+              Cancelar
+            </button>
+<button class="px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition" type="submit">
+              Guardar en calendario
+            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Micro-Interactions Script for Confirmation, Month Navigation, Modals & Toast -->
+<script>
+    // State management for metrics
+    const state = {
+      projected: 2242.14,
+      received: 1023.70,
+      pending: 1218.44
+    };
+
+    function formatBalboas(num) {
+      return 'B/. ' + Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function updateMetricDisplays() {
+      const pct = (state.received / state.projected) * 100;
+      document.getElementById('metric-projected').innerText = formatBalboas(state.projected);
+      document.getElementById('metric-received').innerText = formatBalboas(state.received);
+      document.getElementById('metric-pending').innerText = formatBalboas(state.pending);
+      
+      const pctDisplay = Math.min(100, Math.max(0, pct)).toFixed(1) + '%';
+      document.getElementById('metric-percent-text').innerText = pctDisplay;
+      document.getElementById('progress-bar-fill').style.width = pctDisplay;
+    }
+
+    // Interactive Toast feedback
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const isSuccess = type === 'success';
+      
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg transition-all duration-300 transform translate-y-2 ${
+        isSuccess ? 'bg-primary text-on-primary' : 'bg-inverse-surface text-inverse-on-surface'
+      }`;
+      
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-[18px]">${isSuccess ? 'check_circle' : 'info'}</span>
+        <span class="font-label-md text-label-md">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2'), 10);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Toggle confirm status for standard items
+    function toggleConfirmStatus(cardId, amount, person, title) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      const badge = card.querySelector('.income-badge');
+      const btn = card.querySelector('.confirm-btn');
+      const isConfirmed = btn.innerText.includes('Confirmado');
+
+      if (!isConfirmed) {
+        // Switch to Confirmed
+        state.received += amount;
+        state.pending -= amount;
+        
+        badge.className = 'income-badge px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1';
+        badge.innerHTML = '<span class="material-symbols-outlined text-[14px]">done_all</span> Recibido';
+
+        btn.className = 'confirm-btn px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-variant font-label-md text-label-md transition flex items-center gap-1.5 shadow-none';
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">verified</span><span>Confirmado</span>';
+
+        updateMetricDisplays();
+        showToast(`+${formatBalboas(amount)} acreditado a la cuenta familiar`);
+      } else {
+        // Revert to Pending
+        state.received -= amount;
+        state.pending += amount;
+
+        badge.className = 'income-badge px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold flex items-center gap-1';
+        badge.innerHTML = '<span class="material-symbols-outlined text-[14px]">timelapse</span> Pendiente';
+
+        btn.className = 'confirm-btn px-5 py-2.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5';
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>Confirmar recibido</span>';
+
+        updateMetricDisplays();
+        showToast(`Se revirtió a pendiente el cobro de ${title}`, 'info');
+      }
+    }
+
+    // Special handler for Jennifer's Conditional Bonus
+    function applyConditionalBonus(isEffective) {
+      const container = document.getElementById('conditional-actions-8');
+      const bonusAmount = 120.00;
+      
+      if (isEffective) {
+        state.received += bonusAmount;
+        state.pending -= bonusAmount;
+        container.innerHTML = `
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold">
+            <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+            Efectivo Acreditado
+          </div>
+        `;
+        showToast(`¡Bono de ${formatBalboas(bonusAmount)} de Jennifer hecho efectivo!`);
+      } else {
+        state.projected -= bonusAmount;
+        state.pending -= bonusAmount;
+        container.innerHTML = `
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md">
+            <span class="material-symbols-outlined text-[18px]">do_not_disturb</span>
+            No aplicado este mes
+          </div>
+        `;
+        showToast('Bono excluido de la proyección de este periodo.', 'info');
+      }
+      updateMetricDisplays();
+    }
+
+    // Modal behavior for new income
+    const modal = document.getElementById('modal-backdrop');
+    document.getElementById('btn-open-new-income').addEventListener('click', () => modal.classList.remove('hidden'));
+    document.getElementById('btn-close-modal').addEventListener('click', () => modal.classList.add('hidden'));
+    document.getElementById('btn-cancel-modal').addEventListener('click', () => modal.classList.add('hidden'));
+
+    function handleCreateIncome(e) {
+      e.preventDefault();
+      const spouse = document.querySelector('input[name="spouse"]:checked').value;
+      const concept = document.getElementById('input-concept').value;
+      const amount = parseFloat(document.getElementById('input-amount').value) || 0;
+      const isConfirmed = document.getElementById('input-is-confirmed').checked;
+
+      state.projected += amount;
+      if (isConfirmed) {
+        state.received += amount;
+      } else {
+        state.pending += amount;
+      }
+      updateMetricDisplays();
+
+      modal.classList.add('hidden');
+      document.getElementById('form-new-income').reset();
+      showToast(`+${formatBalboas(amount)} registrado con éxito para ${spouse}`);
+    }
+
+    // Month Navigation Mock
+    const months = ['Julio 2026', 'Agosto 2026', 'Septiembre 2026', 'Octubre 2026', 'Noviembre 2026'];
+    let currentIdx = 2;
+    document.getElementById('btn-prev-month').addEventListener('click', () => {
+      if (currentIdx > 0) {
+        currentIdx--;
+        document.getElementById('current-month-display').innerText = months[currentIdx];
+        showToast(`Cargando calendario de ${months[currentIdx]}...`, 'info');
+      }
+    });
+    document.getElementById('btn-next-month').addEventListener('click', () => {
+      if (currentIdx < months.length - 1) {
+        currentIdx++;
+        document.getElementById('current-month-display').innerText = months[currentIdx];
+        showToast(`Cargando calendario de ${months[currentIdx]}...`, 'info');
+      }
+    });
+  </script>
+</div></main></body></html>
