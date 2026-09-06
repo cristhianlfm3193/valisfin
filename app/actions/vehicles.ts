@@ -1,0 +1,99 @@
+'use server';
+
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+
+export async function addMileageLog(formData: FormData) {
+  const supabase = await createClient();
+  
+  const vehicle_id = formData.get('vehicle_id') as string;
+  const kmStr = formData.get('km') as string;
+  const user_id = formData.get('user_id') as string;
+  const date = new Date().toISOString().split('T')[0];
+  
+  const km = parseInt(kmStr, 10);
+
+  // Get current km to calculate variation and update vehicle
+  const { data: vehicle, error: fetchError } = await supabase
+    .from('vehicles')
+    .select('current_km')
+    .eq('id', vehicle_id)
+    .single();
+
+  if (fetchError) {
+    console.error('Error fetching vehicle:', fetchError);
+    return { success: false, error: fetchError.message };
+  }
+
+  // Insert log
+  const { error: insertError } = await supabase
+    .from('mileage_logs')
+    .insert({
+      vehicle_id,
+      date,
+      km,
+      user_id,
+      source: 'manual'
+    });
+
+  if (insertError) {
+    console.error('Error inserting mileage log:', insertError);
+    return { success: false, error: insertError.message };
+  }
+
+  // Update vehicle current_km
+  const { error: updateError } = await supabase
+    .from('vehicles')
+    .update({ current_km: km, km_date: date })
+    .eq('id', vehicle_id);
+
+  if (updateError) {
+    console.error('Error updating vehicle km:', updateError);
+    return { success: false, error: updateError.message };
+  }
+
+  revalidatePath('/vehiculos');
+  return { success: true };
+}
+
+export async function addMaintenanceLog(formData: FormData) {
+  const supabase = await createClient();
+  
+  const vehicle_id = formData.get('vehicle_id') as string;
+  const service = formData.get('service') as string;
+  const kmStr = formData.get('km') as string;
+  const nextKmStr = formData.get('next_km') as string;
+  const costStr = formData.get('cost') as string;
+  const date = formData.get('date') as string;
+  const shop = formData.get('shop') as string;
+  const user_id = formData.get('user_id') as string;
+
+  const km = parseInt(kmStr, 10);
+  const next_km = nextKmStr ? parseInt(nextKmStr, 10) : null;
+  const cost = parseFloat(costStr);
+
+  const { error: insertError } = await supabase
+    .from('maintenance')
+    .insert({
+      vehicle_id,
+      date,
+      km,
+      service,
+      type: 'Mantenimiento',
+      cost,
+      next_km,
+      next_date: null,
+      is_pending: false,
+      shop,
+      user_id,
+      status: 'completed'
+    });
+
+  if (insertError) {
+    console.error('Error inserting maintenance:', insertError);
+    return { success: false, error: insertError.message };
+  }
+
+  revalidatePath('/vehiculos');
+  return { success: true };
+}

@@ -80,7 +80,7 @@ export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDra
             { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
             { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
             { href: "/gastos-diarios", label: "Gastos Diarios", icon: Wallet },
-            { href: "#vehiculos", label: "Vehículos", icon: Car },
+            { href: "/vehiculos", label: "Vehículos", icon: Car },
             { href: "#metas", label: "Metas de Ahorro", icon: Target },
             { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
           ].map((item) => {
