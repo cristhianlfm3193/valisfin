@@ -17,6 +17,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Finanzas Familiares | Familia Fuentes Camaño",
   description: "Panel de control financiero de la familia",
+  formatDetection: {
+    telephone: false,
+    date: false,
+    email: false,
+    address: false,
+  },
 };
 
 export default async function RootLayout({

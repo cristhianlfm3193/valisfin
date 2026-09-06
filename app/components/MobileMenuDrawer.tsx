@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -24,19 +24,16 @@ interface MobileMenuDrawerProps {
 
 export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const closeMenu = () => setIsOpen(false);
 
-  return (
+  const drawerContent = (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="lg:hidden w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition"
-        aria-label="Abrir menú principal"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
       {/* Backdrop */}
       {isOpen && (
         <div 
@@ -113,6 +110,22 @@ export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDra
           <LogoutButtonMobile />
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="lg:hidden w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-100 transition"
+        aria-label="Abrir menú principal"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {mounted && typeof document !== 'undefined' 
+        ? require('react-dom').createPortal(drawerContent, document.body) 
+        : null}
     </>
   );
 }

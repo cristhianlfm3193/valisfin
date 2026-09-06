@@ -238,9 +238,9 @@ export function AddIncomeModal() {
                       category === 'representacion' ? 140.43 :
                       category === 'carro' ? 125.00 : ''
                     }
-                    readOnly={['salario', 'representacion', 'carro'].includes(category)}
+                    readOnly={['salario', 'carro'].includes(category)}
                     className={`w-full pl-11 pr-4 py-2.5 rounded-xl text-base font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all ${
-                      ['salario', 'representacion', 'carro'].includes(category) 
+                      ['salario', 'carro'].includes(category) 
                         ? 'bg-slate-100 text-slate-500 border-transparent cursor-not-allowed shadow-inner' 
                         : 'bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-emerald-500'
                     }`} 

@@ -16,9 +16,15 @@ import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { familyData, ingresosMetrics, ingresosBreakdown } from "@/lib/mockData";
 import { IncomeList } from "./components/IncomeList";
 import { AddIncomeModal } from "./components/AddIncomeModal";
+import { generateMonthlyIncomes } from "@/app/actions/income";
 
 export default async function IngresosPage() {
   const supabase = await createClient();
+
+  // 1. Auto-generate missing fixed incomes for the current month
+  await generateMonthlyIncomes();
+
+  // 2. Fetch all incomes for calculations
   const { data: { user } } = await supabase.auth.getUser();
   const fullName = user?.user_metadata?.full_name || "Usuario";
   const avatarUrl = user?.user_metadata?.avatar_url;
