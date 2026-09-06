@@ -79,18 +79,6 @@ export function SearchAndFilters({
         </div>
       </div>
 
-      {/* Banner informativo aclaratorio solicitado: Gasolina y Supermercado */}
-      <div className="flex items-center justify-between bg-amber-50/70 border border-amber-200/60 rounded-xl px-3.5 py-2 text-xs text-amber-800">
-        <div className="flex items-center gap-2">
-          <span className="text-amber-600 font-bold">Nota:</span>
-          <span>
-            La <strong>Gasolina</strong> y el <strong>Supermercado</strong> son variables y se registran en la sección de Gastos Cotidianos.
-          </span>
-        </div>
-        <Link href="#gastos" className="hidden sm:inline font-semibold underline text-amber-900 hover:text-black">
-          Ir a variables →
-        </Link>
-      </div>
     </section>
   );
 }

@@ -15,33 +15,72 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
 
-  const handleToggleStatus = async (id: string, currentStatus: boolean) => {
+  // Group payments by title
+  const groupedPayments = useMemo(() => {
+    const groups = new Map<string, FixedPayment[]>();
+    payments.forEach(p => {
+      if (!groups.has(p.title)) {
+        groups.set(p.title, []);
+      }
+      groups.get(p.title)!.push(p);
+    });
+
+    return Array.from(groups.values()).map(group => {
+      const unpaid = group.filter(p => !p.is_paid);
+      const isPaid = unpaid.length === 0;
+      
+      // If paid, show the most recent amount. If unpaid, sum the unpaid amounts.
+      const amount = isPaid 
+        ? group[0].amount // Arbitrarily take first if all paid
+        : unpaid.reduce((sum, p) => sum + p.amount, 0);
+
+      const isAccumulated = unpaid.length > 1;
+
+      return {
+        // We use a composite ID or just pass all IDs to the card
+        id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
+        originalIds: isPaid ? group.map(p => p.id) : unpaid.map(p => p.id),
+        category: group[0].category,
+        is_paid: isPaid,
+        responsible: group[0].responsible,
+        title: group[0].title,
+        amount,
+        subtitle: isAccumulated ? `Acumulado (${unpaid.length} meses)` : group[0].subtitle,
+        period: isAccumulated 
+          ? unpaid.map(p => p.period || '').join(', ') 
+          : (isPaid ? group[group.length - 1].period : unpaid[0].period)
+      };
+    });
+  }, [payments]);
+
+  const handleToggleStatus = async (compositeId: string, currentStatus: boolean, originalIds?: string[]) => {
+    const idsToToggle = originalIds || [compositeId];
     // Optimistic update
     setPayments((prev) =>
       prev.map((payment) =>
-        payment.id === id ? { ...payment, is_paid: !payment.is_paid } : payment
+        idsToToggle.includes(payment.id) ? { ...payment, is_paid: !currentStatus } : payment
       )
     );
     try {
-      await togglePaymentStatus(id, currentStatus);
+      await togglePaymentStatus(idsToToggle, currentStatus);
     } catch (e) {
       // Revert if error
       setPayments((prev) =>
         prev.map((payment) =>
-          payment.id === id ? { ...payment, is_paid: currentStatus } : payment
+          idsToToggle.includes(payment.id) ? { ...payment, is_paid: currentStatus } : payment
         )
       );
     }
   };
 
-  // Metrics calculation
+  // Metrics calculation based on GROUPED payments (so 1 group = 1 obligation)
   const { totalPaid, totalPending, paidCount, pendingCount } = useMemo(() => {
     let tPaid = 0;
     let tPending = 0;
     let pCount = 0;
     let pendCount = 0;
 
-    payments.forEach((payment) => {
+    groupedPayments.forEach((payment) => {
       if (payment.is_paid) {
         tPaid += payment.amount;
         pCount++;
@@ -57,14 +96,14 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
       paidCount: pCount,
       pendingCount: pendCount,
     };
-  }, [payments]);
+  }, [groupedPayments]);
 
   const totalItems = paidCount + pendingCount;
   const progressPercent = totalItems > 0 ? Math.round((paidCount / totalItems) * 100) : 0;
 
   // Filtering and Searching
   const filteredPayments = useMemo(() => {
-    return payments.filter((payment) => {
+    return groupedPayments.filter((payment) => {
       // Filter by status
       if (currentFilter === 'pending' && payment.is_paid) return false;
       if (currentFilter === 'paid' && !payment.is_paid) return false;
@@ -79,7 +118,7 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
 
       return true;
     });
-  }, [payments, currentFilter, searchQuery]);
+  }, [groupedPayments, currentFilter, searchQuery]);
 
   return (
     <>
@@ -111,7 +150,11 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {filteredPayments.map((payment) => (
-            <PaymentCard key={payment.id} payment={payment} onToggleStatus={handleToggleStatus} />
+            <PaymentCard 
+              key={payment.id} 
+              payment={payment as any} 
+              onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)} 
+            />
           ))}
         </div>
 

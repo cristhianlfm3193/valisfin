@@ -10,6 +10,7 @@ export interface FixedPayment {
   title: string;
   amount: number;
   subtitle: string;
+  period?: string;
 }
 
 interface PaymentCardProps {
@@ -34,7 +35,7 @@ export function PaymentCard({ payment, onToggleStatus }: PaymentCardProps) {
           <div className="flex justify-between items-start">
             <div>
               <span className="inline-block text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">
-                {responsible}
+                {responsible} {payment.period ? `• ${payment.period}` : ''}
               </span>
               <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
             </div>
@@ -67,7 +68,7 @@ export function PaymentCard({ payment, onToggleStatus }: PaymentCardProps) {
         <div className="flex justify-between items-start">
           <div>
             <span className="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
-              {responsible}
+              {responsible} {payment.period ? `• ${payment.period}` : ''}
             </span>
             <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
           </div>

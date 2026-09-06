@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { getFixedPayments } from "@/app/actions/fixed_payments";
 import { PagosFijosClient } from "./components/PagosFijosClient";
+import { AddVariablePaymentModal } from "./components/AddVariablePaymentModal";
 import Link from "next/link";
 import { Bell } from "lucide-react";
 
@@ -29,8 +30,9 @@ export default async function PagosFijosPage() {
           </div>
         </div>
 
-        {/* Icono de Notificaciones / Campana limpia */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <AddVariablePaymentModal />
+          {/* Icono de Notificaciones / Campana limpia */}
           <button
             aria-label="Notificaciones"
             className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
