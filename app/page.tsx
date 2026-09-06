@@ -16,7 +16,7 @@ import {
   vehicleData,
 } from "../lib/mockData";
 import { createClient } from "@/lib/supabase/server";
-import { LogoutButtonMobile } from "./components/LogoutButton";
+import { MobileMenuDrawer } from "./components/MobileMenuDrawer";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -32,15 +32,7 @@ export default async function Home() {
         data-purpose="top-header"
       >
         <div className="flex items-center gap-3">
-          <div className="lg:hidden">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt={fullName} className="w-8 h-8 rounded-xl border border-slate-200 object-cover" />
-            ) : (
-              <div className="w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold text-xs">
-                {initial}
-              </div>
-            )}
-          </div>
+          <MobileMenuDrawer avatarUrl={avatarUrl} fullName={fullName} initial={initial} />
           <div>
             <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-700 block">
               Finanzas Familiares
@@ -56,12 +48,9 @@ export default async function Home() {
             <Calendar className="w-3.5 h-3.5 text-slate-500" />
             <span>{familyData.month}</span>
           </div>
-          <div className="hidden sm:flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-1.5 rounded-full text-xs font-medium">
+          <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-1.5 rounded-full text-xs font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Sincronizado</span>
-          </div>
-          <div className="lg:hidden w-8">
-             <LogoutButtonMobile />
           </div>
         </div>
       </header>

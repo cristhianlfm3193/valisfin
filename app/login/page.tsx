@@ -49,17 +49,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8 text-slate-800 bg-[#f8faf9] relative">
-      <style dangerouslySetInnerHTML={{__html: `
-        body {
-          background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
-                      radial-gradient(circle at 90% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 45%),
-                      #f8faf9;
-        }
-        .hero-photo-gradient {
-          background: linear-gradient(180deg, rgba(6, 78, 59, 0.02) 0%, rgba(6, 78, 59, 0.75) 75%, rgba(6, 78, 59, 0.94) 100%);
-        }
-      `}} />
+    <div className="min-h-screen flex flex-col justify-center py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8 text-slate-800 login-bg relative">
       <main className="w-full max-w-5xl mx-auto z-10 relative">
         <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_20px_45px_-15px_rgba(6,95,70,0.08),0_0_1px_1px_rgba(0,0,0,0.04)] border border-emerald-100/70 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
           
