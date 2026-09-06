@@ -16,9 +16,10 @@ export interface FixedPayment {
 interface PaymentCardProps {
   payment: FixedPayment;
   onToggleStatus: (id: string, currentStatus: boolean) => void;
+  onPartialPayment?: () => void;
 }
 
-export function PaymentCard({ payment, onToggleStatus }: PaymentCardProps) {
+export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: PaymentCardProps) {
   const { id, is_paid, responsible, title, amount, subtitle } = payment;
 
   const handleToggle = (e: React.MouseEvent) => {
@@ -80,15 +81,26 @@ export function PaymentCard({ payment, onToggleStatus }: PaymentCardProps) {
           </div>
         </div>
       </div>
-      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+      <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-3">
         <span className="text-xs text-slate-600 font-medium">{subtitle}</span>
-        <button
-          onClick={handleToggle}
-          className="pay-toggle-btn min-h-[44px] px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-          type="button"
-        >
-          <span className="btn-text">Pagar {formattedAmount}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {onPartialPayment && amount > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onPartialPayment(); }}
+              className="pay-toggle-btn min-h-[44px] flex-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold tracking-wide transition-all flex items-center justify-center focus:ring-2 focus:ring-slate-300 focus:outline-none"
+              type="button"
+            >
+              <span>Abonar</span>
+            </button>
+          )}
+          <button
+            onClick={handleToggle}
+            className="pay-toggle-btn min-h-[44px] flex-[2] px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            type="button"
+          >
+            <span className="btn-text">Pagar Total</span>
+          </button>
+        </div>
       </div>
     </article>
   );

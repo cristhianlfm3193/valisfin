@@ -4,7 +4,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { MetricsSummary } from './MetricsSummary';
 import { SearchAndFilters, FilterType } from './SearchAndFilters';
 import { PaymentCard, FixedPayment } from './PaymentCard';
-import { togglePaymentStatus } from '@/app/actions/fixed_payments';
+import { togglePaymentStatus, partialPayment as partialPaymentAction } from '@/app/actions/fixed_payments';
+import { PartialPaymentModal } from './PartialPaymentModal';
 
 interface PagosFijosClientProps {
   initialPayments: FixedPayment[];
@@ -12,6 +13,9 @@ interface PagosFijosClientProps {
 
 export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
   const [payments, setPayments] = useState<FixedPayment[]>(initialPayments);
+  
+  // Partial payment state
+  const [selectedForPartial, setSelectedForPartial] = useState<FixedPayment | null>(null);
   
   // Sync state with server prop on revalidation
   useEffect(() => {
@@ -104,14 +108,43 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
     }
   };
 
-  // Metrics calculation based on GROUPED payments (so 1 group = 1 obligation)
+  const handlePartialPaymentSubmit = async (partialAmount: number) => {
+    if (!selectedForPartial) return;
+    
+    const originalRecord = payments.find(p => p.id === selectedForPartial.originalIds?.[0] || p.id === selectedForPartial.id);
+    if (!originalRecord) return;
+
+    // Optimistic update
+    const newPaidRecord: FixedPayment = {
+      ...originalRecord,
+      id: `temp-${Date.now()}`,
+      is_paid: true,
+      amount: partialAmount,
+    };
+
+    setPayments((prev) => {
+      const updated = prev.map(p => 
+        p.id === originalRecord.id ? { ...p, amount: p.amount - partialAmount } : p
+      );
+      return [...updated, newPaidRecord];
+    });
+
+    try {
+      await partialPaymentAction(originalRecord.id, partialAmount);
+    } catch (e) {
+      // Very simple revert (relies on next revalidation to fully fix if error happens)
+      setPayments(initialPayments);
+    }
+  };
+
+  // Metrics calculation based on RAW month-filtered payments
   const { totalPaid, totalPending, paidCount, pendingCount } = useMemo(() => {
     let tPaid = 0;
     let tPending = 0;
     let pCount = 0;
     let pendCount = 0;
 
-    groupedPayments.forEach((payment) => {
+    monthFilteredPayments.forEach((payment) => {
       if (payment.is_paid) {
         tPaid += payment.amount;
         pCount++;
@@ -127,7 +160,7 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
       paidCount: pCount,
       pendingCount: pendCount,
     };
-  }, [groupedPayments]);
+  }, [monthFilteredPayments]);
 
   const totalItems = paidCount + pendingCount;
   const progressPercent = totalItems > 0 ? Math.round((paidCount / totalItems) * 100) : 0;
@@ -222,7 +255,8 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
             <PaymentCard 
               key={payment.id} 
               payment={payment as any} 
-              onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)} 
+              onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)}
+              onPartialPayment={!payment.is_paid ? () => setSelectedForPartial(payment as any) : undefined}
             />
           ))}
         </div>
@@ -249,6 +283,13 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
           </div>
         )}
       </section>
+      
+      <PartialPaymentModal 
+        isOpen={!!selectedForPartial}
+        payment={selectedForPartial}
+        onClose={() => setSelectedForPartial(null)}
+        onSubmit={handlePartialPaymentSubmit}
+      />
     </>
   );
 }

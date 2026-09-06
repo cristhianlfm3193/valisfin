@@ -100,3 +100,59 @@ export async function addVariablePayment(formData: FormData) {
   revalidatePath('/pagos-fijos');
   return { success: true };
 }
+
+export async function partialPayment(id: string, partialAmount: number) {
+  const supabase = await createClient();
+  
+  // 1. Get the current record
+  const { data: currentRecord, error: fetchError } = await supabase
+    .from('fixed_payments')
+    .select('*')
+    .eq('id', id)
+    .single();
+    
+  if (fetchError || !currentRecord) {
+    console.error('Error fetching record for partial payment:', fetchError);
+    return { success: false, error: 'Record not found' };
+  }
+
+  if (partialAmount >= currentRecord.amount) {
+    return { success: false, error: 'Partial amount must be less than the total amount' };
+  }
+
+  const remainingAmount = currentRecord.amount - partialAmount;
+
+  // 2. Update the original record to be the remaining amount
+  const { error: updateError } = await supabase
+    .from('fixed_payments')
+    .update({ amount: remainingAmount })
+    .eq('id', id);
+
+  if (updateError) {
+    console.error('Error updating remaining amount:', updateError);
+    return { success: false, error: updateError.message };
+  }
+
+  // 3. Insert a new record for the paid amount
+  const { error: insertError } = await supabase
+    .from('fixed_payments')
+    .insert({
+      category: currentRecord.category,
+      is_paid: true, // This is the paid part
+      responsible: currentRecord.responsible,
+      title: currentRecord.title,
+      amount: partialAmount,
+      subtitle: currentRecord.subtitle,
+      period: currentRecord.period,
+      type: currentRecord.type
+    });
+
+  if (insertError) {
+    console.error('Error inserting partial payment record:', insertError);
+    // Ideally we would rollback the update here, but for simplicity we just return error
+    return { success: false, error: insertError.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  return { success: true };
+}
