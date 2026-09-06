@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { getFixedPayments } from "@/app/actions/fixed_payments";
+import { getDailyExpenses } from "@/app/actions/daily_expenses";
 import { PagosFijosClient } from "./components/PagosFijosClient";
 import { AddVariablePaymentModal } from "./components/AddVariablePaymentModal";
 import Link from "next/link";
@@ -14,6 +15,7 @@ export default async function PagosFijosPage() {
   const initial = fullName.charAt(0).toUpperCase();
 
   const fixedPayments = await getFixedPayments();
+  const dailyExpenses = await getDailyExpenses();
 
   return (
     <>
@@ -48,7 +50,7 @@ export default async function PagosFijosPage() {
       </header>
 
       <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto pb-24 md:pb-12">
-        <PagosFijosClient initialPayments={fixedPayments as any} />
+        <PagosFijosClient initialPayments={fixedPayments as any} initialDailyExpenses={dailyExpenses as any} />
       </main>
     </>
   );

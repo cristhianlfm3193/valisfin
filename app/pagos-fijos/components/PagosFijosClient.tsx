@@ -6,12 +6,14 @@ import { SearchAndFilters, FilterType } from './SearchAndFilters';
 import { PaymentCard, FixedPayment } from './PaymentCard';
 import { togglePaymentStatus, partialPayment as partialPaymentAction } from '@/app/actions/fixed_payments';
 import { PartialPaymentModal } from './PartialPaymentModal';
+import { DailyExpense } from '@/app/actions/daily_expenses';
 
 interface PagosFijosClientProps {
   initialPayments: FixedPayment[];
+  initialDailyExpenses?: DailyExpense[];
 }
 
-export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
+export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }: PagosFijosClientProps) {
   const [payments, setPayments] = useState<FixedPayment[]>(initialPayments);
   
   // Partial payment state
@@ -39,10 +41,30 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
       // Include if it belongs to selected month
       if (p.period === selectedMonth) return true;
       // Rollover: Include if it belongs to a past month AND is unpaid
-      if (p.period < selectedMonth && !p.is_paid) return true;
+      if (p.period < selectedMonth && !p.is_paid) {
+        // Do not rollover smart budgets like Supermercado or Gasolina
+        if (p.title === 'Supermercado' || p.title === 'Gasolina') return false;
+        return true;
+      }
       return false;
     });
   }, [payments, selectedMonth]);
+
+  // Compute accumulated amounts from daily expenses for smart cards
+  const { superSpent, gasSpent } = useMemo(() => {
+    let superAcc = 0;
+    let gasAcc = 0;
+    initialDailyExpenses.forEach(e => {
+      if (e.date.startsWith(selectedMonth)) {
+        if (e.category === 'Supermercado' || e.category === 'Alimentación') {
+          superAcc += e.amount;
+        } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
+          gasAcc += e.amount;
+        }
+      }
+    });
+    return { superSpent: superAcc, gasSpent: gasAcc };
+  }, [initialDailyExpenses, selectedMonth]);
 
   // Group payments by title (using only the month-filtered ones)
   const groupedPayments = useMemo(() => {
@@ -65,20 +87,24 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
 
       const isAccumulated = unpaid.length > 1;
 
-      return {
-        // We use a composite ID or just pass all IDs to the card
-        id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
-        originalIds: isPaid ? group.map(p => p.id) : unpaid.map(p => p.id),
-        category: group[0].category,
-        is_paid: isPaid,
-        responsible: group[0].responsible,
-        title: group[0].title,
-        amount,
-        subtitle: isAccumulated ? `Acumulado (${unpaid.length} meses)` : group[0].subtitle,
-        period: isAccumulated 
-          ? unpaid.map(p => p.period || '').join(', ') 
-          : (isPaid ? group[group.length - 1].period : unpaid[0].period)
-      };
+        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina';
+        const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : 0);
+
+        return {
+          id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
+          originalIds: isPaid ? group.map(p => p.id) : unpaid.map(p => p.id),
+          category: group[0].category,
+          is_paid: isPaid,
+          responsible: group[0].responsible,
+          title: group[0].title,
+          amount,
+          subtitle: isAccumulated ? `Acumulado (${unpaid.length} meses)` : group[0].subtitle,
+          period: isAccumulated 
+            ? unpaid.map(p => p.period || '').join(', ') 
+            : (isPaid ? group[group.length - 1].period : unpaid[0].period),
+          isSmartCard,
+          accumulatedSpent
+        };
     });
     
     // Sort so pending items (is_paid === false) appear first
@@ -145,12 +171,25 @@ export function PagosFijosClient({ initialPayments }: PagosFijosClientProps) {
     let pendCount = 0;
 
     monthFilteredPayments.forEach((payment) => {
-      if (payment.is_paid) {
-        tPaid += payment.amount;
-        pCount++;
+      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina';
+      
+      if (isSmart) {
+        const spent = payment.title === 'Supermercado' ? superSpent : gasSpent;
+        const pending = Math.max(payment.amount - spent, 0);
+        
+        tPaid += spent;
+        tPending += pending;
+        
+        if (spent >= payment.amount) pCount++;
+        else pendCount++;
       } else {
-        tPending += payment.amount;
-        pendCount++;
+        if (payment.is_paid) {
+          tPaid += payment.amount;
+          pCount++;
+        } else {
+          tPending += payment.amount;
+          pendCount++;
+        }
       }
     });
 

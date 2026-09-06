@@ -11,6 +11,8 @@ export interface FixedPayment {
   amount: number;
   subtitle: string;
   period?: string;
+  isSmartCard?: boolean;
+  accumulatedSpent?: number;
 }
 
 interface PaymentCardProps {
@@ -28,6 +30,46 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: Payme
   };
 
   const formattedAmount = `B/. ${amount.toFixed(2)}`;
+
+  if (payment.isSmartCard) {
+    const spent = payment.accumulatedSpent || 0;
+    const progressPct = amount > 0 ? Math.min(Math.max((spent / amount) * 100, 0), 100) : 0;
+    
+    return (
+      <article className="payment-card bg-indigo-50/30 border border-indigo-100 rounded-2xl p-4 shadow-sm flex flex-col justify-between relative overflow-hidden">
+        <div className="border-l-4 border-indigo-400 -ml-4 -mt-4 pl-4 pt-4 pb-1">
+          <div className="flex justify-between items-start">
+            <div>
+              <span className="inline-block text-[11px] font-semibold text-indigo-700 uppercase tracking-wider">
+                Presupuesto Variable {payment.period ? `• ${payment.period}` : ''}
+              </span>
+              <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
+            </div>
+            <div className="text-right">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
+                Automático
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 pt-3 border-t border-indigo-100/50 flex flex-col gap-2">
+          <div className="flex justify-between items-baseline">
+            <span className="text-xs text-slate-500 font-medium">Gastado: <strong className="text-slate-900">B/. {spent.toFixed(2)}</strong></span>
+            <span className="text-xs text-slate-500 font-medium">Límite: <strong className="text-slate-900">{formattedAmount}</strong></span>
+          </div>
+          <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${progressPct >= 100 ? 'bg-rose-500' : 'bg-indigo-500'}`}
+              style={{ width: `${progressPct}%` }}
+            ></div>
+          </div>
+          <p className="text-[10px] text-slate-500 mt-1">
+            Se alimenta automáticamente desde tus Gastos Diarios.
+          </p>
+        </div>
+      </article>
+    );
+  }
 
   if (is_paid) {
     return (
