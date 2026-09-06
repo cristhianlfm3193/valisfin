@@ -64,7 +64,7 @@ export default async function IngresosPage(props: {
   // Fetch real incomes from Supabase filtered by the selected month
   const { data: incomes = [], error } = await supabase
     .from('incomes')
-    .select('*')
+    .select('*, profiles(first_name)')
     .gte('date_expected', firstDay)
     .lte('date_expected', lastDay)
     .order('date_expected', { ascending: true });
@@ -111,14 +111,14 @@ export default async function IngresosPage(props: {
   };
 
   // Calculate Breakdown
-  const cfIncomes = incomes?.filter(i => i.person === 'cristhian') || [];
+  const cfIncomes = incomes?.filter(i => (i.profiles?.first_name || '').toLowerCase().includes('cristhian')) || [];
   const cfPlanned = cfIncomes.filter(i => ['salario', 'representacion', 'carro'].includes(i.category));
   const hasCfData = cfPlanned.length > 0;
   const cfProjected = hasCfData ? cfPlanned.reduce((acc, curr) => acc + curr.amount, 0) : 1189.68;
   const cfReceived = cfIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
   const cfPending = hasCfData ? cfProjected - cfReceived : 0;
   
-  const jcIncomes = incomes?.filter(i => i.person === 'jennifer') || [];
+  const jcIncomes = incomes?.filter(i => (i.profiles?.first_name || '').toLowerCase().includes('jennifer')) || [];
   const jcPlanned = jcIncomes.filter(i => ['salario', 'representacion', 'carro'].includes(i.category));
   const hasJcData = jcPlanned.length > 0;
   const jcProjected = hasJcData ? jcPlanned.reduce((acc, curr) => acc + curr.amount, 0) : 982.72;

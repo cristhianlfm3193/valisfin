@@ -138,11 +138,11 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
-                    <input type="radio" name="person" value="Cristhian" className="peer sr-only" required defaultChecked />
+                    <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required defaultChecked />
                     <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
                   </label>
                   <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
-                    <input type="radio" name="person" value="Jennifer" className="peer sr-only" required />
+                    <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required />
                     <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Jennifer</span>
                   </label>
                 </div>

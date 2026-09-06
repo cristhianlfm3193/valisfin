@@ -79,8 +79,10 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
       }
       
       // 3. Person Filter
-      if (personFilter !== 'all' && e.person.toLowerCase() !== personFilter.toLowerCase()) {
-        return false;
+      if (personFilter !== 'all') {
+        const firstName = e.profiles?.first_name?.toLowerCase() || '';
+        if (personFilter === 'cristhian' && !firstName.includes('cristhian')) return false;
+        if (personFilter === 'jennifer' && !firstName.includes('jennifer')) return false;
       }
       
       return true;
@@ -334,10 +336,10 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
                     <td className="py-4 px-3 font-medium text-slate-900 max-w-xs truncate">{expense.detail}</td>
                     <td className="py-4 px-3">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 bg-white shadow-sm">
-                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${expense.person.toLowerCase() === 'cristhian' ? 'bg-emerald-600' : 'bg-indigo-500'}`}>
-                          {expense.person.toLowerCase() === 'cristhian' ? 'CF' : 'JC'}
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'bg-emerald-600' : 'bg-indigo-500'}`}>
+                          {(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'CF' : 'JC'}
                         </span>
-                        <span className="text-xs font-medium text-slate-700">{expense.person}</span>
+                        <span className="text-xs font-medium text-slate-700">{expense.profiles?.first_name || 'Desconocido'}</span>
                       </span>
                     </td>
                     <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">-B/. {expense.amount.toFixed(2)}</td>

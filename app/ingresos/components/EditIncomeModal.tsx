@@ -7,7 +7,8 @@ import { editIncome, deleteIncome } from '@/app/actions/income';
 export function EditIncomeModal({ item }: { item: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [person, setPerson] = useState(item.person);
+  const initialPerson = (item.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'cristhian' : 'jennifer';
+  const [person, setPerson] = useState(initialPerson);
   const [category, setCategory] = useState(item.category);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -15,7 +16,7 @@ export function EditIncomeModal({ item }: { item: any }) {
     setIsLoading(true);
     
     const formData = new FormData(e.currentTarget);
-    formData.set('person', person);
+    formData.set('profile_id', person === 'cristhian' ? 'edc938dc-9fbc-4573-b007-0bdb95114f95' : '7b5c62be-58f1-48d6-b366-0f504c39bdcb');
     
     try {
       const result = await editIncome(item.id, formData);
@@ -94,8 +95,8 @@ export function EditIncomeModal({ item }: { item: any }) {
                   }`}>
                     <input 
                       type="radio" 
-                      name="person" 
-                      value="cristhian" 
+                      name="profile_id" 
+                      value="edc938dc-9fbc-4573-b007-0bdb95114f95" 
                       checked={person === 'cristhian'}
                       onChange={() => setPerson('cristhian')}
                       className="sr-only" 
@@ -116,8 +117,8 @@ export function EditIncomeModal({ item }: { item: any }) {
                   }`}>
                     <input 
                       type="radio" 
-                      name="person" 
-                      value="jennifer" 
+                      name="profile_id" 
+                      value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" 
                       checked={person === 'jennifer'}
                       onChange={() => setPerson('jennifer')}
                       className="sr-only" 

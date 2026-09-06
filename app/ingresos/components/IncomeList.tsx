@@ -60,8 +60,9 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
 
   const renderItem = (item: any) => {
     const isReceived = item.is_received;
-    const initials = item.person === 'cristhian' ? 'CF' : 'JC';
-    const personName = item.person === 'cristhian' ? 'Cristhian' : 'Jennifer';
+    const isCristhian = (item.profiles?.first_name || '').toLowerCase().includes('cristhian');
+    const initials = isCristhian ? 'CF' : 'JC';
+    const personName = isCristhian ? 'Cristhian' : 'Jennifer';
     
     return (
       <div 

@@ -105,8 +105,8 @@ export function AddIncomeModal() {
                 >
                   <input 
                     type="radio" 
-                    name="person" 
-                    value="cristhian" 
+                    name="profile_id" 
+                    value="edc938dc-9fbc-4573-b007-0bdb95114f95" 
                     checked={person === 'cristhian'} 
                     onChange={() => { setPerson('cristhian'); if (category === 'carro') setCategory('salario'); }}
                     className="sr-only" 
@@ -133,8 +133,8 @@ export function AddIncomeModal() {
                 >
                   <input 
                     type="radio" 
-                    name="person" 
-                    value="jennifer" 
+                    name="profile_id" 
+                    value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" 
                     checked={person === 'jennifer'} 
                     onChange={() => { setPerson('jennifer'); if (category === 'representacion') setCategory('salario'); }}
                     className="sr-only" 
