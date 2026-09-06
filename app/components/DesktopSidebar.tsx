@@ -7,9 +7,15 @@ import {
   Car,
   Target,
   BarChart2,
+  LogOut,
 } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
 
-export function DesktopSidebar() {
+export function DesktopSidebar({ user }: { user?: User }) {
+  const fullName = user?.user_metadata?.full_name || "Usuario";
+  const avatarUrl = user?.user_metadata?.avatar_url;
+  const initial = fullName.charAt(0).toUpperCase();
+
   return (
     <aside
       className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200/80 p-5 shrink-0 justify-between min-h-screen sticky top-0"
@@ -31,7 +37,7 @@ export function DesktopSidebar() {
         </div>
         <nav aria-label="Navegación principal" className="space-y-1.5">
           <Link
-            href="#inicio"
+            href="/"
             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-semibold text-sm transition group"
           >
             <Home className="w-5 h-5 text-emerald-700" />
@@ -81,14 +87,18 @@ export function DesktopSidebar() {
           </Link>
         </nav>
       </div>
-      <div className="pt-4 border-t border-slate-100">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-50/80">
-          <div className="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center font-bold text-emerald-800 text-xs">
-            FC
-          </div>
+      <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-50/80 flex-1">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={fullName} className="w-9 h-9 rounded-full border border-slate-200" />
+          ) : (
+            <div className="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center font-bold text-emerald-800 text-xs">
+              {initial}
+            </div>
+          )}
           <div className="overflow-hidden">
             <p className="text-xs font-semibold text-slate-900 truncate">
-              Cristhian & Jennifer
+              {fullName}
             </p>
             <p className="text-[11px] text-slate-500 truncate">Hogar Protegido</p>
           </div>

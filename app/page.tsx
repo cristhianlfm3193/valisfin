@@ -15,8 +15,15 @@ import {
   upcomingBills,
   vehicleData,
 } from "../lib/mockData";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const fullName = user?.user_metadata?.full_name || "Usuario";
+  const avatarUrl = user?.user_metadata?.avatar_url;
+  const initial = fullName.charAt(0).toUpperCase();
+
   return (
     <>
       <header
@@ -24,8 +31,14 @@ export default function Home() {
         data-purpose="top-header"
       >
         <div className="flex items-center gap-3">
-          <div className="lg:hidden w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold text-xs">
-            FC
+          <div className="lg:hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={fullName} className="w-8 h-8 rounded-xl border border-slate-200 object-cover" />
+            ) : (
+              <div className="w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold text-xs">
+                {initial}
+              </div>
+            )}
           </div>
           <div>
             <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-700 block">
