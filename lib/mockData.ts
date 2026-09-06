@@ -187,3 +187,96 @@ export const quincena2Ingresos = [
     type: "Incluye bono (B/. 120.00)"
   }
 ];
+
+export const initialFixedPayments = [
+  {
+    id: "fp-1",
+    category: "servicios",
+    isPaid: false,
+    responsible: "Cristhian Fuentes • Servicios",
+    title: "Luz (Electricidad)",
+    amount: 25.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-2",
+    category: "servicios",
+    isPaid: true,
+    responsible: "Cristhian Fuentes • Telecom",
+    title: "Internet Residencial",
+    amount: 44.00,
+    subtitle: "Registrado este mes"
+  },
+  {
+    id: "fp-3",
+    category: "servicios",
+    isPaid: true,
+    responsible: "Cristhian Fuentes • Servicios",
+    title: "Tasa de Basura",
+    amount: 12.00,
+    subtitle: "Registrado este mes"
+  },
+  {
+    id: "fp-4",
+    category: "autos",
+    isPaid: false,
+    responsible: "Cristhian Fuentes • Auto",
+    title: "Seguro Carro Cristhian",
+    amount: 45.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-5",
+    category: "educacion",
+    isPaid: false,
+    responsible: "Jennifer Camaño • Niña",
+    title: "Guardería Valeria",
+    amount: 180.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-6",
+    category: "autos",
+    isPaid: false,
+    responsible: "Jennifer Camaño • Financiamiento",
+    title: "Cuota Carro Jenny",
+    amount: 325.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-7",
+    category: "autos",
+    isPaid: false,
+    responsible: "Jennifer Camaño • Auto",
+    title: "Seguro Carro Jenny",
+    amount: 60.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-8",
+    category: "telecom",
+    isPaid: false,
+    responsible: "Plan Móvil • Mensual",
+    title: "Contrato Celular",
+    amount: 24.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-9",
+    category: "banco",
+    isPaid: false,
+    responsible: "Cristhian Fuentes • Deuda",
+    title: "Tarjeta de Crédito",
+    amount: 60.00,
+    subtitle: "Predeterminado fijo"
+  },
+  {
+    id: "fp-10",
+    category: "ahorro",
+    isPaid: true,
+    responsible: "Jennifer Camaño • Futuro",
+    title: "Ahorro de Valeria",
+    amount: 50.00,
+    subtitle: "Transferencia exitosa"
+  }
+];

@@ -17,7 +17,7 @@ import { LogoutButton } from "./LogoutButton";
 const navItems = [
   { href: "/", label: "Inicio", icon: Home },
   { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
-  { href: "#pagos", label: "Pagos Fijos", icon: CreditCard },
+  { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
   { href: "#gastos", label: "Gastos Diarios", icon: Wallet },
   { href: "#vehiculos", label: "Vehículos", icon: Car },
   { href: "#metas", label: "Metas de Ahorro", icon: Target },
