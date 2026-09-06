@@ -76,3 +76,114 @@ export const vehicleData = {
   budgetTotal: 140.00,
   percentage: 60
 };
+
+// Datos simulados para la página de Ingresos
+export const ingresosMetrics = {
+  projected: 2242.14,
+  projectedCount: 8,
+  received: 1023.70,
+  receivedCount: 3,
+  pending: 1218.44,
+  pendingCount: 5,
+  percent: 45.6
+};
+
+export const ingresosBreakdown = [
+  {
+    id: "cf",
+    name: "Cristhian Fuentes",
+    initials: "CF",
+    subtitle: "Salarios & Gastos de Representación",
+    color: "emerald",
+    abonos: 4,
+    projected: 1189.68,
+    received: 594.84,
+    pending: 594.84,
+    footer: "50% recaudado a la fecha",
+    footerDates: "Cortes 02, 11, 17 y 25",
+    dotColor: "bg-emerald-500"
+  },
+  {
+    id: "jc",
+    name: "Jennifer Camaño",
+    initials: "JC",
+    subtitle: "Salario base, Carro & Comisión Meta",
+    color: "teal",
+    abonos: 4,
+    projected: 1052.46,
+    received: 428.86,
+    pending: 623.60,
+    footer: "Incluye bono sujeto a meta (B/. 120.00)",
+    footerDates: "Cortes 15 y 30",
+    dotColor: "bg-indigo-500"
+  }
+];
+
+export const quincena1Ingresos = [
+  {
+    id: "inc-1",
+    title: "Gasto de representación",
+    person: "Cristhian Fuentes",
+    initials: "CF",
+    status: "received", // 'received' or 'pending'
+    dateExpected: "02/09/2026",
+    dateReceived: "02/09/2026",
+    amount: 140.43,
+  },
+  {
+    id: "inc-2",
+    title: "Salario Cristhian (Quincena 1)",
+    person: "Cristhian Fuentes",
+    initials: "CF",
+    status: "received",
+    dateExpected: "11/09/2026",
+    dateReceived: "03/09/2026",
+    amount: 454.41,
+  },
+  {
+    id: "inc-3",
+    title: "Salario Jennifer (Quincena 15)",
+    person: "Jennifer Camaño",
+    initials: "JC",
+    status: "received",
+    dateExpected: "15/09/2026",
+    dateReceived: "03/09/2026",
+    amount: 428.86,
+  }
+];
+
+export const quincena2Ingresos = [
+  {
+    id: "inc-4",
+    title: "Gasto de representación",
+    person: "Cristhian Fuentes",
+    initials: "CF",
+    status: "pending",
+    dateExpected: "17/09/2026",
+    dateReceived: null,
+    amount: 140.43,
+    type: "Programado regular"
+  },
+  {
+    id: "inc-5",
+    title: "Salario Cristhian (Quincena 2)",
+    person: "Cristhian Fuentes",
+    initials: "CF",
+    status: "pending",
+    dateExpected: "25/09/2026",
+    dateReceived: null,
+    amount: 454.41,
+    type: "Programado regular"
+  },
+  {
+    id: "inc-6",
+    title: "Salario Jennifer (Quincena 30)",
+    person: "Jennifer Camaño",
+    initials: "JC",
+    status: "pending",
+    dateExpected: "30/09/2026",
+    dateReceived: null,
+    amount: 623.60,
+    type: "Incluye bono (B/. 120.00)"
+  }
+];

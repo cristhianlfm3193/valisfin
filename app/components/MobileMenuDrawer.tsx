@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { 
   Menu, 
   X, 
@@ -76,36 +77,34 @@ export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDra
           </button>
         </div>
 
-        {/* Navigation Links */}
         <nav className="flex-1 overflow-y-auto py-4 px-4 space-y-1.5 custom-scrollbar">
-          <Link href="/" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-emerald-50 text-emerald-800 font-semibold text-sm transition group">
-            <Home className="w-5 h-5 text-emerald-700" />
-            Inicio
-          </Link>
-          <Link href="#ingresos" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <TrendingUp className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Ingresos
-          </Link>
-          <Link href="#pagos" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <CreditCard className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Pagos Fijos
-          </Link>
-          <Link href="#gastos" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <Wallet className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Gastos Diarios
-          </Link>
-          <Link href="#vehiculos" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <Car className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Vehículos
-          </Link>
-          <Link href="#metas" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <Target className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Metas de Ahorro
-          </Link>
-          <Link href="#consultas" onClick={closeMenu} className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group">
-            <BarChart2 className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Consultas & Reportes
-          </Link>
+          {[
+            { href: "/", label: "Inicio", icon: Home },
+            { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
+            { href: "#pagos", label: "Pagos Fijos", icon: CreditCard },
+            { href: "#gastos", label: "Gastos Diarios", icon: Wallet },
+            { href: "#vehiculos", label: "Vehículos", icon: Car },
+            { href: "#metas", label: "Metas de Ahorro", icon: Target },
+            { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
+          ].map((item) => {
+            const isActive = usePathname() === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeMenu}
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-sm transition group ${
+                  isActive
+                    ? "bg-emerald-50 text-emerald-800 font-semibold"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${isActive ? "text-emerald-700" : "text-slate-400 group-hover:text-slate-600"}`} />
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Footer Actions */}

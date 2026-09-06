@@ -1,4 +1,7 @@
+'use client';
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Home,
   TrendingUp,
@@ -11,7 +14,18 @@ import {
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
 
+const navItems = [
+  { href: "/", label: "Inicio", icon: Home },
+  { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
+  { href: "#pagos", label: "Pagos Fijos", icon: CreditCard },
+  { href: "#gastos", label: "Gastos Diarios", icon: Wallet },
+  { href: "#vehiculos", label: "Vehículos", icon: Car },
+  { href: "#metas", label: "Metas de Ahorro", icon: Target },
+  { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
+];
+
 export function DesktopSidebar({ user }: { user?: User }) {
+  const pathname = usePathname();
   const fullName = user?.user_metadata?.full_name || "Usuario";
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
@@ -36,55 +50,25 @@ export function DesktopSidebar({ user }: { user?: User }) {
           </div>
         </div>
         <nav aria-label="Navegación principal" className="space-y-1.5">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-semibold text-sm transition group"
-          >
-            <Home className="w-5 h-5 text-emerald-700" />
-            Inicio
-          </Link>
-          <Link
-            href="#ingresos"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <TrendingUp className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Ingresos
-          </Link>
-          <Link
-            href="#pagos"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <CreditCard className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Pagos Fijos
-          </Link>
-          <Link
-            href="#gastos"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <Wallet className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Gastos Diarios
-          </Link>
-          <Link
-            href="#vehiculos"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <Car className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Vehículos
-          </Link>
-          <Link
-            href="#metas"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <Target className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Metas de Ahorro
-          </Link>
-          <Link
-            href="#consultas"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group"
-          >
-            <BarChart2 className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            Consultas & Reportes
-          </Link>
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition group ${
+                  isActive 
+                    ? "bg-emerald-50 text-emerald-800 font-semibold" 
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${isActive ? "text-emerald-700" : "text-slate-400 group-hover:text-slate-600"}`} />
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
       <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
