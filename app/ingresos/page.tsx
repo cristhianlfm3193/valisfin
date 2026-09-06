@@ -15,6 +15,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { familyData, ingresosMetrics, ingresosBreakdown } from "@/lib/mockData";
 import { IncomeList } from "./components/IncomeList";
+import { AddIncomeModal } from "./components/AddIncomeModal";
 
 export default async function IngresosPage() {
   const supabase = await createClient();
@@ -22,6 +23,75 @@ export default async function IngresosPage() {
   const fullName = user?.user_metadata?.full_name || "Usuario";
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
+
+  // Fetch real incomes from Supabase
+  const { data: incomes = [], error } = await supabase
+    .from('incomes')
+    .select('*')
+    .order('date_expected', { ascending: true });
+
+  if (error) {
+    // console.warn('Error fetching incomes:', error.message);
+  }
+
+  // Calculate metrics
+  const projected = incomes?.reduce((acc, curr) => acc + curr.amount, 0) || 0;
+  const projectedCount = incomes?.length || 0;
+  const received = incomes?.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0) || 0;
+  const receivedCount = incomes?.filter(i => i.is_received).length || 0;
+  const pending = projected - received;
+  const pendingCount = projectedCount - receivedCount;
+  const percent = projected > 0 ? (received / projected * 100).toFixed(1) : "0.0";
+
+  const dynamicMetrics = {
+    projected,
+    projectedCount,
+    received,
+    receivedCount,
+    pending,
+    pendingCount,
+    percent
+  };
+
+  // Calculate Breakdown
+  const cfIncomes = incomes?.filter(i => i.person === 'cristhian') || [];
+  const cfProjected = cfIncomes.reduce((acc, curr) => acc + curr.amount, 0);
+  const cfReceived = cfIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+  
+  const jcIncomes = incomes?.filter(i => i.person === 'jennifer') || [];
+  const jcProjected = jcIncomes.reduce((acc, curr) => acc + curr.amount, 0);
+  const jcReceived = jcIncomes.filter(i => i.is_received).reduce((acc, curr) => acc + curr.amount, 0);
+
+  const dynamicBreakdown = [
+    {
+      id: "cf",
+      name: "Cristhian Fuentes",
+      initials: "CF",
+      subtitle: "Salarios & Gastos de Representación",
+      color: "emerald",
+      abonos: cfIncomes.length,
+      projected: cfProjected,
+      received: cfReceived,
+      pending: cfProjected - cfReceived,
+      footer: "Ingresos programados",
+      footerDates: "Mes actual",
+      dotColor: "bg-emerald-500"
+    },
+    {
+      id: "jc",
+      name: "Jennifer Camaño",
+      initials: "JC",
+      subtitle: "Salario base, Carro & Comisión Meta",
+      color: "teal",
+      abonos: jcIncomes.length,
+      projected: jcProjected,
+      received: jcReceived,
+      pending: jcProjected - jcReceived,
+      footer: "Ingresos programados",
+      footerDates: "Mes actual",
+      dotColor: "bg-indigo-500"
+    }
+  ];
 
   return (
     <>
@@ -81,10 +151,7 @@ export default async function IngresosPage() {
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-            <button className="inline-flex items-center gap-2 bg-emerald-700 text-white hover:bg-emerald-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm transition hover:shadow-md active:scale-95">
-              <PlusCircle className="w-4 h-4" />
-              <span>Ingreso eventual</span>
-            </button>
+            <AddIncomeModal />
           </div>
         </header>
 
@@ -106,9 +173,9 @@ export default async function IngresosPage() {
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {ingresosMetrics.projected.toFixed(2)}</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.projected.toFixed(2)}</div>
               <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" /> {ingresosMetrics.projectedCount} conceptos planificados
+                <Clock className="w-3.5 h-3.5 text-emerald-600" /> {dynamicMetrics.projectedCount} conceptos planificados
               </span>
             </div>
           </div>
@@ -122,9 +189,9 @@ export default async function IngresosPage() {
               </span>
             </div>
             <div className="relative z-10 mt-4">
-              <div className="text-2xl font-bold font-mono text-emerald-700 tracking-tight">B/. {ingresosMetrics.received.toFixed(2)}</div>
+              <div className="text-2xl font-bold font-mono text-emerald-700 tracking-tight">B/. {dynamicMetrics.received.toFixed(2)}</div>
               <span className="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> {ingresosMetrics.receivedCount} depósitos confirmados
+                <CheckCircle2 className="w-3.5 h-3.5" /> {dynamicMetrics.receivedCount} depósitos confirmados
               </span>
             </div>
           </div>
@@ -137,9 +204,9 @@ export default async function IngresosPage() {
               </span>
             </div>
             <div className="mt-4">
-              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {ingresosMetrics.pending.toFixed(2)}</div>
+              <div className="text-2xl font-bold font-mono text-slate-900 tracking-tight">B/. {dynamicMetrics.pending.toFixed(2)}</div>
               <span className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> {ingresosMetrics.pendingCount} por acreditarse
+                <CalendarDays className="w-3.5 h-3.5 text-slate-400" /> {dynamicMetrics.pendingCount} por acreditarse
               </span>
             </div>
           </div>
@@ -147,14 +214,14 @@ export default async function IngresosPage() {
           <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
             <div className="flex items-center justify-between text-slate-500">
               <span className="text-xs uppercase tracking-wider font-semibold">Efectividad del Mes</span>
-              <span className="text-sm font-bold text-emerald-700">{ingresosMetrics.percent}%</span>
+              <span className="text-sm font-bold text-emerald-700">{dynamicMetrics.percent}%</span>
             </div>
             <div className="mt-3">
               <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
-                <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${ingresosMetrics.percent}%` }}></div>
+                <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${dynamicMetrics.percent}%` }}></div>
               </div>
               <div className="flex justify-between items-center text-slate-500 text-xs mt-2">
-                <span>Recibido: B/. {ingresosMetrics.received.toFixed(2)}</span>
+                <span>Recibido: B/. {dynamicMetrics.received.toFixed(2)}</span>
                 <span className="text-emerald-700 font-medium">Meta: 100%</span>
               </div>
             </div>
@@ -163,7 +230,7 @@ export default async function IngresosPage() {
 
         {/* Resumen por Cónyuge */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          {ingresosBreakdown.map((person) => (
+          {dynamicBreakdown.map((person) => (
             <div key={person.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between">
@@ -205,7 +272,7 @@ export default async function IngresosPage() {
         </section>
 
         {/* Lista Interactiva de Ingresos */}
-        <IncomeList />
+        <IncomeList incomes={incomes || []} />
         
       </main>
     </>

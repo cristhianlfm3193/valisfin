@@ -1,42 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck } from 'lucide-react';
-import { quincena1Ingresos, quincena2Ingresos } from '@/lib/mockData';
+import { toggleIncomeStatus } from '@/app/actions/income';
 
-// We need to merge them to handle state uniformly, or handle them separately.
-// The easiest way is to use the initial mock data as the default state.
+export function IncomeList({ incomes }: { incomes: any[] }) {
+  const [isPending, startTransition] = useTransition();
 
-export function IncomeList() {
-  const [items, setItems] = useState([...quincena1Ingresos, ...quincena2Ingresos]);
-
-  const toggleConfirm = (id: string) => {
-    setItems(items.map(item => 
-      item.id === id 
-        ? { ...item, status: item.status === 'pending' ? 'received' : 'pending', dateReceived: item.status === 'pending' ? new Date().toLocaleDateString('es-PA') : null }
-        : item
-    ));
+  const toggleConfirm = (id: string, currentStatus: boolean) => {
+    startTransition(async () => {
+      try {
+        await toggleIncomeStatus(id, currentStatus);
+      } catch (e) {
+        console.error(e);
+      }
+    });
   };
 
-  const q1Items = items.filter(i => quincena1Ingresos.find(q1 => q1.id === i.id));
-  const q2Items = items.filter(i => quincena2Ingresos.find(q2 => q2.id === i.id));
+  const q1Items = incomes.filter(i => i.period === 'q1');
+  const q2Items = incomes.filter(i => i.period === 'q2' || i.period === 'eventual');
 
   const renderItem = (item: any) => {
-    const isReceived = item.status === 'received';
+    const isReceived = item.is_received;
+    const initials = item.person === 'cristhian' ? 'CF' : 'JC';
+    const personName = item.person === 'cristhian' ? 'Cristhian' : 'Jennifer';
     
     return (
       <div 
         key={item.id} 
-        className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4"
+        className={`bg-white rounded-xl p-4 sm:p-5 border shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 ${isPending ? 'opacity-70 pointer-events-none' : ''} ${isReceived ? 'border-emerald-200/60' : 'border-slate-200/80'}`}
       >
         <div className="flex items-start sm:items-center gap-3.5">
           <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 text-slate-700 font-bold text-sm">
-            {item.initials}
+            {initials}
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-semibold text-slate-900 text-sm sm:text-base">{item.title}</h3>
-              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold text-[10px] sm:text-xs">{item.person}</span>
+              <h3 className="font-semibold text-slate-900 text-sm sm:text-base">{item.description}</h3>
+              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold text-[10px] sm:text-xs">{personName}</span>
               <span className={`px-2 py-0.5 rounded-full font-semibold text-[10px] sm:text-xs flex items-center gap-1 ${
                 isReceived ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-amber-50 text-amber-700 border border-amber-200/60'
               }`}>
@@ -48,13 +49,13 @@ export function IncomeList() {
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500 text-xs sm:text-sm">
-              <span>Fecha prevista: {item.dateExpected}</span>
+              <span>Fecha prevista: {new Date(item.date_expected).toLocaleDateString('es-PA')}</span>
               {isReceived ? (
                 <span className="text-emerald-700 font-medium flex items-center gap-1">
-                  <CalendarCheck className="w-3.5 h-3.5" /> Recibido: {item.dateReceived}
+                  <CalendarCheck className="w-3.5 h-3.5" /> En cuenta
                 </span>
               ) : (
-                <span className="text-slate-500">{item.type}</span>
+                <span className="text-slate-500 capitalize">{item.category}</span>
               )}
             </div>
           </div>
@@ -72,7 +73,7 @@ export function IncomeList() {
           <div>
             {isReceived ? (
               <button 
-                onClick={() => toggleConfirm(item.id)}
+                onClick={() => toggleConfirm(item.id, isReceived)}
                 className="px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5 border border-emerald-200/60"
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -80,7 +81,7 @@ export function IncomeList() {
               </button>
             ) : (
               <button 
-                onClick={() => toggleConfirm(item.id)}
+                onClick={() => toggleConfirm(item.id, isReceived)}
                 className="px-5 py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5"
               >
                 <Check className="w-4 h-4" />
