@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DailyExpense } from '@/app/actions/daily_expenses';
-import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search } from 'lucide-react';
+import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 
 interface GastosDiariosClientProps {
@@ -15,6 +15,18 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [personFilter, setPersonFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  });
+
+  const ITEMS_PER_PAGE = 5;
+
+  // Resetea a la página 1 cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, categoryFilter, personFilter, selectedMonth]);
 
   // Hardcoded budgets for now as discussed
   const budgets = {
@@ -23,11 +35,9 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
     Ocio: 150
   };
 
-  // Currently only calculating budgets for the current month
+  // Calculate budgets for the selected month
   const currentMonthExpenses = expenses.filter(e => {
-    const d = new Date();
-    const currentMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-    return e.date.startsWith(currentMonth);
+    return e.date.startsWith(selectedMonth);
   });
 
   // Calculate spent amounts per budget category
@@ -52,6 +62,11 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
 
   const filteredExpenses = useMemo(() => {
     return expenses.filter(e => {
+      // 0. Month Filter
+      if (!e.date.startsWith(selectedMonth)) {
+        return false;
+      }
+      
       // 1. Search Query
       const q = searchQuery.toLowerCase();
       if (q && !e.detail.toLowerCase().includes(q) && !e.category.toLowerCase().includes(q)) {
@@ -87,7 +102,23 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Gastos Diarios</h1>
         </div>
         
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <div className="relative">
+            <Calendar className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input 
+              type="month" 
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              onClick={(e) => {
+                try {
+                  if ('showPicker' in HTMLInputElement.prototype) {
+                    e.currentTarget.showPicker();
+                  }
+                } catch (err) {}
+              }}
+              className="pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-full text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer shadow-sm hover:bg-slate-50"
+            />
+          </div>
           <button className="sm:hidden flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-sm">
             <SlidersHorizontal className="w-4 h-4" />
             <span>Filtros</span>
@@ -287,7 +318,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredExpenses.map((expense) => {
+              {filteredExpenses.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((expense) => {
                 const formattedDate = new Date(expense.date).toLocaleDateString('es-ES', {
                   year: 'numeric', month: '2-digit', day: '2-digit'
                 });
@@ -323,6 +354,34 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Controls */}
+        {filteredExpenses.length > ITEMS_PER_PAGE && (
+          <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
+            <div className="text-sm text-slate-500">
+              Mostrando <span className="font-medium text-slate-900">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> a <span className="font-medium text-slate-900">{Math.min(currentPage * ITEMS_PER_PAGE, filteredExpenses.length)}</span> de <span className="font-medium text-slate-900">{filteredExpenses.length}</span> gastos
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <div className="text-sm font-medium text-slate-700">
+                Página {currentPage} de {Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE)}
+              </div>
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE), p + 1))}
+                disabled={currentPage === Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE)}
+                className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <AddDailyExpenseModal 
