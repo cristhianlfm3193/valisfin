@@ -97,3 +97,45 @@ export async function addMaintenanceLog(formData: FormData) {
   revalidatePath('/vehiculos');
   return { success: true };
 }
+
+export async function addPendingMaintenance(formData: FormData) {
+  const supabase = await createClient();
+  
+  const vehicleId = formData.get('vehicle_id') as string;
+  const service = formData.get('service') as string;
+  const cost = formData.get('cost') ? parseFloat(formData.get('cost') as string) : null;
+  const currentKm = parseInt(formData.get('current_km') as string);
+  const notes = formData.get('notes') as string || null;
+  const date = new Date().toISOString().split('T')[0];
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: 'User not authenticated' };
+  }
+
+  try {
+    // Insert into maintenance with is_pending = true
+    const { error: insertError } = await supabase
+      .from('maintenance')
+      .insert({
+        vehicle_id: vehicleId,
+        date: date,
+        service: service,
+        km: currentKm,
+        cost: cost,
+        status: 'pending',
+        is_pending: true,
+        notes: notes,
+        user_id: user.id
+      });
+
+    if (insertError) throw insertError;
+
+    revalidatePath('/vehiculos');
+    return { success: true };
+  } catch (error) {
+    console.error('Error in addPendingMaintenance:', error);
+    return { success: false, error: 'Failed to add pending maintenance' };
+  }
+}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import AddKmModal from './AddKmModal';
 import AddMaintenanceModal from './AddMaintenanceModal';
+import AddPendingModal from './AddPendingModal';
 
 export default function VehiculosClient({
   vehicles,
@@ -15,11 +16,15 @@ export default function VehiculosClient({
 }) {
   const [isKmModalOpen, setIsKmModalOpen] = useState(false);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
   const [kmFilter, setKmFilter] = useState('all');
 
   const filteredMileage = kmFilter === 'all' 
     ? mileageLogs 
     : mileageLogs.filter(log => log.vehicle_id === kmFilter);
+
+  const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
+  const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
@@ -45,7 +50,7 @@ export default function VehiculosClient({
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#006655] hover:bg-[#005144] text-white font-semibold text-sm shadow-sm transition-all"
             >
               <span className="material-symbols-outlined text-[18px]">speed</span>
-              <span>+ Registrar Kilometraje</span>
+              <span>+ Kilometraje</span>
             </button>
             <button 
               onClick={() => setIsMaintenanceModalOpen(true)}
@@ -53,6 +58,13 @@ export default function VehiculosClient({
             >
               <span className="material-symbols-outlined text-[18px]">build</span>
               <span>Registrar Mantenimiento</span>
+            </button>
+            <button 
+              onClick={() => setIsPendingModalOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm shadow-sm transition-all"
+            >
+              <span className="material-symbols-outlined text-[18px] text-orange-600">assignment_late</span>
+              <span>Trabajo Pendiente</span>
             </button>
           </div>
         </header>
@@ -63,14 +75,20 @@ export default function VehiculosClient({
             const latestMaintenance = maintenanceLogs.find(log => log.vehicle_id === vehicle.id);
             const next_service_km = latestMaintenance?.next_km || null;
             
-            const isWarning = next_service_km && (next_service_km - vehicle.current_km <= 1000);
-            const remaining = next_service_km ? next_service_km - vehicle.current_km : 0;
-            const progress = next_service_km ? Math.min(100, Math.max(0, 100 - (remaining / 5000) * 100)) : 100;
+            const isOverdue = next_service_km && (vehicle.current_km > next_service_km);
+            const isWarning = next_service_km && !isOverdue && (next_service_km - vehicle.current_km <= 1000);
+            
+            const remaining = next_service_km ? Math.max(0, next_service_km - vehicle.current_km) : 0;
+            const overdueBy = next_service_km && isOverdue ? vehicle.current_km - next_service_km : 0;
+            const progress = next_service_km 
+              ? (isOverdue ? 100 : Math.min(100, Math.max(0, 100 - (remaining / 5000) * 100))) 
+              : 100;
+              
             const isJennifer = vehicle.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
             
             return (
-              <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300'}`}>
-                {isWarning && <div className={`absolute top-0 left-0 right-0 h-1 ${isJennifer ? 'bg-pink-400' : 'bg-amber-400'}`}></div>}
+              <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
+                {(isWarning || isOverdue) && <div className={`absolute top-0 left-0 right-0 h-1 ${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-400' : 'bg-amber-400')}`}></div>}
                 
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-5">
@@ -92,7 +110,12 @@ export default function VehiculosClient({
                         </div>
                       </div>
                     </div>
-                    {isWarning ? (
+                    {isOverdue ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200">
+                        <span className="material-symbols-outlined text-[15px] text-red-600">dangerous</span>
+                        Mantenimiento Vencido
+                      </span>
+                    ) : isWarning ? (
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-100 text-pink-800 border border-pink-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
                         <span className={`material-symbols-outlined text-[15px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'}`}>warning</span>
                         Atención requerida
@@ -123,17 +146,25 @@ export default function VehiculosClient({
                     <div className="mt-4 pt-2 border-t border-slate-200/60">
                       <div className="flex items-center justify-between text-xs mb-1.5">
                         <span className="text-slate-600">Próximo servicio: <strong className="font-mono text-slate-900 font-semibold">{next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
-                        <span className={`${isJennifer ? 'text-pink-600' : 'text-[#006655]'} font-semibold font-mono`}>
-                          {next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
+                        <span className={`${isOverdue ? 'text-red-600' : (isJennifer ? 'text-pink-600' : 'text-[#006655]')} font-semibold font-mono`}>
+                          {isOverdue ? `Pasado por ${overdueBy.toLocaleString()} km` : next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
                         </span>
                       </div>
                       <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                        <div className={`${isJennifer ? 'bg-pink-500' : 'bg-[#006655]'} h-full rounded-full transition-all duration-500`} style={{ width: `${progress}%` }}></div>
+                        <div className={`${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-500' : 'bg-[#006655]')} h-full rounded-full transition-all duration-500`} style={{ width: `${progress}%` }}></div>
                       </div>
+                      
+                      {isOverdue && (
+                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs bg-red-50 border-red-200 text-red-800`}>
+                          <span className={`material-symbols-outlined text-[16px] text-red-600 mt-0.5`}>warning</span>
+                          <span><strong>¡Peligro Crítico!</strong> Te has pasado por {overdueBy.toLocaleString()} km. Programa el mantenimiento urgente porque el motor podría sufrir daños severos y costar mucho dinero.</span>
+                        </div>
+                      )}
+                      
                       {isWarning && (
-                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
-                          <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'}`}>error</span>
-                          <span><strong>¡Atención!</strong> Faltan {remaining} km para mantenimiento.</span>
+                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
+                          <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'} mt-0.5`}>error</span>
+                          <span><strong>¡Atención!</strong> Faltan {remaining.toLocaleString()} km para mantenimiento.</span>
                         </div>
                       )}
                     </div>
@@ -202,6 +233,61 @@ export default function VehiculosClient({
           </div>
         </section>
 
+        {/* TAREAS PENDIENTES */}
+        {pendingTasks.length > 0 && (
+          <section className="bg-white rounded-3xl p-6 border border-orange-200 shadow-card space-y-4 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-orange-400"></div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[18px]">assignment_late</span>
+                  </div>
+                  <h2 className="text-lg font-bold text-on-surface">Trabajos Pendientes de Revisión</h2>
+                </div>
+              </div>
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
+                {pendingTasks.length} Tareas Críticas
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {pendingTasks.map(task => {
+                const vehicle = vehicles.find(v => v.id === task.vehicle_id);
+                return (
+                  <div key={task.id} className="p-4 rounded-2xl border border-orange-100 bg-orange-50/50 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">{vehicle?.brand} {vehicle?.model}</span>
+                        <span className="font-mono text-xs text-slate-500">{task.date}</span>
+                      </div>
+                      <h3 className="font-bold text-slate-800 text-base leading-tight mb-2">{task.service}</h3>
+                      
+                      <div className="flex items-center gap-4 mt-3">
+                        <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+                          <span className="material-symbols-outlined text-[16px] text-slate-400">speed</span>
+                          Registrado a los {task.km?.toLocaleString()} km
+                        </div>
+                      </div>
+                    </div>
+                    {task.cost ? (
+                      <div className="mt-4 pt-3 border-t border-orange-200/50 flex items-center justify-between">
+                        <span className="text-xs text-slate-500 font-medium">Presupuesto Estimado:</span>
+                        <span className="font-mono font-bold text-orange-700 text-base">B/. {task.cost.toFixed(2)}</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 pt-3 border-t border-orange-200/50 flex items-center justify-between">
+                        <span className="text-xs text-slate-500 font-medium">Presupuesto Estimado:</span>
+                        <span className="text-xs font-semibold text-slate-400 bg-white px-2 py-1 rounded-md border border-slate-200">Sin presupuesto</span>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
         {/* HISTORIAL MANTENIMIENTO */}
         <section className="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
@@ -214,7 +300,7 @@ export default function VehiculosClient({
               </div>
             </div>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
-              {maintenanceLogs.length} Servicios Registrados
+              {completedMaintenance.length} Servicios Completados
             </span>
           </div>
 
@@ -231,7 +317,7 @@ export default function VehiculosClient({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
-                {maintenanceLogs.map(log => {
+                {completedMaintenance.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   return (
                     <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
@@ -262,6 +348,12 @@ export default function VehiculosClient({
       <AddMaintenanceModal 
         isOpen={isMaintenanceModalOpen} 
         onClose={() => setIsMaintenanceModalOpen(false)} 
+        vehicles={vehicles} 
+      />
+      
+      <AddPendingModal 
+        isOpen={isPendingModalOpen} 
+        onClose={() => setIsPendingModalOpen(false)} 
         vehicles={vehicles} 
       />
     </div>
