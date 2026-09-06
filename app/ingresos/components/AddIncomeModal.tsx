@@ -72,10 +72,17 @@ export function AddIncomeModal() {
               try {
                 // Since fields might be disabled/readonly, we can ensure they are in formData 
                 // but readOnly inputs are submitted normally.
-                await addIncome(formData);
-                setIsOpen(false);
+                // Wait, if an input is disabled or readOnly but we need its value, we should make sure it's passed.
+                // readOnly inputs ARE passed in formData.
+                const res = await addIncome(formData);
+                if (res && res.success === false) {
+                  alert("Error de base de datos: " + res.error);
+                } else {
+                  setIsOpen(false);
+                }
               } catch (e) {
                 console.error(e);
+                alert("Hubo un error de conexión al guardar.");
               } finally {
                 setIsLoading(false);
               }
@@ -247,7 +254,15 @@ export function AddIncomeModal() {
                   Fecha de Cobro / Depósito <span className="text-emerald-600">*</span>
                 </label>
                 <div className="relative">
-                  <input type="date" id="income-date" name="income-date" required className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" />
+                  <input 
+                    type="date" 
+                    id="income-date" 
+                    name="income-date" 
+                    required 
+                    suppressHydrationWarning
+                    defaultValue={new Date().toISOString().split('T')[0]}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" 
+                  />
                 </div>
               </div>
             </div>

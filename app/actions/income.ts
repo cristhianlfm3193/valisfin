@@ -30,10 +30,11 @@ export async function addIncome(formData: FormData) {
 
   if (error) {
     console.error('Error inserting income:', error);
-    throw new Error('Failed to add income');
+    return { success: false, error: error.message || JSON.stringify(error) };
   }
 
   revalidatePath('/ingresos');
+  return { success: true };
 }
 
 export async function toggleIncomeStatus(id: string, currentStatus: boolean) {

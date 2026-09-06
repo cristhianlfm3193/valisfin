@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang="es" suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full bg-slate-50`}>
-      <body className="h-full antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row pb-6 lg:pb-0 custom-scrollbar">
+      <body suppressHydrationWarning className="h-full antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row pb-6 lg:pb-0 custom-scrollbar">
         {user && <DesktopSidebar user={user} />}
         <div className="flex-1 flex flex-col min-w-0">
           {children}
