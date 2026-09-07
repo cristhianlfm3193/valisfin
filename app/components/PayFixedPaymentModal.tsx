@@ -83,34 +83,37 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm transition-opacity z-40 flex items-center justify-center p-3 sm:p-4" 
+      onClick={handleClose}
+    >
       <div 
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" 
-        onClick={handleClose}
-      />
-      <div className="relative bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-100/80 overflow-hidden z-50 transition-all"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="bg-emerald-600 px-6 py-5 flex items-center justify-between">
+        <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-2xl bg-violet-50 border border-violet-100 text-violet-700 flex items-center justify-center shrink-0">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white leading-tight">Pago de Obligación</h2>
-              <p className="text-emerald-100 text-xs font-medium">Registra el pago de un gasto fijo</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pago de Gasto Fijo</h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Registra el pago de una obligación pendiente</p>
             </div>
           </div>
           <button 
+            type="button"
             onClick={handleClose}
             disabled={isPending}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors disabled:opacity-50"
+            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
-        </div>
+        </header>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="px-6 sm:px-8 py-5 sm:py-6 space-y-5">
           {errorMsg && (
             <div className="p-3 bg-rose-50 text-rose-600 rounded-xl text-sm font-medium border border-rose-100">
               {errorMsg}
@@ -118,14 +121,14 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Seleccionar Obligación Pendiente
+            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+              Seleccionar Obligación Pendiente <span className="text-violet-600">*</span>
             </label>
             <select
               value={selectedPaymentId}
               onChange={(e) => setSelectedPaymentId(e.target.value)}
               disabled={isPending}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-medium appearance-none"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all appearance-none"
               required
             >
               <option value="" disabled>-- Elige una obligación --</option>
@@ -144,8 +147,8 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
                 <span className="text-sm font-bold text-slate-900">B/. {selectedPayment.amount.toFixed(2)}</span>
               </div>
 
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                Tipo de Pago
+              <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                Tipo de Pago <span className="text-violet-600">*</span>
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -154,7 +157,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
                   disabled={isPending}
                   className={`py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
                     paymentMode === 'total' 
-                      ? 'bg-emerald-600 text-white shadow-sm' 
+                      ? 'bg-violet-600 text-white shadow-sm' 
                       : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -166,7 +169,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
                   disabled={isPending}
                   className={`py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
                     paymentMode === 'abono' 
-                      ? 'bg-emerald-600 text-white shadow-sm' 
+                      ? 'bg-violet-600 text-white shadow-sm' 
                       : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}
                 >
@@ -176,8 +179,8 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
 
               {paymentMode === 'abono' && (
                 <div className="mt-4">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Monto a Abonar (B/.)
+                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    Monto a Abonar (B/.) <span className="text-violet-600">*</span>
                   </label>
                   <div className="relative">
                     <DollarSign className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -188,7 +191,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
                       value={abonoAmount}
                       onChange={(e) => setAbonoAmount(e.target.value)}
                       disabled={isPending}
-                      className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-bold placeholder:font-normal"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-base font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all"
                       placeholder="0.00"
                       required
                     />
@@ -198,20 +201,27 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
             </div>
           )}
 
-          <div className="pt-2">
+          {/* Modal Footer CTA */}
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
+            <button 
+              type="button" 
+              onClick={handleClose}
+              disabled={isPending}
+              className="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors disabled:opacity-50"
+            >
+              Cancelar
+            </button>
             <button
               type="submit"
               disabled={isPending || !selectedPaymentId}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]"
+              className="px-6 py-2.5 rounded-xl bg-violet-700 hover:bg-violet-800 text-white font-bold text-sm shadow-md shadow-violet-700/20 hover:shadow-violet-700/30 flex items-center gap-2 transition-all disabled:opacity-50"
             >
               {isPending ? (
-                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
               ) : (
-                <>
-                  <Wallet className="w-5 h-5" />
-                  <span>{paymentMode === 'total' ? 'Registrar Pago Total' : 'Registrar Abono'}</span>
-                </>
+                <Wallet className="w-4 h-4" />
               )}
+              {isPending ? 'Guardando...' : (paymentMode === 'total' ? 'Registrar Pago Total' : 'Registrar Abono')}
             </button>
           </div>
         </form>
