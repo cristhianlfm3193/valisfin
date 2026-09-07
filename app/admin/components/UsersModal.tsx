@@ -87,7 +87,7 @@ export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps)
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 pl-4">
+                  <div className="flex items-center gap-4 pl-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       isAdmin 
                         ? 'bg-amber-100 text-amber-700 border border-amber-200' 
@@ -97,22 +97,24 @@ export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps)
                     </span>
                     
                     <button
+                      type="button"
                       onClick={() => handleToggleRole(user.id, user.role)}
                       disabled={isLoading}
-                      className={`p-2 rounded-xl transition-all ${
-                        isAdmin 
-                          ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' 
-                          : 'text-slate-400 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-600'
-                      } disabled:opacity-50`}
-                      title={isAdmin ? "Quitar rol de administrador" : "Hacer administrador"}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200 ease-in-out disabled:opacity-50 ${
+                        isAdmin ? 'bg-amber-500' : 'bg-slate-200'
+                      }`}
+                      role="switch"
+                      aria-checked={isAdmin}
                     >
-                      {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : isAdmin ? (
-                        <ShieldCheck className="w-4 h-4" />
-                      ) : (
-                        <ShieldAlert className="w-4 h-4" />
-                      )}
+                      <span className="sr-only">Toggle admin role</span>
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
+                          isAdmin ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      >
+                        {isLoading && <Loader2 className="w-3 h-3 text-slate-400 animate-spin" />}
+                      </span>
                     </button>
                   </div>
                 </div>
