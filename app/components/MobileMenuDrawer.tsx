@@ -12,7 +12,8 @@ import {
   CreditCard, 
   Car, 
   Target, 
-  BarChart2 
+  BarChart2,
+  Wrench
 } from 'lucide-react';
 import { LogoutButtonMobile } from './LogoutButton';
 
@@ -81,6 +82,7 @@ export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDra
             { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
             { href: "/gastos-diarios", label: "Gastos Diarios", icon: Wallet },
             { href: "/vehiculos", label: "Vehículos", icon: Car },
+            { href: "/hogar", label: "Hogar", icon: Wrench },
             { href: "#metas", label: "Metas de Ahorro", icon: Target },
             { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
           ].map((item) => {

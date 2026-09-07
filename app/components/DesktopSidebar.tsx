@@ -10,6 +10,7 @@ import {
   Car,
   Target,
   BarChart2,
+  Wrench,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
   { href: "/gastos-diarios", label: "Gastos Diarios", icon: Wallet },
   { href: "/vehiculos", label: "Vehículos", icon: Car },
+  { href: "/hogar", label: "Hogar", icon: Wrench },
   { href: "#metas", label: "Metas de Ahorro", icon: Target },
   { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
 ];

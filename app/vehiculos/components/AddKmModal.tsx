@@ -30,7 +30,7 @@ export default function AddKmModal({
   };
 
   const incrementKm = (amount: number) => {
-    setKmValue(prev => (typeof prev === 'number' ? prev + amount : amount));
+    setKmValue((prev: number) => (typeof prev === 'number' ? prev + amount : amount));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

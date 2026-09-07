@@ -137,7 +137,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
   const handlePartialPaymentSubmit = async (partialAmount: number) => {
     if (!selectedForPartial) return;
     
-    const originalRecord = payments.find(p => p.id === selectedForPartial.originalIds?.[0] || p.id === selectedForPartial.id);
+    const originalRecord = payments.find(p => p.id === (selectedForPartial as any).originalIds?.[0] || p.id === selectedForPartial.id);
     if (!originalRecord) return;
 
     // Optimistic update
