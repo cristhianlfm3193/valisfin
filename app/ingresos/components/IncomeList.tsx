@@ -12,7 +12,7 @@ const formatCurrency = (amount: number) => {
     maximumFractionDigits: 2,
   }).format(amount);
 };
-export function IncomeList({ incomes }: { incomes: any[] }) {
+export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[], monthName?: string }) {
   const [isPending, startTransition] = useTransition();
 
   const toggleConfirm = (id: string, currentStatus: boolean) => {
@@ -157,7 +157,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Primera Quincena (1 al 15 de Septiembre)</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Primera Quincena (1 al 15 de {monthName})</h2>
               <p className="text-xs sm:text-sm text-slate-500">Pagos de inicio de mes, colegiatura y primera ronda de compromisos familiares.</p>
             </div>
           </div>
@@ -194,7 +194,7 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-sm shrink-0">2</div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Segunda Quincena (16 al 30 de Septiembre)</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Segunda Quincena (16 al 30/31 de {monthName})</h2>
               <p className="text-xs sm:text-sm text-slate-500">Cierres de mes, servicios del hogar, ahorros y amortizaciones.</p>
             </div>
           </div>

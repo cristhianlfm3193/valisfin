@@ -338,7 +338,7 @@ export default async function IngresosPage(props: {
         </section>
 
         {/* Lista Interactiva de Ingresos */}
-        <IncomeList incomes={incomes || []} />
+        <IncomeList incomes={incomes || []} monthName={MONTHS[selectedMonth]} />
         
       </main>
     </>

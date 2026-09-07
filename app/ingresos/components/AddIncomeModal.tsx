@@ -14,7 +14,7 @@ export function AddIncomeModal({
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [person, setPerson] = useState<'cristhian' | 'jennifer'>('cristhian');
-  const [category, setCategory] = useState('salario');
+  const [category, setCategory] = useState('extra');
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
@@ -84,7 +84,7 @@ export function AddIncomeModal({
                 if (res && res.success === false) {
                   alert("Error de base de datos: " + res.error);
                 } else {
-                  setIsOpen(false);
+                  handleClose();
                 }
               } catch (e) {
                 console.error(e);
@@ -114,7 +114,7 @@ export function AddIncomeModal({
                     name="profile_id" 
                     value="edc938dc-9fbc-4573-b007-0bdb95114f95" 
                     checked={person === 'cristhian'} 
-                    onChange={() => { setPerson('cristhian'); if (category === 'carro') setCategory('salario'); }}
+                    onChange={() => { setPerson('cristhian'); }}
                     className="sr-only" 
                   />
                   <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
@@ -142,7 +142,7 @@ export function AddIncomeModal({
                     name="profile_id" 
                     value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" 
                     checked={person === 'jennifer'} 
-                    onChange={() => { setPerson('jennifer'); if (category === 'representacion') setCategory('salario'); }}
+                    onChange={() => { setPerson('jennifer'); }}
                     className="sr-only" 
                   />
                   <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
@@ -173,9 +173,6 @@ export function AddIncomeModal({
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                 >
-                  <option value="salario">Salario Quincenal</option>
-                  {person === 'cristhian' && <option value="representacion">Gasto de Representación</option>}
-                  {person === 'jennifer' && <option value="carro">Gasto de Carro / Movilidad</option>}
                   <option value="bono">Bono por Objetivos</option>
                   <option value="extra">Ingreso Extraordinario / Consultoría</option>
                 </select>
@@ -206,17 +203,7 @@ export function AddIncomeModal({
                 required 
                 placeholder="Ej. Venta de artículo" 
                 key={`title-${category}-${person}`}
-                defaultValue={
-                  category === 'salario' ? `Salario Quincenal ${person === 'cristhian' ? 'Cristhian' : 'Jennifer'}` :
-                  category === 'representacion' ? 'Gasto de Representación Cristhian' :
-                  category === 'carro' ? 'Gasto de Carro Jennifer' : ''
-                }
-                readOnly={['salario', 'representacion', 'carro'].includes(category)}
-                className={`w-full px-4 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all ${
-                  ['salario', 'representacion', 'carro'].includes(category) 
-                    ? 'bg-slate-100 text-slate-500 border-transparent cursor-not-allowed shadow-inner' 
-                    : 'bg-slate-50 border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500'
-                }`} 
+                className="w-full px-4 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500" 
               />
             </div>
 
@@ -239,17 +226,7 @@ export function AddIncomeModal({
                     required 
                     placeholder="0.00" 
                     key={`amount-${category}-${person}`}
-                    defaultValue={
-                      category === 'salario' ? (person === 'cristhian' ? 454.41 : 428.86) :
-                      category === 'representacion' ? 140.43 :
-                      category === 'carro' ? 125.00 : ''
-                    }
-                    readOnly={['salario', 'carro'].includes(category)}
-                    className={`w-full pl-11 pr-4 py-2.5 rounded-xl text-base font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all ${
-                      ['salario', 'carro'].includes(category) 
-                        ? 'bg-slate-100 text-slate-500 border-transparent cursor-not-allowed shadow-inner' 
-                        : 'bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-emerald-500'
-                    }`} 
+                    className="w-full pl-11 pr-4 py-2.5 rounded-xl text-base font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-emerald-500" 
                   />
                 </div>
               </div>
@@ -277,7 +254,7 @@ export function AddIncomeModal({
             <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
               <button 
                 type="button" 
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 disabled={isLoading}
                 className="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors disabled:opacity-50"
               >
