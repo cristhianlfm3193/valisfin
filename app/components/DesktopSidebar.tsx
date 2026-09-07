@@ -22,7 +22,7 @@ const navItems = [
   { href: "/gastos-diarios", label: "Gastos Diarios", icon: Wallet },
   { href: "/vehiculos", label: "Vehículos", icon: Car },
   { href: "/hogar", label: "Hogar", icon: Wrench },
-  { href: "#metas", label: "Metas de Ahorro", icon: Target },
+  { href: "/metas", label: "Metas de Ahorro", icon: Target },
   { href: "#consultas", label: "Consultas & Reportes", icon: BarChart2 },
 ];
 
