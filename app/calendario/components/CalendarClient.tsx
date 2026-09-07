@@ -26,8 +26,13 @@ const CATEGORY_STYLES = {
   'Recordatorios': { bg: 'bg-pink-50', text: 'text-pink-900', border: 'border-pink-200', dot: 'bg-pink-500', icon: '🔔' },
 };
 
+import { getCalendarEvents } from '@/app/actions/calendario';
+
 export function CalendarClient({ initialEvents, currentMonth, currentYear }: CalendarClientProps) {
-  const router = useRouter();
+  const [month, setMonth] = useState(currentMonth);
+  const [year, setYear] = useState(currentYear);
+  const [events, setEvents] = useState(initialEvents);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -36,14 +41,26 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
   const [viewType, setViewType] = useState<'Año' | 'Mes' | 'Día'>('Mes');
   const [activeDateStr, setActiveDateStr] = useState<string>(new Date().toISOString().split('T')[0]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('es-PA', { style: 'currency', currency: 'USD' }).format(amount);
   };
 
+  const fetchEvents = async (y: number, m: number) => {
+    setIsLoading(true);
+    try {
+      const newEvents = await getCalendarEvents(y, m);
+      setEvents(newEvents);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const navigate = (direction: -1 | 1) => {
-    if (viewType === 'Mes' || viewType === 'Año') {
-      let newMonth = currentMonth + direction;
-      let newYear = currentYear;
+    if (viewType === 'Mes') {
+      let newMonth = month + direction;
+      let newYear = year;
       if (newMonth < 1) {
         newMonth = 12;
         newYear -= 1;
@@ -51,7 +68,15 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
         newMonth = 1;
         newYear += 1;
       }
-      router.push(`/calendario?month=${newMonth}&year=${newYear}`);
+      setMonth(newMonth);
+      setYear(newYear);
+      fetchEvents(newYear, newMonth);
+      window.history.pushState(null, '', `/calendario?month=${newMonth}&year=${newYear}`);
+    } else if (viewType === 'Año') {
+      let newYear = year + direction;
+      setYear(newYear);
+      fetchEvents(newYear, month);
+      window.history.pushState(null, '', `/calendario?month=${month}&year=${newYear}`);
     } else if (viewType === 'Día') {
       const d = new Date(activeDateStr);
       d.setDate(d.getDate() + direction);
@@ -61,8 +86,13 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
 
   const navigateToToday = () => {
     const d = new Date();
+    const todayMonth = d.getMonth() + 1;
+    const todayYear = d.getFullYear();
+    setMonth(todayMonth);
+    setYear(todayYear);
     setActiveDateStr(d.toISOString().split('T')[0]);
-    router.push(`/calendario?month=${d.getMonth() + 1}&year=${d.getFullYear()}`);
+    fetchEvents(todayYear, todayMonth);
+    window.history.pushState(null, '', `/calendario?month=${todayMonth}&year=${todayYear}`);
     if (viewType === 'Año') setViewType('Mes');
   };
 
@@ -72,12 +102,12 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
   ];
 
   // Calendar logic
-  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).getDay();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   // Adjust so Monday is 0, Sunday is 6
   const startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
-  const previousMonthDays = new Date(currentYear, currentMonth - 1, 0).getDate();
+  const previousMonthDays = new Date(year, month - 1, 0).getDate();
 
   const days = [];
   
@@ -88,7 +118,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
   
   // Current month days
   for (let i = 1; i <= daysInMonth; i++) {
-    const dStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+    const dStr = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
     days.push({ day: i, isCurrentMonth: true, fullDate: dStr });
   }
 
@@ -98,7 +128,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
     days.push({ day: i, isCurrentMonth: false, fullDate: null });
   }
 
-  const filteredEvents = filter === 'Todos' ? initialEvents : initialEvents.filter(e => e.category === filter);
+  const filteredEvents = filter === 'Todos' ? events : events.filter(e => e.category === filter);
 
   const eventsByDate = filteredEvents.reduce((acc, event) => {
     if (!acc[event.date]) acc[event.date] = [];
@@ -130,35 +160,61 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
         </div>
 
         <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/60">
-              <button onClick={() => navigate(-1)} className="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition shadow-xs">
-                <ChevronLeft className="w-4 h-4" />
+          
+          <div className="flex items-center gap-4 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/60 shadow-sm relative overflow-hidden w-full lg:w-auto justify-between lg:justify-start">
+            {isLoading && (
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-brand-500 animate-pulse"></div>
+            )}
+            
+            <div className="flex items-center">
+              <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-xl text-slate-600 hover:text-slate-900 transition shadow-xs">
+                <ChevronLeft className="w-5 h-5" />
               </button>
-              <span className="px-3 text-xs font-bold text-slate-800 select-none capitalize">
-                {viewType === 'Mes' && `${monthNames[currentMonth - 1]} ${currentYear}`}
-                {viewType === 'Año' && `${currentYear}`}
-                {viewType === 'Día' && new Intl.DateTimeFormat('es-PA', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(activeDateStr))}
-              </span>
-              <button onClick={() => navigate(1)} className="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition shadow-xs">
-                <ChevronRight className="w-4 h-4" />
+              
+              <div className="w-40 text-center flex flex-col justify-center">
+                {viewType === 'Mes' && (
+                  <>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">{year}</span>
+                    <span className="text-sm font-extrabold text-slate-900 leading-none capitalize">{monthNames[month - 1]}</span>
+                  </>
+                )}
+                {viewType === 'Año' && (
+                  <span className="text-lg font-extrabold text-slate-900">{year}</span>
+                )}
+                {viewType === 'Día' && (
+                  <>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">
+                      {new Intl.DateTimeFormat('es-PA', { month: 'short', year: 'numeric' }).format(new Date(activeDateStr))}
+                    </span>
+                    <span className="text-sm font-extrabold text-slate-900 leading-none capitalize">
+                      {new Intl.DateTimeFormat('es-PA', { weekday: 'long', day: 'numeric' }).format(new Date(activeDateStr))}
+                    </span>
+                  </>
+                )}
+              </div>
+              
+              <button onClick={() => navigate(1)} className="p-2 hover:bg-white rounded-xl text-slate-600 hover:text-slate-900 transition shadow-xs">
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-            <button onClick={navigateToToday} className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition">
+            
+            <div className="w-px h-8 bg-slate-200/80 mx-1 hidden lg:block"></div>
+            
+            <button onClick={navigateToToday} className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border-2 border-slate-200 rounded-xl hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition hidden sm:block">
               Hoy
             </button>
           </div>
           
-          <div className="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/60 text-xs font-bold">
+          <div className="flex items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/60 text-xs font-bold shadow-sm w-full lg:w-auto">
             <button 
               onClick={() => setViewType('Año')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${viewType === 'Año' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-700'}`}>Año</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Año' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Año</button>
             <button 
               onClick={() => setViewType('Mes')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${viewType === 'Mes' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-700'}`}>Mes</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Mes' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Mes</button>
             <button 
               onClick={() => setViewType('Día')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${viewType === 'Día' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-700'}`}>Día</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Día' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Día</button>
           </div>
         </div>
       </header>
@@ -258,22 +314,25 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
 
         {viewType === 'Año' && (
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {monthNames.map((month, index) => (
+            {monthNames.map((monthName, index) => (
               <button
-                key={month}
+                key={monthName}
                 onClick={() => {
-                  router.push(`/calendario?month=${index + 1}&year=${currentYear}`);
+                  const newMonth = index + 1;
+                  setMonth(newMonth);
                   setViewType('Mes');
+                  fetchEvents(year, newMonth);
+                  window.history.pushState(null, '', `/calendario?month=${newMonth}&year=${year}`);
                 }}
                 className={`p-6 bg-white rounded-2xl border transition-all text-center group
-                  ${index + 1 === currentMonth ? 'border-brand-500 shadow-md ring-2 ring-brand-500/20' : 'border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md'}
+                  ${index + 1 === month ? 'border-brand-500 shadow-md ring-2 ring-brand-500/20' : 'border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md'}
                 `}
               >
                 <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2 group-hover:text-brand-600 transition-colors">
-                  {currentYear}
+                  {year}
                 </div>
                 <div className="text-2xl font-extrabold text-slate-900 group-hover:text-brand-700 transition-colors">
-                  {month}
+                  {monthName}
                 </div>
               </button>
             ))}
