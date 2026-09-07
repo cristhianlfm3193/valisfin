@@ -32,6 +32,11 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  /* Make sure all buttons show the hand pointer */
+  button, [role="button"] {
+    cursor: pointer;
+  }
+
   .login-bg {
     background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 45%),
