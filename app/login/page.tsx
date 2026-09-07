@@ -49,6 +49,20 @@ export default function LoginPage() {
       setToastMessage('Credenciales incorrectas. Verifica tu acceso.')
       setTimeout(() => setShowToast(false), 3500)
     } else {
+      // Record audit log for login
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          await supabase.from('audit_logs').insert({
+            table_name: 'auth',
+            action: 'LOGIN',
+            user_id: user.id
+          })
+        }
+      } catch (e) {
+        console.error('Failed to write login audit log', e)
+      }
+      
       setToastMessage(`Acceso concedido a ${email}`)
       window.location.href = '/' // Refresh and pass middleware
     }

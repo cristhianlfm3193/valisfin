@@ -6,7 +6,75 @@ import { Trash2, Edit3, PlusCircle, Activity, X, ChevronLeft, ChevronRight, Sear
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+const translateKey = (key: string) => {
+  const dictionary: Record<string, string> = {
+    id: 'ID',
+    title: 'Título',
+    name: 'Nombre',
+    description: 'Descripción',
+    concept: 'Concepto',
+    amount: 'Monto',
+    amount_paid: 'Monto Pagado',
+    target_amount: 'Monto Objetivo',
+    saved_amount: 'Monto Ahorrado',
+    cost: 'Costo',
+    category: 'Categoría',
+    priority: 'Prioridad',
+    deadline_date: 'Fecha Límite',
+    date: 'Fecha',
+    date_expected: 'Fecha Esperada',
+    created_at: 'Creado el',
+    user_id: 'ID Usuario',
+    profile_id: 'ID Perfil'
+  };
+  return dictionary[key] || key;
+};
+
+const formatValue = (key: string, value: any) => {
+  if (value === null || value === undefined) return <span className="text-slate-400 italic">Vacío</span>;
+  
+  if (typeof value === 'boolean') {
+    return value ? 'Sí' : 'No';
+  }
+  
+  if (key.includes('amount') || key === 'cost') {
+    return <span className="text-emerald-600 font-bold">B/. {Number(value).toFixed(2)}</span>;
+  }
+  
+  if (key.includes('date') || key === 'created_at') {
+    try {
+      return format(new Date(value), "PPP", { locale: es });
+    } catch (e) {
+      return String(value);
+    }
+  }
+
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+
+  return String(value);
+};
+
+const DataViewer = ({ data }: { data: any }) => {
+  if (!data) return null;
+  // Ocultamos algunos campos internos que no aportan valor visual al humano, pero mostramos los datos reales
+  const entries = Object.entries(data).filter(([key]) => key !== 'id' && !key.endsWith('_id') && key !== 'created_at'); 
+  
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 bg-slate-50 border border-slate-100 rounded-2xl p-5 shadow-inner mt-2">
+      {entries.map(([key, value]) => (
+        <div key={key} className="flex flex-col">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{translateKey(key)}</span>
+          <span className="text-sm font-medium text-slate-800 break-words">{formatValue(key, value)}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 interface AuditLogTableProps {
+
   initialLogs: any[];
 }
 
@@ -14,6 +82,7 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
   const [logs, setLogs] = useState<any[]>(initialLogs);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLog, setSelectedLog] = useState<any | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   
   const itemsPerPage = 10;
   const supabase = createClient();
@@ -46,15 +115,26 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
     };
   }, [supabase]);
 
+  // Filtering Logic
+  const filteredLogs = logs.filter(log => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    const userName = log.profiles?.first_name || log.profiles?.email || 'Sistema';
+    const table = formatTableName(log.table_name);
+    return userName.toLowerCase().includes(q) || table.toLowerCase().includes(q) || log.action.toLowerCase().includes(q);
+  });
+
   // Pagination Logic
-  const totalPages = Math.ceil(logs.length / itemsPerPage);
-  const currentLogs = logs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage) || 1;
+  const currentLogs = filteredLogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const getActionInfo = (action: string) => {
     switch (action) {
       case 'DELETE': return { label: 'ELIMINÓ', color: 'bg-rose-100 text-rose-700', icon: <Trash2 className="w-4 h-4 text-rose-600" /> };
       case 'UPDATE': return { label: 'ACTUALIZÓ', color: 'bg-indigo-100 text-indigo-700', icon: <Edit3 className="w-4 h-4 text-indigo-600" /> };
       case 'INSERT': return { label: 'CREÓ', color: 'bg-emerald-100 text-emerald-700', icon: <PlusCircle className="w-4 h-4 text-emerald-600" /> };
+      case 'LOGIN': return { label: 'INICIO SESIÓN', color: 'bg-blue-100 text-blue-700', icon: <Activity className="w-4 h-4 text-blue-600" /> };
+      case 'LOGOUT': return { label: 'CERRÓ SESIÓN', color: 'bg-slate-100 text-slate-700', icon: <Activity className="w-4 h-4 text-slate-600" /> };
       default: return { label: action, color: 'bg-slate-100 text-slate-700', icon: <Activity className="w-4 h-4 text-slate-600" /> };
     }
   };
@@ -66,12 +146,16 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
       'savings_goals': 'Metas de Ahorro',
       'fixed_payments': 'Pagos Fijos Mensuales',
       'vehicles': 'Vehículos',
-      'vehicle_maintenance': 'Mantenimiento de Vehículos'
+      'vehicle_maintenance': 'Mantenimiento de Vehículos',
+      'auth': 'Autenticación'
     };
     return names[name] || name;
   };
 
   const getRecordDescription = (log: any) => {
+    if (log.action === 'LOGIN') return <span>Inició sesión exitosamente en el sistema.</span>;
+    if (log.action === 'LOGOUT') return <span>Cerró sesión del sistema.</span>;
+    
     const data = log.action === 'DELETE' ? log.old_data : log.new_data;
     if (!data) return 'Registro desconocido';
     
@@ -90,7 +174,7 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
     <>
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mt-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50 gap-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50 gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-emerald-50 rounded-xl">
               <Activity className="w-5 h-5 text-emerald-600" />
@@ -105,6 +189,19 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
               </h3>
               <p className="text-sm text-slate-500">Sincronizado vía Supabase Realtime</p>
             </div>
+          </div>
+          
+          <div className="relative w-full md:w-72">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-slate-400" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              className="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+              placeholder="Buscar por usuario, acción o tabla..."
+            />
           </div>
         </div>
 
@@ -245,29 +342,24 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
                 </div>
               </div>
 
+
               {selectedLog.old_data && (
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-rose-500"></span> Datos Anteriores
                   </h4>
-                  <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto text-sm text-emerald-400 font-mono">
-                    <pre>{JSON.stringify(selectedLog.old_data, null, 2)}</pre>
-                  </div>
+                  <DataViewer data={selectedLog.old_data} />
                 </div>
               )}
 
               {selectedLog.new_data && (
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span> {selectedLog.action === 'UPDATE' ? 'Datos Nuevos' : 'Datos del Registro'}
                   </h4>
-                  <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto text-sm text-emerald-400 font-mono">
-                    <pre>{JSON.stringify(selectedLog.new_data, null, 2)}</pre>
-                  </div>
+                  <DataViewer data={selectedLog.new_data} />
                 </div>
-              )}
-
-            </div>
+              )}</div>
           </div>
         </div>
       )}

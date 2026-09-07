@@ -9,6 +9,19 @@ export function LogoutButton({ isCollapsed = false }: { isCollapsed?: boolean })
   const supabase = createClient()
 
   const handleLogout = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('audit_logs').insert({
+          table_name: 'auth',
+          action: 'LOGOUT',
+          user_id: user.id
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    
     await supabase.auth.signOut()
     router.refresh()
   }
@@ -32,6 +45,19 @@ export function LogoutButtonMobile() {
   const supabase = createClient()
 
   const handleLogout = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('audit_logs').insert({
+          table_name: 'auth',
+          action: 'LOGOUT',
+          user_id: user.id
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    
     await supabase.auth.signOut()
     router.refresh()
   }
