@@ -167,6 +167,20 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                   />
                 </div>
               </div>
+
+              {/* Uso Tarjeta de Crédito */}
+              <div className="pt-2">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
+                  <div className="relative flex items-center">
+                    <input type="checkbox" name="is_credit_card" value="true" className="peer sr-only" />
+                    <div className="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-800">Uso tarjeta de crédito</span>
+                    <p className="text-[10px] text-slate-500 font-medium">Asociar pago a la deuda de tarjeta</p>
+                  </div>
+                </label>
+              </div>
             </form>
           </div>
 

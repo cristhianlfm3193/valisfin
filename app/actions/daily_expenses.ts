@@ -11,6 +11,7 @@ export interface DailyExpense {
   profile_id: string;
   profiles?: { first_name: string };
   amount: number;
+  is_credit_card?: boolean;
   created_at?: string;
 }
 
@@ -38,6 +39,7 @@ export async function addDailyExpense(formData: FormData) {
   const detail = formData.get('detail') as string;
   const profile_id = formData.get('profile_id') as string;
   const amountStr = formData.get('amount') as string;
+  const is_credit_card = formData.get('is_credit_card') === 'true';
   const amount = parseFloat(amountStr);
 
   const { error } = await supabase
@@ -47,7 +49,8 @@ export async function addDailyExpense(formData: FormData) {
       category,
       detail,
       profile_id,
-      amount
+      amount,
+      is_credit_card
     });
 
   if (error) {
