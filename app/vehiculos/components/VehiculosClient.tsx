@@ -54,12 +54,15 @@ export default function VehiculosClient({
   
   const [kmFilter, setKmFilter] = useState('all');
   const [kmPage, setKmPage] = useState(1);
+  const [kmPageSize, setKmPageSize] = useState(10);
   
   const [maintFilter, setMaintFilter] = useState('all');
   const [maintPage, setMaintPage] = useState(1);
+  const [maintPageSize, setMaintPageSize] = useState(10);
   
   const [pendingFilter, setPendingFilter] = useState('all');
   const [pendingPage, setPendingPage] = useState(1);
+  const [pendingPageSize, setPendingPageSize] = useState(10);
 
   const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
   const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
@@ -67,8 +70,10 @@ export default function VehiculosClient({
   const filteredPending = pendingFilter === 'all'
     ? pendingTasks
     : pendingTasks.filter(log => log.vehicle_id === pendingFilter);
-  const totalPendingPages = Math.max(1, Math.ceil(filteredPending.length / 3));
-  const paginatedPending = filteredPending.slice((pendingPage - 1) * 3, pendingPage * 3);
+  const totalPendingPages = Math.max(1, Math.ceil(filteredPending.length / pendingPageSize));
+  const paginatedPending = filteredPending.slice((pendingPage - 1) * pendingPageSize, pendingPage * pendingPageSize);
+  
+  const totalPendingFilteredCost = filteredPending.reduce((sum, task) => sum + (task.cost || 0), 0);
 
   const handleMarkDone = async (id: string) => {
     if (confirm('¿Marcar este trabajo como realizado? Se moverá al historial.')) {
@@ -95,14 +100,14 @@ export default function VehiculosClient({
   const filteredMileage = kmFilter === 'all' 
     ? mileageLogs 
     : mileageLogs.filter(log => log.vehicle_id === kmFilter);
-  const totalKmPages = Math.max(1, Math.ceil(filteredMileage.length / 3));
-  const paginatedMileage = filteredMileage.slice((kmPage - 1) * 3, kmPage * 3);
+  const totalKmPages = Math.max(1, Math.ceil(filteredMileage.length / kmPageSize));
+  const paginatedMileage = filteredMileage.slice((kmPage - 1) * kmPageSize, kmPage * kmPageSize);
 
   const filteredMaintenance = maintFilter === 'all'
     ? completedMaintenance
     : completedMaintenance.filter(log => log.vehicle_id === maintFilter);
-  const totalMaintPages = Math.max(1, Math.ceil(filteredMaintenance.length / 3));
-  const paginatedMaintenance = filteredMaintenance.slice((maintPage - 1) * 3, maintPage * 3);
+  const totalMaintPages = Math.max(1, Math.ceil(filteredMaintenance.length / maintPageSize));
+  const paginatedMaintenance = filteredMaintenance.slice((maintPage - 1) * maintPageSize, maintPage * maintPageSize);
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
@@ -356,25 +361,42 @@ export default function VehiculosClient({
           </div>
           
           <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
-            <button 
-              onClick={() => setKmPage(p => Math.max(1, p - 1))}
-              disabled={kmPage === 1}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-            >
-              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
-              Anterior
-            </button>
-            <span className="text-xs font-medium text-slate-500">
-              Página {kmPage} de {totalKmPages}
-            </span>
-            <button 
-              onClick={() => setKmPage(p => Math.min(totalKmPages, p + 1))}
-              disabled={kmPage === totalKmPages}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-            >
-              Siguiente
-              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
+              <select 
+                value={kmPageSize} 
+                onChange={(e) => { setKmPageSize(Number(e.target.value)); setKmPage(1); }}
+                className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+              >
+                <option value={3}>3</option>
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={1000}>Todos</option>
+              </select>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setKmPage(p => Math.max(1, p - 1))}
+                disabled={kmPage === 1}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                Anterior
+              </button>
+              <span className="text-xs font-medium text-slate-500">
+                Página {kmPage} de {totalKmPages}
+              </span>
+              <button 
+                onClick={() => setKmPage(p => Math.min(totalKmPages, p + 1))}
+                disabled={kmPage === totalKmPages}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                Siguiente
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -391,9 +413,12 @@ export default function VehiculosClient({
                   <h2 className="text-lg font-bold text-on-surface">Trabajos Pendientes de Revisión</h2>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
                   {filteredPending.length} Tareas Críticas
+                </span>
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+                  Total: B/. {totalPendingFilteredCost.toFixed(2)}
                 </span>
                 <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
                   <button onClick={() => { setPendingFilter('all'); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
@@ -473,25 +498,42 @@ export default function VehiculosClient({
             </div>
             
             <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
-              <button 
-                onClick={() => setPendingPage(p => Math.max(1, p - 1))}
-                disabled={pendingPage === 1}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-              >
-                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
-                Anterior
-              </button>
-              <span className="text-xs font-medium text-slate-500">
-                Página {pendingPage} de {totalPendingPages}
-              </span>
-              <button 
-                onClick={() => setPendingPage(p => Math.min(totalPendingPages, p + 1))}
-                disabled={pendingPage === totalPendingPages}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-              >
-                Siguiente
-                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
+                <select 
+                  value={pendingPageSize} 
+                  onChange={(e) => { setPendingPageSize(Number(e.target.value)); setPendingPage(1); }}
+                  className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+                >
+                  <option value={3}>3</option>
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={1000}>Todos</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => setPendingPage(p => Math.max(1, p - 1))}
+                  disabled={pendingPage === 1}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                  Anterior
+                </button>
+                <span className="text-xs font-medium text-slate-500">
+                  Página {pendingPage} de {totalPendingPages}
+                </span>
+                <button 
+                  onClick={() => setPendingPage(p => Math.min(totalPendingPages, p + 1))}
+                  disabled={pendingPage === totalPendingPages}
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                >
+                  Siguiente
+                  <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                </button>
+              </div>
             </div>
           </section>
         )}
@@ -574,25 +616,42 @@ export default function VehiculosClient({
           </div>
           
           <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
-            <button 
-              onClick={() => setMaintPage(p => Math.max(1, p - 1))}
-              disabled={maintPage === 1}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-            >
-              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
-              Anterior
-            </button>
-            <span className="text-xs font-medium text-slate-500">
-              Página {maintPage} de {totalMaintPages}
-            </span>
-            <button 
-              onClick={() => setMaintPage(p => Math.min(totalMaintPages, p + 1))}
-              disabled={maintPage === totalMaintPages}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
-            >
-              Siguiente
-              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
+              <select 
+                value={maintPageSize} 
+                onChange={(e) => { setMaintPageSize(Number(e.target.value)); setMaintPage(1); }}
+                className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+              >
+                <option value={3}>3</option>
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={1000}>Todos</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setMaintPage(p => Math.max(1, p - 1))}
+                disabled={maintPage === 1}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                Anterior
+              </button>
+              <span className="text-xs font-medium text-slate-500">
+                Página {maintPage} de {totalMaintPages}
+              </span>
+              <button 
+                onClick={() => setMaintPage(p => Math.min(totalMaintPages, p + 1))}
+                disabled={maintPage === totalMaintPages}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                Siguiente
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
           </div>
         </section>
 
