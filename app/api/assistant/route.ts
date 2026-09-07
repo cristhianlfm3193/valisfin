@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     const systemInstruction = "Eres un asistente financiero amigable para la app ValisFin. Ayudas al usuario a consultar su información financiera y del hogar. Tienes herramientas (tools) para consultar la base de datos. Usa las herramientas siempre que te pregunten sobre datos específicos (carros, tareas, gastos, pagos). Responde de manera concisa y clara en español.";
 
     const chat = ai.chats.create({
-      model: 'gemini-3.6-flash',
+      model: 'gemini-flash-lite-latest',
       config: {
         systemInstruction,
         tools: [{ functionDeclarations: tools }],
