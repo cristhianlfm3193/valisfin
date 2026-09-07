@@ -103,7 +103,7 @@ export async function getDashboardData() {
 
   let dailyExpensesTotal = 0;
   de.forEach(e => {
-    if (e.date.startsWith(currentMonthPeriod)) {
+    if (e.date.startsWith(currentMonthPeriod) && !e.is_credit_card) {
       dailyExpensesTotal += e.amount;
     }
   });

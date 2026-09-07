@@ -77,3 +77,40 @@ export async function deleteDailyExpense(id: string) {
   revalidatePath('/gastos-diarios');
   return { success: true };
 }
+
+export async function updateDailyExpense(id: string, formData: FormData) {
+  const supabase = await createClient();
+  
+  const date = formData.get('date') as string;
+  const category = formData.get('category') as string;
+  const detail = formData.get('detail') as string;
+  const profile_id = formData.get('profile_id') as string;
+  const amountStr = formData.get('amount') as string;
+  let is_credit_card = formData.get('is_credit_card') === 'true';
+  const amount = parseFloat(amountStr);
+
+  // Forzar que sea uso de tarjeta de crédito si la categoría es Intereses
+  if (category === 'Intereses de Tarjeta de Crédito') {
+    is_credit_card = true;
+  }
+
+  const { error } = await supabase
+    .from('daily_expenses')
+    .update({
+      date,
+      category,
+      detail,
+      profile_id,
+      amount,
+      is_credit_card
+    })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating daily expense:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/gastos-diarios');
+  return { success: true };
+}

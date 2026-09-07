@@ -126,21 +126,23 @@ export async function partialPayment(id: string, partialAmount: number) {
     return { success: false, error: 'Record not found' };
   }
 
-  if (partialAmount >= currentRecord.amount) {
+  if (currentRecord.title !== 'Uso Tarjeta de Credito' && partialAmount >= currentRecord.amount) {
     return { success: false, error: 'Partial amount must be less than the total amount' };
   }
 
   const remainingAmount = currentRecord.amount - partialAmount;
 
-  // 2. Update the original record to be the remaining amount
-  const { error: updateError } = await supabase
-    .from('fixed_payments')
-    .update({ amount: remainingAmount })
-    .eq('id', id);
+  if (currentRecord.title !== 'Uso Tarjeta de Credito') {
+    // 2. Update the original record to be the remaining amount
+    const { error: updateError } = await supabase
+      .from('fixed_payments')
+      .update({ amount: remainingAmount })
+      .eq('id', id);
 
-  if (updateError) {
-    console.error('Error updating remaining amount:', updateError);
-    return { success: false, error: updateError.message };
+    if (updateError) {
+      console.error('Error updating remaining amount:', updateError);
+      return { success: false, error: updateError.message };
+    }
   }
 
   // 3. Insert a new record for the paid amount
@@ -184,5 +186,77 @@ export async function updateFixedPaymentSettings(id: string, amount: number, bil
   }
 
   revalidatePath('/pagos-fijos');
+  return { success: true };
+}
+
+export async function createFixedPayment(formData: FormData) {
+  const supabase = await createClient();
+  
+  const title = formData.get('title') as string;
+  const amountStr = formData.get('amount') as string;
+  const billingDayStr = formData.get('billing_day') as string;
+  const amount = parseFloat(amountStr);
+  const billing_day = billingDayStr ? parseInt(billingDayStr, 10) : null;
+
+  const d = new Date();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const period = `${d.getFullYear()}-${m}`;
+
+  const { error } = await supabase
+    .from('fixed_payments')
+    .insert({
+      category: 'otros',
+      is_paid: false,
+      responsible: 'Hogar',
+      title,
+      amount,
+      subtitle: 'Obligación',
+      type: 'fixed',
+      billing_day,
+      period
+    });
+
+  if (error) {
+    console.error('Error creating fixed payment:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  return { success: true };
+}
+
+export async function deleteFixedPayment(id: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('fixed_payments')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting fixed payment:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  revalidatePath('/'); // For dashboard metrics
+  return { success: true };
+}
+
+export async function updateFixedPaymentAmount(id: string, newAmount: number) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('fixed_payments')
+    .update({ amount: newAmount })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating fixed payment amount:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  revalidatePath('/');
   return { success: true };
 }

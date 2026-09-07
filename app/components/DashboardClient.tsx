@@ -49,6 +49,11 @@ export function DashboardClient({
 
   const closeModals = () => setActiveModal(null);
 
+  const totalPagado = metrics.paymentsDone + metrics.dailyExpenses;
+  const pendientePorPagar = metrics.pendingPayments;
+  const totalObligaciones = totalPagado + pendientePorPagar;
+  const cumplimiento = totalObligaciones > 0 ? Math.round((totalPagado / totalObligaciones) * 100) : 0;
+
   return (
     <div className="space-y-6">
       {/* Quick Actions Grid */}
@@ -132,7 +137,7 @@ export function DashboardClient({
               <div className="flex items-center justify-between mb-4">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-emerald-50 text-xs font-semibold backdrop-blur-sm border border-white/5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  Balance Disponible
+                  Total Pagado (Mes Actual)
                 </span>
                 <Link href="/consultas" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors backdrop-blur-sm border border-white/5">
                   <ArrowUpRight className="w-4 h-4" />
@@ -142,13 +147,13 @@ export function DashboardClient({
               <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-6">
                 <div>
                   <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight drop-shadow-sm">
-                    {formatCurrency(metrics.actualBalance)}
+                    {formatCurrency(totalPagado)}
                   </h1>
                 </div>
                 <div className="flex items-center gap-2 pb-1 sm:pb-2">
                   <span className="flex items-center gap-1 text-sm font-medium text-emerald-100 bg-emerald-800/40 px-2 py-0.5 rounded-lg">
                     <TrendingUp className="w-4 h-4 text-emerald-300" />
-                    +{formatCurrency(metrics.incomesReceived)}
+                    +{formatCurrency(metrics.incomesReceived)} Ingresos
                   </span>
                 </div>
               </div>
@@ -156,21 +161,21 @@ export function DashboardClient({
               <div className="mt-8 grid grid-cols-2 gap-4">
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                   <p className="text-emerald-100/80 text-xs font-medium uppercase tracking-wider mb-1">
-                    Estimado Libre
+                    Pendiente por Pagar
                   </p>
                   <p className="text-xl sm:text-2xl font-bold text-white">
-                    {formatCurrency(metrics.availableEstimated)}
+                    {formatCurrency(pendientePorPagar)}
                   </p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                   <p className="text-emerald-100/80 text-xs font-medium uppercase tracking-wider mb-1">
-                    Metas
+                    Cumplimiento
                   </p>
                   <div className="flex items-end gap-2">
                     <p className="text-xl sm:text-2xl font-bold text-white">
-                      {metrics.goalsPercentage}%
+                      {cumplimiento}%
                     </p>
-                    <span className="text-xs text-emerald-200 mb-1">({metrics.goalsCompleted}/{metrics.goalsTotal})</span>
+                    <span className="text-xs text-emerald-200 mb-1">al día</span>
                   </div>
                 </div>
               </div>
@@ -188,7 +193,7 @@ export function DashboardClient({
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Realizados</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fijos Pagados</p>
               <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.paymentsDone)}</p>
             </Link>
 
@@ -201,7 +206,7 @@ export function DashboardClient({
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Cotidianos</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Gastos Diarios</p>
               <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.dailyExpenses)}</p>
             </Link>
 
@@ -214,7 +219,7 @@ export function DashboardClient({
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pendiente</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fijos Pendientes</p>
               <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.pendingPayments)}</p>
             </Link>
             
@@ -228,7 +233,7 @@ export function DashboardClient({
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Auto • Gas</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Presp. Vehicular</p>
               <div className="flex items-baseline gap-1 mt-auto">
                 <p className="text-lg font-extrabold text-slate-900">{formatCurrency(vehicleData.budgetUsed)}</p>
                 <span className="text-xs text-slate-400 font-medium">/ {formatCurrency(vehicleData.budgetTotal)}</span>

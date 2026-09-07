@@ -7,6 +7,9 @@ import { PaymentCard, FixedPayment } from './PaymentCard';
 import { togglePaymentStatus, partialPayment as partialPaymentAction, updateFixedPaymentSettings } from '@/app/actions/fixed_payments';
 import { PartialPaymentModal } from './PartialPaymentModal';
 import { EditPaymentModal } from './EditPaymentModal';
+import { AddFixedPaymentModal } from './AddFixedPaymentModal';
+import { CreditCardHistoryModal } from './CreditCardHistoryModal';
+import { EditDailyExpenseModal } from '@/app/gastos-diarios/components/EditDailyExpenseModal';
 import { DailyExpense } from '@/app/actions/daily_expenses';
 
 interface PagosFijosClientProps {
@@ -22,12 +25,15 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
   
   // Edit state
   const [editingPayment, setEditingPayment] = useState<FixedPayment | null>(null);
+  const [editingDailyExpense, setEditingDailyExpense] = useState<DailyExpense | null>(null);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   
   // Sync state with server prop on revalidation
   useEffect(() => {
     setPayments(initialPayments);
   }, [initialPayments]);
 
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
   
@@ -61,12 +67,26 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let superAcc = 0;
     let gasAcc = 0;
     let luzAcc = 0;
-    let ccAcc = 0;
+    
+    // Credit card debt is ALL TIME expenses minus ALL TIME payments
+    let totalCcSpent = 0;
+    initialDailyExpenses.forEach(e => {
+      if (e.is_credit_card) {
+        totalCcSpent += e.amount;
+      }
+    });
+
+    let totalCcPaid = 0;
+    payments.forEach(p => {
+      if (p.is_paid && p.title === 'Uso Tarjeta de Credito') {
+        totalCcPaid += p.amount;
+      }
+    });
+
+    const ccDebt = totalCcSpent - totalCcPaid;
+
     initialDailyExpenses.forEach(e => {
       if (e.date.startsWith(selectedMonth)) {
-        if (e.is_credit_card) {
-          ccAcc += e.amount;
-        }
         if (e.category === 'Supermercado' || e.category === 'Super Reposición' || e.category === 'Compras Super y tiendas') {
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
@@ -76,8 +96,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         }
       }
     });
-    return { superSpent: superAcc, gasSpent: gasAcc, luzSpent: luzAcc, ccSpent: ccAcc };
-  }, [initialDailyExpenses, selectedMonth]);
+    return { superSpent: superAcc, gasSpent: gasAcc, luzSpent: luzAcc, ccSpent: ccDebt };
+  }, [initialDailyExpenses, payments, selectedMonth]);
 
   // Group payments by title (using only the month-filtered ones)
   const groupedPayments = useMemo(() => {
@@ -167,7 +187,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
     setPayments((prev) => {
       const updated = prev.map(p => 
-        p.id === originalRecord.id ? { ...p, amount: p.amount - partialAmount } : p
+        (p.id === originalRecord.id && originalRecord.title !== 'Uso Tarjeta de Credito') ? { ...p, amount: p.amount - partialAmount } : p
       );
       return [...updated, newPaidRecord];
     });
@@ -325,9 +345,22 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
               <PaymentCard 
                 key={payment.id} 
                 payment={payment as any} 
-                onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)}
+                onToggleStatus={(id, status) => {
+                  if (payment.title === 'Uso Tarjeta de Credito' && !payment.is_paid) {
+                    // Si es pagar total, pagamos la deuda completa como un "abono" para no tocar el límite
+                    const record = payments.find(p => p.id === (payment as any).originalIds?.[0] || p.id === payment.id);
+                    if (record && payment.accumulatedSpent && payment.accumulatedSpent > 0) {
+                      const newPaidRecord = { ...record, id: `temp-${Date.now()}`, is_paid: true, amount: payment.accumulatedSpent };
+                      setPayments(prev => [...prev, newPaidRecord]);
+                      partialPaymentAction(record.id, payment.accumulatedSpent).catch(() => setPayments(initialPayments));
+                    }
+                  } else {
+                    handleToggleStatus(id, status, (payment as any).originalIds);
+                  }
+                }}
                 onPartialPayment={!payment.is_paid ? () => setSelectedForPartial(payment as any) : undefined}
                 onEdit={() => setEditingPayment(payment as any)}
+                onViewHistory={payment.title === 'Uso Tarjeta de Credito' ? () => setIsHistoryModalOpen(true) : undefined}
               />
             ))}
           </div>
@@ -336,10 +369,18 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
       <section>
         <div className="flex items-center justify-between mb-3 px-1">
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-            Obligaciones Predeterminadas
-          </h3>
-          <span className="text-xs text-slate-600">Toque directo para registrar pago</span>
+          <div>
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              Obligaciones Predeterminadas
+            </h3>
+            <span className="text-xs text-slate-600">Toque directo para registrar pago</span>
+          </div>
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-xs font-bold transition-colors"
+          >
+            <span>+ Añadir</span>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -395,6 +436,25 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           onSubmit={handleEditSubmit}
         />
       )}
+
+      <AddFixedPaymentModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+      />
+
+      <CreditCardHistoryModal
+        isOpen={isHistoryModalOpen}
+        onClose={() => setIsHistoryModalOpen(false)}
+        expenses={initialDailyExpenses}
+        payments={payments}
+        onEditExpense={(expense) => setEditingDailyExpense(expense)}
+      />
+
+      <EditDailyExpenseModal
+        isOpen={!!editingDailyExpense}
+        onClose={() => setEditingDailyExpense(null)}
+        expense={editingDailyExpense}
+      />
     </>
   );
 }

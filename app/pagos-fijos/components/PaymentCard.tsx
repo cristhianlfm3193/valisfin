@@ -21,9 +21,10 @@ interface PaymentCardProps {
   onToggleStatus: (id: string, currentStatus: boolean) => void;
   onPartialPayment?: () => void;
   onEdit?: () => void;
+  onViewHistory?: () => void;
 }
 
-export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit }: PaymentCardProps) {
+export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit, onViewHistory }: PaymentCardProps) {
   const { id, is_paid, responsible, title, amount, subtitle } = payment;
 
   const handleToggle = (e: React.MouseEvent) => {
@@ -48,8 +49,13 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit 
               <div className="flex items-center gap-1.5 mt-0.5">
                 <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
                 {onEdit && (
-                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Editar">
+                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Editar límite">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  </button>
+                )}
+                {onViewHistory && (
+                  <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Ver historial">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                   </button>
                 )}
               </div>
@@ -75,6 +81,37 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit 
           <p className="text-[10px] text-slate-500 mt-1">
             Se alimenta automáticamente desde tus Gastos Diarios.
           </p>
+          
+          {title === 'Uso Tarjeta de Credito' && (
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-indigo-100/50">
+              {onPartialPayment && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onPartialPayment(); }}
+                  disabled={payment.accumulatedSpent ? payment.accumulatedSpent <= 0 : false}
+                  className={`pay-toggle-btn min-h-[44px] flex-1 px-3 py-2 rounded-xl text-xs font-bold tracking-wide transition-all flex items-center justify-center focus:outline-none ${
+                    (payment.accumulatedSpent && payment.accumulatedSpent <= 0)
+                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                      : 'bg-indigo-100/50 hover:bg-indigo-100 text-indigo-700 focus:ring-2 focus:ring-indigo-300'
+                  }`}
+                  type="button"
+                >
+                  <span>Abonar</span>
+                </button>
+              )}
+              <button
+                onClick={handleToggle}
+                disabled={payment.accumulatedSpent ? payment.accumulatedSpent <= 0 : false}
+                className={`pay-toggle-btn min-h-[44px] flex-[2] px-3 py-2 rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm flex items-center justify-center gap-1.5 focus:outline-none ${
+                  (payment.accumulatedSpent && payment.accumulatedSpent <= 0)
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                    : 'bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-2 focus:ring-emerald-500'
+                }`}
+                type="button"
+              >
+                <span className="btn-text">Pagar Total</span>
+              </button>
+            </div>
+          )}
         </div>
       </article>
     );

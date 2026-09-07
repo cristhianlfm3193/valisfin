@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useTransition } from 'react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
 import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Check, Edit2, Trash2 } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
+import { EditDailyExpenseModal } from './EditDailyExpenseModal';
 
 interface GastosDiariosClientProps {
   initialExpenses: DailyExpense[];
@@ -13,6 +14,7 @@ interface GastosDiariosClientProps {
 export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: GastosDiariosClientProps) {
   const expenses = initialExpenses;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<DailyExpense | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [personFilter, setPersonFilter] = useState('all');
@@ -404,10 +406,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                     <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toFixed(2)}</td>
                     <td className="py-4 px-3 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <button className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors" title="Confirmar">
-                          <Check className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors" title="Editar">
+                        <button onClick={() => setEditingExpense(expense)} className="p-1.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors" title="Editar">
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors disabled:opacity-50" title="Eliminar">
@@ -461,6 +460,12 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
       <AddDailyExpenseModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+      />
+
+      <EditDailyExpenseModal
+        isOpen={!!editingExpense}
+        onClose={() => setEditingExpense(null)}
+        expense={editingExpense}
       />
     </>
   );
