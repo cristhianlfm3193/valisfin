@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CalendarEvent } from '@/app/actions/calendario';
 import { AddReminderModal } from './AddReminderModal';
+import { EventDetailsModal } from './EventDetailsModal';
+import { DayEventsListModal } from './DayEventsListModal';
 import { 
   ChevronLeft, ChevronRight, Plus, Download, RefreshCw, Calendar as CalendarIcon
 } from 'lucide-react';
@@ -17,6 +19,7 @@ interface CalendarClientProps {
 const CATEGORY_STYLES = {
   'Ingresos': { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-200', dot: 'bg-emerald-600', icon: '💵' },
   'Pagos Fijos': { bg: 'bg-indigo-50', text: 'text-indigo-900', border: 'border-indigo-200', dot: 'bg-indigo-600', icon: '⚡' },
+  'Gastos Diarios': { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', dot: 'bg-rose-500', icon: '🛒' },
   'Vehículos': { bg: 'bg-sky-50', text: 'text-sky-900', border: 'border-sky-200', dot: 'bg-sky-500', icon: '🚗' },
   'Hogar': { bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-200', dot: 'bg-amber-500', icon: '🏡' },
   'Metas': { bg: 'bg-teal-50', text: 'text-teal-900', border: 'border-teal-200', dot: 'bg-teal-500', icon: '🎯' },
@@ -26,6 +29,8 @@ const CATEGORY_STYLES = {
 export function CalendarClient({ initialEvents, currentMonth, currentYear }: CalendarClientProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>('Todos');
 
   const formatCurrency = (amount: number) => {
@@ -194,11 +199,12 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                   </div>
                   
                   <div className="space-y-1 mt-1 flex-1 overflow-y-auto custom-scrollbar">
-                    {dayEvents.map(event => {
-                      const style = CATEGORY_STYLES[event.category] || CATEGORY_STYLES['Recordatorios'];
+                    {dayEvents.slice(0, 3).map(event => {
+                      const style = CATEGORY_STYLES[event.category as keyof typeof CATEGORY_STYLES] || CATEGORY_STYLES['Recordatorios'];
                       return (
                         <div 
                           key={event.id}
+                          onClick={() => setSelectedEvent(event)}
                           className={`px-1.5 py-0.5 md:py-1 rounded-md border text-[9px] md:text-[10px] font-semibold truncate flex items-center gap-1 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
                             ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50 line-through' : ''}
                           `}
@@ -213,6 +219,15 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                         </div>
                       )
                     })}
+                    
+                    {dayEvents.length > 3 && (
+                      <button 
+                        onClick={() => setSelectedDay(d.fullDate)}
+                        className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
+                      >
+                        + {dayEvents.length - 3} más...
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -222,6 +237,23 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
       </div>
 
       <AddReminderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <DayEventsListModal 
+        date={selectedDay} 
+        events={selectedDay ? eventsByDate[selectedDay] : []} 
+        categoryStyles={CATEGORY_STYLES}
+        onEventClick={(ev) => {
+          setSelectedEvent(ev);
+        }}
+        onClose={() => setSelectedDay(null)} 
+      />
+      <EventDetailsModal 
+        event={selectedEvent} 
+        onClose={() => {
+          setSelectedEvent(null);
+          // It will automatically drop back to DayEventsListModal if selectedDay is set, 
+          // because DayEventsListModal is still rendered behind it.
+        }} 
+      />
     </div>
   );
 }

@@ -8,7 +8,7 @@ export interface CalendarEvent {
   title: string;
   amount?: number;
   date: string; // YYYY-MM-DD
-  category: 'Ingresos' | 'Pagos Fijos' | 'Vehículos' | 'Hogar' | 'Metas' | 'Recordatorios';
+  category: 'Ingresos' | 'Pagos Fijos' | 'Vehículos' | 'Hogar' | 'Metas' | 'Recordatorios' | 'Gastos Diarios';
   time?: string;
   isCompleted?: boolean;
 }
@@ -21,43 +21,69 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
   // or fetch a slightly wider range. For now, fetch all active/recent.
   // In a real large app, we'd filter at the DB level, but here the datasets are small.
 
-  // 1. Incomes
+  // 1. Incomes (Extrapolate to current month based on their original day)
   const { data: incomes } = await supabase.from('incomes').select('*');
   if (incomes) {
     incomes.forEach(inc => {
+      if (!inc.date) return;
       const incDate = new Date(inc.date);
-      if (incDate.getFullYear() === year && incDate.getMonth() + 1 === month) {
-        events.push({
-          id: `inc_${inc.id}`,
-          title: inc.description || 'Ingreso',
-          amount: inc.amount,
-          date: inc.date.split('T')[0],
-          category: 'Ingresos',
-        });
-      }
+      if (isNaN(incDate.getTime())) return; // Skip invalid dates
+      
+      // We extrapolate the income to happen on the same day every month
+      const day = incDate.getDate();
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const finalDay = Math.min(day, daysInMonth);
+      const extrapolatedDate = new Date(year, month - 1, finalDay);
+      
+      // Avoid duplicates if they entered multiple incomes with same name/day? 
+      // For now, let's just project all unique ones. Actually, incomes might be added every month manually.
+      // If we project all of them, they might duplicate if the user logs "Quincena" every month.
+      // So we can group them by 'description' and 'day' to avoid duplicating "Quincena" 5 times on the 15th.
+      // But let's keep it simple first:
+      events.push({
+        id: `inc_${inc.id}_${year}_${month}`,
+        title: inc.description || 'Ingreso',
+        amount: inc.amount,
+        date: extrapolatedDate.toISOString().split('T')[0],
+        category: 'Ingresos',
+      });
     });
   }
 
-  // 2. Fixed Payments (Calculate Due Dates)
+  // To remove duplicated extrapolated incomes (since they might log it manually every month)
+  const uniqueIncomes = new Map();
+  events.filter(e => e.category === 'Ingresos').forEach(e => {
+    const key = `${e.title}_${e.date}`;
+    if (!uniqueIncomes.has(key)) {
+      uniqueIncomes.set(key, e);
+    }
+  });
+
+  // Filter out the raw incomes from events and push the unique ones back
+  let finalEvents = events.filter(e => e.category !== 'Ingresos');
+  finalEvents.push(...Array.from(uniqueIncomes.values()));
+
+  // 2. Fixed Payments (Extrapolate to current month based on created_at or billing_day)
   const { data: fixedPayments } = await supabase.from('fixed_payments').select('*');
   if (fixedPayments) {
     fixedPayments.forEach(fp => {
-      if (!fp.is_paid) {
-        const createdDate = new Date(fp.created_at);
-        const cycleDays = fp.payment_cycle_days || 30;
-        const dueDate = new Date(createdDate.getTime() + (cycleDays * 24 * 60 * 60 * 1000));
-        
-        if (dueDate.getFullYear() === year && dueDate.getMonth() + 1 === month) {
-          events.push({
-            id: `fp_${fp.id}`,
-            title: fp.title,
-            amount: fp.amount,
-            date: dueDate.toISOString().split('T')[0],
-            category: 'Pagos Fijos',
-            isCompleted: false
-          });
-        }
-      }
+      if (!fp.created_at) return;
+      const createdDate = new Date(fp.created_at);
+      if (isNaN(createdDate.getTime())) return;
+      
+      const day = fp.billing_day || createdDate.getDate();
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const finalDay = Math.min(day, daysInMonth);
+      const extrapolatedDate = new Date(year, month - 1, finalDay);
+      
+      finalEvents.push({
+        id: `fp_${fp.id}_${year}_${month}`,
+        title: fp.title,
+        amount: fp.amount,
+        date: extrapolatedDate.toISOString().split('T')[0],
+        category: 'Pagos Fijos',
+        isCompleted: false // We can't easily track completion for past/future months without a history table
+      });
     });
   }
 
@@ -68,7 +94,7 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
       if (m.date) {
         const mDate = new Date(m.date);
         if (mDate.getFullYear() === year && mDate.getMonth() + 1 === month) {
-          events.push({
+          finalEvents.push({
             id: `veh_${m.id}`,
             title: m.service,
             amount: m.cost,
@@ -89,7 +115,7 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
       if (d) {
         const htDate = new Date(d);
         if (htDate.getFullYear() === year && htDate.getMonth() + 1 === month) {
-          events.push({
+          finalEvents.push({
             id: `home_${ht.id}`,
             title: ht.title,
             amount: ht.budget,
@@ -108,7 +134,7 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
     reminders.forEach(r => {
       const rDate = new Date(r.date);
       if (rDate.getFullYear() === year && rDate.getMonth() + 1 === month) {
-        events.push({
+        finalEvents.push({
           id: `rem_${r.id}`,
           title: r.title,
           amount: r.amount,
@@ -120,10 +146,30 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
     });
   }
 
-  // Sort by date
-  events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // 6. Daily Expenses (Gastos Diarios) - Actuals only, no extrapolation
+  const currentMonthStr = `${year}-${String(month).padStart(2, '0')}`;
+  const { data: dailyExpenses } = await supabase
+    .from('daily_expenses')
+    .select('*')
+    .like('date', `${currentMonthStr}%`);
+    
+  if (dailyExpenses) {
+    dailyExpenses.forEach(de => {
+      finalEvents.push({
+        id: `de_${de.id}`,
+        title: `${de.category} - ${de.description || ''}`,
+        amount: de.amount,
+        date: de.date,
+        category: 'Gastos Diarios',
+        isCompleted: true // They are actual expenses, so they are done
+      });
+    });
+  }
 
-  return events;
+  // Sort by date
+  finalEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  return finalEvents;
 }
 
 export async function addReminder(prevState: any, formData: FormData) {
