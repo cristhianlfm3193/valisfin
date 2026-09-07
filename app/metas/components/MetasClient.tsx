@@ -19,10 +19,31 @@ export default function MetasClient({ goals }: { goals: any[] }) {
 
   // Filter
   const filteredGoals = useMemo(() => {
-    return goals.filter(g => 
+    const priorityWeight: Record<string, number> = {
+      'MUY_ALTA': 1,
+      'MUY ALTA': 1,
+      'ALTA': 2,
+      'MEDIA': 3,
+      'BAJA': 4
+    };
+
+    const filtered = goals.filter(g => 
       g.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       g.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    return filtered.sort((a, b) => {
+      const aCompleted = a.target_amount > 0 ? a.saved_amount >= a.target_amount : !!a.linked_vehicle_id;
+      const bCompleted = b.target_amount > 0 ? b.saved_amount >= b.target_amount : !!b.linked_vehicle_id;
+      
+      if (aCompleted && !bCompleted) return 1;
+      if (!aCompleted && bCompleted) return -1;
+      
+      const weightA = priorityWeight[a.priority] || 99;
+      const weightB = priorityWeight[b.priority] || 99;
+      
+      return weightA - weightB;
+    });
   }, [goals, searchTerm]);
 
   const handleDelete = async (id: string) => {
