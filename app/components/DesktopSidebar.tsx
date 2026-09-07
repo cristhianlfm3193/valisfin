@@ -13,7 +13,8 @@ import {
   BarChart2,
   Wrench,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Calendar
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -26,6 +27,7 @@ const navItems = [
   { href: "/vehiculos", label: "Vehículos", icon: Car },
   { href: "/hogar", label: "Hogar", icon: Wrench },
   { href: "/metas", label: "Metas de Ahorro", icon: Target },
+  { href: "/calendario", label: "Calendario Financiero", icon: Calendar },
   { href: "/consultas", label: "Consultas & Reportes", icon: BarChart2 },
 ];
 

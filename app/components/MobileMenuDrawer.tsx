@@ -13,7 +13,8 @@ import {
   Car, 
   Target, 
   BarChart2,
-  Wrench
+  Wrench,
+  Calendar
 } from 'lucide-react';
 import { LogoutButtonMobile } from './LogoutButton';
 
@@ -84,6 +85,7 @@ export function MobileMenuDrawer({ avatarUrl, fullName, initial }: MobileMenuDra
             { href: "/vehiculos", label: "Vehículos", icon: Car },
             { href: "/hogar", label: "Hogar", icon: Wrench },
             { href: "/metas", label: "Metas de Ahorro", icon: Target },
+            { href: "/calendario", label: "Calendario Financiero", icon: Calendar },
             { href: "/consultas", label: "Consultas & Reportes", icon: BarChart2 },
           ].map((item) => {
             const isActive = usePathname() === item.href;
