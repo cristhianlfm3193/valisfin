@@ -67,7 +67,7 @@ export async function getDashboardData() {
   const { data: incomes } = await supabase
     .from('incomes')
     .select('*')
-    .order('date', { ascending: false });
+    .order('date_expected', { ascending: false });
 
   // 4. Fetch Savings Goals
   const { data: savingsGoals } = await supabase
@@ -124,7 +124,7 @@ export async function getDashboardData() {
 
   let incomesReceived = 0;
   inc.forEach(i => {
-    if (i.date.startsWith(currentMonthPeriod)) {
+    if (i.date_expected?.startsWith(currentMonthPeriod)) {
       incomesReceived += i.amount;
     }
   });
@@ -160,7 +160,7 @@ export async function getDashboardData() {
   let jIncomes = 0, jExpenses = 0;
 
   inc.forEach(i => {
-    if (i.date.startsWith(currentMonthPeriod)) {
+    if (i.date_expected?.startsWith(currentMonthPeriod)) {
       if (i.responsible === 'Cristhian') cIncomes += i.amount;
       else if (i.responsible === 'Jennifer') jIncomes += i.amount;
     }

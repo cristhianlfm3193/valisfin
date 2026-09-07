@@ -1,7 +1,8 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getAppSettings } from '@/app/actions/admin'
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -9,6 +10,11 @@ export default function LoginPage() {
   const [showToast, setShowToast] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [settings, setSettings] = useState<any>(null)
+
+  useEffect(() => {
+    getAppSettings('login_page').then(setSettings)
+  }, [])
 
   const handleGoogleLogin = async () => {
     setToastMessage('Conectando con Google Authentication...')
@@ -56,7 +62,7 @@ export default function LoginPage() {
           {/* Inspiration Section */}
           <section className="lg:col-span-5 relative flex flex-col justify-between overflow-hidden bg-emerald-900 min-h-[380px] sm:min-h-[440px] lg:min-h-full p-6 sm:p-8 text-white order-1 lg:order-1">
             <div className="absolute inset-0 z-0">
-              <img alt="Nuestra bebé sonriendo con camiseta de Panamá" className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.03] scale-100 hover:scale-105 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ"/>
+              <img alt="Nuestra bebé sonriendo con camiseta de Panamá" className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.03] scale-100 hover:scale-105 transition-transform duration-700 ease-out" src={settings?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ"}/>
               <div className="absolute inset-0 hero-photo-gradient pointer-events-none"></div>
             </div>
             
@@ -78,10 +84,10 @@ export default function LoginPage() {
                 <span>Por el futuro de nuestra bebé</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-snug">
-                Construyendo el patrimonio y bienestar de nuestra familia día a día.
+                {settings?.welcomeTitle || "Construyendo el patrimonio y bienestar de nuestra familia día a día."}
               </h2>
               <p className="mt-2 text-xs sm:text-sm text-emerald-100/90 font-medium leading-relaxed">
-                “Cada balboa cuidado es un paso firme y lleno de amor hacia su tranquilidad y mañana.”
+                {settings?.welcomeSubtitle || "“Cada balboa cuidado es un paso firme y lleno de amor hacia su tranquilidad y mañana.”"}
               </p>
               
               <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-[11px] text-emerald-200/90">
