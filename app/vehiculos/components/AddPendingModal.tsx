@@ -26,31 +26,20 @@ export default function AddPendingModal({
   const [cost, setCost] = useState('');
   
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(addPendingMaintenance, { success: false, error: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, formAction, isPending] = useActionState(addPendingMaintenance, { success: false, error: '' });
 
   // Get current km of selected vehicle
   const currentKm = vehicles.find(v => v.id === selectedVehicle)?.current_km || 0;
 
   useEffect(() => {
     if (state?.success) {
-      setIsSubmitting(false);
       setService('');
       setCost('');
       onClose();
     } else if (state?.error) {
-      setIsSubmitting(false);
       alert(state.error);
     }
   }, [state, onClose]);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    const formData = new FormData(e.currentTarget);
-    formData.append('current_km', currentKm.toString());
-    formAction(formData);
-  };
 
   if (!isOpen) return null;
 
@@ -77,7 +66,8 @@ export default function AddPendingModal({
         </div>
 
         <div className="p-6 overflow-y-auto">
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+          <form ref={formRef} action={formAction} className="space-y-5">
+            <input type="hidden" name="current_km" value={currentKm} />
             
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-slate-700">Vehículo</label>
@@ -160,10 +150,10 @@ export default function AddPendingModal({
             <div className="pt-2">
               <button 
                 type="submit" 
-                disabled={isSubmitting || !service}
+                disabled={isPending || !service}
                 className="w-full py-3.5 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-300 text-white rounded-xl font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
               >
-                {isSubmitting ? (
+                {isPending ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                 ) : (
                   <>

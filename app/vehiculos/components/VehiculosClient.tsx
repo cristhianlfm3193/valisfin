@@ -4,6 +4,8 @@ import { useState } from 'react';
 import AddKmModal from './AddKmModal';
 import AddMaintenanceModal from './AddMaintenanceModal';
 import AddPendingModal from './AddPendingModal';
+import EditPendingModal from './EditPendingModal';
+import { markMaintenanceAsDone, deleteMaintenance } from '../../actions/vehicles';
 
 export default function VehiculosClient({
   vehicles,
@@ -18,14 +20,43 @@ export default function VehiculosClient({
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
   
+  const [isEditPendingModalOpen, setIsEditPendingModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<any>(null);
+  
   const [kmFilter, setKmFilter] = useState('all');
   const [kmPage, setKmPage] = useState(1);
   
   const [maintFilter, setMaintFilter] = useState('all');
   const [maintPage, setMaintPage] = useState(1);
+  
+  const [pendingFilter, setPendingFilter] = useState('all');
+  const [pendingPage, setPendingPage] = useState(1);
 
   const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
   const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
+
+  const filteredPending = pendingFilter === 'all'
+    ? pendingTasks
+    : pendingTasks.filter(log => log.vehicle_id === pendingFilter);
+  const totalPendingPages = Math.max(1, Math.ceil(filteredPending.length / 3));
+  const paginatedPending = filteredPending.slice((pendingPage - 1) * 3, pendingPage * 3);
+
+  const handleMarkDone = async (id: string) => {
+    if (confirm('¿Marcar este trabajo como realizado? Se moverá al historial.')) {
+      await markMaintenanceAsDone(id);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('¿Eliminar permanentemente este trabajo de los registros?')) {
+      await deleteMaintenance(id);
+    }
+  };
+
+  const handleEdit = (task: any) => {
+    setTaskToEdit(task);
+    setIsEditPendingModalOpen(true);
+  };
 
   const filteredMileage = kmFilter === 'all' 
     ? mileageLogs 
@@ -281,44 +312,107 @@ export default function VehiculosClient({
                   <h2 className="text-lg font-bold text-on-surface">Trabajos Pendientes de Revisión</h2>
                 </div>
               </div>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
-                {pendingTasks.length} Tareas Críticas
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
+                  {filteredPending.length} Tareas Críticas
+                </span>
+                <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
+                  <button onClick={() => { setPendingFilter('all'); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+                  {vehicles.map(v => (
+                    <button key={v.id} onClick={() => { setPendingFilter(v.id); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                      {v.brand} {v.model}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {pendingTasks.map(task => {
-                const vehicle = vehicles.find(v => v.id === task.vehicle_id);
-                return (
-                  <div key={task.id} className="p-4 rounded-2xl border border-orange-100 bg-orange-50/50 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-orange-600 uppercase tracking-wider">{vehicle?.brand} {vehicle?.model}</span>
-                        <span className="font-mono text-xs text-slate-500">{task.date}</span>
-                      </div>
-                      <h3 className="font-bold text-slate-800 text-base leading-tight mb-2">{task.service}</h3>
-                      
-                      <div className="flex items-center gap-4 mt-3">
-                        <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
-                          <span className="material-symbols-outlined text-[16px] text-slate-400">speed</span>
-                          Registrado a los {task.km?.toLocaleString()} km
-                        </div>
-                      </div>
-                    </div>
-                    {task.cost ? (
-                      <div className="mt-4 pt-3 border-t border-orange-200/50 flex items-center justify-between">
-                        <span className="text-xs text-slate-500 font-medium">Presupuesto Estimado:</span>
-                        <span className="font-mono font-bold text-orange-700 text-base">B/. {task.cost.toFixed(2)}</span>
-                      </div>
-                    ) : (
-                      <div className="mt-4 pt-3 border-t border-orange-200/50 flex items-center justify-between">
-                        <span className="text-xs text-slate-500 font-medium">Presupuesto Estimado:</span>
-                        <span className="text-xs font-semibold text-slate-400 bg-white px-2 py-1 rounded-md border border-slate-200">Sin presupuesto</span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+                    <th className="py-3 px-3">Fecha</th>
+                    <th className="py-3 px-3">Vehículo</th>
+                    <th className="py-3 px-3">Trabajo a Realizar</th>
+                    <th className="py-3 px-3 font-mono">Registrado en</th>
+                    <th className="py-3 px-3 font-mono text-right">Presupuesto (B/.)</th>
+                    <th className="py-3 px-3 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-orange-100 text-sm">
+                  {paginatedPending.map(task => {
+                    const vehicle = vehicles.find(v => v.id === task.vehicle_id);
+                    return (
+                      <tr key={task.id} className="hover:bg-orange-50/50 transition-colors">
+                        <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{task.date}</td>
+                        <td className="py-3.5 px-3 font-semibold text-on-surface text-orange-700">{vehicle?.brand} {vehicle?.model}</td>
+                        <td className="py-3.5 px-3 font-medium text-slate-800">
+                          {task.service}
+                          {task.notes && <p className="text-[11px] text-slate-500 mt-0.5 max-w-[200px] truncate" title={task.notes}>{task.notes}</p>}
+                        </td>
+                        <td className="py-3.5 px-3 font-mono text-slate-700">
+                          {task.km?.toLocaleString() || 0} km
+                          {vehicle && task.km && vehicle.current_km > task.km ? (
+                            <span className="block text-[10px] text-red-500 font-bold mt-0.5" title="Kilómetros recorridos desde que se recomendó">
+                              +{ (vehicle.current_km - task.km).toLocaleString() } km
+                            </span>
+                          ) : null}
+                        </td>
+                        <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">
+                          {task.cost ? `B/. ${task.cost.toFixed(2)}` : <span className="text-xs font-normal text-slate-400">Sin presupuesto</span>}
+                        </td>
+                        <td className="py-3.5 px-3 text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <button 
+                              onClick={() => handleMarkDone(task.id)}
+                              className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-colors border border-emerald-100"
+                              title="Marcar como Realizado"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                            </button>
+                            <button 
+                              onClick={() => handleEdit(task)}
+                              className="w-7 h-7 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors border border-slate-200"
+                              title="Editar"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">edit</span>
+                            </button>
+                            <button 
+                              onClick={() => handleDelete(task.id)}
+                              className="w-7 h-7 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors border border-red-100"
+                              title="Eliminar permanentemente"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">delete</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+              <button 
+                onClick={() => setPendingPage(p => Math.max(1, p - 1))}
+                disabled={pendingPage === 1}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                Anterior
+              </button>
+              <span className="text-xs font-medium text-slate-500">
+                Página {pendingPage} de {totalPendingPages}
+              </span>
+              <button 
+                onClick={() => setPendingPage(p => Math.min(totalPendingPages, p + 1))}
+                disabled={pendingPage === totalPendingPages}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+              >
+                Siguiente
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
             </div>
           </section>
         )}
@@ -422,6 +516,12 @@ export default function VehiculosClient({
         isOpen={isPendingModalOpen} 
         onClose={() => setIsPendingModalOpen(false)} 
         vehicles={vehicles} 
+      />
+
+      <EditPendingModal 
+        isOpen={isEditPendingModalOpen}
+        onClose={() => { setIsEditPendingModalOpen(false); setTaskToEdit(null); }}
+        task={taskToEdit}
       />
     </div>
   );

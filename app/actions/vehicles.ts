@@ -139,3 +139,62 @@ export async function addPendingMaintenance(prevState: any, formData: FormData) 
     return { success: false, error: 'Failed to add pending maintenance' };
   }
 }
+
+export async function markMaintenanceAsDone(id: string) {
+  const supabase = await createClient();
+  const date = new Date().toISOString().split('T')[0];
+  
+  const { error } = await supabase
+    .from('maintenance')
+    .update({ 
+      is_pending: false, 
+      status: 'completed',
+      date: date // optionally update date to when it was actually done
+    })
+    .eq('id', id);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/vehiculos');
+  return { success: true };
+}
+
+export async function deleteMaintenance(id: string) {
+  const supabase = await createClient();
+  
+  const { error } = await supabase
+    .from('maintenance')
+    .delete()
+    .eq('id', id);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/vehiculos');
+  return { success: true };
+}
+
+export async function updatePendingMaintenance(prevState: any, formData: FormData) {
+  const supabase = await createClient();
+  
+  const id = formData.get('id') as string;
+  const service = formData.get('service') as string;
+  const cost = formData.get('cost') ? parseFloat(formData.get('cost') as string) : null;
+  const notes = formData.get('notes') as string || null;
+
+  try {
+    const { error } = await supabase
+      .from('maintenance')
+      .update({
+        service: service,
+        cost: cost,
+        notes: notes
+      })
+      .eq('id', id);
+
+    if (error) throw error;
+
+    revalidatePath('/vehiculos');
+    return { success: true };
+  } catch (error) {
+    console.error('Error in updatePendingMaintenance:', error);
+    return { success: false, error: 'Failed to update pending maintenance' };
+  }
+}
