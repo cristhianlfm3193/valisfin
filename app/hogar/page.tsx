@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import HogarClient from "./components/HogarClient";
 
+import { getACData } from "../actions/ac";
+
 export const metadata = {
   title: 'Hogar y Mantenimiento - ValisFin',
 };
@@ -30,9 +32,14 @@ export default async function HogarPage() {
     console.error('Error fetching home tasks:', tasksError.message || tasksError);
   }
 
+  const acData = await getACData().catch(e => {
+    console.error('Error fetching AC Data:', e);
+    return [];
+  });
+
   return (
     <div className="flex flex-col min-w-0 overflow-y-auto">
-      <HogarClient tasks={tasks || []} />
+      <HogarClient tasks={tasks || []} acData={acData} />
     </div>
   );
 }

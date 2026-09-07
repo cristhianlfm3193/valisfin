@@ -4,9 +4,10 @@ import { useState, useMemo, useEffect } from 'react';
 import { Search, PenSquare, Trash2, CheckCircle2, Clock, AlertCircle, Wrench } from 'lucide-react';
 import AddHomeTaskModal from './AddHomeTaskModal';
 import EditHomeTaskModal from './EditHomeTaskModal';
+import ACTracker from './ACTracker';
 import { markTaskCompleted, deleteHomeTask } from '@/app/actions/home';
 
-export default function HogarClient({ tasks }: { tasks: any[] }) {
+export default function HogarClient({ tasks, acData }: { tasks: any[], acData: any[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('Todos');
   const [editingTask, setEditingTask] = useState<any>(null);
@@ -156,6 +157,8 @@ export default function HogarClient({ tasks }: { tasks: any[] }) {
           </div>
         </div>
       </section>
+
+      <ACTracker acData={acData} />
 
       <main className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 pb-24 md:pb-6 flex-1">
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col">
