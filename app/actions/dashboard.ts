@@ -96,10 +96,12 @@ export async function getDashboardData() {
   let paymentsDone = 0;
   let pendingPayments = 0;
   fp.forEach(p => {
-    if (p.is_paid) {
-      if (p.period === currentMonthPeriod) paymentsDone += p.amount;
-    } else {
-      pendingPayments += p.amount;
+    if (p.period === currentMonthPeriod) {
+      if (p.is_paid) {
+        paymentsDone += p.amount;
+      } else {
+        pendingPayments += p.amount;
+      }
     }
   });
 
@@ -210,7 +212,7 @@ export async function getDashboardData() {
   const now = new Date();
   const upcoming: UpcomingPayment[] = [];
   
-  fp.filter(p => !p.is_paid).forEach(p => {
+  fp.filter(p => !p.is_paid && p.period === currentMonthPeriod).forEach(p => {
     // Generate due date
     const createdDate = new Date(p.created_at);
     const cycleDays = p.payment_cycle_days || 30;
