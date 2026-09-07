@@ -51,19 +51,22 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
   }, [payments, selectedMonth]);
 
   // Compute accumulated amounts from daily expenses for smart cards
-  const { superSpent, gasSpent } = useMemo(() => {
+  const { superSpent, gasSpent, luzSpent } = useMemo(() => {
     let superAcc = 0;
     let gasAcc = 0;
+    let luzAcc = 0;
     initialDailyExpenses.forEach(e => {
       if (e.date.startsWith(selectedMonth)) {
-        if (e.category === 'Supermercado' || e.category === 'Alimentación') {
+        if (e.category === 'Supermercado' || e.category === 'Compras Super y tiendas') {
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
           gasAcc += e.amount;
+        } else if (e.category === 'Luz (Electricidad)') {
+          luzAcc += e.amount;
         }
       }
     });
-    return { superSpent: superAcc, gasSpent: gasAcc };
+    return { superSpent: superAcc, gasSpent: gasAcc, luzSpent: luzAcc };
   }, [initialDailyExpenses, selectedMonth]);
 
   // Group payments by title (using only the month-filtered ones)
@@ -87,8 +90,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
       const isAccumulated = unpaid.length > 1;
 
-        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina';
-        const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : 0);
+        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Luz (Electricidad)' || group[0].title === 'Electricidad Naturgy';
+        const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : luzSpent);
 
         return {
           id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
@@ -171,10 +174,10 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let pendCount = 0;
 
     monthFilteredPayments.forEach((payment) => {
-      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina';
+      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Luz (Electricidad)' || payment.title === 'Electricidad Naturgy';
       
       if (isSmart) {
-        const spent = payment.title === 'Supermercado' ? superSpent : gasSpent;
+        const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : luzSpent);
         const pending = Math.max(payment.amount - spent, 0);
         
         tPaid += spent;

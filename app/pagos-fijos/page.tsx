@@ -3,7 +3,6 @@ import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { getFixedPayments } from "@/app/actions/fixed_payments";
 import { getDailyExpenses } from "@/app/actions/daily_expenses";
 import { PagosFijosClient } from "./components/PagosFijosClient";
-import { AddVariablePaymentModal } from "./components/AddVariablePaymentModal";
 import Link from "next/link";
 import { Bell } from "lucide-react";
 
@@ -33,7 +32,6 @@ export default async function PagosFijosPage() {
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <AddVariablePaymentModal />
           {/* Icono de Notificaciones / Campana limpia */}
           <button
             aria-label="Notificaciones"

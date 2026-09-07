@@ -4,23 +4,36 @@ import { useState, useActionState, useEffect } from 'react';
 import { PlusCircle, X, CheckCircle2 } from 'lucide-react';
 import { addHomeTask } from '@/app/actions/home';
 
-export default function AddHomeTaskModal() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function AddHomeTaskModal({
+  isOpen: externalIsOpen,
+  onClose: externalOnClose
+}: {
+  isOpen?: boolean;
+  onClose?: () => void;
+} = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [state, formAction, isPending] = useActionState(addHomeTask, null);
   
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  const handleClose = () => {
+    if (externalOnClose) externalOnClose();
+    else setInternalIsOpen(false);
+  };
+
   // Perfil seleccionado dinámicamente para cambiar estilos de color
   const [selectedProfile, setSelectedProfile] = useState('edc938dc-9fbc-4573-b007-0bdb95114f95');
 
   useEffect(() => {
     if (state?.success) {
-      setIsOpen(false);
+      handleClose();
     }
   }, [state]);
 
-  if (!isOpen) {
+  if (!isOpen && externalIsOpen === undefined) {
     return (
       <button 
-        onClick={() => setIsOpen(true)}
+        onClick={() => setInternalIsOpen(true)}
         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#09574a] hover:bg-[#064238] text-white shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 min-h-[44px]"
       >
         <PlusCircle className="w-4 h-4" />
@@ -28,6 +41,8 @@ export default function AddHomeTaskModal() {
       </button>
     );
   }
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
@@ -43,7 +58,7 @@ export default function AddHomeTaskModal() {
             <p className="text-xs text-slate-500 font-normal">Planifica reparaciones, compras o servicios técnicos para el hogar.</p>
           </div>
           <button 
-            onClick={() => setIsOpen(false)}
+            onClick={handleClose}
             className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none"
           >
             <X className="w-5 h-5" />
@@ -127,7 +142,7 @@ export default function AddHomeTaskModal() {
           <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
             <button 
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors min-h-[40px]"
             >
               Cancelar

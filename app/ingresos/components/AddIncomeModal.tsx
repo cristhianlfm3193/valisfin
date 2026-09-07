@@ -4,16 +4,29 @@ import { useState } from 'react';
 import { PlusCircle, Wallet, X, Check } from 'lucide-react';
 import { addIncome } from '@/app/actions/income';
 
-export function AddIncomeModal() {
-  const [isOpen, setIsOpen] = useState(false);
+export function AddIncomeModal({
+  isOpen: externalIsOpen,
+  onClose: externalOnClose
+}: {
+  isOpen?: boolean;
+  onClose?: () => void;
+} = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [person, setPerson] = useState<'cristhian' | 'jennifer'>('cristhian');
   const [category, setCategory] = useState('salario');
 
-  if (!isOpen) {
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  const handleClose = () => {
+    if (externalOnClose) externalOnClose();
+    else setInternalIsOpen(false);
+  };
+
+  if (!isOpen && externalIsOpen === undefined) {
     return (
       <button 
-        onClick={() => setIsOpen(true)}
+        onClick={() => setInternalIsOpen(true)}
         className="inline-flex items-center gap-2 bg-emerald-700 text-white hover:bg-emerald-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm transition hover:shadow-md active:scale-95"
       >
         <PlusCircle className="w-4 h-4" />
@@ -22,21 +35,15 @@ export function AddIncomeModal() {
     );
   }
 
+  if (!isOpen) return null;
+
   return (
     <>
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 bg-emerald-700 text-white hover:bg-emerald-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm transition hover:shadow-md active:scale-95"
-      >
-        <PlusCircle className="w-4 h-4" />
-        <span>Ingreso eventual</span>
-      </button>
-
       {/* Modal Overlay Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm transition-opacity z-40 flex items-center justify-center p-3 sm:p-4" 
         aria-hidden="true"
-        onClick={() => setIsOpen(false)}
+        onClick={handleClose}
       >
         {/* Modal Dialog Window */}
         <div 
@@ -55,10 +62,9 @@ export function AddIncomeModal() {
               </div>
             </div>
             <button 
-              type="button" 
-              aria-label="Cerrar modal" 
-              onClick={() => setIsOpen(false)}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              type="button"
+              onClick={handleClose}
+              className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

@@ -3,10 +3,23 @@
 import { useState, useRef } from 'react';
 import { addSavingsGoal } from '@/app/actions/goals';
 
-export default function AddGoalModal() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function AddGoalModal({
+  isOpen: externalIsOpen,
+  onClose: externalOnClose
+}: {
+  isOpen?: boolean;
+  onClose?: () => void;
+} = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  const handleClose = () => {
+    if (externalOnClose) externalOnClose();
+    else setInternalIsOpen(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,7 +29,7 @@ export default function AddGoalModal() {
     try {
       const formData = new FormData(formRef.current);
       await addSavingsGoal(formData);
-      setIsOpen(false);
+      handleClose();
       formRef.current.reset();
     } catch (error) {
       console.error(error);
@@ -27,21 +40,23 @@ export default function AddGoalModal() {
 
   return (
     <>
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition-all hover:scale-[1.01] active:scale-[0.98] shrink-0" 
-        type="button"
-      >
-        <svg className="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M12 4.5v15m7.5-7.5h-15" strokeLinecap="round" strokeLinejoin="round"></path>
-        </svg>
-        <span>Nueva Meta</span>
-      </button>
+      {!isOpen && externalIsOpen === undefined && (
+        <button 
+          onClick={() => setInternalIsOpen(true)}
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition-all hover:scale-[1.01] active:scale-[0.98] shrink-0" 
+          type="button"
+        >
+          <svg className="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 4.5v15m7.5-7.5h-15" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+          <span>Nueva Meta</span>
+        </button>
+      )}
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-y-auto bg-slate-900/35 backdrop-blur-[4px]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-y-auto bg-slate-900/35 backdrop-blur-[4px]">
           <section aria-modal="true" className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-auto animate-fade-in transition-all" role="dialog">
-            <button onClick={() => setIsOpen(false)} aria-label="Cerrar ventana emergente" className="absolute top-4 right-4 sm:top-6 sm:right-6 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-500" type="button">
+            <button onClick={handleClose} aria-label="Cerrar ventana emergente" className="absolute top-4 right-4 sm:top-6 sm:right-6 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-500" type="button">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
               </svg>
@@ -156,7 +171,7 @@ export default function AddGoalModal() {
               </div>
 
               <div className="pt-6 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
-                <button onClick={() => setIsOpen(false)} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors text-center" type="button">
+                <button onClick={handleClose} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors text-center" type="button">
                   Cancelar
                 </button>
                 <button disabled={loading} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50" type="submit">

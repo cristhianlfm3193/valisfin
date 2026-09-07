@@ -46,13 +46,22 @@ export async function addVariablePayment(formData: FormData) {
   // Derive category/responsible/subtitle based on title (simple mapping)
   let category = 'servicios';
   let responsible = 'Hogar • Variable';
+  let subtitle = 'Servicio variable';
+  let payment_cycle_days = 30; // Default cycle
   
   if (title === 'Gasolina') {
     category = 'autos';
     responsible = 'Transporte • Variable';
+    payment_cycle_days = 15; // Usually twice a month, but defaulting to 15 or 30
   } else if (title === 'Supermercado') {
     category = 'hogar';
     responsible = 'Compras • Variable';
+    payment_cycle_days = 15; // Often biweekly
+  } else if (title === 'Electricidad Naturgy' || title === 'Luz') {
+    category = 'servicios';
+    responsible = 'Hogar • Variable';
+    subtitle = 'Servicio hogar';
+    payment_cycle_days = 30;
   }
 
   // Check if there is already an unpaid record for this title and period
@@ -86,9 +95,10 @@ export async function addVariablePayment(formData: FormData) {
         responsible,
         title,
         amount,
-        subtitle: 'Servicio variable',
+        subtitle,
         period,
-        type: 'variable'
+        type: 'variable',
+        payment_cycle_days
       });
 
     if (insertError) {
