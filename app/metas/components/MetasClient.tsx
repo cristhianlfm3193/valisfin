@@ -106,7 +106,7 @@ export default function MetasClient({ goals }: { goals: any[] }) {
           <article className="bg-white rounded-2xl p-5 border border-brand-200/80 shadow-xs relative overflow-hidden group bg-gradient-to-b from-white to-brand-50/20">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-brand-800">Total Ahorrado</span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800 border border-brand-200">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800 border border-brand-200 whitespace-nowrap shrink-0">
                 {Math.min(100, globalProgress).toFixed(1)}% completado
               </span>
             </div>
