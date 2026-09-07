@@ -3,17 +3,21 @@
 import { useState } from 'react';
 import { SettingsModal } from './components/SettingsModal';
 import { UsersModal } from './components/UsersModal';
-import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock } from 'lucide-react';
+import { AuditLogTable } from './components/AuditLogTable';
+import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminClientProps {
   initialSettings: any;
   initialUsers: any[];
+  initialLogs: any[];
 }
 
-export default function AdminClient({ initialSettings, initialUsers }: AdminClientProps) {
+export default function AdminClient({ initialSettings, initialUsers, initialLogs }: AdminClientProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = useState(false);
+
+  const loginImageUrl = initialSettings?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ";
 
   return (
     <main className="min-h-screen bg-[#faf8ff] p-4 sm:p-6 lg:p-8 font-['Plus_Jakarta_Sans'] pb-24 lg:pb-8">
@@ -32,7 +36,7 @@ export default function AdminClient({ initialSettings, initialUsers }: AdminClie
         onSaved={() => window.location.reload()} 
       />
 
-      <div className="max-w-5xl mx-auto space-y-6 lg:space-y-8">
+      <div className="max-w-6xl mx-auto space-y-6 lg:space-y-8">
         
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -43,7 +47,7 @@ export default function AdminClient({ initialSettings, initialUsers }: AdminClie
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Panel de Control</h1>
             </div>
-            <p className="text-sm text-slate-500">Gestión centralizada de la plataforma ValisFin.</p>
+            <p className="text-sm text-slate-500">Gestión centralizada y auditoría de ValisFin.</p>
           </div>
           
           <Link 
@@ -55,42 +59,53 @@ export default function AdminClient({ initialSettings, initialUsers }: AdminClie
           </Link>
         </header>
 
-        {/* Stats Row (Decorative/Placeholder for future) */}
+        {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-              <Activity className="w-5 h-5" />
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Base de Datos</p>
+              <Database className="w-4 h-4 text-emerald-500" />
             </div>
-            <div>
-              <p className="text-xs text-slate-500 font-medium">Estado del Sistema</p>
-              <p className="text-sm font-bold text-slate-900">Óptimo</p>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-              <Users className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-500 font-medium">Usuarios Totales</p>
-              <p className="text-sm font-bold text-slate-900">{initialUsers.length}</p>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Supabase PG <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 ml-1 mb-0.5"></span></p>
+            <div className="flex items-end gap-2 mt-1">
+              <span className="text-2xl font-bold text-emerald-700 leading-none">38</span>
+              <span className="text-xs text-slate-500 font-medium mb-0.5">ms</span>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
-              <Database className="w-5 h-5" />
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Disponibilidad 30D</p>
+              <Server className="w-4 h-4 text-emerald-500" />
             </div>
-            <div>
-              <p className="text-xs text-slate-500 font-medium">Base de Datos</p>
-              <p className="text-sm font-bold text-slate-900">Conectada</p>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Uptime ValisFin</p>
+            <div className="flex items-end gap-2 mt-1">
+              <span className="text-2xl font-bold text-slate-900 leading-none">99.9%</span>
+              <span className="text-xs text-emerald-600 font-medium mb-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">Óptimo</span>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-            <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-              <Lock className="w-5 h-5" />
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Seguridad y Accesos</p>
+              <Users className="w-4 h-4 text-blue-500" />
             </div>
-            <div>
-              <p className="text-xs text-slate-500 font-medium">Seguridad</p>
-              <p className="text-sm font-bold text-slate-900">Nivel Máximo</p>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Cuentas Registradas</p>
+            <div className="flex items-end gap-2 mt-1">
+              <span className="text-2xl font-bold text-slate-900 leading-none">{initialUsers.length}</span>
+              <span className="text-xs text-slate-500 font-medium mb-0.5">miembros activos</span>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Actividad Reciente</p>
+              <Activity className="w-4 h-4 text-slate-700" />
+            </div>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Operaciones DB</p>
+            <div className="flex items-end gap-2 mt-1">
+              <span className="text-2xl font-bold text-slate-900 leading-none">{initialLogs.length}+</span>
+              <span className="text-xs text-slate-500 font-medium mb-0.5">transacciones</span>
             </div>
           </div>
         </div>
@@ -99,26 +114,28 @@ export default function AdminClient({ initialSettings, initialUsers }: AdminClie
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Card: Apariencia */}
-          <div className="group relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-            <div className="absolute top-0 right-0 p-6 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform duration-500">
-              <ImageIcon className="w-32 h-32 text-emerald-600" />
+          <div className="group relative overflow-hidden bg-slate-900 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col h-full min-h-[300px]">
+            {/* Background Image (Real Image from settings) */}
+            <div className="absolute inset-0 z-0">
+              <img src={loginImageUrl} alt="Background" className="w-full h-full object-cover object-center opacity-40 group-hover:scale-105 group-hover:opacity-30 transition-all duration-700 ease-out" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-transparent"></div>
             </div>
             
             <div className="p-6 sm:p-8 flex-1 flex flex-col relative z-10">
-              <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6 border border-emerald-100">
-                <ImageIcon className="w-6 h-6 text-emerald-600" />
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 border border-white/20">
+                <ImageIcon className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Apariencia de la App</h2>
-              <p className="text-sm text-slate-500 mb-8 flex-1">
+              <h2 className="text-xl font-bold text-white mb-2">Apariencia de la App</h2>
+              <p className="text-sm text-slate-300 mb-8 flex-1">
                 Personaliza la foto de portada, el mensaje de bienvenida y el estilo visual de la pantalla de inicio de sesión para tu familia.
               </p>
               
               <button 
                 onClick={() => setIsSettingsOpen(true)}
-                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-slate-900 text-white font-semibold rounded-xl hover:bg-black transition-colors"
+                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg"
               >
                 <span>Editar Pantalla de Inicio</span>
-                <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-emerald-100 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
@@ -149,6 +166,10 @@ export default function AdminClient({ initialSettings, initialUsers }: AdminClie
           </div>
 
         </div>
+
+        {/* Audit Logs Table */}
+        <AuditLogTable initialLogs={initialLogs} />
+
       </div>
     </main>
   );

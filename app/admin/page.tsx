@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import AdminClient from './AdminClient';
-import { getAppSettings, getAllUsers } from '@/app/actions/admin';
+import { getAppSettings, getAllUsers, getAuditLogs } from '@/app/actions/admin';
 
 export const metadata = {
   title: 'Admin Panel | ValisFin',
@@ -29,10 +29,11 @@ export default async function AdminPage() {
   }
 
   // 3. Fetch Data for Admin Client
-  const [initialSettings, initialUsers] = await Promise.all([
+  const [initialSettings, initialUsers, initialLogs] = await Promise.all([
     getAppSettings('login_page'),
-    getAllUsers()
+    getAllUsers(),
+    getAuditLogs()
   ]);
 
-  return <AdminClient initialSettings={initialSettings || {}} initialUsers={initialUsers} />;
+  return <AdminClient initialSettings={initialSettings || {}} initialUsers={initialUsers} initialLogs={initialLogs} />;
 }

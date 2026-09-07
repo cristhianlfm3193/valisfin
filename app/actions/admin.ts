@@ -115,3 +115,40 @@ export async function updateUserRole(userId: string, newRole: string) {
   revalidatePath('/admin');
   return { success: true };
 }
+
+// --- Audit Logs ---
+
+export async function getAuditLogs() {
+  const supabase = await createClient();
+  
+  // Verify admin role
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'administrador') return [];
+
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select(`
+      *,
+      profiles:user_id (
+        first_name,
+        email,
+        avatar_url
+      )
+    `)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error('Error fetching audit logs:', error);
+    return [];
+  }
+  return data || [];
+}
