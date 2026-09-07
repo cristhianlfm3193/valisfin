@@ -17,14 +17,27 @@ export default function VehiculosClient({
   const [isKmModalOpen, setIsKmModalOpen] = useState(false);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+  
   const [kmFilter, setKmFilter] = useState('all');
+  const [kmPage, setKmPage] = useState(1);
+  
+  const [maintFilter, setMaintFilter] = useState('all');
+  const [maintPage, setMaintPage] = useState(1);
+
+  const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
+  const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
 
   const filteredMileage = kmFilter === 'all' 
     ? mileageLogs 
     : mileageLogs.filter(log => log.vehicle_id === kmFilter);
+  const totalKmPages = Math.max(1, Math.ceil(filteredMileage.length / 3));
+  const paginatedMileage = filteredMileage.slice((kmPage - 1) * 3, kmPage * 3);
 
-  const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
-  const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
+  const filteredMaintenance = maintFilter === 'all'
+    ? completedMaintenance
+    : completedMaintenance.filter(log => log.vehicle_id === maintFilter);
+  const totalMaintPages = Math.max(1, Math.ceil(filteredMaintenance.length / 3));
+  const paginatedMaintenance = filteredMaintenance.slice((maintPage - 1) * 3, maintPage * 3);
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
@@ -187,9 +200,9 @@ export default function VehiculosClient({
               </div>
             </div>
             <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
-              <button onClick={() => setKmFilter('all')} className={`px-3 py-1 rounded-full transition-all ${kmFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+              <button onClick={() => { setKmFilter('all'); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
               {vehicles.map(v => (
-                <button key={v.id} onClick={() => setKmFilter(v.id)} className={`px-3 py-1 rounded-full transition-all ${kmFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                <button key={v.id} onClick={() => { setKmFilter(v.id); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
                   {v.brand} {v.model}
                 </button>
               ))}
@@ -207,7 +220,7 @@ export default function VehiculosClient({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
-                {filteredMileage.map(log => {
+                {paginatedMileage.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   const isJennifer = vehicle?.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
                   return (
@@ -230,6 +243,28 @@ export default function VehiculosClient({
                 })}
               </tbody>
             </table>
+          </div>
+          
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+            <button 
+              onClick={() => setKmPage(p => Math.max(1, p - 1))}
+              disabled={kmPage === 1}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              Anterior
+            </button>
+            <span className="text-xs font-medium text-slate-500">
+              Página {kmPage} de {totalKmPages}
+            </span>
+            <button 
+              onClick={() => setKmPage(p => Math.min(totalKmPages, p + 1))}
+              disabled={kmPage === totalKmPages}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+            >
+              Siguiente
+              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
           </div>
         </section>
 
@@ -299,9 +334,19 @@ export default function VehiculosClient({
                 <h2 className="text-lg font-bold text-on-surface">Historial de Mantenimientos Realizados</h2>
               </div>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
-              {completedMaintenance.length} Servicios Completados
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+                {filteredMaintenance.length} Servicios
+              </span>
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
+                <button onClick={() => { setMaintFilter('all'); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+                {vehicles.map(v => (
+                  <button key={v.id} onClick={() => { setMaintFilter(v.id); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                    {v.brand} {v.model}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -317,7 +362,7 @@ export default function VehiculosClient({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
-                {completedMaintenance.map(log => {
+                {paginatedMaintenance.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   return (
                     <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
@@ -334,6 +379,28 @@ export default function VehiculosClient({
                 })}
               </tbody>
             </table>
+          </div>
+          
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+            <button 
+              onClick={() => setMaintPage(p => Math.max(1, p - 1))}
+              disabled={maintPage === 1}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              Anterior
+            </button>
+            <span className="text-xs font-medium text-slate-500">
+              Página {maintPage} de {totalMaintPages}
+            </span>
+            <button 
+              onClick={() => setMaintPage(p => Math.min(totalMaintPages, p + 1))}
+              disabled={maintPage === totalMaintPages}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+            >
+              Siguiente
+              <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            </button>
           </div>
         </section>
 

@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useRef, useState, useEffect, useActionState } from 'react';
 import { addPendingMaintenance } from '../../actions/vehicles';
 
 const SUGGESTIONS = [
@@ -27,7 +26,7 @@ export default function AddPendingModal({
   const [cost, setCost] = useState('');
   
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(addPendingMaintenance, { success: false, error: '' });
+  const [state, formAction] = useActionState(addPendingMaintenance, { success: false, error: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get current km of selected vehicle
@@ -146,6 +145,16 @@ export default function AddPendingModal({
                 />
               </div>
               <p className="text-[11px] text-slate-500">Si no tienes el precio ahora, puedes dejarlo en blanco.</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">Observaciones <span className="text-slate-400 font-normal">(Opcional)</span></label>
+              <textarea 
+                name="notes"
+                rows={2}
+                placeholder="Agrega algún detalle o recomendación del mecánico..."
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-sm resize-none"
+              ></textarea>
             </div>
 
             <div className="pt-2">

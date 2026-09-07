@@ -98,7 +98,7 @@ export async function addMaintenanceLog(formData: FormData) {
   return { success: true };
 }
 
-export async function addPendingMaintenance(formData: FormData) {
+export async function addPendingMaintenance(prevState: any, formData: FormData) {
   const supabase = await createClient();
   
   const vehicleId = formData.get('vehicle_id') as string;
