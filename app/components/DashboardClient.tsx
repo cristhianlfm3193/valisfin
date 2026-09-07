@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { 
   Calendar, CheckCircle2, TrendingUp, ArrowUpRight, ArrowDownRight, Sparkles, 
-  Wallet, Car, Wrench, Home, Target, Banknote, FileText 
+  Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -199,20 +199,19 @@ export function DashboardClient({
               <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.dailyExpenses)}</p>
             </Link>
 
-            <Link href="/pagos-fijos" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
-              <div className={`absolute bottom-0 left-0 h-1 bg-emerald-500 transition-all duration-1000 ease-out`} style={{ width: `${totalFixed > 0 ? (metrics.paymentsDone / totalFixed) * 100 : 0}%` }}></div>
+            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
-                  <CheckCircle2 className="w-5 h-5" />
+                <div className="p-2 bg-orange-50 rounded-xl text-orange-600">
+                  <Utensils className="w-5 h-5" />
                 </div>
-                <span className="text-slate-400 group-hover:text-emerald-500 transition-colors">
+                <span className="text-slate-400 group-hover:text-orange-500 transition-colors">
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pagos Fijos Cumplimiento</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Restaurante</p>
               <div className="flex items-baseline gap-1 mt-auto">
-                <p className="text-lg font-extrabold text-slate-900">{Math.round(totalFixed > 0 ? (metrics.paymentsDone / totalFixed) * 100 : 0)}%</p>
-                <span className="text-xs text-slate-400 font-medium ml-1">pagado</span>
+                <p className="text-lg font-extrabold text-slate-900">{formatCurrency(metrics.restauranteSpent)}</p>
+                <span className="text-xs text-slate-400 font-medium ml-1">gastado</span>
               </div>
             </Link>
 

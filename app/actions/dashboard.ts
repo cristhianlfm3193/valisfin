@@ -6,6 +6,7 @@ export interface DashboardMetrics {
   paymentsDone: number;
   dailyExpenses: number;
   creditCardTotal: number;
+  restauranteSpent: number;
   pendingPayments: number;
   goalsCompleted: number;
   goalsTotal: number;
@@ -104,12 +105,17 @@ export async function getDashboardData() {
 
   let dailyExpensesTotal = 0;
   let creditCardTotal = 0;
+  let restauranteSpent = 0;
   de.forEach(e => {
     if (e.date.startsWith(currentMonthPeriod)) {
       if (!e.is_credit_card) {
         dailyExpensesTotal += e.amount;
       } else {
         creditCardTotal += e.amount;
+      }
+      
+      if (e.category === 'Restaurante') {
+        restauranteSpent += e.amount;
       }
     }
   });
@@ -137,6 +143,7 @@ export async function getDashboardData() {
     paymentsDone,
     dailyExpenses: dailyExpensesTotal,
     creditCardTotal,
+    restauranteSpent,
     pendingPayments,
     goalsCompleted,
     goalsTotal,
