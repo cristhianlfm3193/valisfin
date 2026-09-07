@@ -1,6 +1,9 @@
 import { getCalendarEvents } from '../actions/calendario';
 import { CalendarClient } from './components/CalendarClient';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function CalendarioPage({
   searchParams,
 }: {
