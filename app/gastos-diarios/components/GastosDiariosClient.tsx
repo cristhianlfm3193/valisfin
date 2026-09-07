@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useTransition } from 'react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
-import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2 } from 'lucide-react';
+import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2, Utensils } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 import { EditDailyExpenseModal } from './EditDailyExpenseModal';
 
@@ -42,7 +42,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
       Supermercado: getLimit('Supermercado', 200),
       Gasolina: getLimit('Gasolina', 200),
       Ocio: 150, // Not tied to fixed payments right now
-      Naturgy: getLimit('Naturgy', 40)
+      Restaurante: 100 // Default budget, can be tied if needed
     };
   }, [fixedPayments]);
 
@@ -63,11 +63,11 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
     .reduce((sum, e) => sum + e.amount, 0);
 
   const spentOcio = currentMonthExpenses
-    .filter(e => e.category === 'Ocio' || e.category === 'Restaurante')
+    .filter(e => e.category === 'Ocio')
     .reduce((sum, e) => sum + e.amount, 0);
 
-  const spentNaturgy = currentMonthExpenses
-    .filter(e => e.category === 'Luz (Electricidad)' || e.category === 'Naturgy' || e.category === 'Servicios')
+  const spentRestaurante = currentMonthExpenses
+    .filter(e => e.category === 'Restaurante')
     .reduce((sum, e) => sum + e.amount, 0);
 
   const getProgress = (spent: number, total: number) => {
@@ -266,36 +266,36 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
         </div>
 
-        {/* Naturgy */}
+        {/* Restaurante */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
           <div className="flex items-start justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center">
-                <Zap className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                <Utensils className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Naturgy</h2>
+                <h2 className="text-lg font-bold text-slate-900 leading-tight">Restaurante</h2>
                 <p className="text-xs text-slate-500">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
-              {Math.round(getProgress(spentNaturgy, budgets.Naturgy))}% usado
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700">
+              {Math.round(getProgress(spentRestaurante, budgets.Restaurante))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentNaturgy.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Naturgy.toFixed(2)}</span>
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toFixed(2)}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
               <div 
-                className="bg-yellow-500 h-full rounded-full transition-all duration-500" 
-                style={{ width: `${getProgress(spentNaturgy, budgets.Naturgy)}%` }}
+                className="bg-orange-500 h-full rounded-full transition-all duration-500" 
+                style={{ width: `${getProgress(spentRestaurante, budgets.Restaurante)}%` }}
               ></div>
             </div>
             <div className="flex items-center justify-between pt-1">
               <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Naturgy - spentNaturgy).toFixed(2)} disponible</span>
+              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Restaurante - spentRestaurante).toFixed(2)} disponible</span>
             </div>
           </div>
         </div>
