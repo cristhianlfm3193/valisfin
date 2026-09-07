@@ -53,6 +53,8 @@ export function DashboardClient({
   const pendientePorPagar = metrics.pendingPayments;
   const totalObligaciones = totalPagado + pendientePorPagar;
   const cumplimiento = totalObligaciones > 0 ? Math.round((totalPagado / totalObligaciones) * 100) : 0;
+  
+  const totalFixed = metrics.paymentsDone + metrics.pendingPayments;
 
   return (
     <div className="space-y-6">
@@ -183,21 +185,8 @@ export function DashboardClient({
           </section>
 
           {/* Metrics Overview */}
-          <section className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <Link href="/pagos-fijos" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-              <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <span className="text-slate-400 group-hover:text-emerald-500 transition-colors">
-                  <ArrowUpRight className="w-4 h-4" />
-                </span>
-              </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fijos Pagados</p>
-              <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.paymentsDone)}</p>
-            </Link>
-
-            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+          <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-3">
                 <div className="p-2 bg-rose-50 rounded-xl text-rose-600">
                   <ArrowDownRight className="w-5 h-5" />
@@ -210,34 +199,34 @@ export function DashboardClient({
               <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.dailyExpenses)}</p>
             </Link>
 
-            <Link href="/pagos-fijos" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+            <Link href="/pagos-fijos" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
+              <div className={`absolute bottom-0 left-0 h-1 bg-emerald-500 transition-all duration-1000 ease-out`} style={{ width: `${totalFixed > 0 ? (metrics.paymentsDone / totalFixed) * 100 : 0}%` }}></div>
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-amber-50 rounded-xl text-amber-600">
-                  <Calendar className="w-5 h-5" />
+                <div className="p-2 bg-emerald-50 rounded-xl text-emerald-600">
+                  <CheckCircle2 className="w-5 h-5" />
                 </div>
-                <span className="text-slate-400 group-hover:text-amber-500 transition-colors">
+                <span className="text-slate-400 group-hover:text-emerald-500 transition-colors">
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Fijos Pendientes</p>
-              <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.pendingPayments)}</p>
-            </Link>
-            
-            <Link href="/vehiculos" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
-              <div className={`absolute bottom-0 left-0 h-1 bg-${vehicleData.percentage >= 100 ? 'rose' : 'blue'}-500 transition-all duration-1000 ease-out`} style={{ width: `${vehicleData.percentage}%` }}></div>
-              <div className="flex justify-between items-start mb-3">
-                <div className={`p-2 bg-${vehicleData.percentage >= 100 ? 'rose' : 'blue'}-50 rounded-xl text-${vehicleData.percentage >= 100 ? 'rose' : 'blue'}-600`}>
-                  <Car className="w-5 h-5" />
-                </div>
-                <span className={`text-slate-400 group-hover:text-${vehicleData.percentage >= 100 ? 'rose' : 'blue'}-500 transition-colors`}>
-                  <ArrowUpRight className="w-4 h-4" />
-                </span>
-              </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Presp. Vehicular</p>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Pagos Fijos Cumplimiento</p>
               <div className="flex items-baseline gap-1 mt-auto">
-                <p className="text-lg font-extrabold text-slate-900">{formatCurrency(vehicleData.budgetUsed)}</p>
-                <span className="text-xs text-slate-400 font-medium">/ {formatCurrency(vehicleData.budgetTotal)}</span>
+                <p className="text-lg font-extrabold text-slate-900">{Math.round(totalFixed > 0 ? (metrics.paymentsDone / totalFixed) * 100 : 0)}%</p>
+                <span className="text-xs text-slate-400 font-medium ml-1">pagado</span>
               </div>
+            </Link>
+
+            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
+              <div className="flex justify-between items-start mb-3">
+                <div className="p-2 bg-violet-50 rounded-xl text-violet-600">
+                  <Wallet className="w-5 h-5" />
+                </div>
+                <span className="text-slate-400 group-hover:text-violet-500 transition-colors">
+                  <ArrowUpRight className="w-4 h-4" />
+                </span>
+              </div>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Uso Tarjeta Crédito</p>
+              <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.creditCardTotal)}</p>
             </Link>
           </section>
 

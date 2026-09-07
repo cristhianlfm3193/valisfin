@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 export interface DashboardMetrics {
   paymentsDone: number;
   dailyExpenses: number;
+  creditCardTotal: number;
   pendingPayments: number;
   goalsCompleted: number;
   goalsTotal: number;
@@ -102,9 +103,14 @@ export async function getDashboardData() {
   });
 
   let dailyExpensesTotal = 0;
+  let creditCardTotal = 0;
   de.forEach(e => {
-    if (e.date.startsWith(currentMonthPeriod) && !e.is_credit_card) {
-      dailyExpensesTotal += e.amount;
+    if (e.date.startsWith(currentMonthPeriod)) {
+      if (!e.is_credit_card) {
+        dailyExpensesTotal += e.amount;
+      } else {
+        creditCardTotal += e.amount;
+      }
     }
   });
 
@@ -130,6 +136,7 @@ export async function getDashboardData() {
   const metrics: DashboardMetrics = {
     paymentsDone,
     dailyExpenses: dailyExpensesTotal,
+    creditCardTotal,
     pendingPayments,
     goalsCompleted,
     goalsTotal,
