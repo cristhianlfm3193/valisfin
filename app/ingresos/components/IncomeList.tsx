@@ -37,7 +37,7 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
   const [q1ShowAll, setQ1ShowAll] = useState(false);
   const [q2ShowAll, setQ2ShowAll] = useState(false);
 
-  const ITEMS_LIMIT = 3;
+  const ITEMS_LIMIT = 4;
 
   const q1VisibleItems = q1ShowAll ? q1Items : q1Items.slice(0, ITEMS_LIMIT);
   const q2VisibleItems = q2ShowAll ? q2Items : q2Items.slice(0, ITEMS_LIMIT);
