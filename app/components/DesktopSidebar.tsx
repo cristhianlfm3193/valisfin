@@ -14,7 +14,8 @@ import {
   Wrench,
   PanelLeftClose,
   PanelLeftOpen,
-  Calendar
+  Calendar,
+  Shield
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -31,7 +32,7 @@ const navItems = [
   { href: "/consultas", label: "Consultas & Reportes", icon: BarChart2 },
 ];
 
-export function DesktopSidebar({ user }: { user?: User }) {
+export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -109,6 +110,19 @@ export function DesktopSidebar({ user }: { user?: User }) {
       </div>
 
       <div className={`pt-4 border-t border-slate-100 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
+        {profile?.role === 'administrador' && (
+          <Link
+            href="/admin"
+            title={isCollapsed ? "Panel de Administrador" : undefined}
+            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden bg-rose-50 text-rose-700 hover:bg-rose-100 ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+          >
+            <Shield className="shrink-0 w-4 h-4 text-rose-600 group-hover:scale-110 transition-transform" />
+            {!isCollapsed && (
+              <span className="truncate whitespace-nowrap">Admin Panel</span>
+            )}
+          </Link>
+        )}
+
         <div className={`flex items-center rounded-xl bg-slate-50/80 ${isCollapsed ? 'p-1.5 justify-center' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
           {avatarUrl ? (
             <img src={avatarUrl} alt={fullName} className="w-9 h-9 rounded-full border border-slate-200 shrink-0" />

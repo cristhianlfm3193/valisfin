@@ -39,6 +39,19 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Validar si el usuario está autorizado
+  const allowedEmails = ['cristhianf3193@gmail.com', 'jenniferyohana.yco@gmail.com', 'cristhianlf3193@gmail.com'];
+  
+  if (user && !allowedEmails.includes(user.email || '')) {
+    // Si no está autorizado y no está en /unauthorized o /auth, redirigir a unauthorized
+    if (!request.nextUrl.pathname.startsWith('/unauthorized') && !request.nextUrl.pathname.startsWith('/auth')) {
+      // Opcional: Cerrar sesión inmediatamente (el cliente también debe hacerlo, pero lo bloqueamos aquí)
+      const url = request.nextUrl.clone()
+      url.pathname = '/unauthorized'
+      return NextResponse.redirect(url)
+    }
+  }
+
   // Validar rol de usuario si el usuario existe
   if (user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
     // Buscar perfil en base de datos para obtener el rol

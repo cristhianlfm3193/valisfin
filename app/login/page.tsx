@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [toastMessage, setToastMessage] = useState('')
   const [showToast, setShowToast] = useState(false)
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleGoogleLogin = async () => {
     setToastMessage('Conectando con Google Authentication...')
@@ -21,31 +22,30 @@ export default function LoginPage() {
     })
   }
 
-  const handleMagicLink = async () => {
-    if (!email) {
-      setToastMessage('Por favor escribe tu correo autorizado')
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || !password) {
+      setToastMessage('Por favor ingresa correo y contraseña')
       setShowToast(true)
       setTimeout(() => setShowToast(false), 3500)
       return
     }
     
-    setToastMessage(`Enviando enlace seguro a ${email}...`)
+    setToastMessage(`Iniciando sesión como admin local...`)
     setShowToast(true)
     
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      }
+      password,
     })
     
     if (error) {
-      setToastMessage('Error al enviar el enlace. Intenta nuevamente.')
+      setToastMessage('Credenciales incorrectas. Verifica tu acceso.')
+      setTimeout(() => setShowToast(false), 3500)
     } else {
-      setToastMessage(`Enlace confidencial enviado a ${email}`)
-      setEmail('')
+      setToastMessage(`Acceso concedido a ${email}`)
+      window.location.href = '/' // Refresh and pass middleware
     }
-    setTimeout(() => setShowToast(false), 3500)
   }
 
   return (
@@ -149,28 +149,38 @@ export default function LoginPage() {
               <div className="mt-4 text-center">
                 <details className="group text-left">
                   <summary className="cursor-pointer list-none text-center text-xs font-semibold text-slate-500 hover:text-emerald-700 transition-colors">
-                    ¿Prefieres un enlace de acceso seguro al correo?
+                    ¿Acceso de administrador local (emergencias)?
                   </summary>
-                  <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                    <label className="block text-xs font-medium text-slate-600" htmlFor="magic-email">Correo autorizado del hogar</label>
-                    <div className="flex gap-2">
+                  <form onSubmit={handlePasswordLogin} className="mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1" htmlFor="admin-email">Correo de administrador</label>
                       <input 
                         type="email" 
-                        id="magic-email" 
+                        id="admin-email" 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="block w-full text-xs rounded-lg border-slate-300 focus:border-emerald-600 focus:ring-emerald-600 py-2 px-3 border" 
-                        placeholder="cristhian@gmail.com o jennifer@gmail.com"
+                        className="block w-full text-xs rounded-lg border-slate-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5 px-3 border bg-white" 
+                        placeholder="admin@valisfin.com"
                       />
-                      <button 
-                        type="button" 
-                        onClick={handleMagicLink}
-                        className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3 py-2 rounded-lg shrink-0 transition-colors"
-                      >
-                        Enviar Enlace
-                      </button>
                     </div>
-                  </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1" htmlFor="admin-password">Contraseña</label>
+                      <input 
+                        type="password" 
+                        id="admin-password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="block w-full text-xs rounded-lg border-slate-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5 px-3 border bg-white" 
+                        placeholder="••••••••"
+                      />
+                    </div>
+                    <button 
+                      type="submit" 
+                      className="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-2.5 rounded-lg shrink-0 transition-colors mt-2"
+                    >
+                      Entrar como Admin
+                    </button>
+                  </form>
                 </details>
               </div>
             </div>
