@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Pencil, X, Check, Trash2 } from 'lucide-react';
+import { Pencil, X, Check, Trash2, Edit2 } from 'lucide-react';
 import { editIncome, deleteIncome } from '@/app/actions/income';
 
 export function EditIncomeModal({ item }: { item: any }) {
@@ -50,10 +50,10 @@ export function EditIncomeModal({ item }: { item: any }) {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition shrink-0"
+        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors shrink-0"
         title="Editar Ingreso"
       >
-        <Pencil className="w-4 h-4" />
+        <Edit2 className="w-4 h-4" />
       </button>
 
       {isOpen && (

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useTransition } from 'react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
-import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Check, Edit2, Trash2 } from 'lucide-react';
+import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2 } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 import { EditDailyExpenseModal } from './EditDailyExpenseModal';
 
@@ -404,12 +404,12 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                       </span>
                     </td>
                     <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toFixed(2)}</td>
-                    <td className="py-4 px-3 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button onClick={() => setEditingExpense(expense)} className="p-1.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors" title="Editar">
+                    <td className="py-4 px-3">
+                      <div className="flex justify-end items-center gap-1">
+                        <button onClick={() => setEditingExpense(expense)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
                           <Edit2 className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors disabled:opacity-50" title="Eliminar">
+                        <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50" title="Eliminar">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

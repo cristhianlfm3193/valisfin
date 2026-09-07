@@ -230,3 +230,58 @@ export async function updateCompletedMaintenance(prevState: any, formData: FormD
     return { success: false, error: 'Failed to update completed maintenance' };
   }
 }
+
+async function syncVehicleKm(supabase: any, vehicle_id: string) {
+  const { data: latestLog } = await supabase
+    .from('mileage_logs')
+    .select('km, date')
+    .eq('vehicle_id', vehicle_id)
+    .order('date', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (latestLog) {
+    await supabase.from('vehicles').update({ current_km: latestLog.km, km_date: latestLog.date }).eq('id', vehicle_id);
+  } else {
+    await supabase.from('vehicles').update({ current_km: 0, km_date: null }).eq('id', vehicle_id);
+  }
+}
+
+export async function deleteMileageLog(id: string) {
+  const supabase = await createClient();
+  
+  const { data: logData } = await supabase.from('mileage_logs').select('vehicle_id').eq('id', id).single();
+  if (!logData) return { success: false, error: 'Log not found' };
+
+  const { error } = await supabase
+    .from('mileage_logs')
+    .delete()
+    .eq('id', id);
+
+  if (error) return { success: false, error: error.message };
+  
+  await syncVehicleKm(supabase, logData.vehicle_id);
+
+  revalidatePath('/vehiculos');
+  return { success: true };
+}
+
+export async function updateMileageLog(id: string, km: number) {
+  const supabase = await createClient();
+  
+  const { data: logData } = await supabase.from('mileage_logs').select('vehicle_id').eq('id', id).single();
+  if (!logData) return { success: false, error: 'Log not found' };
+
+  const { error } = await supabase
+    .from('mileage_logs')
+    .update({ km })
+    .eq('id', id);
+
+  if (error) return { success: false, error: error.message };
+  
+  await syncVehicleKm(supabase, logData.vehicle_id);
+
+  revalidatePath('/vehiculos');
+  return { success: true };
+}

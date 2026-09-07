@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import AddKmModal from './AddKmModal';
 import AddMaintenanceModal from './AddMaintenanceModal';
 import AddPendingModal from './AddPendingModal';
 import EditPendingModal from './EditPendingModal';
 import EditCompletedModal from './EditCompletedModal';
-import { markMaintenanceAsDone, deleteMaintenance } from '../../actions/vehicles';
+import { markMaintenanceAsDone, deleteMaintenance, deleteMileageLog, updateMileageLog } from '../../actions/vehicles';
+import { Trash2, Edit2, CheckCircle } from 'lucide-react';
 
 export default function VehiculosClient({
   vehicles,
@@ -17,6 +18,30 @@ export default function VehiculosClient({
   mileageLogs: any[];
   maintenanceLogs: any[];
 }) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleEditKm = (id: string, currentKm: number) => {
+    const newVal = window.prompt('Editar kilometraje:', currentKm.toString());
+    if (newVal !== null) {
+      const newKm = parseInt(newVal, 10);
+      if (!isNaN(newKm) && newKm > 0) {
+        startTransition(async () => {
+          await updateMileageLog(id, newKm);
+        });
+      } else {
+        alert('Kilometraje inválido.');
+      }
+    }
+  };
+
+  const handleDeleteKm = (id: string) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este registro de kilometraje?')) {
+      startTransition(async () => {
+        await deleteMileageLog(id);
+      });
+    }
+  };
+
   const [isKmModalOpen, setIsKmModalOpen] = useState(false);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
@@ -281,6 +306,7 @@ export default function VehiculosClient({
                   <th className="py-3 px-3">Vehículo</th>
                   <th className="py-3 px-3 font-mono">Kilometraje</th>
                   <th className="py-3 px-3 text-right">Registrado Por</th>
+                  <th className="py-3 px-3 text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -301,6 +327,26 @@ export default function VehiculosClient({
                         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-700 font-medium">
                           {log.user_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' ? 'Cristhian Fuentes' : 'Jennifer Camaño'}
                         </span>
+                      </td>
+                      <td className="py-3.5 px-3 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button 
+                            disabled={isPending}
+                            onClick={() => handleEditKm(log.id, log.km)}
+                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
+                            title="Editar"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button 
+                            disabled={isPending}
+                            onClick={() => handleDeleteKm(log.id)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )
@@ -398,24 +444,24 @@ export default function VehiculosClient({
                           <div className="flex items-center justify-center gap-1">
                             <button 
                               onClick={() => handleMarkDone(task.id)}
-                              className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-colors border border-emerald-100"
+                              className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                               title="Marcar como Realizado"
                             >
-                              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                              <CheckCircle className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleEdit(task)}
-                              className="w-7 h-7 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors border border-slate-200"
+                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Editar"
                             >
-                              <span className="material-symbols-outlined text-[16px]">edit</span>
+                              <Edit2 className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleDelete(task.id)}
-                              className="w-7 h-7 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors border border-red-100"
-                              title="Eliminar permanentemente"
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              title="Eliminar"
                             >
-                              <span className="material-symbols-outlined text-[16px]">delete</span>
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -503,13 +549,22 @@ export default function VehiculosClient({
                       <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">B/. {log.cost?.toFixed(2) || '0.00'}</td>
                       <td className="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">{log.shop || 'N/A'}</td>
                       <td className="py-3.5 px-3 text-center">
-                        <button 
-                          onClick={() => handleEditCompleted(log)}
-                          className="w-7 h-7 mx-auto rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors border border-slate-200"
-                          title="Editar Registro"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">edit</span>
-                        </button>
+                        <div className="flex items-center justify-center gap-1">
+                          <button 
+                            onClick={() => handleEditCompleted(log)}
+                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Editar mantenimiento"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(log.id)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )

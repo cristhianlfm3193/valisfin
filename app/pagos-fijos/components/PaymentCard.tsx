@@ -1,6 +1,6 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check, Edit2, Eye } from 'lucide-react';
 
 export interface FixedPayment {
   id: string;
@@ -49,13 +49,13 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
               <div className="flex items-center gap-1.5 mt-0.5">
                 <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
                 {onEdit && (
-                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Editar límite">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Editar límite">
+                    <Edit2 className="w-4 h-4" />
                   </button>
                 )}
                 {onViewHistory && (
-                  <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Ver historial">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Ver historial">
+                    <Eye className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -129,13 +129,13 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
               <div className="flex items-center gap-1.5 mt-0.5">
                 <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
                 {onEdit && (
-                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-emerald-700 hover:bg-emerald-100 rounded-md transition-colors" title="Editar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
+                    <Edit2 className="w-4 h-4" />
                   </button>
                 )}
                 {onViewHistory && (
-                  <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1 text-slate-300 hover:text-emerald-700 hover:bg-emerald-100 rounded-md transition-colors" title="Ver historial">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Ver historial">
+                    <Eye className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -174,13 +174,13 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
             <div className="flex items-center gap-1.5 mt-0.5">
               <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
               {onEdit && (
-                <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-rose-600 hover:bg-rose-100 rounded-md transition-colors" title="Editar">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Editar">
+                  <Edit2 className="w-4 h-4" />
                 </button>
               )}
               {onViewHistory && (
-                <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1 text-slate-300 hover:text-rose-600 hover:bg-rose-100 rounded-md transition-colors" title="Ver historial">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <button onClick={(e) => { e.stopPropagation(); onViewHistory(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Ver historial">
+                  <Eye className="w-4 h-4" />
                 </button>
               )}
             </div>
