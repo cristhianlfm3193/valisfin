@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { DailyExpense } from '@/app/actions/daily_expenses';
-import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { useState, useMemo, useEffect, useTransition } from 'react';
+import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
+import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Check, Edit2, Trash2 } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 
 interface GastosDiariosClientProps {
@@ -21,7 +21,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   });
 
-  const ITEMS_PER_PAGE = 5;
+  const [isPending, startTransition] = useTransition();
+  const ITEMS_PER_PAGE = 10;
 
   // Resetea a la página 1 cuando cambian los filtros
   useEffect(() => {
@@ -32,7 +33,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
   const budgets = {
     Supermercado: 200,
     Gasolina: 200,
-    Ocio: 150
+    Ocio: 150,
+    Electricidad: 40
   };
 
   // Calculate budgets for the selected month
@@ -53,6 +55,10 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
 
   const spentOcio = currentMonthExpenses
     .filter(e => e.category === 'Ocio' || e.category === 'Restaurante')
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  const spentElectricidad = currentMonthExpenses
+    .filter(e => e.category === 'Luz (Electricidad)' || e.category === 'Servicios')
     .reduce((sum, e) => sum + e.amount, 0);
 
   const getProgress = (spent: number, total: number) => {
@@ -90,6 +96,17 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
   }, [expenses, searchQuery, categoryFilter, personFilter]);
 
   const totalFiltered = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+  const handleDelete = (id: string) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este gasto?')) {
+      startTransition(async () => {
+        const res = await deleteDailyExpense(id);
+        if (res?.success === false) {
+          alert('Error al eliminar el gasto.');
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -136,7 +153,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
       </div>
 
       {/* Bento Trio: Dynamic Budget Tracking Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 mb-6">
         
         {/* Supermercado */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
@@ -156,8 +173,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-rose-500 font-mono tracking-tight">-B/. {spentSupermercado.toFixed(2)}</span>
-              <span className="text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toFixed(2)}</span>
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toFixed(2)}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
               <div 
@@ -166,8 +183,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
               ></div>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-slate-500">No utilizado:</span>
-              <span className="text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Supermercado - spentSupermercado).toFixed(2)} disponible</span>
+              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-xs xl:text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Supermercado - spentSupermercado).toFixed(2)} disponible</span>
             </div>
           </div>
         </div>
@@ -190,8 +207,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-slate-900 font-mono tracking-tight">-B/. {spentGasolina.toFixed(2)}</span>
-              <span className="text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toFixed(2)}</span>
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toFixed(2)}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
               <div 
@@ -200,8 +217,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
               ></div>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-slate-500">No utilizado:</span>
-              <span className="text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Gasolina - spentGasolina).toFixed(2)} disponible</span>
+              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-xs xl:text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Gasolina - spentGasolina).toFixed(2)} disponible</span>
             </div>
           </div>
         </div>
@@ -224,8 +241,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-rose-500 font-mono tracking-tight">-B/. {spentOcio.toFixed(2)}</span>
-              <span className="text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toFixed(2)}</span>
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toFixed(2)}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
               <div 
@@ -234,8 +251,42 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
               ></div>
             </div>
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-slate-500">No utilizado:</span>
-              <span className="text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Ocio - spentOcio).toFixed(2)} disponible</span>
+              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Ocio - spentOcio).toFixed(2)} disponible</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Electricidad */}
+        <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                <Zap className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 leading-tight">Electricidad</h2>
+                <p className="text-xs text-slate-500">Presupuesto mensual</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
+              {Math.round(getProgress(spentElectricidad, budgets.Electricidad))}% usado
+            </span>
+          </div>
+          <div className="space-y-3 mt-1">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentElectricidad.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Electricidad.toFixed(2)}</span>
+            </div>
+            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+              <div 
+                className="bg-yellow-500 h-full rounded-full transition-all duration-500" 
+                style={{ width: `${getProgress(spentElectricidad, budgets.Electricidad)}%` }}
+              ></div>
+            </div>
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Electricidad - spentElectricidad).toFixed(2)} disponible</span>
             </div>
           </div>
         </div>
@@ -304,7 +355,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-sm text-slate-500">Total filtrado:</span>
-            <span className="text-lg font-bold text-rose-500 font-mono">-B/. {totalFiltered.toFixed(2)}</span>
+            <span className="text-lg font-bold text-rose-500 font-mono">B/. {totalFiltered.toFixed(2)}</span>
           </div>
         </div>
 
@@ -317,6 +368,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
                 <th className="py-3 px-3">Detalle / Comercio</th>
                 <th className="py-3 px-3">Persona</th>
                 <th className="py-3 px-3 text-right">Monto</th>
+                <th className="py-3 px-3 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="text-sm">
@@ -342,13 +394,26 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
                         <span className="text-xs font-medium text-slate-700">{expense.profiles?.first_name || 'Desconocido'}</span>
                       </span>
                     </td>
-                    <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">-B/. {expense.amount.toFixed(2)}</td>
+                    <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toFixed(2)}</td>
+                    <td className="py-4 px-3 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors" title="Confirmar">
+                          <Check className="w-4 h-4" />
+                        </button>
+                        <button className="p-1.5 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition-colors" title="Editar">
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors disabled:opacity-50" title="Eliminar">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
               {filteredExpenses.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-500">
+                  <td colSpan={6} className="py-12 text-center text-slate-500">
                     No se encontraron gastos que coincidan con los filtros.
                   </td>
                 </tr>

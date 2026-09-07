@@ -58,3 +58,14 @@ export async function addDailyExpense(formData: FormData) {
   revalidatePath('/gastos-diarios');
   return { success: true };
 }
+
+export async function deleteDailyExpense(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from('daily_expenses').delete().eq('id', id);
+  if (error) {
+    console.error('Error deleting daily expense:', error);
+    return { success: false, error: error.message };
+  }
+  revalidatePath('/gastos-diarios');
+  return { success: true };
+}
