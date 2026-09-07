@@ -1,14 +1,16 @@
 import { getDailyExpenses } from '@/app/actions/daily_expenses';
+import { getFixedPayments } from '@/app/actions/fixed_payments';
 import { GastosDiariosClient } from './components/GastosDiariosClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function GastosDiariosPage() {
   const initialExpenses = await getDailyExpenses();
+  const fixedPayments = await getFixedPayments();
 
   return (
     <div className="p-4 sm:p-6 w-full max-w-7xl mx-auto min-h-screen pb-24 min-w-0 overflow-x-hidden">
-      <GastosDiariosClient initialExpenses={initialExpenses} />
+      <GastosDiariosClient initialExpenses={initialExpenses} fixedPayments={fixedPayments} />
     </div>
   );
 }

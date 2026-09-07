@@ -7,9 +7,10 @@ import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 
 interface GastosDiariosClientProps {
   initialExpenses: DailyExpense[];
+  fixedPayments?: any[];
 }
 
-export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProps) {
+export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: GastosDiariosClientProps) {
   const expenses = initialExpenses;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,13 +30,19 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
     setCurrentPage(1);
   }, [searchQuery, categoryFilter, personFilter, selectedMonth]);
 
-  // Hardcoded budgets for now as discussed
-  const budgets = {
-    Supermercado: 200,
-    Gasolina: 200,
-    Ocio: 150,
-    Electricidad: 40
-  };
+  // Dynamic budgets from fixedPayments
+  const budgets = useMemo(() => {
+    const getLimit = (title: string, defaultLimit: number) => {
+      const match = fixedPayments.find((p: any) => p.title === title);
+      return match ? match.amount : defaultLimit;
+    };
+    return {
+      Supermercado: getLimit('Supermercado', 200),
+      Gasolina: getLimit('Gasolina', 200),
+      Ocio: 150, // Not tied to fixed payments right now
+      Naturgy: getLimit('Naturgy', 40)
+    };
+  }, [fixedPayments]);
 
   // Calculate budgets for the selected month
   const currentMonthExpenses = expenses.filter(e => {
@@ -57,8 +64,8 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
     .filter(e => e.category === 'Ocio' || e.category === 'Restaurante')
     .reduce((sum, e) => sum + e.amount, 0);
 
-  const spentElectricidad = currentMonthExpenses
-    .filter(e => e.category === 'Luz (Electricidad)' || e.category === 'Servicios')
+  const spentNaturgy = currentMonthExpenses
+    .filter(e => e.category === 'Luz (Electricidad)' || e.category === 'Naturgy' || e.category === 'Servicios')
     .reduce((sum, e) => sum + e.amount, 0);
 
   const getProgress = (spent: number, total: number) => {
@@ -257,7 +264,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
           </div>
         </div>
 
-        {/* Electricidad */}
+        {/* Naturgy */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
           <div className="flex items-start justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
@@ -265,28 +272,28 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
                 <Zap className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Electricidad</h2>
+                <h2 className="text-lg font-bold text-slate-900 leading-tight">Naturgy</h2>
                 <p className="text-xs text-slate-500">Presupuesto mensual</p>
               </div>
             </div>
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
-              {Math.round(getProgress(spentElectricidad, budgets.Electricidad))}% usado
+              {Math.round(getProgress(spentNaturgy, budgets.Naturgy))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentElectricidad.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Electricidad.toFixed(2)}</span>
+              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentNaturgy.toFixed(2)}</span>
+              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Naturgy.toFixed(2)}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
               <div 
                 className="bg-yellow-500 h-full rounded-full transition-all duration-500" 
-                style={{ width: `${getProgress(spentElectricidad, budgets.Electricidad)}%` }}
+                style={{ width: `${getProgress(spentNaturgy, budgets.Naturgy)}%` }}
               ></div>
             </div>
             <div className="flex items-center justify-between pt-1">
               <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Electricidad - spentElectricidad).toFixed(2)} disponible</span>
+              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Naturgy - spentNaturgy).toFixed(2)} disponible</span>
             </div>
           </div>
         </div>

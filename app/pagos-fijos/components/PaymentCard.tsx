@@ -13,15 +13,17 @@ export interface FixedPayment {
   period?: string;
   isSmartCard?: boolean;
   accumulatedSpent?: number;
+  billing_day?: number | null;
 }
 
 interface PaymentCardProps {
   payment: FixedPayment;
   onToggleStatus: (id: string, currentStatus: boolean) => void;
   onPartialPayment?: () => void;
+  onEdit?: () => void;
 }
 
-export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: PaymentCardProps) {
+export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit }: PaymentCardProps) {
   const { id, is_paid, responsible, title, amount, subtitle } = payment;
 
   const handleToggle = (e: React.MouseEvent) => {
@@ -41,9 +43,16 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: Payme
           <div className="flex justify-between items-start">
             <div>
               <span className="inline-block text-[11px] font-semibold text-indigo-700 uppercase tracking-wider">
-                Presupuesto Variable {payment.period ? `• ${payment.period}` : ''}
+                Presupuesto Variable {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
               </span>
-              <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+                {onEdit && (
+                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-indigo-600 hover:bg-indigo-100 rounded-md transition-colors" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  </button>
+                )}
+              </div>
             </div>
             <div className="text-right">
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
@@ -78,9 +87,16 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: Payme
           <div className="flex justify-between items-start">
             <div>
               <span className="inline-block text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">
-                {responsible} {payment.period ? `• ${payment.period}` : ''}
+                {responsible} {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
               </span>
-              <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+                {onEdit && (
+                  <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-emerald-700 hover:bg-emerald-100 rounded-md transition-colors" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                  </button>
+                )}
+              </div>
             </div>
             <div className="text-right">
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">
@@ -111,9 +127,16 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment }: Payme
         <div className="flex justify-between items-start">
           <div>
             <span className="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
-              {responsible} {payment.period ? `• ${payment.period}` : ''}
+              {responsible} {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
             </span>
-            <h4 className="text-base font-bold text-slate-900 mt-0.5 item-title">{title}</h4>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+              {onEdit && (
+                <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1 text-slate-300 hover:text-rose-600 hover:bg-rose-100 rounded-md transition-colors" title="Editar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                </button>
+              )}
+            </div>
           </div>
           <div className="text-right">
             <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">

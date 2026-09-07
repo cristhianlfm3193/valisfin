@@ -4,8 +4,9 @@ import { useState, useMemo, useEffect } from 'react';
 import { MetricsSummary } from './MetricsSummary';
 import { SearchAndFilters, FilterType } from './SearchAndFilters';
 import { PaymentCard, FixedPayment } from './PaymentCard';
-import { togglePaymentStatus, partialPayment as partialPaymentAction } from '@/app/actions/fixed_payments';
+import { togglePaymentStatus, partialPayment as partialPaymentAction, updateFixedPaymentSettings } from '@/app/actions/fixed_payments';
 import { PartialPaymentModal } from './PartialPaymentModal';
+import { EditPaymentModal } from './EditPaymentModal';
 import { DailyExpense } from '@/app/actions/daily_expenses';
 
 interface PagosFijosClientProps {
@@ -18,6 +19,9 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
   
   // Partial payment state
   const [selectedForPartial, setSelectedForPartial] = useState<FixedPayment | null>(null);
+  
+  // Edit state
+  const [editingPayment, setEditingPayment] = useState<FixedPayment | null>(null);
   
   // Sync state with server prop on revalidation
   useEffect(() => {
@@ -34,13 +38,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     return `${d.getFullYear()}-${m}`;
   });
 
-  // Share budgets with Gastos Diarios for Smart Cards
-  const budgets = useMemo(() => ({
-    Supermercado: 200,
-    Gasolina: 200,
-    Electricidad: 40,
-    TarjetaCredito: 1000
-  }), []);
+  // Removed hardcoded budgets, now relying on DB limits.
 
   // Filter payments by selectedMonth (rollover logic)
   const monthFilteredPayments = useMemo(() => {
@@ -73,7 +71,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
           gasAcc += e.amount;
-        } else if (e.category === 'Luz (Electricidad)') {
+        } else if (e.category === 'Naturgy' || e.category === 'Luz (Electricidad)') {
           luzAcc += e.amount;
         }
       }
@@ -102,14 +100,11 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
       const isAccumulated = unpaid.length > 1;
 
-        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Luz (Electricidad)' || group[0].title === 'Electricidad Naturgy' || group[0].title === 'Uso Tarjeta de Credito';
+        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Naturgy' || group[0].title === 'Electricidad Naturgy' || group[0].title === 'Uso Tarjeta de Credito';
         const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : (group[0].title === 'Uso Tarjeta de Credito' ? ccSpent : luzSpent));
 
-        // Override amount with connected budget for smart cards
-        if (group[0].title === 'Supermercado') amount = budgets.Supermercado;
-        else if (group[0].title === 'Gasolina') amount = budgets.Gasolina;
-        else if (group[0].title === 'Luz (Electricidad)' || group[0].title === 'Electricidad Naturgy') amount = budgets.Electricidad;
-        else if (group[0].title === 'Uso Tarjeta de Credito') amount = budgets.TarjetaCredito;
+        // For smart cards, the limit is just the DB amount. Unpaid logic doesn't sum up limits.
+        if (isSmartCard) amount = group[0].amount;
 
         return {
           id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
@@ -119,6 +114,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           responsible: group[0].responsible,
           title: group[0].title,
           amount,
+          billing_day: group[0].billing_day,
           subtitle: isAccumulated ? `Acumulado (${unpaid.length} meses)` : group[0].subtitle,
           period: isAccumulated 
             ? unpaid.map(p => p.period || '').join(', ') 
@@ -179,9 +175,17 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     try {
       await partialPaymentAction(originalRecord.id, partialAmount);
     } catch (e) {
-      // Very simple revert (relies on next revalidation to fully fix if error happens)
       setPayments(initialPayments);
     }
+  };
+
+  const handleEditSubmit = async (amount: number, billingDay: number | null) => {
+    if (!editingPayment) return;
+    const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
+    if (!originalRecord) return;
+
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay);
   };
 
   // Metrics calculation based on RAW month-filtered payments
@@ -192,15 +196,11 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let pendCount = 0;
 
     monthFilteredPayments.forEach((payment) => {
-      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Luz (Electricidad)' || payment.title === 'Electricidad Naturgy' || payment.title === 'Uso Tarjeta de Credito';
+      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Naturgy' || payment.title === 'Electricidad Naturgy' || payment.title === 'Uso Tarjeta de Credito';
       
       if (isSmart) {
         const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : (payment.title === 'Uso Tarjeta de Credito' ? ccSpent : luzSpent));
         let connectedLimit = payment.amount;
-        if (payment.title === 'Supermercado') connectedLimit = budgets.Supermercado;
-        if (payment.title === 'Gasolina') connectedLimit = budgets.Gasolina;
-        if (payment.title === 'Luz (Electricidad)' || payment.title === 'Electricidad Naturgy') connectedLimit = budgets.Electricidad;
-        if (payment.title === 'Uso Tarjeta de Credito') connectedLimit = budgets.TarjetaCredito;
 
         const pending = Math.max(connectedLimit - spent, 0);
         
@@ -249,6 +249,9 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
       return true;
     });
   }, [groupedPayments, currentFilter, searchQuery]);
+
+  const variablePayments = filteredPayments.filter(p => p.isSmartCard);
+  const fixedPaymentsList = filteredPayments.filter(p => !p.isSmartCard);
 
   // Helper for Month Selector UI
   const handleMonthChange = (increment: number) => {
@@ -308,6 +311,29 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         paidCount={paidCount}
       />
 
+      {variablePayments.length > 0 && (
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              Gastos Variables
+            </h3>
+            <span className="text-xs text-slate-600">Límites adaptables</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {variablePayments.map((payment) => (
+              <PaymentCard 
+                key={payment.id} 
+                payment={payment as any} 
+                onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)}
+                onPartialPayment={!payment.is_paid ? () => setSelectedForPartial(payment as any) : undefined}
+                onEdit={() => setEditingPayment(payment as any)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section>
         <div className="flex items-center justify-between mb-3 px-1">
           <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
@@ -317,12 +343,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filteredPayments.map((payment) => (
+          {fixedPaymentsList.map((payment) => (
             <PaymentCard 
               key={payment.id} 
               payment={payment as any} 
               onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)}
               onPartialPayment={!payment.is_paid ? () => setSelectedForPartial(payment as any) : undefined}
+              onEdit={() => setEditingPayment(payment as any)}
             />
           ))}
         </div>
@@ -356,6 +383,18 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         onClose={() => setSelectedForPartial(null)}
         onSubmit={handlePartialPaymentSubmit}
       />
+
+      {editingPayment && (
+        <EditPaymentModal
+          isOpen={true}
+          onClose={() => setEditingPayment(null)}
+          title={editingPayment.title}
+          currentAmount={editingPayment.amount}
+          currentBillingDay={editingPayment.billing_day}
+          isVariable={!!editingPayment.isSmartCard}
+          onSubmit={handleEditSubmit}
+        />
+      )}
     </>
   );
 }

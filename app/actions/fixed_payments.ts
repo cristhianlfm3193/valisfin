@@ -166,3 +166,23 @@ export async function partialPayment(id: string, partialAmount: number) {
   revalidatePath('/pagos-fijos');
   return { success: true };
 }
+
+export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null) {
+  const supabase = await createClient();
+  
+  const { error } = await supabase
+    .from('fixed_payments')
+    .update({ 
+      amount,
+      billing_day
+    })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating fixed payment settings:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  return { success: true };
+}
