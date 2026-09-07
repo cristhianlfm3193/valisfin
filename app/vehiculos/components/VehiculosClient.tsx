@@ -130,6 +130,9 @@ export default function VehiculosClient({
               
             const isJennifer = vehicle.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
             
+            const vehiclePendingTasks = pendingTasks.filter(task => task.vehicle_id === vehicle.id);
+            const totalPendingCost = vehiclePendingTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
+            
             return (
               <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
                 {(isWarning || isOverdue) && <div className={`absolute top-0 left-0 right-0 h-1 ${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-400' : 'bg-amber-400')}`}></div>}
@@ -209,6 +212,16 @@ export default function VehiculosClient({
                         <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
                           <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'} mt-0.5`}>error</span>
                           <span><strong>¡Atención!</strong> Faltan {remaining.toLocaleString()} km para mantenimiento.</span>
+                        </div>
+                      )}
+
+                      {vehiclePendingTasks.length > 0 && (
+                        <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50 border-pink-200' : 'bg-orange-50 border-orange-200'}`}>
+                          <div className="flex items-center gap-1.5">
+                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-600' : 'text-orange-600'}`}>account_balance_wallet</span>
+                            <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-orange-800'}`}>Presupuesto Pendiente</span>
+                          </div>
+                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-orange-700'}`}>B/. {totalPendingCost.toFixed(2)}</span>
                         </div>
                       )}
                     </div>
