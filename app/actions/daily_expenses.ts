@@ -39,8 +39,13 @@ export async function addDailyExpense(formData: FormData) {
   const detail = formData.get('detail') as string;
   const profile_id = formData.get('profile_id') as string;
   const amountStr = formData.get('amount') as string;
-  const is_credit_card = formData.get('is_credit_card') === 'true';
+  let is_credit_card = formData.get('is_credit_card') === 'true';
   const amount = parseFloat(amountStr);
+
+  // Forzar que sea uso de tarjeta de crédito si la categoría es Intereses
+  if (category === 'Intereses de Tarjeta de Crédito') {
+    is_credit_card = true;
+  }
 
   const { error } = await supabase
     .from('daily_expenses')
