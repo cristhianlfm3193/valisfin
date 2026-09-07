@@ -166,136 +166,136 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         
         {/* Supermercado */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <ShoppingCart className="w-5 h-5" />
+          <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2 lg:gap-3 min-w-0">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Supermercado</h2>
-                <p className="text-xs text-slate-500">Presupuesto mensual</p>
+              <div className="min-w-0">
+                <h2 className="text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">Supermercado</h2>
+                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-slate-100 text-slate-600">
               {Math.round(getProgress(spentSupermercado, budgets.Supermercado))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toFixed(2)}</span>
+            <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toFixed(2)}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toFixed(2)}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-emerald-600 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentSupermercado, budgets.Supermercado)}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Supermercado - spentSupermercado).toFixed(2)} disponible</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
+              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Supermercado - spentSupermercado).toFixed(2)} disp.</span>
             </div>
           </div>
         </div>
 
         {/* Gasolina */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center">
-                <Fuel className="w-5 h-5" />
+          <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2 lg:gap-3 min-w-0">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center">
+                <Fuel className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Gasolina</h2>
-                <p className="text-xs text-slate-500">Presupuesto mensual</p>
+              <div className="min-w-0">
+                <h2 className="text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">Gasolina</h2>
+                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-slate-100 text-slate-600">
               {Math.round(getProgress(spentGasolina, budgets.Gasolina))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toFixed(2)}</span>
+            <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toFixed(2)}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toFixed(2)}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-emerald-600 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentGasolina, budgets.Gasolina)}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-emerald-600 font-mono">B/. {(budgets.Gasolina - spentGasolina).toFixed(2)} disponible</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
+              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Gasolina - spentGasolina).toFixed(2)} disp.</span>
             </div>
           </div>
         </div>
 
         {/* Varios & Ocio */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                <PartyPopper className="w-5 h-5" />
+          <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2 lg:gap-3 min-w-0">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                <PartyPopper className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Varios & Ocio</h2>
-                <p className="text-xs text-slate-500">Presupuesto mensual</p>
+              <div className="min-w-0">
+                <h2 className="text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">Varios & Ocio</h2>
+                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-indigo-50 text-indigo-600">
               {Math.round(getProgress(spentOcio, budgets.Ocio))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toFixed(2)}</span>
+            <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toFixed(2)}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toFixed(2)}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-indigo-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentOcio, budgets.Ocio)}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Ocio - spentOcio).toFixed(2)} disponible</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
+              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Ocio - spentOcio).toFixed(2)} disp.</span>
             </div>
           </div>
         </div>
 
         {/* Restaurante */}
         <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-slate-100">
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
-                <Utensils className="w-5 h-5" />
+          <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2 lg:gap-3 min-w-0">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                <Utensils className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900 leading-tight">Restaurante</h2>
-                <p className="text-xs text-slate-500">Presupuesto mensual</p>
+              <div className="min-w-0">
+                <h2 className="text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">Restaurante</h2>
+                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-orange-50 text-orange-700">
               {Math.round(getProgress(spentRestaurante, budgets.Restaurante))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toFixed(2)}</span>
-              <span className="text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toFixed(2)}</span>
+            <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toFixed(2)}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toFixed(2)}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-orange-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentRestaurante, budgets.Restaurante)}%` }}
               ></div>
             </div>
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] xl:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-xs xl:text-sm font-semibold text-slate-900 font-mono">B/. {(budgets.Restaurante - spentRestaurante).toFixed(2)} disponible</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
+              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Restaurante - spentRestaurante).toFixed(2)} disp.</span>
             </div>
           </div>
         </div>
