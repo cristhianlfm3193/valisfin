@@ -15,6 +15,7 @@ import AddMaintenanceModal from '@/app/vehiculos/components/AddMaintenanceModal'
 import AddPendingModal from '@/app/vehiculos/components/AddPendingModal';
 import AddHomeTaskModal from '@/app/hogar/components/AddHomeTaskModal';
 import AddGoalModal from '@/app/metas/components/AddGoalModal';
+import { PayFixedPaymentModal } from './PayFixedPaymentModal';
 
 import { 
   DashboardMetrics, 
@@ -29,6 +30,7 @@ interface DashboardClientProps {
   upcomingBills: UpcomingPayment[];
   vehicleData: DashboardVehicleData;
   vehicles: any[];
+  fixedPayments: any[];
 }
 
 export function DashboardClient({
@@ -36,7 +38,8 @@ export function DashboardClient({
   coupleBreakdown,
   upcomingBills,
   vehicleData,
-  vehicles
+  vehicles,
+  fixedPayments
 }: DashboardClientProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
@@ -99,11 +102,18 @@ export function DashboardClient({
             <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Trabajo<br/>Hogar</span>
           </button>
 
-          <button onClick={() => setActiveModal('meta')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md transition-all active:scale-95 group col-span-2 sm:col-span-2">
+          <button onClick={() => setActiveModal('meta')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md transition-all active:scale-95 group">
             <div className="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
               <Target className="w-5 h-5" />
             </div>
             <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Nueva<br/>Meta de Ahorro</span>
+          </button>
+
+          <button onClick={() => setActiveModal('pago-fijo')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-violet-300 hover:shadow-md transition-all active:scale-95 group">
+            <div className="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 group-hover:bg-violet-100 transition-colors">
+              <Calendar className="w-5 h-5" />
+            </div>
+            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Pago<br/>Gasto Fijo</span>
           </button>
         </div>
       </section>
@@ -316,6 +326,7 @@ export function DashboardClient({
       <AddPendingModal isOpen={activeModal === 'pendiente'} onClose={closeModals} vehicles={vehicles} />
       <AddHomeTaskModal isOpen={activeModal === 'hogar'} onClose={closeModals} />
       <AddGoalModal isOpen={activeModal === 'meta'} onClose={closeModals} />
+      <PayFixedPaymentModal isOpen={activeModal === 'pago-fijo'} onClose={closeModals} fixedPayments={fixedPayments} />
     </div>
   );
 }

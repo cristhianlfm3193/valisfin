@@ -4,6 +4,7 @@ import { Calendar } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { MobileMenuDrawer } from "./components/MobileMenuDrawer";
 import { getDashboardData } from "./actions/dashboard";
+import { getFixedPayments } from "./actions/fixed_payments";
 import { DashboardClient } from "./components/DashboardClient";
 
 export default async function Home() {
@@ -14,6 +15,7 @@ export default async function Home() {
   const initial = fullName.charAt(0).toUpperCase();
 
   const dashboardData = await getDashboardData();
+  const fixedPayments = await getFixedPayments();
   const { data: vehicles } = await supabase.from('vehicles').select('*');
 
   const d = new Date();
@@ -57,6 +59,7 @@ export default async function Home() {
           upcomingBills={dashboardData.upcomingBills}
           vehicleData={dashboardData.vehicleData}
           vehicles={vehicles || []}
+          fixedPayments={fixedPayments || []}
         />
       </main>
     </>
