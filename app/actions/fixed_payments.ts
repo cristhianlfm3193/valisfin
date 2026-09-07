@@ -260,3 +260,74 @@ export async function updateFixedPaymentAmount(id: string, newAmount: number) {
   revalidatePath('/');
   return { success: true };
 }
+
+export async function generateMonthObligations(targetMonth: string, previousMonth: string) {
+  const supabase = await createClient();
+
+  // 1. Get all unique active obligations from previous month
+  const { data: previousRecords, error: prevError } = await supabase
+    .from('fixed_payments')
+    .select('*')
+    .eq('period', previousMonth);
+
+  if (prevError) {
+    console.error('Error fetching previous month records:', prevError);
+    return { success: false, error: prevError.message };
+  }
+
+  // 2. Get all obligations already in target month
+  const { data: targetRecords, error: targetError } = await supabase
+    .from('fixed_payments')
+    .select('title')
+    .eq('period', targetMonth);
+
+  if (targetError) {
+    console.error('Error fetching target month records:', targetError);
+    return { success: false, error: targetError.message };
+  }
+
+  const targetTitles = new Set(targetRecords.map(r => r.title));
+
+  // 3. Find unique titles from previous month to clone
+  const uniquePrev = new Map<string, any>();
+  previousRecords.forEach(r => {
+    // We only clone fixed or variable. Credit Card is a special global card usually.
+    if (r.title === 'Uso Tarjeta de Credito') return;
+    
+    // Keep the most recent representation of that title
+    uniquePrev.set(r.title, r);
+  });
+
+  // 4. Create new records
+  const toInsert: any[] = [];
+  
+  for (const [title, record] of uniquePrev.entries()) {
+    if (!targetTitles.has(title)) {
+      toInsert.push({
+        category: record.category,
+        is_paid: false,
+        responsible: record.responsible,
+        title: record.title,
+        amount: record.amount,
+        subtitle: record.subtitle,
+        type: record.type,
+        billing_day: record.billing_day,
+        period: targetMonth
+      });
+    }
+  }
+
+  if (toInsert.length > 0) {
+    const { error: insertError } = await supabase
+      .from('fixed_payments')
+      .insert(toInsert);
+
+    if (insertError) {
+      console.error('Error inserting new month records:', insertError);
+      return { success: false, error: insertError.message };
+    }
+  }
+
+  revalidatePath('/pagos-fijos');
+  return { success: true, count: toInsert.length };
+}

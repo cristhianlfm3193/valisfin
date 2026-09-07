@@ -9,8 +9,11 @@ import { PartialPaymentModal } from './PartialPaymentModal';
 import { EditPaymentModal } from './EditPaymentModal';
 import { AddFixedPaymentModal } from './AddFixedPaymentModal';
 import { CreditCardHistoryModal } from './CreditCardHistoryModal';
+import { FixedPaymentHistoryModal } from './FixedPaymentHistoryModal';
 import { EditDailyExpenseModal } from '@/app/gastos-diarios/components/EditDailyExpenseModal';
 import { DailyExpense } from '@/app/actions/daily_expenses';
+import { generateMonthObligations } from '@/app/actions/fixed_payments';
+import { RefreshCw } from 'lucide-react';
 
 interface PagosFijosClientProps {
   initialPayments: FixedPayment[];
@@ -27,6 +30,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
   const [editingPayment, setEditingPayment] = useState<FixedPayment | null>(null);
   const [editingDailyExpense, setEditingDailyExpense] = useState<DailyExpense | null>(null);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [historyFixedPaymentTitle, setHistoryFixedPaymentTitle] = useState<string | null>(null);
   
   // Sync state with server prop on revalidation
   useEffect(() => {
@@ -91,12 +95,10 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
           gasAcc += e.amount;
-        } else if (e.category === 'Naturgy' || e.category === 'Luz (Electricidad)') {
-          luzAcc += e.amount;
         }
       }
     });
-    return { superSpent: superAcc, gasSpent: gasAcc, luzSpent: luzAcc, ccSpent: ccDebt };
+    return { superSpent: superAcc, gasSpent: gasAcc, ccSpent: ccDebt };
   }, [initialDailyExpenses, payments, selectedMonth]);
 
   // Group payments by title (using only the month-filtered ones)
@@ -120,8 +122,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
       const isAccumulated = unpaid.length > 1;
 
-        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Naturgy' || group[0].title === 'Electricidad Naturgy' || group[0].title === 'Uso Tarjeta de Credito';
-        const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : (group[0].title === 'Uso Tarjeta de Credito' ? ccSpent : luzSpent));
+        const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Uso Tarjeta de Credito';
+        const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : (group[0].title === 'Uso Tarjeta de Credito' ? ccSpent : undefined));
 
         // For smart cards, the limit is just the DB amount. Unpaid logic doesn't sum up limits.
         if (isSmartCard) amount = group[0].amount;
@@ -216,10 +218,10 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let pendCount = 0;
 
     monthFilteredPayments.forEach((payment) => {
-      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Naturgy' || payment.title === 'Electricidad Naturgy' || payment.title === 'Uso Tarjeta de Credito';
+      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Uso Tarjeta de Credito';
       
       if (isSmart) {
-        const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : (payment.title === 'Uso Tarjeta de Credito' ? ccSpent : luzSpent));
+        const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : (payment.title === 'Uso Tarjeta de Credito' ? ccSpent : 0));
         let connectedLimit = payment.amount;
 
         const pending = Math.max(connectedLimit - spent, 0);
@@ -288,6 +290,21 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     return `${name.charAt(0).toUpperCase() + name.slice(1)} ${y}`;
   };
 
+  const hasCurrentMonthRecords = payments.some(p => p.period === selectedMonth && p.title !== 'Uso Tarjeta de Credito');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateMonth = async () => {
+    setIsGenerating(true);
+    // Find previous month
+    const [y, m] = selectedMonth.split('-').map(Number);
+    const d = new Date(y, m - 2, 1); // Go back one month
+    const prevM = String(d.getMonth() + 1).padStart(2, '0');
+    const previousMonth = `${d.getFullYear()}-${prevM}`;
+
+    await generateMonthObligations(selectedMonth, previousMonth);
+    setIsGenerating(false);
+  };
+
   return (
     <>
       {/* Month Selector */}
@@ -312,6 +329,23 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           </button>
         </div>
       </div>
+
+      {!hasCurrentMonthRecords && (
+        <div className="mb-6 bg-indigo-50 border border-indigo-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-bold text-indigo-900">Nuevo Mes Detectado</h3>
+            <p className="text-xs text-indigo-700 mt-1">Aún no has generado las obligaciones y presupuestos para {getMonthLabel()}.</p>
+          </div>
+          <button
+            onClick={handleGenerateMonth}
+            disabled={isGenerating}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50 whitespace-nowrap"
+          >
+            <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
+            {isGenerating ? 'Generando...' : 'Generar Obligaciones'}
+          </button>
+        </div>
+      )}
 
       <MetricsSummary
         totalPaid={totalPaid}
@@ -391,6 +425,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
               onToggleStatus={(id, status) => handleToggleStatus(id, status, (payment as any).originalIds)}
               onPartialPayment={!payment.is_paid ? () => setSelectedForPartial(payment as any) : undefined}
               onEdit={() => setEditingPayment(payment as any)}
+              onViewHistory={(payment.title === 'Naturgy' || payment.title === 'Electricidad Naturgy') ? () => setHistoryFixedPaymentTitle(payment.title) : undefined}
             />
           ))}
         </div>
@@ -454,6 +489,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         isOpen={!!editingDailyExpense}
         onClose={() => setEditingDailyExpense(null)}
         expense={editingDailyExpense}
+      />
+
+      <FixedPaymentHistoryModal
+        isOpen={!!historyFixedPaymentTitle}
+        onClose={() => setHistoryFixedPaymentTitle(null)}
+        payments={initialPayments}
+        title={historyFixedPaymentTitle || ''}
       />
     </>
   );
