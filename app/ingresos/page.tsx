@@ -138,7 +138,12 @@ export default async function IngresosPage(props: {
       pending: cfPending,
       footer: "Ingresos programados",
       footerDates: displayMonthString,
-      dotColor: "bg-emerald-500"
+      dotColor: "bg-emerald-500",
+      initialsColor: "bg-emerald-50 border-emerald-100 text-[#006655]",
+      dateColor: "text-emerald-700",
+      hoverClass: "hover:border-emerald-300",
+      effectiveBoxBorder: "border-emerald-100",
+      effectiveBoxText: "text-emerald-700"
     },
     {
       id: "jc",
@@ -152,7 +157,12 @@ export default async function IngresosPage(props: {
       pending: jcPending,
       footer: "Ingresos programados",
       footerDates: displayMonthString,
-      dotColor: "bg-indigo-500"
+      dotColor: "bg-pink-500",
+      initialsColor: "bg-pink-50 border-pink-100 text-pink-600",
+      dateColor: "text-pink-600",
+      hoverClass: "hover:border-pink-300",
+      effectiveBoxBorder: "border-pink-100",
+      effectiveBoxText: "text-pink-600"
     }
   ];
 
@@ -287,11 +297,11 @@ export default async function IngresosPage(props: {
         {/* Resumen por Cónyuge */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           {dynamicBreakdown.map((person) => (
-            <div key={person.id} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div key={person.id} className={`bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between transition-all ${person.hoverClass}`}>
               <div>
                 <div className="flex items-start sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 shrink-0">
+                    <div className={`w-10 h-10 rounded-full border flex items-center justify-center font-bold shrink-0 ${person.initialsColor}`}>
                       {person.initials}
                     </div>
                     <div className="min-w-0">
@@ -307,9 +317,9 @@ export default async function IngresosPage(props: {
                     <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Proyectado</div>
                     <div className="text-[11px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.projected)}</div>
                   </div>
-                  <div className="bg-white rounded-lg py-1 shadow-sm border border-emerald-100 px-0.5 sm:px-1">
-                    <div className="text-[9px] sm:text-[11px] font-medium text-emerald-700">Efectivo</div>
-                    <div className="text-[11px] sm:text-sm font-bold font-mono text-emerald-700 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.received)}</div>
+                  <div className={`bg-white rounded-lg py-1 shadow-sm border px-0.5 sm:px-1 ${person.effectiveBoxBorder}`}>
+                    <div className={`text-[9px] sm:text-[11px] font-medium ${person.effectiveBoxText}`}>Efectivo</div>
+                    <div className={`text-[11px] sm:text-sm font-bold font-mono mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal ${person.effectiveBoxText}`}>B/. {formatCurrency(person.received)}</div>
                   </div>
                   <div className="px-0.5 sm:px-1">
                     <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Pendiente</div>
@@ -321,7 +331,7 @@ export default async function IngresosPage(props: {
                 <span className="inline-flex items-center gap-1.5">
                   <span className={`w-2 h-2 rounded-full ${person.dotColor}`}></span> {person.footer}
                 </span>
-                <span className="font-medium text-emerald-700 capitalize">{person.footerDates}</span>
+                <span className={`font-medium capitalize ${person.dateColor}`}>{person.footerDates}</span>
               </div>
             </div>
           ))}

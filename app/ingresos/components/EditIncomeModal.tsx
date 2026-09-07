@@ -112,8 +112,8 @@ export function EditIncomeModal({ item }: { item: any }) {
 
                   <label className={`relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
                     person === 'jennifer' 
-                      ? 'border-indigo-600 bg-indigo-50 shadow-sm' 
-                      : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+                      ? 'border-pink-600 bg-pink-50 shadow-sm' 
+                      : 'border-slate-200 hover:border-pink-300 hover:bg-slate-50'
                   }`}>
                     <input 
                       type="radio" 
@@ -123,12 +123,12 @@ export function EditIncomeModal({ item }: { item: any }) {
                       onChange={() => setPerson('jennifer')}
                       className="sr-only" 
                     />
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 transition-colors ${
-                      person === 'jennifer' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'
+                    <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
+                      person === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-500'
                     }`}>JC</div>
                     <div>
-                      <div className={`text-sm font-bold leading-tight ${person === 'jennifer' ? 'text-indigo-900' : 'text-slate-700'}`}>Jennifer</div>
-                      <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-indigo-800' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
+                      <div className={`text-sm font-bold leading-tight ${person === 'jennifer' ? 'text-pink-900' : 'text-slate-700'}`}>Jennifer</div>
+                      <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-pink-600' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
                     </div>
                   </label>
                 </div>

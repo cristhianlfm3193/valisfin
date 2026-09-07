@@ -262,9 +262,9 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
             </button>
             <button 
               onClick={() => setPersonFilter('jennifer')}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap ${personFilter === 'jennifer' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap ${personFilter === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
             >
-              <span className="w-5 h-5 rounded-full bg-indigo-500 text-white text-[10px] font-bold flex items-center justify-center">JC</span>
+              <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${personFilter === 'jennifer' ? 'bg-white text-pink-600' : 'bg-pink-500 text-white'}`}>JC</span>
               <span>Jennifer Camaño</span>
             </button>
           </div>
@@ -336,7 +336,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
                     <td className="py-4 px-3 font-medium text-slate-900 max-w-xs truncate">{expense.detail}</td>
                     <td className="py-4 px-3">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 bg-white shadow-sm">
-                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'bg-emerald-600' : 'bg-indigo-500'}`}>
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'bg-emerald-600' : 'bg-pink-500'}`}>
                           {(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'CF' : 'JC'}
                         </span>
                         <span className="text-xs font-medium text-slate-700">{expense.profiles?.first_name || 'Desconocido'}</span>

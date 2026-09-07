@@ -70,13 +70,17 @@ export function IncomeList({ incomes }: { incomes: any[] }) {
         className={`bg-white rounded-xl p-4 sm:p-5 border shadow-sm transition hover:shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4 ${isPending ? 'opacity-70 pointer-events-none' : ''} ${isReceived ? 'border-emerald-200/60' : 'border-slate-200/80'}`}
       >
         <div className="flex items-start sm:items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 text-slate-700 font-bold text-sm">
+          <div className={`w-11 h-11 rounded-xl border flex items-center justify-center shrink-0 font-bold text-sm ${
+            isCristhian ? 'bg-slate-50 border-slate-100 text-slate-700' : 'bg-pink-50 border-pink-100 text-pink-600'
+          }`}>
             {initials}
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-semibold text-slate-900 text-sm sm:text-base">{item.description}</h3>
-              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold text-[10px] sm:text-xs">{personName}</span>
+              <span className={`px-2 py-0.5 rounded-full font-semibold text-[10px] sm:text-xs ${
+                isCristhian ? 'bg-slate-100 text-slate-600' : 'bg-pink-100 text-pink-700'
+              }`}>{personName}</span>
               <span className={`px-2 py-0.5 rounded-full font-semibold text-[10px] sm:text-xs flex items-center gap-1 ${
                 isReceived ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-amber-50 text-amber-700 border border-amber-200/60'
               }`}>

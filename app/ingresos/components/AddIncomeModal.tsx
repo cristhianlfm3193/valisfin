@@ -140,15 +140,15 @@ export function AddIncomeModal() {
                     className="sr-only" 
                   />
                   <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
-                    person === 'jennifer' ? 'bg-indigo-700 text-white' : 'bg-slate-100 text-slate-500 border border-slate-200'
+                    person === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-500 border border-slate-200'
                   }`}>
                     JC
                   </div>
                   <div className="min-w-0">
                     <div className={`text-sm leading-tight ${person === 'jennifer' ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}`}>Jennifer Camaño</div>
-                    <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-indigo-800' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
+                    <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-pink-600' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
                   </div>
-                  {person === 'jennifer' && <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-indigo-600"></span>}
+                  {person === 'jennifer' && <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-pink-500"></span>}
                 </label>
               </div>
             </div>
