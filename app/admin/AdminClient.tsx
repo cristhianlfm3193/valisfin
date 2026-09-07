@@ -63,24 +63,24 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Base de Datos</p>
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Base de Datos (Gratis)</p>
               <Database className="w-4 h-4 text-emerald-500" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Supabase PG <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 ml-1 mb-0.5"></span></p>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Almacenamiento 500 MB</p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-emerald-700 leading-none">38</span>
-              <span className="text-xs text-slate-500 font-medium mb-0.5">ms</span>
+              <span className="text-2xl font-bold text-emerald-700 leading-none">&lt; 1%</span>
+              <span className="text-xs text-slate-500 font-medium mb-0.5">uso aprox.</span>
             </div>
           </div>
 
           <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Disponibilidad 30D</p>
-              <Server className="w-4 h-4 text-emerald-500" />
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Autenticación (Auth)</p>
+              <Users className="w-4 h-4 text-emerald-500" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Uptime ValisFin</p>
+            <p className="text-sm sm:text-base font-semibold text-slate-900">Límite 50,000 MAU</p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-slate-900 leading-none">99.9%</span>
+              <span className="text-2xl font-bold text-slate-900 leading-none">{initialUsers.length}</span>
               <span className="text-xs text-emerald-600 font-medium mb-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">Óptimo</span>
             </div>
           </div>
@@ -142,8 +142,23 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
 
           {/* Card: Usuarios y Roles */}
           <div className="group relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-            <div className="absolute top-0 right-0 p-6 opacity-5 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform duration-500">
-              <Users className="w-32 h-32 text-slate-900" />
+            <div className="absolute top-6 right-6 flex -space-x-3 transition-transform duration-500 group-hover:-translate-x-1">
+              {initialUsers.slice(0, 4).map((u, i) => (
+                <div key={u.id} className="w-10 h-10 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 hover:-translate-y-1 hover:z-20 relative z-10 transition-all bg-white" style={{ zIndex: 10 - i }}>
+                  {u.avatar_url ? (
+                    <img src={u.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
+                      {(u.first_name || u.email || 'U').charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {initialUsers.length > 4 && (
+                <div className="w-10 h-10 rounded-full border-[3px] border-white bg-slate-50 flex items-center justify-center text-slate-600 font-bold text-xs shadow-sm z-0 relative">
+                  +{initialUsers.length - 4}
+                </div>
+              )}
             </div>
             
             <div className="p-6 sm:p-8 flex-1 flex flex-col relative z-10">
