@@ -166,6 +166,26 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
     });
   }
 
+  // 7. Metas de Ahorro
+  const { data: savingsGoals } = await supabase.from('savings_goals').select('*');
+  if (savingsGoals) {
+    savingsGoals.forEach(goal => {
+      if (goal.deadline_date) {
+        const dDate = new Date(goal.deadline_date);
+        if (dDate.getFullYear() === year && dDate.getMonth() + 1 === month) {
+          finalEvents.push({
+            id: `goal_${goal.id}`,
+            title: goal.title,
+            amount: goal.target_amount,
+            date: goal.deadline_date.split('T')[0],
+            category: 'Metas',
+            isCompleted: goal.saved_amount >= goal.target_amount
+          });
+        }
+      }
+    });
+  }
+
   // Sort by date
   finalEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
