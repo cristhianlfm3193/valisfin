@@ -55,9 +55,9 @@ export async function addACMaintenance(formData: FormData) {
   const technician = formData.get('technician') as string || '';
   const profile_id = formData.get('profile_id') as string;
 
-  // Calculate next maintenance (6 months later)
+  // Calculate next maintenance (3 months later)
   const dateObj = new Date(maintenance_date);
-  dateObj.setMonth(dateObj.getMonth() + 6);
+  dateObj.setMonth(dateObj.getMonth() + 3);
   const next_maintenance = dateObj.toISOString().split('T')[0];
 
   const { error } = await supabase
