@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { DesktopSidebar } from "./components/DesktopSidebar";
+import { AssistantWidget } from "./components/AssistantWidget";
 import { createClient } from "@/lib/supabase/server";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -49,6 +50,7 @@ export default async function RootLayout({
         <div className="flex-1 flex flex-col min-w-0">
           {children}
         </div>
+        {user && <AssistantWidget />}
       </body>
     </html>
   );
