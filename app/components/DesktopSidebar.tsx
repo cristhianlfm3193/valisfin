@@ -112,13 +112,23 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
       <div className={`pt-4 border-t border-slate-100 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
         {profile?.role === 'administrador' && (
           <Link
-            href="/admin"
-            title={isCollapsed ? "Panel de Administrador" : undefined}
-            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-slate-700 shadow-sm hover:shadow-md hover:from-slate-900 hover:to-black ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+            href={pathname === '/admin' ? '/' : '/admin'}
+            title={isCollapsed ? (pathname === '/admin' ? "Volver al Inicio" : "Panel de Administrador") : undefined}
+            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden ${
+              pathname === '/admin' 
+                ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white border border-emerald-600 hover:from-emerald-700 hover:to-emerald-800'
+                : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-slate-700 hover:from-slate-900 hover:to-black'
+            } shadow-sm hover:shadow-md ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
           >
-            <Shield className="shrink-0 w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            {pathname === '/admin' ? (
+              <Home className="shrink-0 w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform" />
+            ) : (
+              <Shield className="shrink-0 w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            )}
             {!isCollapsed && (
-              <span className="truncate whitespace-nowrap">Admin Panel</span>
+              <span className="truncate whitespace-nowrap">
+                {pathname === '/admin' ? 'Salir del Panel' : 'Admin Panel'}
+              </span>
             )}
           </Link>
         )}
