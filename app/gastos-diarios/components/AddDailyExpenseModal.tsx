@@ -106,7 +106,7 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
                 >
                   <option value="Supermercado">Supermercado</option>
-                  <option value="Compras Super y tiendas">Compras Super y tiendas</option>
+                  <option value="Super Reposición">Super Reposición</option>
                   <option value="Restaurante">Restaurante</option>
                   <option value="Ocio">Ocio</option>
                   <option value="Tecnología">Tecnología</option>

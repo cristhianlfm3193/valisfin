@@ -34,6 +34,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     return `${d.getFullYear()}-${m}`;
   });
 
+  // Share budgets with Gastos Diarios for Smart Cards
+  const budgets = useMemo(() => ({
+    Supermercado: 200,
+    Gasolina: 200,
+    Electricidad: 40
+  }), []);
+
   // Filter payments by selectedMonth (rollover logic)
   const monthFilteredPayments = useMemo(() => {
     return payments.filter(p => {
@@ -57,7 +64,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let luzAcc = 0;
     initialDailyExpenses.forEach(e => {
       if (e.date.startsWith(selectedMonth)) {
-        if (e.category === 'Supermercado' || e.category === 'Compras Super y tiendas') {
+        if (e.category === 'Supermercado' || e.category === 'Super Reposición' || e.category === 'Compras Super y tiendas') {
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
           gasAcc += e.amount;
@@ -84,7 +91,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
       const isPaid = unpaid.length === 0;
       
       // If paid, show the most recent amount. If unpaid, sum the unpaid amounts.
-      const amount = isPaid 
+      let amount = isPaid 
         ? group[0].amount // Arbitrarily take first if all paid
         : unpaid.reduce((sum, p) => sum + p.amount, 0);
 
@@ -92,6 +99,11 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
 
         const isSmartCard = group[0].title === 'Supermercado' || group[0].title === 'Gasolina' || group[0].title === 'Luz (Electricidad)' || group[0].title === 'Electricidad Naturgy';
         const accumulatedSpent = group[0].title === 'Supermercado' ? superSpent : (group[0].title === 'Gasolina' ? gasSpent : luzSpent);
+
+        // Override amount with connected budget for smart cards
+        if (group[0].title === 'Supermercado') amount = budgets.Supermercado;
+        else if (group[0].title === 'Gasolina') amount = budgets.Gasolina;
+        else if (group[0].title === 'Luz (Electricidad)' || group[0].title === 'Electricidad Naturgy') amount = budgets.Electricidad;
 
         return {
           id: isPaid ? group.map(p => p.id).join(',') : unpaid.map(p => p.id).join(','),
@@ -178,12 +190,17 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
       
       if (isSmart) {
         const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : luzSpent);
-        const pending = Math.max(payment.amount - spent, 0);
+        let connectedLimit = payment.amount;
+        if (payment.title === 'Supermercado') connectedLimit = budgets.Supermercado;
+        if (payment.title === 'Gasolina') connectedLimit = budgets.Gasolina;
+        if (payment.title === 'Luz (Electricidad)' || payment.title === 'Electricidad Naturgy') connectedLimit = budgets.Electricidad;
+
+        const pending = Math.max(connectedLimit - spent, 0);
         
         tPaid += spent;
         tPending += pending;
         
-        if (spent >= payment.amount) pCount++;
+        if (spent >= connectedLimit) pCount++;
         else pendCount++;
       } else {
         if (payment.is_paid) {

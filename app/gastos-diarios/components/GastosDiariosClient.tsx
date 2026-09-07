@@ -46,7 +46,7 @@ export function GastosDiariosClient({ initialExpenses }: GastosDiariosClientProp
   // Assuming "Alimentación" and "Supermercado" group together for Supermercado budget?
   // Let's use strict match for now, or group them logically.
   const spentSupermercado = currentMonthExpenses
-    .filter(e => e.category === 'Supermercado' || e.category === 'Alimentación')
+    .filter(e => e.category === 'Supermercado' || e.category === 'Alimentación' || e.category === 'Super Reposición')
     .reduce((sum, e) => sum + e.amount, 0);
 
   const spentGasolina = currentMonthExpenses
