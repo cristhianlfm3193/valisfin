@@ -292,7 +292,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
             </div>
           </div>
           <div>
-            <span className="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight">+B/. {formatCurrency(totalIngresos)}</span>
+            <span className="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight">B/. {formatCurrency(totalIngresos)}</span>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500">
               Salarios y Asignaciones
             </div>

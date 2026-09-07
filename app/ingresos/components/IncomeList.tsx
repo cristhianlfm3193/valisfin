@@ -107,7 +107,7 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
         <div className="flex items-center justify-between w-full md:w-auto gap-4 md:gap-6 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-0 border-slate-100/80 shrink-0">
           <div className="text-left md:text-right">
             <div className={`text-lg sm:text-xl font-bold font-mono whitespace-nowrap ${isReceived ? 'text-emerald-700' : 'text-slate-900'}`}>
-              +B/. {formatCurrency(item.amount)}
+              B/. {formatCurrency(item.amount)}
             </div>
             <div className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">
               {isReceived ? 'Efectivo en cuenta' : 'Por confirmar'}
