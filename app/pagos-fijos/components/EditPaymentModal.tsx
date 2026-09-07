@@ -7,7 +7,7 @@ import { X, Save, Calendar, DollarSign } from 'lucide-react';
 interface EditPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (amount: number, billingDay: number | null) => Promise<void>;
+  onSubmit: (amount: number, billingDay: number | null, title: string) => Promise<void>;
   currentAmount: number;
   currentBillingDay?: number | null;
   title: string;
@@ -26,6 +26,7 @@ export function EditPaymentModal({
   const [mounted, setMounted] = useState(false);
   const [amount, setAmount] = useState(currentAmount.toString());
   const [billingDay, setBillingDay] = useState(currentBillingDay ? currentBillingDay.toString() : '');
+  const [editedTitle, setEditedTitle] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -36,8 +37,9 @@ export function EditPaymentModal({
     if (isOpen) {
       setAmount(currentAmount.toString());
       setBillingDay(currentBillingDay ? currentBillingDay.toString() : '');
+      setEditedTitle(title);
     }
-  }, [isOpen, currentAmount, currentBillingDay]);
+  }, [isOpen, currentAmount, currentBillingDay, title]);
 
   if (!isOpen) return null;
 
@@ -48,7 +50,7 @@ export function EditPaymentModal({
     try {
       const parsedAmount = parseFloat(amount);
       const parsedDay = billingDay ? parseInt(billingDay, 10) : null;
-      await onSubmit(parsedAmount, parsedDay);
+      await onSubmit(parsedAmount, parsedDay, editedTitle);
       onClose();
     } catch (err) {
       console.error(err);
@@ -90,6 +92,22 @@ export function EditPaymentModal({
           <div className="p-5">
             <form id="edit-payment-form" onSubmit={handleSubmit} className="space-y-4">
               
+              {/* Title */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  Nombre de la Obligación
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={editedTitle}
+                    onChange={e => setEditedTitle(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-base rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block px-4 py-3 outline-none transition-all"
+                  />
+                </div>
+              </div>
+
               {/* Amount */}
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">

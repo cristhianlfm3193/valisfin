@@ -201,13 +201,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     }
   };
 
-  const handleEditSubmit = async (amount: number, billingDay: number | null) => {
+  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string) => {
     if (!editingPayment) return;
     const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
     if (!originalRecord) return;
 
-    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay } : p));
-    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay);
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title);
   };
 
   // Metrics calculation based on RAW month-filtered payments

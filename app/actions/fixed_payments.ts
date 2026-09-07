@@ -169,14 +169,15 @@ export async function partialPayment(id: string, partialAmount: number) {
   return { success: true };
 }
 
-export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null) {
+export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string) {
   const supabase = await createClient();
   
   const { error } = await supabase
     .from('fixed_payments')
     .update({ 
       amount,
-      billing_day
+      billing_day,
+      title
     })
     .eq('id', id);
 
