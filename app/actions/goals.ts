@@ -27,7 +27,36 @@ export async function getSavingsGoals() {
     throw new Error('Failed to fetch savings goals');
   }
 
-  return data || [];
+  const goals = data || [];
+
+  // Fetch pending maintenance costs to dynamically override linked goals
+  const { data: maintenanceData } = await supabase
+    .from('maintenance')
+    .select('vehicle_id, cost')
+    .eq('is_pending', true);
+
+  if (maintenanceData && maintenanceData.length > 0) {
+    const costMap: Record<string, number> = {};
+    for (const log of maintenanceData) {
+      if (!costMap[log.vehicle_id]) costMap[log.vehicle_id] = 0;
+      costMap[log.vehicle_id] += (log.cost || 0);
+    }
+
+    // Override target_amount for linked goals
+    for (const goal of goals) {
+      if (goal.linked_vehicle_id) {
+        goal.target_amount = costMap[goal.linked_vehicle_id] || 0;
+      }
+    }
+  } else {
+    for (const goal of goals) {
+      if (goal.linked_vehicle_id) {
+        goal.target_amount = 0;
+      }
+    }
+  }
+
+  return goals;
 }
 
 export async function addSavingsGoal(formData: FormData) {

@@ -100,8 +100,11 @@ export default function EditGoalModal({
               </label>
               <div className="relative rounded-xl border border-slate-200 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600 bg-white flex items-center transition">
                 <span className="pl-3.5 pr-1.5 text-sm font-bold text-slate-500 select-none">B/.</span>
-                <input className="w-full border-0 bg-transparent py-3 pr-4 text-sm font-semibold text-slate-900 focus:ring-0 focus:outline-none" id="target-amount" name="target-amount" defaultValue={goal.target_amount} required step="0.01" type="number" />
+                <input className="w-full border-0 bg-transparent py-3 pr-4 text-sm font-semibold text-slate-900 focus:ring-0 focus:outline-none disabled:opacity-50" id="target-amount" name="target-amount" defaultValue={goal.target_amount} required step="0.01" type="number" readOnly={!!goal.linked_vehicle_id} title={goal.linked_vehicle_id ? "El costo se calcula automáticamente de los mantenimientos pendientes." : undefined} />
               </div>
+              {goal.linked_vehicle_id && (
+                <p className="mt-1.5 text-[11px] text-emerald-600 font-medium">Este costo objetivo se calcula automáticamente según los mantenimientos pendientes del vehículo.</p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="current-savings">

@@ -4,7 +4,7 @@ import { LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
-export function LogoutButton() {
+export function LogoutButton({ isCollapsed = false }: { isCollapsed?: boolean }) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -16,10 +16,13 @@ export function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold text-sm transition group w-full"
+      title="Cerrar Sesión"
+      className={`flex items-center rounded-xl text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold text-sm transition-all group w-full ${
+        isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3.5 py-2.5'
+      }`}
     >
-      <LogOut className="w-5 h-5 text-rose-500 group-hover:text-rose-600" />
-      Cerrar Sesión
+      <LogOut className="w-5 h-5 text-rose-500 group-hover:text-rose-600 shrink-0" />
+      {!isCollapsed && <span className="truncate">Cerrar Sesión</span>}
     </button>
   )
 }
