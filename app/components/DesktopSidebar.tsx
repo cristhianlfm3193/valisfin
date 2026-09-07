@@ -68,7 +68,7 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
         <div className={`flex items-center mb-6 px-2 ${isCollapsed ? 'justify-center mt-2' : 'justify-between'}`}>
           {!isCollapsed && (
             <Link href="/" className="shrink-0">
-              <img src="/logo.svg" alt="ValisFin Logo" className="w-32 h-auto drop-shadow-sm hover:opacity-90 transition-opacity" />
+              <img src="/logo.svg" alt="ValisFin Logo" className="w-44 h-auto drop-shadow-sm hover:opacity-90 transition-opacity" />
             </Link>
           )}
           <button 
