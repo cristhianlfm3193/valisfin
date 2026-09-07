@@ -114,9 +114,9 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
           <Link
             href="/admin"
             title={isCollapsed ? "Panel de Administrador" : undefined}
-            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden bg-rose-50 text-rose-700 hover:bg-rose-100 ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-slate-700 shadow-sm hover:shadow-md hover:from-slate-900 hover:to-black ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
           >
-            <Shield className="shrink-0 w-4 h-4 text-rose-600 group-hover:scale-110 transition-transform" />
+            <Shield className="shrink-0 w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
             {!isCollapsed && (
               <span className="truncate whitespace-nowrap">Admin Panel</span>
             )}

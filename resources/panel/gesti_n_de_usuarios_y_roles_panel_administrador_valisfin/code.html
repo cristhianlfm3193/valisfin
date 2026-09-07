@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline": "#6d7a72",
+          "background": "#faf8ff",
+          "on-primary-fixed": "#002114",
+          "surface-tint": "#006c4a",
+          "on-secondary-container": "#306d58",
+          "on-surface-variant": "#3d4a42",
+          "inverse-on-surface": "#eef0ff",
+          "secondary-container": "#adedd3",
+          "primary": "#006948",
+          "on-primary-container": "#f5fff7",
+          "inverse-surface": "#283044",
+          "secondary-fixed-dim": "#95d3ba",
+          "on-background": "#131b2e",
+          "tertiary": "#4648d4",
+          "surface-container-lowest": "#ffffff",
+          "outline-variant": "#bccac0",
+          "on-error": "#ffffff",
+          "on-error-container": "#93000a",
+          "on-primary": "#ffffff",
+          "primary-container": "#00855d",
+          "primary-fixed-dim": "#68dba9",
+          "tertiary-fixed": "#e1e0ff",
+          "on-tertiary-fixed": "#07006c",
+          "surface-container": "#eaedff",
+          "surface-container-low": "#f2f3ff",
+          "secondary": "#2b6954",
+          "inverse-primary": "#68dba9",
+          "surface": "#faf8ff",
+          "secondary-fixed": "#b0f0d6",
+          "error-container": "#ffdad6",
+          "on-secondary": "#ffffff",
+          "on-tertiary-fixed-variant": "#2f2ebe",
+          "surface-variant": "#dae2fd",
+          "tertiary-container": "#6063ee",
+          "surface-dim": "#d2d9f4",
+          "on-surface": "#131b2e",
+          "on-tertiary": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "surface-bright": "#faf8ff",
+          "on-tertiary-container": "#fffbff",
+          "on-primary-fixed-variant": "#005137",
+          "tertiary-fixed-dim": "#c0c1ff",
+          "surface-container-high": "#e2e7ff",
+          "on-secondary-fixed-variant": "#0b513d",
+          "primary-fixed": "#85f8c4",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#002117"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "bento-gap-mobile": "0.875rem",
+          "layout-margin-desktop": "2rem",
+          "space-md": "1rem",
+          "layout-margin-mobile": "1rem",
+          "space-xl": "2rem",
+          "space-xs": "0.5rem",
+          "space-sm": "0.75rem",
+          "space-2xs": "0.25rem",
+          "bento-gap-desktop": "1.5rem",
+          "space-2xl": "3rem",
+          "space-3xl": "4rem"
+        },
+        "fontFamily": {
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-body": [
+            "JetBrains Mono"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-display": [
+            "JetBrains Mono"
+          ]
+        },
+        "fontSize": {
+          "headline-lg": [
+            "2.25rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-sm": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.45",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "1.3",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "0.875rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.35",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "financial-body": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.4",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "1.75rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "1.1",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.75rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "financial-display": [
+            "2rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container"><main class="w-full flex-1 flex flex-col justify-center"><div class="flex flex-col w-full">
+<!-- Top Global Admin Console Navigation Header -->
+<header class="w-full bg-surface-container-lowest/80 backdrop-blur-md shadow-sm px- layout-margin-mobile md:px-layout-margin-desktop py-space-md sticky top-0 z-30 transition-all">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<!-- Title & Branding Scope -->
+<div class="flex items-start gap-space-sm">
+<div class="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-md shrink-0">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">Panel de Administrador &amp; Salud del Sistema</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              ValisFin · Familia Fuentes Camaño
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 md:line-clamp-none">
+            Monitoreo de seguridad, registro de auditoría en vivo, accesos criptográficos y telemetría de Supabase.
+          </p>
+</div>
+</div>
+<!-- Super Admin Tag & Global Quick Actions -->
+<div class="flex items-center gap-space-xs flex-wrap justify-between md:justify-end">
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm">CF</div>
+<span class="font-label-sm text-label-sm text-on-surface">Cristhian Fuentes (Super Admin)</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-financial-body text-label-sm text-primary">99.98% Uptime</span>
+</div>
+<div class="flex items-center gap-space-2xs"><button class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-secondary-container text-on-secondary-container hover:bg-secondary hover:text-on-secondary font-label-sm text-label-sm shadow-sm transition active:scale-95 cursor-pointer" onclick="document.getElementById('userManagementModal').classList.remove('hidden')"><span class="material-symbols-outlined text-base">manage_accounts</span><span>Gestionar Usuarios</span></button>
+<button class="flex items-center gap-1 px-3 py-2 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm transition shadow-sm active:scale-95" id="btnRefresh" onclick="refreshMetrics()">
+<span class="material-symbols-outlined text-base" id="refreshIcon">sync</span>
+<span class="hidden sm:inline">Refrescar</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm shadow-md transition active:scale-95" onclick="exportAuditLog()">
+<span class="material-symbols-outlined text-base">download</span>
+<span>Exportar Log</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="w-full max-w-7xl mx-auto px-layout-margin-mobile md:px-layout-margin-desktop py-space-lg space-y-space-lg">
+<!-- SECTION 1: Bento Grid Telemetry & System Health -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Supabase PostgreSQL Health -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between hover:shadow-md transition">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Base de Datos</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface flex items-center gap-1.5">
+<span>Supabase PG</span>
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</h3>
+</div>
+<div class="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">database</span>
+</div>
+</div>
+<!-- Latency Display & Sparkline -->
+<div class="mt-space-md space-y-2">
+<div class="flex items-baseline justify-between">
+<span class="font-financial-display text-financial-display text-primary">42 <span class="font-financial-body text-body-sm text-outline">ms</span></span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Latencia Baja</span>
+</div>
+<!-- Micro SVG Latency Chart -->
+<div class="w-full h-10 pt-1">
+<svg class="w-full h-full text-primary" fill="none" preserveaspectratio="none" viewbox="0 0 140 30">
+<path d="M0,22 Q15,10 30,18 T60,12 T90,20 T115,8 T140,14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M0,22 Q15,10 30,18 T60,12 T90,20 T115,8 T140,14 L140,30 L0,30 Z" fill="currentColor" fill-opacity="0.08"></path>
+</svg>
+</div>
+<div class="flex justify-between items-center text-outline font-label-sm text-label-sm pt-1">
+<span>0 errores (24h)</span>
+<span class="text-primary font-financial-body">SSL/TLS 1.3 v15</span>
+</div>
+</div>
+</div>
+<!-- Card 2: App Availability & Uptime -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between hover:shadow-md transition">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Disponibilidad 30d</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface">Uptime ValisFin</h3>
+</div>
+<div class="w-9 h-9 rounded-lg bg-primary-fixed text-on-primary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">cloud_done</span>
+</div>
+</div>
+<div class="mt-space-md space-y-2">
+<div class="flex items-baseline justify-between">
+<span class="font-financial-display text-financial-display text-on-surface">99.98%</span>
+<span class="text-primary flex items-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm mr-0.5">check_circle</span> 0 caídas
+            </span>
+</div>
+<!-- 30-Day mini uptime status bars -->
+<div class="grid grid-cols-15 gap-1 py-1 flex items-center">
+<div class="flex gap-0.5 w-full">
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-secondary-fixed opacity-90" title="Mantenimiento 1 min"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+<span class="h-4 flex-1 rounded-sm bg-primary opacity-90"></span>
+</div>
+</div>
+<div class="flex justify-between items-center text-outline font-label-sm text-label-sm pt-1">
+<span>Chequeo automático</span>
+<span class="text-on-surface-variant">Hace 20 seg</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Active Sessions & Device Authorization -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between hover:shadow-md transition">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Seguridad &amp; Accesos</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface">Sesiones Activas</h3>
+</div>
+<div class="w-9 h-9 rounded-lg bg-surface-container text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">devices_other</span>
+</div>
+</div>
+<div class="mt-space-md space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-financial-display text-financial-display text-on-surface">2</span>
+<span class="font-label-sm text-label-sm text-outline">usuarios en línea</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-tertiary font-label-sm text-label-sm">Google OAuth</span>
+</div>
+<div class="space-y-1.5 text-body-sm font-body-sm pt-1">
+<div class="flex items-center justify-between bg-surface-container-low p-1.5 rounded-lg">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+<span class="font-label-sm text-label-sm text-on-surface truncate">Cristhian</span>
+<span class="text-outline text-label-sm">iPhone 15 Pro</span>
+</div>
+<span class="font-financial-body text-label-sm text-primary shrink-0">08:42 AM</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low p-1.5 rounded-lg">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+<span class="font-label-sm text-label-sm text-on-surface truncate">Jennifer</span>
+<span class="text-outline text-label-sm">Samsung S24+</span>
+</div>
+<span class="font-financial-body text-label-sm text-primary shrink-0">Ayer</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: 24h Critical Operations Summary -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between hover:shadow-md transition">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Actividad Crítica (24h)</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface">Operaciones DB</h3>
+</div>
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed-dim text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">history_edu</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex items-baseline justify-between mb-2">
+<span class="font-financial-display text-financial-display text-on-surface">35</span>
+<span class="font-label-sm text-label-sm text-outline">Transacciones</span>
+</div>
+<!-- Semantic Pills Breakdown -->
+<div class="grid grid-cols-3 gap-1.5 text-center">
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="block font-financial-body text-body-sm font-bold text-primary">19</span>
+<span class="block font-label-sm text-label-sm text-outline truncate">Nuevos</span>
+</div>
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="block font-financial-body text-body-sm font-bold text-tertiary">14</span>
+<span class="block font-label-sm text-label-sm text-outline truncate">Updates</span>
+</div>
+<div class="bg-error-container/50 p-2 rounded-lg">
+<span class="block font-financial-body text-body-sm font-bold text-error">2</span>
+<span class="block font-label-sm text-label-sm text-error truncate">Borrados</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-outline text-center mt-2.5">
+            0 intentos de intrusión bloqueados
+          </p>
+</div>
+</div>
+</section>
+<!-- SECTION 2: Interactive Audit Filter Bar -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex flex-col lg:flex-row gap-space-sm items-stretch lg:items-center justify-between">
+<!-- Full-text search -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm pl-11 pr-4 py-2.5 rounded-full focus:outline-none focus:bg-surface transition shadow-inner placeholder:text-outline" id="auditSearch" onkeyup="filterAuditLogs()" placeholder="Buscar por usuario, acción, tabla o concepto (ej. borrado, Naturgy, Guardería, Tucson)..." type="text"/>
+</div>
+<!-- User Identity Selector Filter -->
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-label-sm text-outline whitespace-nowrap hidden sm:inline" for="userFilter">Usuario:</label>
+<div class="relative w-full sm:w-auto">
+<select class="w-full sm:w-56 appearance-none bg-surface-container-low text-on-surface font-label-sm text-label-sm px-3.5 py-2.5 pr-8 rounded-full focus:outline-none transition cursor-pointer" id="userFilter" onchange="filterAuditLogs()">
+<option value="ALL">Todos los usuarios (Fuentes Camaño)</option>
+<option value="Cristhian">Cristhian Fuentes</option>
+<option value="Jennifer">Jennifer Camaño</option>
+<option value="Sistema">Sistema ValisFin (Automático)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-base">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Action Type Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar pt-1" id="filterPillsContainer">
+<button class="filter-pill active px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm whitespace-nowrap shadow-sm transition active:scale-95" onclick="setActionFilter('ALL', this)">
+          Todos los Eventos (35)
+        </button>
+<button class="filter-pill px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-error-container hover:text-on-error-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap transition active:scale-95" onclick="setActionFilter('ELIMINO', this)">
+<span class="inline-block w-2 h-2 rounded-full bg-error mr-1"></span>
+          Eliminaciones / Rollbacks (2)
+        </button>
+<button class="filter-pill px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap transition active:scale-95" onclick="setActionFilter('ACTUALIZO', this)">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary mr-1"></span>
+          Actualizaciones (14)
+        </button>
+<button class="filter-pill px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-secondary-container hover:text-on-secondary-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap transition active:scale-95" onclick="setActionFilter('CREO', this)">
+<span class="inline-block w-2 h-2 rounded-full bg-primary mr-1"></span>
+          Nuevos Registros (19)
+        </button>
+<button class="filter-pill px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap transition active:scale-95" onclick="setActionFilter('LOGIN', this)">
+<span class="inline-block w-2 h-2 rounded-full bg-outline mr-1"></span>
+          Inicios de Sesión (6)
+        </button>
+<button class="filter-pill px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-outline font-label-sm text-label-sm whitespace-nowrap transition opacity-70 cursor-not-allowed" onclick="setActionFilter('ALERTA', this)">
+          Alertas de Rendimiento (0)
+        </button>
+</div>
+</section>
+<!-- SECTION 3: Live Audit Trail List (Quién modificó / borró qué) -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<!-- Section header with real-time heartbeat -->
+<div class="px-space-md py-space-sm bg-surface-container-low/60 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">receipt_long</span>
+<h2 class="font-headline-sm text-body-lg text-on-surface font-semibold">Registro de Auditoría Detallado en Vivo</h2>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse ml-1" title="Canal WebSocket Conectado"></span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">
+          Sincronizado vía Supabase Realtime
+        </span>
+</div>
+<!-- Feed / Records container -->
+<div class="divide-y divide-surface-container-low" id="auditRecordsList">
+<!-- Record Item 1: ELIMINACIÓN CRÍTICA (Cristhian) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="gastos diarios cafe entre panes 3.95 iphone 15 pro" data-type="ELIMINO" data-user="Cristhian">
+<div class="flex items-start gap-space-sm">
+<!-- Action Badge Icon -->
+<div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">delete_forever</span>
+</div>
+<!-- Details -->
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                  ELIMINÓ
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Cristhian Fuentes</span>
+<span class="text-outline text-label-sm">en</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Gastos Diarios</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Registro suprimido: <strong class="text-on-surface">«Café en Entre Panes»</strong> con valor de <span class="font-financial-body font-semibold text-error">-B/. 3.95</span>
+</p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> Hoy, 11:24 AM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phone_iphone</span> iPhone 15 Pro (Panamá, PA)
+                </span>
+<span class="font-financial-body text-xs text-outline">ID: #REC-89021</span>
+</div>
+</div>
+</div>
+<!-- Rollback / Inspector Action -->
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm transition shadow-sm active:scale-95" onclick="restoreRecord('REC-89021', 'Café en Entre Panes')">
+<span class="material-symbols-outlined text-base text-primary">restore_page</span>
+<span>Restaurar Registro</span>
+</button>
+</div>
+</div>
+<!-- Record Item 2: MODIFICACIÓN (Jennifer) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="pagos fijos luz naturgy 75.00 78.44 samsung s24" data-type="ACTUALIZO" data-user="Jennifer">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-tertiary font-label-sm text-label-sm font-bold">
+                  ACTUALIZÓ
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Jennifer Camaño</span>
+<span class="text-outline text-label-sm">en</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Pagos Fijos Mensuales</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Modificación en <strong class="text-on-surface">«Luz Naturgy»</strong>: el monto cambió de <span class="font-financial-body line-through text-outline">B/. 75.00</span> a <span class="font-financial-body font-semibold text-primary">B/. 78.44</span>
+</p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> Hoy, 09:15 AM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">smartphone</span> Samsung Galaxy S24+
+                </span>
+<span class="font-financial-body text-xs text-outline">ID: #REC-89018</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<span class="font-label-sm text-label-sm text-outline px-3 py-1 rounded-full bg-surface-container-low">Delta +B/. 3.44</span>
+</div>
+</div>
+<!-- Record Item 3: CREACIÓN NUEVO REGISTRO (Cristhian) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="metas de ahorro estufa 300.00 macbook pro" data-type="CREO" data-user="Cristhian">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">
+                  CREÓ
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Cristhian Fuentes</span>
+<span class="text-outline text-label-sm">en</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Metas de Ahorro</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Nueva meta registrada: <strong class="text-on-surface">«Estufa de Cocina Nueva»</strong> con objetivo programado de <span class="font-financial-body font-semibold text-primary">B/. 300.00</span>
+</p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> Ayer, 08:12 PM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">laptop_mac</span> Safari en macOS (Casa)
+                </span>
+<span class="font-financial-body text-xs text-outline">ID: #REC-88992</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<span class="px-3 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container font-label-sm text-label-sm">Nueva Partida</span>
+</div>
+</div>
+<!-- Record Item 4: INICIO DE SESIÓN SEGURO (Jennifer) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="login google oauth 2fa sesion jennifer samsung s24" data-type="LOGIN" data-user="Jennifer">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container text-on-surface-variant flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">passkey</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm font-bold">
+                  LOGIN SEGURO
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Jennifer Camaño</span>
+<span class="text-outline text-label-sm">vía</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container-high font-label-sm text-label-sm text-on-surface">Google OAuth + Biometría</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Autenticación exitosa confirmada. Token JWT renovado para sesión de 7 días.
+              </p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> Ayer, 07:30 PM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">fingerprint</span> Autenticación Biométrica
+                </span>
+<span class="font-financial-body text-xs text-primary font-bold">IP Verificada</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<span class="font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified_user</span> Cripto Ok
+            </span>
+</div>
+</div>
+<!-- Record Item 5: ACTUALIZACIÓN KILOMETRAJE VEHÍCULOS (Cristhian) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="vehiculos toyota yaris kilometraje 205187 cristhian iphone" data-type="ACTUALIZO" data-user="Cristhian">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">directions_car</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-tertiary font-label-sm text-label-sm font-bold">
+                  ACTUALIZÓ
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Cristhian Fuentes</span>
+<span class="text-outline text-label-sm">en</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Vehículos &amp; Mantenimiento</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Actualizó odómetro en <strong class="text-on-surface">«Toyota Yaris»</strong> a <span class="font-financial-body font-semibold text-on-surface">205,187 km</span> (antes 204,450 km)
+              </p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> 12 Nov, 03:10 PM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">phone_iphone</span> iPhone 15 Pro
+                </span>
+<span class="font-financial-body text-xs text-outline">ID: #REC-88941</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<span class="font-label-sm text-label-sm text-outline px-3 py-1 rounded-full bg-surface-container-low">+737 km recorridos</span>
+</div>
+</div>
+<!-- Record Item 6: ELIMINACIÓN PROTEGIDA (Jennifer) -->
+<div class="audit-row p-space-md hover:bg-surface-container-low/40 transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm" data-search="hogar cotizacion puerta bano 350.00 jennifer samsung" data-type="ELIMINO" data-user="Jennifer">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+<span class="material-symbols-outlined text-xl">delete_sweep</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                  ELIMINÓ
+                </span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Jennifer Camaño</span>
+<span class="text-outline text-label-sm">en</span>
+<span class="px-2 py-0.5 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Hogar &amp; Mejoras</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                Cotización descartada: <strong class="text-on-surface">«Puerta de Baño Vidrio Templado»</strong> valorada en <span class="font-financial-body font-semibold text-error">B/. 350.00</span>
+</p>
+<div class="flex items-center gap-3 text-outline font-label-sm text-label-sm pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span> 11 Nov, 10:45 AM
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">smartphone</span> Samsung Galaxy S24+
+                </span>
+<span class="font-financial-body text-xs text-outline">ID: #REC-88890</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 self-end md:self-center shrink-0">
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm transition shadow-sm active:scale-95" onclick="restoreRecord('REC-88890', 'Puerta de Baño')">
+<span class="material-symbols-outlined text-base text-primary">restore_page</span>
+<span>Restaurar</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer empty message when filtering -->
+<div class="hidden p-space-2xl text-center flex-col items-center justify-center space-y-2" id="noResultsMsg">
+<span class="material-symbols-outlined text-4xl text-outline">find_in_page</span>
+<p class="font-headline-sm text-body-lg text-on-surface font-semibold">No se encontraron eventos coincidentes</p>
+<p class="font-body-sm text-body-sm text-outline">Prueba modificando los términos de búsqueda o limpiando los filtros seleccionados.</p>
+</div>
+<!-- Pagination & Table Status Bar -->
+<div class="p-space-sm bg-surface-container-low/40 flex flex-col sm:flex-row items-center justify-between gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline" id="recordsCounter">Mostrando 6 de 35 eventos registrados en las últimas 48 horas</span>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1 rounded-full bg-surface-container-lowest font-label-sm text-label-sm text-outline opacity-50 cursor-not-allowed">Anterior</button>
+<span class="px-2 font-financial-body text-label-sm text-on-surface font-bold">1</span>
+<button class="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition">Siguiente</button>
+</div>
+</div>
+</section>
+<!-- SECTION 4: Bottom Technical Health & Maintenance Hub -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- Performance Metrics & Bottleneck Watcher (Spans 2 cols) -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">speed</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">Alertas de Rendimiento &amp; Cuellos de Botella</h3>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">
+              Todo Normal
+            </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-2">
+<!-- Metric A: Query Time -->
+<div class="bg-surface-container-low p-space-sm rounded-xl space-y-1">
+<span class="font-label-sm text-label-sm text-outline block">Consultas a Base de Datos</span>
+<div class="flex items-baseline gap-1">
+<span class="font-financial-display text-headline-sm font-bold text-primary">38</span>
+<span class="font-financial-body text-label-sm text-outline">ms prom.</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-2">
+<div class="bg-primary h-full rounded-full" style="width: 14%;"></div>
+</div>
+<span class="font-label-sm text-xs text-primary block pt-1">Rendimiento Excelente (&lt;50ms)</span>
+</div>
+<!-- Metric B: Supabase Storage Capacity -->
+<div class="bg-surface-container-low p-space-sm rounded-xl space-y-1">
+<span class="font-label-sm text-label-sm text-outline block">Capacidad de Almacenamiento</span>
+<div class="flex items-baseline gap-1">
+<span class="font-financial-display text-headline-sm font-bold text-on-surface">12.4</span>
+<span class="font-financial-body text-label-sm text-outline">/ 500 MB</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-2">
+<div class="bg-tertiary h-full rounded-full" style="width: 2.4%;"></div>
+</div>
+<span class="font-label-sm text-xs text-outline block pt-1">2.4% utilizado en Supabase DB</span>
+</div>
+<!-- Metric C: Realtime WebSockets -->
+<div class="bg-surface-container-low p-space-sm rounded-xl space-y-1">
+<span class="font-label-sm text-label-sm text-outline block">Sincronización Tiempo Real</span>
+<div class="flex items-baseline gap-1">
+<span class="font-financial-display text-headline-sm font-bold text-primary">0</span>
+<span class="font-financial-body text-label-sm text-outline">ms jitter</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-2">
+<div class="bg-primary h-full rounded-full" style="width: 99%;"></div>
+</div>
+<span class="font-label-sm text-xs text-primary block pt-1">WebSockets multiplex activos</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xs text-outline font-label-sm text-label-sm">
+<span>Último volcado de seguridad automático (Postgres WAL): Hoy 04:00 AM</span>
+<span class="text-primary font-financial-body">Cifrado AES-256</span>
+</div>
+</div>
+<!-- Maintenance Utilities Toolbox -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-outline">build</span>
+<h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">Herramientas de Mantenimiento</h3>
+</div>
+<p class="font-body-sm text-body-sm text-outline">
+            Acciones directas para optimizar cache de clientes, sincronía de tablas familiares y depuración.
+          </p>
+</div>
+<div class="space-y-2 pt-2">
+<!-- Button 1 -->
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface transition active:scale-98 text-left" onclick="triggerMaintenance('indices')">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-xl">bolt</span>
+<div>
+<span class="font-label-sm text-label-sm font-semibold block">Optimizar Índices de Búsqueda</span>
+<span class="font-label-sm text-xs text-outline block">Re-indexar gastos y metas familiares</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">chevron_right</span>
+</button>
+<!-- Button 2 -->
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface transition active:scale-98 text-left" onclick="triggerMaintenance('cache')">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-tertiary text-xl">cached</span>
+<div>
+<span class="font-label-sm text-label-sm font-semibold block">Limpiar Caché Local</span>
+<span class="font-label-sm text-xs text-outline block">Depurar datos temporales de dispositivos</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">chevron_right</span>
+</button>
+<!-- Button 3 -->
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface transition active:scale-98 text-left" onclick="triggerMaintenance('logs')">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-outline text-xl">bug_report</span>
+<div>
+<span class="font-label-sm text-label-sm font-semibold block">Ver Registro de Errores de API</span>
+<span class="font-label-sm text-xs text-primary block">0 errores en buffer de depuración</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">chevron_right</span>
+</button>
+</div>
+<div class="pt-2 text-center">
+<span class="font-label-sm text-xs text-outline">Versión del Core: ValisFin v2.4.1 (Producción)</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Interactive Modal / Toast Notification Host -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-layout-margin-mobile md:p-space-lg overflow-y-auto" id="userManagementModal"><div class="fixed inset-0 bg-on-surface/40 backdrop-blur-md transition-opacity" onclick="document.getElementById('userManagementModal').classList.add('hidden')"></div><div class="relative bg-surface-container-lowest rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden border border-outline-variant/30 z-10 my-auto"><div class="px-space-md py-space-sm bg-surface-container-low/70 border-b border-surface-container flex items-center justify-between"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-xl">manage_accounts</span></div><div><h2 class="font-headline-sm text-body-lg text-on-surface font-bold">Gestión de Usuarios y Roles de Acceso</h2><p class="font-label-sm text-xs text-outline">ValisFin · Configuración de privilegios de la cuenta familiar</p></div></div><button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline hover:text-on-surface transition" onclick="document.getElementById('userManagementModal').classList.add('hidden')"><span class="material-symbols-outlined text-xl">close</span></button></div><div class="p-space-md md:p-space-lg space-y-space-md max-h-[75vh] overflow-y-auto"><div class="space-y-space-sm"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Miembros Familiares Autorizados</span><span class="font-label-sm text-xs text-primary font-bold bg-secondary-container px-2.5 py-0.5 rounded-full">3 Cuentas Registradas</span></div><div class="space-y-space-xs"><div class="p-space-sm bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl border border-surface-container transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary text-on-primary font-bold flex items-center justify-center text-body-md shrink-0 shadow-sm">CF</div><div class="space-y-0.5"><div class="flex items-center gap-2 flex-wrap"><span class="font-label-sm text-body-md font-bold text-on-surface">Cristhian Fuentes</span><span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-xs font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Activo</span><span class="text-xs text-outline font-financial-body">(cristhian@gmail.com)</span></div><div class="flex items-center gap-2 text-xs text-outline font-label-sm"><span><span class="material-symbols-outlined text-xs align-middle">schedule</span> Hoy, 08:42 AM</span><span>·</span><span><span class="material-symbols-outlined text-xs align-middle">phone_iphone</span> iPhone 15 Pro</span></div></div></div><div class="flex items-center gap-1.5 bg-surface-container-lowest p-1 rounded-xl border border-surface-container shrink-0"><button class="px-3 py-1 rounded-lg bg-primary text-on-primary font-label-sm text-xs font-semibold shadow-sm transition flex items-center gap-1" type="button"><span class="material-symbols-outlined text-xs">verified_user</span><span>Super Admin</span></button><button class="px-3 py-1 rounded-lg text-outline hover:text-on-surface font-label-sm text-xs transition flex items-center gap-1" onclick="this.parentElement.querySelectorAll('button').forEach(b =&gt; {b.classList.remove('bg-primary','text-on-primary','shadow-sm'); b.classList.add('text-outline');}); this.classList.remove('text-outline'); this.classList.add('bg-primary','text-on-primary','shadow-sm');" type="button"><span class="material-symbols-outlined text-xs">visibility</span><span>Estándar</span></button></div></div><div class="p-space-sm bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl border border-surface-container transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-tertiary text-on-tertiary font-bold flex items-center justify-center text-body-md shrink-0 shadow-sm">JC</div><div class="space-y-0.5"><div class="flex items-center gap-2 flex-wrap"><span class="font-label-sm text-body-md font-bold text-on-surface">Jennifer Camaño</span><span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-xs font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Activo</span><span class="text-xs text-outline font-financial-body">(jennifer@gmail.com)</span></div><div class="flex items-center gap-2 text-xs text-outline font-label-sm"><span><span class="material-symbols-outlined text-xs align-middle">schedule</span> Ayer, 07:30 PM</span><span>·</span><span><span class="material-symbols-outlined text-xs align-middle">smartphone</span> Samsung S24+</span></div></div></div><div class="flex items-center gap-1.5 bg-surface-container-lowest p-1 rounded-xl border border-surface-container shrink-0"><button class="px-3 py-1 rounded-lg bg-primary text-on-primary font-label-sm text-xs font-semibold shadow-sm transition flex items-center gap-1" type="button"><span class="material-symbols-outlined text-xs">admin_panel_settings</span><span>Administrador</span></button><button class="px-3 py-1 rounded-lg text-outline hover:text-on-surface font-label-sm text-xs transition flex items-center gap-1" onclick="this.parentElement.querySelectorAll('button').forEach(b =&gt; {b.classList.remove('bg-primary','text-on-primary','shadow-sm'); b.classList.add('text-outline');}); this.classList.remove('text-outline'); this.classList.add('bg-primary','text-on-primary','shadow-sm');" type="button"><span class="material-symbols-outlined text-xs">visibility</span><span>Estándar</span></button></div></div><div class="p-space-sm bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl border border-surface-container transition flex flex-col md:flex-row md:items-center justify-between gap-space-sm"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-bold flex items-center justify-center text-body-md shrink-0 shadow-sm">VF</div><div class="space-y-0.5"><div class="flex items-center gap-2 flex-wrap"><span class="font-label-sm text-body-md font-bold text-on-surface">Valeria Fuentes</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-xs font-semibold">Invitada Familiar</span><span class="text-xs text-outline font-financial-body">(valeria.fuentes@valisfin.me)</span></div><div class="flex items-center gap-2 text-xs text-outline font-label-sm"><span><span class="material-symbols-outlined text-xs align-middle">schedule</span> 10 Nov, 06:14 PM</span><span>·</span><span><span class="material-symbols-outlined text-xs align-middle">tablet_mac</span> iPad Air Familiar</span></div></div></div><div class="flex items-center gap-1.5 bg-surface-container-lowest p-1 rounded-xl border border-surface-container shrink-0"><button class="px-3 py-1 rounded-lg text-outline hover:text-on-surface font-label-sm text-xs transition flex items-center gap-1" onclick="this.parentElement.querySelectorAll('button').forEach(b =&gt; {b.classList.remove('bg-primary','text-on-primary','shadow-sm'); b.classList.add('text-outline');}); this.classList.remove('text-outline'); this.classList.add('bg-primary','text-on-primary','shadow-sm');" type="button"><span class="material-symbols-outlined text-xs">shield</span><span>Admin</span></button><button class="px-3 py-1 rounded-lg bg-primary text-on-primary font-label-sm text-xs font-semibold shadow-sm transition flex items-center gap-1" type="button"><span class="material-symbols-outlined text-xs">visibility</span><span>Solo Lectura</span></button></div></div></div></div><div class="bg-surface-container-low/50 rounded-xl p-space-sm border border-surface-container space-y-2"><h3 class="font-label-sm text-xs uppercase tracking-wider text-outline font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary">security</span><span>Matriz de Permisos por Rol</span></h3><div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs"><div class="p-2.5 rounded-lg bg-surface-container-lowest space-y-1"><div class="flex items-center gap-1.5 text-primary font-bold font-label-sm"><span class="material-symbols-outlined text-sm">admin_panel_settings</span><span>Super Admin / Administrador</span></div><p class="text-on-surface-variant font-body-sm text-xs">Acceso absoluto: Gestión de presupuestos, borrado permanente con rollback, auditoría forense, creación de reglas de gasto y cambio de privilegios.</p></div><div class="p-2.5 rounded-lg bg-surface-container-lowest space-y-1"><div class="flex items-center gap-1.5 text-tertiary font-bold font-label-sm"><span class="material-symbols-outlined text-sm">account_circle</span><span>Usuario Estándar / Solo Lectura</span></div><p class="text-on-surface-variant font-body-sm text-xs">Registro diario de gastos y consulta de metas de ahorro familiares. Sin acceso a telemetría técnica, logs de borrados ni reversiones de auditoría.</p></div></div></div></div><div class="px-space-md py-space-sm bg-surface-container-low/70 border-t border-surface-container flex items-center justify-between gap-space-sm"><button class="px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition" onclick="document.getElementById('userManagementModal').classList.add('hidden')" type="button">Cancelar</button><div class="flex items-center gap-2"><button class="flex items-center gap-1.5 px-5 py-2 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm shadow-md transition active:scale-95" onclick="document.getElementById('userManagementModal').classList.add('hidden'); showToast('Roles Actualizados', 'Los permisos y roles familiares se sincronizaron en Supabase Auth con éxito.', 'verified_user');" type="button"><span class="material-symbols-outlined text-base">check</span><span>Guardar Cambios de Rol</span></button></div></div></div></div><div class="fixed bottom-6 right-6 transform translate-y-32 opacity-0 transition-all duration-300 z-50 flex items-center gap-3 bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-xl shadow-xl" id="toastNotification">
+<span class="material-symbols-outlined text-primary-fixed" id="toastIcon">check_circle</span>
+<div>
+<p class="font-label-sm text-label-sm font-semibold" id="toastTitle">Acción Completada</p>
+<p class="font-body-sm text-xs opacity-80" id="toastDesc">Se ejecutó la acción en el sistema.</p>
+</div>
+</div>
+</div>
+<script>
+  let currentActionFilter = 'ALL';
+
+  function showToast(title, desc, icon = 'check_circle') {
+    const toast = document.getElementById('toastNotification');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastDesc = document.getElementById('toastDesc');
+    const toastIcon = document.getElementById('toastIcon');
+
+    if (!toast) return;
+    toastTitle.textContent = title;
+    toastDesc.textContent = desc;
+    toastIcon.textContent = icon;
+
+    toast.classList.remove('translate-y-32', 'opacity-0');
+    setTimeout(() => {
+      toast.classList.add('translate-y-32', 'opacity-0');
+    }, 3800);
+  }
+
+  function setActionFilter(action, btnElement) {
+    currentActionFilter = action;
+    
+    // Update pill buttons state
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.classList.remove('bg-primary', 'text-on-primary', 'active');
+      if (!pill.classList.contains('cursor-not-allowed')) {
+        pill.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      }
+    });
+
+    if (btnElement) {
+      btnElement.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      btnElement.classList.add('bg-primary', 'text-on-primary', 'active');
+    }
+
+    filterAuditLogs();
+  }
+
+  function filterAuditLogs() {
+    const searchVal = (document.getElementById('auditSearch')?.value || '').toLowerCase().trim();
+    const userVal = document.getElementById('userFilter')?.value || 'ALL';
+    const rows = document.querySelectorAll('.audit-row');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      const rowType = row.getAttribute('data-type');
+      const rowUser = row.getAttribute('data-user');
+      const rowSearch = row.getAttribute('data-search') || '';
+
+      const matchesType = (currentActionFilter === 'ALL' || rowType === currentActionFilter);
+      const matchesUser = (userVal === 'ALL' || rowUser === userVal);
+      const matchesText = (!searchVal || rowSearch.toLowerCase().includes(searchVal) || row.textContent.toLowerCase().includes(searchVal));
+
+      if (matchesType && matchesUser && matchesText) {
+        row.style.display = 'flex';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    const noResults = document.getElementById('noResultsMsg');
+    const counter = document.getElementById('recordsCounter');
+
+    if (noResults) {
+      noResults.style.display = visibleCount === 0 ? 'flex' : 'none';
+    }
+    if (counter) {
+      counter.textContent = `Mostrando ${visibleCount} de 35 eventos registrados en las últimas 48 horas`;
+    }
+  }
+
+  function restoreRecord(id, title) {
+    showToast('Registro Restaurado', `El item «${title}» (#${id}) fue reincorporado con éxito a la base de datos.`, 'history');
+  }
+
+  function refreshMetrics() {
+    const icon = document.getElementById('refreshIcon');
+    if (icon) {
+      icon.classList.add('animate-spin');
+      setTimeout(() => {
+        icon.classList.remove('animate-spin');
+        showToast('Métricas Actualizadas', 'Ping a Supabase: 41ms. Todos los servicios en línea.', 'cloud_done');
+      }, 700);
+    }
+  }
+
+  function exportAuditLog() {
+    showToast('Descarga Iniciada', 'Generando log forense de auditoría en formato CSV cifrado...', 'download_for_offline');
+  }
+
+  function triggerMaintenance(action) {
+    if (action === 'indices') {
+      showToast('Índices Optimizados', 'Se reestructuraron las tablas de Gastos, Metas y Vehículos en 28ms.', 'bolt');
+    } else if (action === 'cache') {
+      showToast('Caché Purificada', 'Se eliminaron 4.2 MB de caché offline obsoleta en clientes.', 'cached');
+    } else if (action === 'logs') {
+      showToast('Log de Errores Limpio', '0 incidentes o excepciones registradas en el buffer de red.', 'verified');
+    }
+  }
+</script></main></body></html>
