@@ -5,6 +5,7 @@ import AddKmModal from './AddKmModal';
 import AddMaintenanceModal from './AddMaintenanceModal';
 import AddPendingModal from './AddPendingModal';
 import EditPendingModal from './EditPendingModal';
+import EditCompletedModal from './EditCompletedModal';
 import { markMaintenanceAsDone, deleteMaintenance } from '../../actions/vehicles';
 
 export default function VehiculosClient({
@@ -22,6 +23,9 @@ export default function VehiculosClient({
   
   const [isEditPendingModalOpen, setIsEditPendingModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<any>(null);
+
+  const [isEditCompletedModalOpen, setIsEditCompletedModalOpen] = useState(false);
+  const [completedTaskToEdit, setCompletedTaskToEdit] = useState<any>(null);
   
   const [kmFilter, setKmFilter] = useState('all');
   const [kmPage, setKmPage] = useState(1);
@@ -56,6 +60,11 @@ export default function VehiculosClient({
   const handleEdit = (task: any) => {
     setTaskToEdit(task);
     setIsEditPendingModalOpen(true);
+  };
+
+  const handleEditCompleted = (task: any) => {
+    setCompletedTaskToEdit(task);
+    setIsEditCompletedModalOpen(true);
   };
 
   const filteredMileage = kmFilter === 'all' 
@@ -116,7 +125,7 @@ export default function VehiculosClient({
         {/* FICHAS BENTO PRINCIPALES */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {vehicles.map(vehicle => {
-            const latestMaintenance = maintenanceLogs.find(log => log.vehicle_id === vehicle.id);
+            const latestMaintenance = completedMaintenance.find(log => log.vehicle_id === vehicle.id && log.next_km);
             const next_service_km = latestMaintenance?.next_km || null;
             
             const isOverdue = next_service_km && (vehicle.current_km > next_service_km);
@@ -132,6 +141,9 @@ export default function VehiculosClient({
             
             const vehiclePendingTasks = pendingTasks.filter(task => task.vehicle_id === vehicle.id);
             const totalPendingCost = vehiclePendingTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
+
+            const vehicleCompletedTasks = completedMaintenance.filter(task => task.vehicle_id === vehicle.id);
+            const totalInvested = vehicleCompletedTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
             
             return (
               <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
@@ -215,13 +227,21 @@ export default function VehiculosClient({
                         </div>
                       )}
 
+                      <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50/50 border-pink-100' : 'bg-slate-50 border-slate-200'}`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-500' : 'text-slate-500'}`}>payments</span>
+                          <span className={`font-semibold ${isJennifer ? 'text-pink-700' : 'text-slate-700'}`}>Inversión Histórica</span>
+                        </div>
+                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-slate-600'}`}>B/. {totalInvested.toFixed(2)}</span>
+                      </div>
+
                       {vehiclePendingTasks.length > 0 && (
-                        <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50 border-pink-200' : 'bg-orange-50 border-orange-200'}`}>
+                        <div className={`mt-2 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50 border-pink-200' : 'bg-emerald-50 border-emerald-200'}`}>
                           <div className="flex items-center gap-1.5">
-                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-600' : 'text-orange-600'}`}>account_balance_wallet</span>
-                            <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-orange-800'}`}>Presupuesto Pendiente</span>
+                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>account_balance_wallet</span>
+                            <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-emerald-800'}`}>Presupuesto Pendiente</span>
                           </div>
-                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-orange-700'}`}>B/. {totalPendingCost.toFixed(2)}</span>
+                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-[#006655]'}`}>B/. {totalPendingCost.toFixed(2)}</span>
                         </div>
                       )}
                     </div>
@@ -466,6 +486,7 @@ export default function VehiculosClient({
                   <th className="py-3 px-3 font-mono">Kilometraje</th>
                   <th className="py-3 px-3 font-mono text-right">Costo (B/.)</th>
                   <th className="py-3 px-3 text-right">Taller</th>
+                  <th className="py-3 px-3 text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -479,8 +500,17 @@ export default function VehiculosClient({
                         {log.service}
                       </td>
                       <td className="py-3.5 px-3 font-mono text-slate-600">{log.km?.toLocaleString()} km</td>
-                      <td className="py-3.5 px-3 font-mono font-bold text-right text-rose-600">-B/. {log.cost?.toFixed(2)}</td>
+                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">B/. {log.cost?.toFixed(2) || '0.00'}</td>
                       <td className="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">{log.shop || 'N/A'}</td>
+                      <td className="py-3.5 px-3 text-center">
+                        <button 
+                          onClick={() => handleEditCompleted(log)}
+                          className="w-7 h-7 mx-auto rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors border border-slate-200"
+                          title="Editar Registro"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">edit</span>
+                        </button>
+                      </td>
                     </tr>
                   )
                 })}
@@ -535,6 +565,12 @@ export default function VehiculosClient({
         isOpen={isEditPendingModalOpen}
         onClose={() => { setIsEditPendingModalOpen(false); setTaskToEdit(null); }}
         task={taskToEdit}
+      />
+
+      <EditCompletedModal
+        isOpen={isEditCompletedModalOpen}
+        onClose={() => { setIsEditCompletedModalOpen(false); setCompletedTaskToEdit(null); }}
+        task={completedTaskToEdit}
       />
     </div>
   );

@@ -198,3 +198,35 @@ export async function updatePendingMaintenance(prevState: any, formData: FormDat
     return { success: false, error: 'Failed to update pending maintenance' };
   }
 }
+
+export async function updateCompletedMaintenance(prevState: any, formData: FormData) {
+  const supabase = await createClient();
+  
+  const id = formData.get('id') as string;
+  const service = formData.get('service') as string;
+  const cost = formData.get('cost') ? parseFloat(formData.get('cost') as string) : null;
+  const shop = formData.get('shop') as string || null;
+  const date = formData.get('date') as string;
+  const km = parseInt(formData.get('km') as string);
+
+  try {
+    const { error } = await supabase
+      .from('maintenance')
+      .update({
+        service: service,
+        cost: cost,
+        shop: shop,
+        date: date,
+        km: km
+      })
+      .eq('id', id);
+
+    if (error) throw error;
+
+    revalidatePath('/vehiculos');
+    return { success: true };
+  } catch (error) {
+    console.error('Error in updateCompletedMaintenance:', error);
+    return { success: false, error: 'Failed to update completed maintenance' };
+  }
+}
