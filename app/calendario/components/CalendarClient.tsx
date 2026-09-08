@@ -290,7 +290,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                             <span className="truncate">
                               {event.time ? `${event.time.substring(0, 5)} ` : ''}
                               {event.title} 
-                              {event.amount && ` (${event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. ${event.amount})`}
+                              {event.amount && ` (${event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. ${event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`}
                             </span>
                           </div>
                         )
@@ -378,7 +378,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                         </div>
                         {event.amount && (
                           <span className="text-sm font-bold bg-white/50 px-2 py-1 rounded-md">
-                            {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount}
+                            {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                           </span>
                         )}
                       </div>

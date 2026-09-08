@@ -71,7 +71,7 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
                   </div>
                   {event.amount && (
                     <span className="shrink-0 text-xs font-bold opacity-80">
-                      {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount}
+                      {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
                   )}
                 </div>

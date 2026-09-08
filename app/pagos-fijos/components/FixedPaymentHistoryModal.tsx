@@ -117,7 +117,7 @@ export function FixedPaymentHistoryModal({ isOpen, onClose, payments, title }: F
                       <div className="flex items-center gap-3 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
                         <div className="text-left sm:text-right">
                           <p className="font-bold font-mono text-emerald-500">
-                            + B/. {item.amount.toFixed(2)}
+                            + B/. {item.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                           </p>
                           <p className="text-[10px] text-slate-400 font-medium mt-0.5 uppercase tracking-wider">
                             {item.id?.substring(0, 8)}

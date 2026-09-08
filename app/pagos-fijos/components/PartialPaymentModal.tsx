@@ -110,7 +110,7 @@ export function PartialPaymentModal({ isOpen, onClose, onSubmit, payment }: Part
                   />
                 </div>
                 <p className="text-xs text-slate-500 mt-2">
-                  Saldo total pendiente: <span className="font-semibold text-slate-700">B/. {maxAmount.toFixed(2)}</span>
+                  Saldo total pendiente: <span className="font-semibold text-slate-700">B/. {maxAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                 </p>
               </div>
             </form>

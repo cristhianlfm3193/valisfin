@@ -17,8 +17,8 @@ export function MetricsSummary({
   pendingCount,
   progressPercent,
 }: MetricsSummaryProps) {
-  const formattedPaid = `B/. ${totalPaid.toFixed(2)}`;
-  const formattedPending = `B/. ${totalPending.toFixed(2)}`;
+  const formattedPaid = `B/. ${totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  const formattedPending = `B/. ${totalPending.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
   const totalItems = paidCount + pendingCount;
 
   return (

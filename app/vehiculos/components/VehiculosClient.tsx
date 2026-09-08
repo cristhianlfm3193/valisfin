@@ -262,7 +262,7 @@ export default function VehiculosClient({
                           <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-500' : 'text-slate-500'}`}>payments</span>
                           <span className={`font-semibold ${isJennifer ? 'text-pink-700' : 'text-slate-700'}`}>Inversión Histórica</span>
                         </div>
-                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-slate-600'}`}>B/. {totalInvested.toFixed(2)}</span>
+                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-slate-600'}`}>B/. {totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                       </div>
 
                       {vehiclePendingTasks.length > 0 && (
@@ -271,7 +271,7 @@ export default function VehiculosClient({
                             <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>account_balance_wallet</span>
                             <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-emerald-800'}`}>Presupuesto Pendiente</span>
                           </div>
-                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-[#006655]'}`}>B/. {totalPendingCost.toFixed(2)}</span>
+                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-[#006655]'}`}>B/. {totalPendingCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                         </div>
                       )}
                     </div>
@@ -418,7 +418,7 @@ export default function VehiculosClient({
                   {filteredPending.length} Tareas Críticas
                 </span>
                 <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
-                  Total: B/. {totalPendingFilteredCost.toFixed(2)}
+                  Total: B/. {totalPendingFilteredCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </span>
                 <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
                   <button onClick={() => { setPendingFilter('all'); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
@@ -463,7 +463,7 @@ export default function VehiculosClient({
                           ) : null}
                         </td>
                         <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">
-                          {task.cost ? `B/. ${task.cost.toFixed(2)}` : <span className="text-xs font-normal text-slate-400">Sin presupuesto</span>}
+                          {task.cost ? `B/. ${task.cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : <span className="text-xs font-normal text-slate-400">Sin presupuesto</span>}
                         </td>
                         <td className="py-3.5 px-3 text-center">
                           <div className="flex items-center justify-center gap-1">
@@ -588,7 +588,7 @@ export default function VehiculosClient({
                         {log.service}
                       </td>
                       <td className="py-3.5 px-3 font-mono text-slate-600">{log.km?.toLocaleString()} km</td>
-                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">B/. {log.cost?.toFixed(2) || '0.00'}</td>
+                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">B/. {log.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</td>
                       <td className="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">{log.shop || 'N/A'}</td>
                       <td className="py-3.5 px-3 text-center">
                         <div className="flex items-center justify-center gap-1">

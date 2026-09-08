@@ -121,15 +121,15 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
             <div className="grid grid-cols-3 gap-3 mb-6">
               <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Deuda Actual</p>
-                <p className="text-lg sm:text-xl font-bold text-slate-900 font-mono">B/. {totalDebt.toFixed(2)}</p>
+                <p className="text-lg sm:text-xl font-bold text-slate-900 font-mono">B/. {totalDebt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
               <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Gastado</p>
-                <p className="text-lg sm:text-xl font-bold text-rose-500 font-mono">B/. {totalSpent.toFixed(2)}</p>
+                <p className="text-lg sm:text-xl font-bold text-rose-500 font-mono">B/. {totalSpent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
               <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Abonado</p>
-                <p className="text-lg sm:text-xl font-bold text-emerald-500 font-mono">B/. {totalPaid.toFixed(2)}</p>
+                <p className="text-lg sm:text-xl font-bold text-emerald-500 font-mono">B/. {totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
             </div>
 
@@ -164,7 +164,7 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
                     <div className="flex items-center gap-3 w-full sm:w-auto mt-3 sm:mt-0 justify-between sm:justify-end">
                       <div className="text-left sm:text-right">
                         <p className={`font-bold font-mono ${item.type === 'expense' ? 'text-rose-500' : 'text-emerald-500'}`}>
-                          {item.type === 'expense' ? '-' : '+'} B/. {item.amount.toFixed(2)}
+                          {item.type === 'expense' ? '-' : '+'} B/. {item.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </p>
                         <p className="text-[10px] text-slate-400 font-medium mt-0.5 uppercase tracking-wider">
                           {item.person}

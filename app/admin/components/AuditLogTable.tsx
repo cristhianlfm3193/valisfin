@@ -38,7 +38,7 @@ const formatValue = (key: string, value: any) => {
   }
   
   if (key.includes('amount') || key === 'cost') {
-    return <span className="text-emerald-600 font-bold">B/. {Number(value).toFixed(2)}</span>;
+    return <span className="text-emerald-600 font-bold">B/. {Number(value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>;
   }
   
   if (key.includes('date') || key === 'created_at') {
@@ -165,7 +165,7 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
     return (
       <span>
         {log.action === 'DELETE' ? 'Registro suprimido' : log.action === 'UPDATE' ? 'Modificación en' : 'Nuevo registro creado'}: <strong className="text-slate-900">«{title}»</strong>
-        {amount > 0 && <span> con valor de <strong className="text-emerald-700">B/. {amount.toFixed(2)}</strong></span>}
+        {amount > 0 && <span> con valor de <strong className="text-emerald-700">B/. {amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>}
       </span>
     );
   };

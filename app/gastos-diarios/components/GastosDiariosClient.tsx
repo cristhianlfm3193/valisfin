@@ -182,8 +182,8 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
-              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toFixed(2)}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toFixed(2)}</span>
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
@@ -193,7 +193,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
               <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Supermercado - spentSupermercado).toFixed(2)} disp.</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Supermercado - spentSupermercado).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -216,8 +216,8 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
-              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toFixed(2)}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toFixed(2)}</span>
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
@@ -227,7 +227,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
               <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Gasolina - spentGasolina).toFixed(2)} disp.</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Gasolina - spentGasolina).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -250,8 +250,8 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
-              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toFixed(2)}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toFixed(2)}</span>
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
@@ -261,7 +261,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
               <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Ocio - spentOcio).toFixed(2)} disp.</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Ocio - spentOcio).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -284,8 +284,8 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
-              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toFixed(2)}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toFixed(2)}</span>
+              <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
@@ -295,7 +295,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
               <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Restaurante - spentRestaurante).toFixed(2)} disp.</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-slate-900 font-mono truncate">B/. {(budgets.Restaurante - spentRestaurante).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -364,7 +364,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-sm text-slate-500">Total filtrado:</span>
-            <span className="text-lg font-bold text-rose-500 font-mono">B/. {totalFiltered.toFixed(2)}</span>
+            <span className="text-lg font-bold text-rose-500 font-mono">B/. {totalFiltered.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           </div>
         </div>
 
@@ -403,7 +403,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                         <span className="text-xs font-medium text-slate-700">{expense.profiles?.first_name || 'Desconocido'}</span>
                       </span>
                     </td>
-                    <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toFixed(2)}</td>
+                    <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td className="py-4 px-3">
                       <div className="flex justify-end items-center gap-1">
                         <button onClick={() => setEditingExpense(expense)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">

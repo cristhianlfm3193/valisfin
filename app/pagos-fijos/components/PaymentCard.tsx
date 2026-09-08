@@ -33,7 +33,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
     onToggleStatus(id, is_paid);
   };
 
-  const formattedAmount = `B/. ${amount.toFixed(2)}`;
+  const formattedAmount = `B/. ${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
   if (payment.isSmartCard) {
     const spent = payment.accumulatedSpent || 0;
@@ -70,7 +70,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
         </div>
         <div className="mt-3 pt-3 border-t border-indigo-100/50 flex flex-col gap-2">
           <div className="flex justify-between items-baseline">
-            <span className="text-xs text-slate-500 font-medium">Gastado: <strong className="text-slate-900">B/. {spent.toFixed(2)}</strong></span>
+            <span className="text-xs text-slate-500 font-medium">Gastado: <strong className="text-slate-900">B/. {spent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
             <span className="text-xs text-slate-500 font-medium">Límite: <strong className="text-slate-900">{formattedAmount}</strong></span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex">

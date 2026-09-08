@@ -134,7 +134,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
               <option value="" disabled>-- Elige una obligación --</option>
               {pendingPayments.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.title} {p.period ? `(${p.period})` : ''} - B/. {p.amount.toFixed(2)}
+                  {p.title} {p.period ? `(${p.period})` : ''} - B/. {p.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </option>
               ))}
             </select>
@@ -144,7 +144,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-medium text-slate-500">Monto total a pagar:</span>
-                <span className="text-sm font-bold text-slate-900">B/. {selectedPayment.amount.toFixed(2)}</span>
+                <span className="text-sm font-bold text-slate-900">B/. {selectedPayment.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
 
               <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
