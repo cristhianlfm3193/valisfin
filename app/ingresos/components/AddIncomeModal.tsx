@@ -41,13 +41,13 @@ export function AddIncomeModal({
     <>
       {/* Modal Overlay Backdrop */}
       <div 
-        className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm transition-opacity z-40 flex items-center justify-center p-3 sm:p-4" 
+        className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm transition-opacity z-[100] flex items-center justify-center p-3 sm:p-4" 
         aria-hidden="true"
         onClick={handleClose}
       >
         {/* Modal Dialog Window */}
         <div 
-          className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-100/80 overflow-hidden z-50 transition-all"
+          className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-100/80 max-h-[90vh] overflow-y-auto custom-scrollbar z-50 transition-all"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Modal Header */}

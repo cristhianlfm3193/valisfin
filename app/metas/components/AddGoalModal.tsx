@@ -55,7 +55,7 @@ export default function AddGoalModal({
 
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-y-auto bg-slate-900/35 backdrop-blur-[4px]">
-          <section aria-modal="true" className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-auto animate-fade-in transition-all" role="dialog">
+          <section aria-modal="true" className="max-h-[90vh] overflow-y-auto custom-scrollbar relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 overflow-hidden my-auto animate-fade-in transition-all" role="dialog">
             <button onClick={handleClose} aria-label="Cerrar ventana emergente" className="absolute top-4 right-4 sm:top-6 sm:right-6 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-500" type="button">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>

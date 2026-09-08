@@ -18,7 +18,7 @@ export function EventDetailsModal({ event, onClose }: EventDetailsModalProps) {
   if (!event || !mounted) return null;
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-PA', { style: 'currency', currency: 'USD' }).format(amount);
+    return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const formatDate = (dateStr: string) => {
@@ -35,7 +35,7 @@ export function EventDetailsModal({ event, onClose }: EventDetailsModalProps) {
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col overflow-hidden"
+          className="max-h-[90vh] overflow-y-auto custom-scrollbar bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0 bg-slate-50">

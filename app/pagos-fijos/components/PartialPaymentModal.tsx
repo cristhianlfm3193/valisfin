@@ -66,7 +66,7 @@ export function PartialPaymentModal({ isOpen, onClose, onSubmit, payment }: Part
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto transform transition-all flex flex-col"
+          className="max-h-[90vh] overflow-y-auto custom-scrollbar bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto transform transition-all flex flex-col"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
