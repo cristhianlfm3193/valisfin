@@ -38,6 +38,13 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
 
   const formattedAmount = `B/. ${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
+  const linkedGoalElement = payment.linked_goal ? (
+    <div className="mt-1.5 mb-1 inline-flex items-center gap-1.5 px-2 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-md text-[10px] font-bold uppercase tracking-wider">
+      Ahorrado: B/. {Number(payment.linked_goal.saved_amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} 
+      {payment.linked_goal.target_amount > 0 ? ` / B/. ${Number(payment.linked_goal.target_amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : ''}
+    </div>
+  ) : null;
+
   if (payment.isSmartCard) {
     const spent = payment.accumulatedSpent || 0;
     const progressPct = amount > 0 ? Math.min(Math.max((spent / amount) * 100, 0), 100) : 0;
@@ -63,6 +70,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
                   </button>
                 )}
               </div>
+              {linkedGoalElement}
             </div>
             <div className="text-right">
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
@@ -143,6 +151,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
                   </button>
                 )}
               </div>
+              {linkedGoalElement}
             </div>
             <div className="text-right">
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">
@@ -188,6 +197,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
                 </button>
               )}
             </div>
+            {linkedGoalElement}
           </div>
           <div className="text-right">
             <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">
