@@ -136,6 +136,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           category: group[0].category,
           is_paid: isPaid,
           responsible: group[0].responsible,
+          profile_id: group[0].profile_id,
           title: group[0].title,
           amount,
           billing_day: group[0].billing_day,
@@ -203,13 +204,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     }
   };
 
-  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string) => {
+  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string) => {
     if (!editingPayment) return;
     const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
     if (!originalRecord) return;
 
-    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title } : p));
-    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title);
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id);
   };
 
   // Metrics calculation based on RAW month-filtered payments
@@ -494,6 +495,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           title={editingPayment.title}
           currentAmount={editingPayment.amount}
           currentBillingDay={editingPayment.billing_day}
+          currentProfileId={editingPayment.profile_id}
           isVariable={!!editingPayment.isSmartCard}
           onSubmit={handleEditSubmit}
         />

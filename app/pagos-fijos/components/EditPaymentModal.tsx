@@ -7,9 +7,10 @@ import { X, Save, Calendar, DollarSign } from 'lucide-react';
 interface EditPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (amount: number, billingDay: number | null, title: string) => Promise<void>;
+  onSubmit: (amount: number, billingDay: number | null, title: string, profile_id?: string) => Promise<void>;
   currentAmount: number;
   currentBillingDay?: number | null;
+  currentProfileId?: string;
   title: string;
   isVariable: boolean;
 }
@@ -20,12 +21,14 @@ export function EditPaymentModal({
   onSubmit,
   currentAmount,
   currentBillingDay,
+  currentProfileId,
   title,
   isVariable
 }: EditPaymentModalProps) {
   const [mounted, setMounted] = useState(false);
   const [amount, setAmount] = useState(currentAmount.toString());
   const [billingDay, setBillingDay] = useState(currentBillingDay ? currentBillingDay.toString() : '');
+  const [profileId, setProfileId] = useState(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
   const [editedTitle, setEditedTitle] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,9 +40,10 @@ export function EditPaymentModal({
     if (isOpen) {
       setAmount(currentAmount.toString());
       setBillingDay(currentBillingDay ? currentBillingDay.toString() : '');
+      setProfileId(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
       setEditedTitle(title);
     }
-  }, [isOpen, currentAmount, currentBillingDay, title]);
+  }, [isOpen, currentAmount, currentBillingDay, currentProfileId, title]);
 
   if (!isOpen) return null;
 
@@ -50,7 +54,7 @@ export function EditPaymentModal({
     try {
       const parsedAmount = parseFloat(amount);
       const parsedDay = billingDay ? parseInt(billingDay, 10) : null;
-      await onSubmit(parsedAmount, parsedDay, editedTitle);
+      await onSubmit(parsedAmount, parsedDay, editedTitle, profileId);
       onClose();
     } catch (err) {
       console.error(err);
@@ -145,6 +149,23 @@ export function EditPaymentModal({
                   />
                 </div>
                 <p className="mt-1.5 text-[10px] text-slate-500">Dejar en blanco si no aplica o es variable.</p>
+              </div>
+
+              {/* Persona */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  Responsable del Pago
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                    <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required checked={profileId === 'edc938dc-9fbc-4573-b007-0bdb95114f95'} onChange={() => setProfileId('edc938dc-9fbc-4573-b007-0bdb95114f95')} />
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
+                  </label>
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
+                    <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required checked={profileId === '7b5c62be-58f1-48d6-b366-0f504c39bdcb'} onChange={() => setProfileId('7b5c62be-58f1-48d6-b366-0f504c39bdcb')} />
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-pink-600">Jennifer</span>
+                  </label>
+                </div>
               </div>
 
             </form>

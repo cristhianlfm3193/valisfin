@@ -6,20 +6,31 @@ import { revalidatePath } from "next/cache";
 export async function getFixedPayments() {
   const supabase = await createClient();
   
-  const { data, error } = await supabase
+  const { data: fixedPayments, error } = await supabase
     .from('fixed_payments')
-    .select('*, profiles:profile_id(first_name)')
+    .select('*')
     .order('created_at', { ascending: true });
 
-  if (error) {
+  if (error || !fixedPayments) {
     console.error('Error fetching fixed payments:', error);
     return [];
   }
 
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, first_name');
+
+  const profilesMap: Record<string, string> = {};
+  if (profiles) {
+    profiles.forEach((p: any) => {
+      profilesMap[p.id] = p.first_name;
+    });
+  }
+
   // Transform data to map profiles.first_name to responsible
-  const mappedData = data.map((item: any) => ({
+  const mappedData = fixedPayments.map((item: any) => ({
     ...item,
-    responsible: item.profiles?.first_name || 'Desconocido'
+    responsible: profilesMap[item.profile_id] || 'Desconocido'
   }));
 
   return mappedData;
@@ -184,19 +195,25 @@ export async function partialPayment(id: string, partialAmount: number) {
   return { success: true };
 }
 
-export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string) {
+export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string, profile_id?: string) {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
+  const payload: any = { 
+    amount,
+    billing_day,
+    title
+  };
+
+  if (profile_id) {
+    payload.profile_id = profile_id;
+  }
+
   const { error } = await supabase
     .from('fixed_payments')
-    .update({ 
-      amount,
-      billing_day,
-      title
-    })
+    .update(payload)
     .eq('id', id);
 
   if (error) {
@@ -217,6 +234,7 @@ export async function createFixedPayment(formData: FormData) {
   const title = formData.get('title') as string;
   const amountStr = formData.get('amount') as string;
   const billingDayStr = formData.get('billing_day') as string;
+  const profile_id = formData.get('profile_id') as string || 'edc938dc-9fbc-4573-b007-0bdb95114f95';
   const amount = parseFloat(amountStr);
   const billing_day = billingDayStr ? parseInt(billingDayStr, 10) : null;
 
@@ -229,7 +247,7 @@ export async function createFixedPayment(formData: FormData) {
     .insert({
       category: 'otros',
       is_paid: false,
-      profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+      profile_id,
       title,
       amount,
       subtitle: 'Obligación',

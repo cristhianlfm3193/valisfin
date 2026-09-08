@@ -7,6 +7,7 @@ export interface FixedPayment {
   category: string;
   is_paid: boolean;
   responsible: string;
+  profile_id?: string;
   title: string;
   amount: number;
   subtitle: string;
