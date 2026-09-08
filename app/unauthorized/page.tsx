@@ -14,10 +14,15 @@ export default function UnauthorizedPage() {
         </div>
         
         <div className="space-y-3">
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Acceso Denegado</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Acceso Pendiente</h1>
           <p className="text-sm text-slate-500 leading-relaxed">
-            Esta cuenta de correo electrónico no está autorizada para ingresar al sistema de ValisFin. Este es un portal privado de uso exclusivo familiar.
+            Tu cuenta ha sido registrada exitosamente, pero <strong>aún no ha sido autorizada</strong> por el administrador.
           </p>
+          <div className="p-3 bg-amber-50 rounded-xl border border-amber-100 mt-2">
+            <p className="text-sm text-amber-700">
+              Tu solicitud de acceso ya fue enviada. Podrás ingresar a la plataforma tan pronto como el administrador apruebe tu entrada desde el panel de control.
+            </p>
+          </div>
         </div>
 
         <div className="pt-4">

@@ -60,6 +60,13 @@ export async function updateSession(request: NextRequest) {
         url.pathname = '/unauthorized'
         return NextResponse.redirect(url)
       }
+    } else {
+      // Si ESTÁ activo pero está atrapado en la página de unauthorized, enviarlo al inicio
+      if (request.nextUrl.pathname.startsWith('/unauthorized')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+      }
     }
 
     // Lógica opcional: Si necesitas proteger rutas específicas según rol
