@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getFixedPayments } from "@/app/actions/fixed_payments";
 import { getDailyExpenses } from "@/app/actions/daily_expenses";
+import { getSavingsGoals } from "@/app/actions/goals";
 import { PagosFijosClient } from "./components/PagosFijosClient";
 import Link from "next/link";
 import { Bell } from "lucide-react";
@@ -14,6 +15,7 @@ export default async function PagosFijosPage() {
 
   const fixedPayments = await getFixedPayments();
   const dailyExpenses = await getDailyExpenses();
+  const savingsGoals = await getSavingsGoals();
 
   return (
     <>
@@ -46,7 +48,7 @@ export default async function PagosFijosPage() {
       </header>
 
       <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto pb-24 lg:pb-12">
-        <PagosFijosClient initialPayments={fixedPayments as any} initialDailyExpenses={dailyExpenses as any} />
+        <PagosFijosClient initialPayments={fixedPayments as any} initialDailyExpenses={dailyExpenses as any} initialGoals={savingsGoals as any} />
       </main>
     </>
   );

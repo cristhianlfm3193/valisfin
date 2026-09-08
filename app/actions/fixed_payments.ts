@@ -27,11 +27,26 @@ export async function getFixedPayments() {
     });
   }
 
+  const { data: goals } = await supabase
+    .from('savings_goals')
+    .select('id, title, saved_amount, target_amount');
+
+  const goalsMap: Record<string, any> = {};
+  if (goals) {
+    goals.forEach((g: any) => {
+      goalsMap[g.id] = g;
+    });
+  }
+
   // Transform data to map profiles.first_name to responsible
-  const mappedData = fixedPayments.map((item: any) => ({
-    ...item,
-    responsible: profilesMap[item.profile_id] || 'Desconocido'
-  }));
+  const mappedData = fixedPayments.map((item: any) => {
+    const goal = item.linked_goal_id ? goalsMap[item.linked_goal_id] : null;
+    return {
+      ...item,
+      responsible: profilesMap[item.profile_id] || 'Desconocido',
+      linked_goal: goal
+    };
+  });
 
   return mappedData;
 }
@@ -41,6 +56,12 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
+
+  // Fetch records to get amount and linked_goal_id
+  const { data: records } = await supabase
+    .from('fixed_payments')
+    .select('id, amount, linked_goal_id')
+    .in('id', ids);
 
   const { error } = await supabase
     .from('fixed_payments')
@@ -52,7 +73,33 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
     throw new Error('Failed to toggle fixed payment');
   }
 
+  // Update savings goals if linked
+  if (records && records.length > 0) {
+    for (const record of records) {
+      if (record.linked_goal_id) {
+        // Fetch current goal amount
+        const { data: goalData } = await supabase
+          .from('savings_goals')
+          .select('saved_amount')
+          .eq('id', record.linked_goal_id)
+          .single();
+          
+        if (goalData) {
+          // If we are marking as paid (!currentStatus == true), we add. If unpaid, we subtract.
+          const modifier = !currentStatus ? record.amount : -record.amount;
+          const newAmount = Math.max(0, (parseFloat(goalData.saved_amount as any) || 0) + modifier);
+          
+          await supabase
+            .from('savings_goals')
+            .update({ saved_amount: newAmount })
+            .eq('id', record.linked_goal_id);
+        }
+      }
+    }
+  }
+
   revalidatePath('/pagos-fijos');
+  revalidatePath('/metas');
 }
 
 export async function addVariablePayment(formData: FormData) {
@@ -191,11 +238,50 @@ export async function partialPayment(id: string, partialAmount: number) {
     return { success: false, error: insertError.message };
   }
 
+  // 4. Update savings goals if linked
+  if (currentRecord.linked_goal_id) {
+    const { data: goalData } = await supabase
+      .from('savings_goals')
+      .select('saved_amount')
+      .eq('id', currentRecord.linked_goal_id)
+      .single();
+      
+    if (goalData) {
+      const newAmount = Math.max(0, (parseFloat(goalData.saved_amount as any) || 0) + partialAmount);
+      
+      await supabase
+        .from('savings_goals')
+        .update({ saved_amount: newAmount })
+        .eq('id', currentRecord.linked_goal_id);
+    }
+  }
+
   revalidatePath('/pagos-fijos');
+  revalidatePath('/metas');
   return { success: true };
 }
 
-export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string, profile_id?: string) {
+export async function withdrawFromGoal(linkedGoalId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
+  const { error } = await supabase
+    .from('savings_goals')
+    .update({ saved_amount: 0 })
+    .eq('id', linkedGoalId);
+
+  if (error) {
+    console.error('Error withdrawing from goal:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/pagos-fijos');
+  revalidatePath('/metas');
+  return { success: true };
+}
+
+export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -209,6 +295,10 @@ export async function updateFixedPaymentSettings(id: string, amount: number, bil
 
   if (profile_id) {
     payload.profile_id = profile_id;
+  }
+  
+  if (linked_goal_id !== undefined) {
+    payload.linked_goal_id = linked_goal_id;
   }
 
   const { error } = await supabase
@@ -235,6 +325,7 @@ export async function createFixedPayment(formData: FormData) {
   const amountStr = formData.get('amount') as string;
   const billingDayStr = formData.get('billing_day') as string;
   const profile_id = formData.get('profile_id') as string || 'edc938dc-9fbc-4573-b007-0bdb95114f95';
+  const linked_goal_id = formData.get('linked_goal_id') as string;
   const amount = parseFloat(amountStr);
   const billing_day = billingDayStr ? parseInt(billingDayStr, 10) : null;
 
@@ -248,6 +339,7 @@ export async function createFixedPayment(formData: FormData) {
       category: 'otros',
       is_paid: false,
       profile_id,
+      linked_goal_id: linked_goal_id || null,
       title,
       amount,
       subtitle: 'Obligación',
@@ -356,6 +448,7 @@ export async function generateMonthObligations(targetMonth: string, previousMont
         category: record.category,
         is_paid: false,
         profile_id: record.profile_id,
+        linked_goal_id: record.linked_goal_id,
         title: record.title,
         amount: record.amount,
         subtitle: record.subtitle,

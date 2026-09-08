@@ -8,9 +8,10 @@ import { createFixedPayment } from '@/app/actions/fixed_payments';
 interface AddFixedPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  goals?: any[];
 }
 
-export function AddFixedPaymentModal({ isOpen, onClose }: AddFixedPaymentModalProps) {
+export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPaymentModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -136,6 +137,25 @@ export function AddFixedPaymentModal({ isOpen, onClose }: AddFixedPaymentModalPr
                   </label>
                 </div>
               </div>
+
+              {/* Vincular Meta */}
+              {goals.length > 0 && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Vincular a Meta de Ahorro (Opcional)
+                  </label>
+                  <select
+                    name="linked_goal_id"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 block px-4 py-3 outline-none transition-all appearance-none"
+                    defaultValue=""
+                  >
+                    <option value="">-- Ninguna --</option>
+                    {goals.map(g => (
+                      <option key={g.id} value={g.id}>{g.title}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
             </form>
           </div>

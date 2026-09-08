@@ -16,6 +16,8 @@ export interface FixedPayment {
   accumulatedSpent?: number;
   billing_day?: number | null;
   created_at?: string;
+  linked_goal_id?: string | null;
+  linked_goal?: { id: string; saved_amount: number; target_amount: number } | null;
 }
 
 interface PaymentCardProps {

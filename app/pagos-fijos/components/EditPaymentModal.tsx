@@ -7,12 +7,14 @@ import { X, Save, Calendar, DollarSign } from 'lucide-react';
 interface EditPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (amount: number, billingDay: number | null, title: string, profile_id?: string) => Promise<void>;
+  onSubmit: (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) => Promise<void>;
   currentAmount: number;
   currentBillingDay?: number | null;
   currentProfileId?: string;
+  currentLinkedGoalId?: string | null;
   title: string;
   isVariable: boolean;
+  goals?: any[];
 }
 
 export function EditPaymentModal({
@@ -22,15 +24,19 @@ export function EditPaymentModal({
   currentAmount,
   currentBillingDay,
   currentProfileId,
+  currentLinkedGoalId,
   title,
-  isVariable
+  isVariable,
+  goals = []
 }: EditPaymentModalProps) {
   const [mounted, setMounted] = useState(false);
   const [amount, setAmount] = useState(currentAmount.toString());
   const [billingDay, setBillingDay] = useState(currentBillingDay ? currentBillingDay.toString() : '');
   const [profileId, setProfileId] = useState(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
+  const [linkedGoalId, setLinkedGoalId] = useState(currentLinkedGoalId || '');
   const [editedTitle, setEditedTitle] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -41,9 +47,10 @@ export function EditPaymentModal({
       setAmount(currentAmount.toString());
       setBillingDay(currentBillingDay ? currentBillingDay.toString() : '');
       setProfileId(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
+      setLinkedGoalId(currentLinkedGoalId || '');
       setEditedTitle(title);
     }
-  }, [isOpen, currentAmount, currentBillingDay, currentProfileId, title]);
+  }, [isOpen, currentAmount, currentBillingDay, currentProfileId, currentLinkedGoalId, title]);
 
   if (!isOpen) return null;
 
@@ -54,7 +61,7 @@ export function EditPaymentModal({
     try {
       const parsedAmount = parseFloat(amount);
       const parsedDay = billingDay ? parseInt(billingDay, 10) : null;
-      await onSubmit(parsedAmount, parsedDay, editedTitle, profileId);
+      await onSubmit(parsedAmount, parsedDay, editedTitle, profileId, linkedGoalId || null);
       onClose();
     } catch (err) {
       console.error(err);
@@ -168,31 +175,78 @@ export function EditPaymentModal({
                 </div>
               </div>
 
+              {/* Vincular Meta */}
+              {goals.length > 0 && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Vincular a Meta de Ahorro
+                  </label>
+                  <select
+                    value={linkedGoalId}
+                    onChange={e => setLinkedGoalId(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 block px-4 py-3 outline-none transition-all appearance-none"
+                  >
+                    <option value="">-- Ninguna --</option>
+                    {goals.map(g => (
+                      <option key={g.id} value={g.id}>{g.title}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
             </form>
           </div>
 
           {/* Footer */}
-          <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 rounded-b-3xl shrink-0">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              form="edit-payment-form"
-              disabled={isLoading || !amount}
-              className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-70"
-            >
-              {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Save className="w-4 h-4" />
+          <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3 bg-slate-50 rounded-b-3xl shrink-0">
+            <div>
+              {linkedGoalId && (
+                <button
+                  type="button"
+                  disabled={isWithdrawing}
+                  onClick={async () => {
+                    if (window.confirm('¿Seguro que deseas retirar todo lo ahorrado en esta meta? El saldo volverá a $0.')) {
+                      setIsWithdrawing(true);
+                      const { withdrawFromGoal } = await import('@/app/actions/fixed_payments');
+                      const res = await withdrawFromGoal(linkedGoalId);
+                      setIsWithdrawing(false);
+                      if (res.success) {
+                        alert('Ahorro retirado exitosamente.');
+                        onClose();
+                      } else {
+                        alert('Error al retirar ahorro: ' + res.error);
+                      }
+                    }
+                  }}
+                  className="px-4 py-2 rounded-xl text-sm font-semibold text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors"
+                >
+                  {isWithdrawing ? 'Procesando...' : 'Retirar Ahorro'}
+                </button>
               )}
-              <span>Guardar</span>
-            </button>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                form="edit-payment-form"
+                disabled={isLoading || !amount}
+                className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-70"
+              >
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                <span>Guardar</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

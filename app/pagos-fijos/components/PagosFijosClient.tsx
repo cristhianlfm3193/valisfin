@@ -18,9 +18,10 @@ import { RefreshCw } from 'lucide-react';
 interface PagosFijosClientProps {
   initialPayments: FixedPayment[];
   initialDailyExpenses?: DailyExpense[];
+  initialGoals?: any[];
 }
 
-export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }: PagosFijosClientProps) {
+export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], initialGoals = [] }: PagosFijosClientProps) {
   const [payments, setPayments] = useState<FixedPayment[]>(initialPayments);
   
   // Partial payment state
@@ -137,6 +138,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           is_paid: isPaid,
           responsible: group[0].responsible,
           profile_id: group[0].profile_id,
+          linked_goal_id: group[0].linked_goal_id,
+          linked_goal: group[0].linked_goal,
           title: group[0].title,
           amount,
           billing_day: group[0].billing_day,
@@ -204,13 +207,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     }
   };
 
-  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string) => {
+  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) => {
     if (!editingPayment) return;
     const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
     if (!originalRecord) return;
 
-    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id } : p));
-    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id);
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id, linked_goal_id: linked_goal_id } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id);
   };
 
   // Metrics calculation based on RAW month-filtered payments
@@ -496,14 +499,17 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
           currentAmount={editingPayment.amount}
           currentBillingDay={editingPayment.billing_day}
           currentProfileId={editingPayment.profile_id}
+          currentLinkedGoalId={editingPayment.linked_goal_id}
           isVariable={!!editingPayment.isSmartCard}
           onSubmit={handleEditSubmit}
+          goals={initialGoals}
         />
       )}
 
       <AddFixedPaymentModal 
         isOpen={isAddModalOpen} 
         onClose={() => setIsAddModalOpen(false)} 
+        goals={initialGoals}
       />
 
       <CreditCardHistoryModal
