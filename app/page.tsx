@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { MobileMenuDrawer } from "./components/MobileMenuDrawer";
 import { getDashboardData } from "./actions/dashboard";
 import { getFixedPayments } from "./actions/fixed_payments";
 import { DashboardClient } from "./components/DashboardClient";
@@ -29,7 +28,6 @@ export default async function Home() {
         data-purpose="top-header"
       >
         <div className="flex items-center gap-3">
-          <MobileMenuDrawer avatarUrl={avatarUrl} fullName={fullName} initial={initial} />
           <div className="flex items-center gap-2">
             <Link href="/">
               <img src="/logo.svg" alt="ValisFin Logo" className="h-10 sm:h-12 w-auto lg:hidden drop-shadow-sm hover:opacity-90 transition-opacity" />

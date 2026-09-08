@@ -44,7 +44,7 @@ export function DashboardClient({
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-PA', { style: 'currency', currency: 'USD' }).format(amount);
+    return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const closeModals = () => setActiveModal(null);

@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { MobileMenuDrawer } from "../components/MobileMenuDrawer";
 import { getFixedPayments } from "@/app/actions/fixed_payments";
 import { getDailyExpenses } from "@/app/actions/daily_expenses";
 import { PagosFijosClient } from "./components/PagosFijosClient";
@@ -20,7 +19,6 @@ export default async function PagosFijosPage() {
     <>
       <header className="bg-white/80 backdrop-blur border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <MobileMenuDrawer avatarUrl={avatarUrl} fullName={fullName} initial={initial} />
           <div className="flex items-center gap-2">
             <Link href="/">
               <img src="/logo.svg" alt="ValisFin Logo" className="h-10 sm:h-12 w-auto lg:hidden drop-shadow-sm hover:opacity-90 transition-opacity" />
