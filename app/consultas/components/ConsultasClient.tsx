@@ -14,6 +14,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
   const [responsibleFilter, setResponsibleFilter] = useState('Todos');
   const [dateFilter, setDateFilter] = useState('Todas');
   const [categoryFilter, setCategoryFilter] = useState('Todas');
+  const [statusFilter, setStatusFilter] = useState('Todos');
 
   // Extract unique filter options
   const responsibles = useMemo(() => {
@@ -59,6 +60,9 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
     if (categoryFilter !== 'Todas') {
       result = result.filter(t => t.category === categoryFilter);
     }
+    if (statusFilter !== 'Todos') {
+      result = result.filter(t => t.status === (statusFilter === 'Completado' ? 'completed' : 'pending'));
+    }
     if (searchTerm.trim() !== '') {
       const lower = searchTerm.toLowerCase();
       result = result.filter(t => 
@@ -82,7 +86,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       totalIngresos: ingresos,
       totalSalidas: salidas
     };
-  }, [initialTransactions, searchTerm, activeModule, responsibleFilter, dateFilter, categoryFilter]);
+  }, [initialTransactions, searchTerm, activeModule, responsibleFilter, dateFilter, categoryFilter, statusFilter]);
 
   const formatCurrency = (val: number) => {
     return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -94,6 +98,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
     setResponsibleFilter('Todos');
     setDateFilter('Todas');
     setCategoryFilter('Todas');
+    setStatusFilter('Todos');
   };
 
   const getModuleStyle = (mod: string) => {
@@ -232,6 +237,19 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
             >
               <option value="Todas">Todas las Categorías</option>
               {categories.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Estatus</label>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+            >
+              <option value="Todos">Todos los Estatus</option>
+              <option value="Completado">Completado / Recibido</option>
+              <option value="Pendiente">Pendiente</option>
             </select>
           </div>
 

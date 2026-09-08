@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { DesktopSidebar } from "./components/DesktopSidebar";
+import { MobileNavigation } from "./components/MobileNavigation";
 import { AssistantWidget } from "./components/AssistantWidget";
 import { createClient } from "@/lib/supabase/server";
 
@@ -45,11 +46,12 @@ export default async function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
       </head>
-      <body suppressHydrationWarning className="h-full antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row pb-6 lg:pb-0 custom-scrollbar">
+      <body suppressHydrationWarning className="h-full antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row pb-[88px] lg:pb-0 custom-scrollbar">
         {user && <DesktopSidebar user={user} profile={profile} />}
         <div className="flex-1 flex flex-col min-w-0">
           {children}
         </div>
+        {user && <MobileNavigation user={user} profile={profile} />}
         {user && <AssistantWidget />}
       </body>
     </html>

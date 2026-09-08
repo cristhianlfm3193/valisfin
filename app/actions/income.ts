@@ -34,6 +34,8 @@ export async function addIncome(formData: FormData) {
   }
 
   revalidatePath('/ingresos');
+  revalidatePath('/consultas');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -62,6 +64,8 @@ export async function toggleIncomeStatus(id: string, currentStatus: boolean) {
   }
 
   revalidatePath('/ingresos');
+  revalidatePath('/consultas');
+  revalidatePath('/', 'layout');
 }
 
 export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: number) {
@@ -156,6 +160,8 @@ export async function deleteIncome(id: string) {
     return { success: false, error: error.message };
   }
   revalidatePath('/ingresos');
+  revalidatePath('/consultas');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
 
@@ -188,5 +194,7 @@ export async function editIncome(id: string, formData: FormData) {
   }
 
   revalidatePath('/ingresos');
+  revalidatePath('/consultas');
+  revalidatePath('/', 'layout');
   return { success: true };
 }
