@@ -98,7 +98,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
         }
       }
     });
-    return { superSpent: superAcc, gasSpent: gasAcc, ccSpent: ccDebt };
+    return { superSpent: superAcc, gasSpent: gasAcc, luzSpent: luzAcc, ccSpent: ccDebt };
   }, [initialDailyExpenses, payments, selectedMonth]);
 
   // Group payments by title (using only the month-filtered ones)

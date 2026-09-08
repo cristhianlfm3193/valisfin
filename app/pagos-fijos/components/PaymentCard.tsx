@@ -14,6 +14,7 @@ export interface FixedPayment {
   isSmartCard?: boolean;
   accumulatedSpent?: number;
   billing_day?: number | null;
+  created_at?: string;
 }
 
 interface PaymentCardProps {
