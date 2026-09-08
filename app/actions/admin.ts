@@ -116,6 +116,42 @@ export async function updateUserRole(userId: string, newRole: string) {
   return { success: true };
 }
 
+export async function updateUserAccess(userId: string, isActive: boolean) {
+  const supabase = await createClient();
+  
+  // Verify admin role
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'administrador') {
+    throw new Error('Unauthorized: Requires admin role');
+  }
+
+  // Prevent admin from blocking themselves
+  if (user.id === userId && !isActive) {
+    return { success: false, error: 'No puedes denegarte el acceso a ti mismo.' };
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ is_active: isActive })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user access:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/admin');
+  return { success: true };
+}
+
 // --- Audit Logs ---
 
 export async function getAuditLogs() {

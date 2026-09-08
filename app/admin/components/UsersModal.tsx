@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { updateUserRole } from '@/app/actions/admin';
+import { updateUserRole, updateUserAccess } from '@/app/actions/admin';
 import { X, ShieldAlert, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface UsersModalProps {
@@ -13,6 +13,7 @@ interface UsersModalProps {
 
 export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [accessLoadingId, setAccessLoadingId] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
@@ -33,6 +34,23 @@ export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps)
       setError(err.message);
     } finally {
       setLoadingId(null);
+    }
+  };
+
+  const handleToggleAccess = async (userId: string, currentIsActive: boolean) => {
+    setAccessLoadingId(userId);
+    setError('');
+    try {
+      const res = await updateUserAccess(userId, !currentIsActive);
+      if (res.success) {
+        onSaved();
+      } else {
+        setError(res.error || 'Error al cambiar el acceso');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setAccessLoadingId(null);
     }
   };
 
@@ -96,9 +114,13 @@ export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps)
                       {user.role}
                     </span>
                     
-                    <button
-                      type="button"
-                      onClick={() => handleToggleRole(user.id, user.role)}
+                    <div className="flex flex-col gap-3">
+                      {/* Role Toggle */}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase">Admin</span>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleRole(user.id, user.role)}
                       disabled={isLoading}
                       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors duration-200 ease-in-out disabled:opacity-50 ${
                         isAdmin ? 'bg-amber-500' : 'bg-slate-200'
@@ -113,9 +135,36 @@ export function UsersModal({ isOpen, onClose, users, onSaved }: UsersModalProps)
                           isAdmin ? 'translate-x-5' : 'translate-x-0'
                         }`}
                       >
-                        {isLoading && <Loader2 className="w-3 h-3 text-slate-400 animate-spin" />}
-                      </span>
-                    </button>
+                          {isLoading && <Loader2 className="w-3 h-3 text-slate-400 animate-spin" />}
+                        </span>
+                      </button>
+                    </div>
+                    
+                    {/* Access Toggle */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">Acceso</span>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleAccess(user.id, user.is_active)}
+                        disabled={accessLoadingId === user.id}
+                        title={user.is_active ? "Denegar acceso a la app" : "Permitir acceso a la app"}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200 ease-in-out disabled:opacity-50 ${
+                          user.is_active ? 'bg-emerald-500' : 'bg-red-400'
+                        }`}
+                        role="switch"
+                        aria-checked={user.is_active}
+                      >
+                        <span className="sr-only">Toggle App Access</span>
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute left-0 inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
+                            user.is_active ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        >
+                          {accessLoadingId === user.id && <Loader2 className="w-3 h-3 text-slate-400 animate-spin" />}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
