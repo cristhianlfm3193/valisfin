@@ -217,20 +217,45 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     let pCount = 0;
     let pendCount = 0;
 
+    const processedSmartCards = new Set<string>();
+
     monthFilteredPayments.forEach((payment) => {
       const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Uso Tarjeta de Credito';
       
       if (isSmart) {
-        const spent = payment.title === 'Supermercado' ? superSpent : (payment.title === 'Gasolina' ? gasSpent : (payment.title === 'Uso Tarjeta de Credito' ? ccSpent : 0));
-        let connectedLimit = payment.amount;
+        if (!processedSmartCards.has(payment.title)) {
+          processedSmartCards.add(payment.title);
+          
+          if (payment.title === 'Uso Tarjeta de Credito') {
+            // Find how much was actually paid this month towards the card
+            const paidThisMonth = monthFilteredPayments
+              .filter(p => p.title === 'Uso Tarjeta de Credito' && p.is_paid)
+              .reduce((sum, p) => sum + p.amount, 0);
+            
+            // ccSpent represents the total outstanding debt
+            const currentDebt = ccSpent;
+            
+            tPaid += paidThisMonth; // ONLY add actual payments made to the card
+            tPending += currentDebt > 0 ? currentDebt : 0; // Add outstanding debt to 'Por Pagar'
+            
+            if (currentDebt <= 0) pCount++;
+            else pendCount++;
+          } else {
+            // Supermercado / Gasolina
+            const spent = payment.title === 'Supermercado' ? superSpent : gasSpent;
+            // Limit is the amount from the first unpaid record (or the first record if all paid)
+            const limitRecord = monthFilteredPayments.find(p => p.title === payment.title && !p.is_paid) || monthFilteredPayments.find(p => p.title === payment.title) || payment;
+            const connectedLimit = limitRecord.amount;
 
-        const pending = Math.max(connectedLimit - spent, 0);
-        
-        tPaid += spent;
-        tPending += pending;
-        
-        if (spent >= connectedLimit) pCount++;
-        else pendCount++;
+            const pending = Math.max(connectedLimit - spent, 0);
+            
+            tPaid += spent;
+            tPending += pending;
+            
+            if (spent >= connectedLimit) pCount++;
+            else pendCount++;
+          }
+        }
       } else {
         if (payment.is_paid) {
           tPaid += payment.amount;
