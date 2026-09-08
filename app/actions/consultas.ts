@@ -17,6 +17,9 @@ export interface UnifiedTransaction {
 export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
   const supabase = await createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   // Fetch all parallel to save time
   const [
     incomesRes,

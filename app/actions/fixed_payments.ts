@@ -22,6 +22,9 @@ export async function getFixedPayments() {
 export async function togglePaymentStatus(ids: string[], currentStatus: boolean) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase
     .from('fixed_payments')
     .update({ is_paid: !currentStatus })
@@ -38,6 +41,9 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
 export async function addVariablePayment(formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const title = formData.get('title') as string;
   const period = formData.get('period') as string;
   const amountStr = formData.get('amount') as string;
@@ -114,6 +120,9 @@ export async function addVariablePayment(formData: FormData) {
 export async function partialPayment(id: string, partialAmount: number) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   // 1. Get the current record
   const { data: currentRecord, error: fetchError } = await supabase
     .from('fixed_payments')
@@ -172,6 +181,9 @@ export async function partialPayment(id: string, partialAmount: number) {
 export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase
     .from('fixed_payments')
     .update({ 
@@ -193,6 +205,9 @@ export async function updateFixedPaymentSettings(id: string, amount: number, bil
 export async function createFixedPayment(formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const title = formData.get('title') as string;
   const amountStr = formData.get('amount') as string;
   const billingDayStr = formData.get('billing_day') as string;
@@ -229,6 +244,9 @@ export async function createFixedPayment(formData: FormData) {
 export async function deleteFixedPayment(id: string) {
   const supabase = await createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase
     .from('fixed_payments')
     .delete()
@@ -247,6 +265,9 @@ export async function deleteFixedPayment(id: string) {
 export async function updateFixedPaymentAmount(id: string, newAmount: number) {
   const supabase = await createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase
     .from('fixed_payments')
     .update({ amount: newAmount })
@@ -264,6 +285,9 @@ export async function updateFixedPaymentAmount(id: string, newAmount: number) {
 
 export async function generateMonthObligations(targetMonth: string, previousMonth: string) {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
 
   // 1. Get all unique active obligations from previous month
   const { data: previousRecords, error: prevError } = await supabase

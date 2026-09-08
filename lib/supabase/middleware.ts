@@ -71,11 +71,11 @@ export async function updateSession(request: NextRequest) {
 
     // Lógica opcional: Si necesitas proteger rutas específicas según rol
     // Por ejemplo, si tienes una ruta /admin y el rol no es administrador:
-    // if (request.nextUrl.pathname.startsWith('/admin') && profile?.role !== 'administrador') {
-    //   const url = request.nextUrl.clone()
-    //   url.pathname = '/' 
-    //   return NextResponse.redirect(url)
-    // }
+    if (request.nextUrl.pathname.startsWith('/admin') && profile?.role !== 'administrador') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/' 
+      return NextResponse.redirect(url)
+    }
   }
 
   // Si hay usuario y está en la página de login, redirigir al inicio

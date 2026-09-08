@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache";
 export async function addIncome(formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const profile_id = formData.get('profile_id') as string;
   const category = formData.get('income-category') as string;
   const period = formData.get('income-period') as string;
@@ -42,6 +45,9 @@ export async function addIncome(formData: FormData) {
 export async function toggleIncomeStatus(id: string, currentStatus: boolean) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const updates: any = { is_received: !currentStatus };
   
   // If we are confirming the income, update its date to today
@@ -71,6 +77,9 @@ export async function toggleIncomeStatus(id: string, currentStatus: boolean) {
 export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: number) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth(); // 0-11
@@ -154,6 +163,10 @@ export async function generateMonthlyIncomes(targetYear?: number, targetMonth?: 
 
 export async function deleteIncome(id: string) {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase.from('incomes').delete().eq('id', id);
   if (error) {
     console.error('Error deleting income:', error);
@@ -167,6 +180,10 @@ export async function deleteIncome(id: string) {
 
 export async function editIncome(id: string, formData: FormData) {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const profile_id = formData.get('profile_id') as string;
   const category = formData.get('income-category') as string;
   const period = formData.get('income-period') as string;

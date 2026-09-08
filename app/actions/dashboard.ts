@@ -48,6 +48,10 @@ export interface DashboardVehicleData {
 
 export async function getDashboardData() {
   const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const d = new Date();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const currentMonthPeriod = `${d.getFullYear()}-${m}`;

@@ -15,6 +15,10 @@ export interface CalendarEvent {
 
 export async function getCalendarEvents(year: number, month: number): Promise<CalendarEvent[]> {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const events: CalendarEvent[] = [];
   
   // To filter by month, we'll fetch all and filter in JS for simplicity (since we have derived dates like in fixed_payments), 
@@ -195,6 +199,9 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
 export async function addReminder(prevState: any, formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const title = formData.get('title') as string;
   const date = formData.get('date') as string;
   const time = formData.get('time') as string || null;

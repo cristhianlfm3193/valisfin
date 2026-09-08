@@ -24,7 +24,7 @@ export async function getDailyExpenses(): Promise<DailyExpense[]> {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching daily expenses:', error);
+    console.error('Error fetching daily expenses:', JSON.stringify(error, null, 2), error);
     return [];
   }
 
@@ -34,6 +34,9 @@ export async function getDailyExpenses(): Promise<DailyExpense[]> {
 export async function addDailyExpense(formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const date = formData.get('date') as string;
   const category = formData.get('category') as string;
   const detail = formData.get('detail') as string;
@@ -69,6 +72,10 @@ export async function addDailyExpense(formData: FormData) {
 
 export async function deleteDailyExpense(id: string) {
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const { error } = await supabase.from('daily_expenses').delete().eq('id', id);
   if (error) {
     console.error('Error deleting daily expense:', error);
@@ -81,6 +88,9 @@ export async function deleteDailyExpense(id: string) {
 export async function updateDailyExpense(id: string, formData: FormData) {
   const supabase = await createClient();
   
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
   const date = formData.get('date') as string;
   const category = formData.get('category') as string;
   const detail = formData.get('detail') as string;
