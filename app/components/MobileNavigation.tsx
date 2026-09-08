@@ -50,7 +50,7 @@ export function MobileNavigation({ user, profile }: { user?: User, profile?: any
 
   const bottomNavItems = [
     { href: "/", label: "Inicio", icon: Home },
-    { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
+    { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
     { href: "/gastos-diarios", label: "Gastos", icon: Wallet },
   ];
 
