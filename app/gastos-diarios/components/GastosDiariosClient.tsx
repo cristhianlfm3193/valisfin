@@ -343,7 +343,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 text-nowrap scrollbar-none w-full min-w-0">
           <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mr-1 shrink-0">Categoría:</span>
-          {['all', 'Alimentación', 'Supermercado', 'Restaurante', 'Ocio', 'Tecnología', 'Gasolina', 'Transporte', 'Salud', 'Otros'].map(cat => (
+          {['all', 'Alimentación', 'Supermercado', 'Restaurante', 'Ocio', 'Tecnología', 'Gasolina', 'Transporte', 'Salud', 'Gastos Valeria (Hija)', 'Recargas / Telefonía', 'Otros'].map(cat => (
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}

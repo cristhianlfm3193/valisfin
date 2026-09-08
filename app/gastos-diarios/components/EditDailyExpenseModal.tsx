@@ -108,6 +108,8 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
                   <option value="Gasolina">Gasolina</option>
                   <option value="Transporte">Transporte</option>
                   <option value="Salud">Salud</option>
+                  <option value="Gastos Valeria (Hija)">Gastos Valeria (Hija)</option>
+                  <option value="Recargas / Telefonía">Recargas / Telefonía</option>
                   <option value="Intereses de Tarjeta de Crédito">Intereses de Tarjeta de Crédito</option>
                   <option value="Otros">Otros</option>
                 </select>

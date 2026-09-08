@@ -90,7 +90,9 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [] }:
     const ccDebt = totalCcSpent - totalCcPaid;
 
     initialDailyExpenses.forEach(e => {
-      if (e.date.startsWith(selectedMonth)) {
+      // Si el gasto se hizo con tarjeta de crédito, NO se debe descontar del presupuesto variable en efectivo
+      // porque se contabiliza como deuda en "Uso Tarjeta de Credito".
+      if (e.date.startsWith(selectedMonth) && !e.is_credit_card) {
         if (e.category === 'Supermercado' || e.category === 'Super Reposición' || e.category === 'Compras Super y tiendas') {
           superAcc += e.amount;
         } else if (e.category === 'Gasolina' || e.category === 'Transporte') {
