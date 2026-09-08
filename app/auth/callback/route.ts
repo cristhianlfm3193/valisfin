@@ -11,7 +11,18 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+    
     if (!error) {
+      // Validar correos permitidos inmediatamente
+      const { data: { session } } = await supabase.auth.getSession()
+      const allowedEmails = ['cristhianf3193@gmail.com', 'jenniferyohana.yco@gmail.com', 'cristhianlf3193@gmail.com']
+      
+      if (session?.user?.email && !allowedEmails.includes(session.user.email)) {
+        // Si no está permitido, cerramos la sesión de inmediato y lo mandamos a la pantalla de denegado
+        await supabase.auth.signOut()
+        return NextResponse.redirect(`${origin}/unauthorized`)
+      }
+
       const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development'
       if (isLocalEnv) {
