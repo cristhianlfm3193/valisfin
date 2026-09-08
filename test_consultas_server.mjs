@@ -11,6 +11,13 @@ envFile.split('\n').forEach(line => {
 });
 
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-const { data, error } = await supabase.from('fixed_payments').select('id, title, responsible, profile_id').limit(10);
-console.log('Fixed Payments:', data);
-console.log('Error:', error);
+const { data: profiles, error } = await supabase.from('profiles').select('*');
+console.log('Profiles via anon:', profiles);
+
+const profilesMap = {};
+if (profiles) {
+  profiles.forEach(p => {
+    profilesMap[p.id] = p.first_name || 'Desconocido';
+  });
+}
+console.log('Profiles Map:', profilesMap);

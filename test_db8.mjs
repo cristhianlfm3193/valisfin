@@ -11,6 +11,7 @@ envFile.split('\n').forEach(line => {
 });
 
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-const { data, error } = await supabase.from('fixed_payments').select('id, title, responsible, profile_id').limit(10);
-console.log('Fixed Payments:', data);
-console.log('Error:', error);
+const { data, error } = await supabase.from('daily_expenses').select('id, profile_id').is('profile_id', null);
+console.log('Daily Expenses with null profile_id:', data?.length);
+const { data: data2, error: error2 } = await supabase.from('fixed_payments').select('id, profile_id').is('profile_id', null);
+console.log('Fixed Payments with null profile_id:', data2?.length);

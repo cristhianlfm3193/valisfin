@@ -10,7 +10,13 @@ envFile.split('\n').forEach(line => {
   }
 });
 
+// use anon key, but we need to sign in to see if we can read profiles
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-const { data, error } = await supabase.from('fixed_payments').select('id, title, responsible, profile_id').limit(10);
-console.log('Fixed Payments:', data);
-console.log('Error:', error);
+
+// Login as Cristhian
+const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+  email: 'cristhianf3193@gmail.com',
+  password: 'password123' // Just guessing if it's a test environment. If not, it will fail.
+});
+console.log('Auth:', authError);
+

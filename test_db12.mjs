@@ -11,6 +11,6 @@ envFile.split('\n').forEach(line => {
 });
 
 const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-const { data, error } = await supabase.from('fixed_payments').select('id, title, responsible, profile_id').limit(10);
-console.log('Fixed Payments:', data);
-console.log('Error:', error);
+const { data, error } = await supabase.from('profiles').select('id, first_name, last_name');
+console.log('Select with columns:', data, error);
+

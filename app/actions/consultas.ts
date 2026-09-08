@@ -38,11 +38,13 @@ export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
     supabase.from('home_tasks').select('*'),
     supabase.from('maintenance').select('*'),
     supabase.from('savings_goals').select('*'),
-    supabase.from('profiles').select('id, first_name, last_name'),
+    supabase.from('profiles').select('id, first_name'),
     supabase.from('vehicles').select('id, owner_id')
   ]);
 
   const profilesMap: Record<string, string> = {};
+  console.log('Consultas -> Profiles Data:', profilesRes.data);
+  console.log('Consultas -> Profiles Error:', profilesRes.error);
   if (profilesRes.data) {
     profilesRes.data.forEach(p => {
       profilesMap[p.id] = p.first_name || 'Desconocido';
