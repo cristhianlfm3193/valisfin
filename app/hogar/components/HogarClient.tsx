@@ -160,7 +160,7 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
 
       <ACTracker acData={acData} />
 
-      <main className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 pb-24 md:pb-6 flex-1">
+      <main className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 pb-24 lg:pb-6 flex-1">
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col">
           <div className="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-2.5">

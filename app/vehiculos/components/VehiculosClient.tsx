@@ -111,7 +111,7 @@ export default function VehiculosClient({
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-      <main className="max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-6">
+      <main className="max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-6 pb-24 lg:pb-12">
         
         {/* CABECERA SUPERIOR */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">

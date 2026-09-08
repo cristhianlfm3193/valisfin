@@ -45,7 +45,7 @@ export default async function PagosFijosPage() {
         </div>
       </header>
 
-      <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto pb-24 md:pb-12">
+      <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto pb-24 lg:pb-12">
         <PagosFijosClient initialPayments={fixedPayments as any} initialDailyExpenses={dailyExpenses as any} />
       </main>
     </>
