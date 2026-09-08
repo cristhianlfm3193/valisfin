@@ -391,7 +391,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                     <td className="py-4 px-3 text-slate-500 font-mono">{formattedDate}</td>
                     <td className="py-4 px-3">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
-                        {expense.category}
+                        {expense.category}{expense.sub_category ? ` - ${expense.sub_category}` : ''}
                       </span>
                     </td>
                     <td className="py-4 px-3 font-medium text-slate-900 max-w-xs truncate">{expense.detail}</td>

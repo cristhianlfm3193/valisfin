@@ -12,9 +12,11 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
   const [searchTerm, setSearchTerm] = useState('');
   const [activeModule, setActiveModule] = useState('Todos');
   const [responsibleFilter, setResponsibleFilter] = useState('Todos');
-  const [dateFilter, setDateFilter] = useState('Todas');
+  const [startDateFilter, setStartDateFilter] = useState('');
+  const [endDateFilter, setEndDateFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Todas');
   const [statusFilter, setStatusFilter] = useState('Todos');
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState('Todos');
 
   // Extract unique filter options
   const responsibles = useMemo(() => {
@@ -51,17 +53,24 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
     if (responsibleFilter !== 'Todos') {
       result = result.filter(t => t.responsibleName === responsibleFilter);
     }
-    if (dateFilter !== 'Todas') {
-      result = result.filter(t => {
-        const d = new Date(t.date);
-        return !isNaN(d.getTime()) && d.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) === dateFilter;
-      });
+    if (startDateFilter) {
+      result = result.filter(t => new Date(t.date) >= new Date(startDateFilter));
+    }
+    if (endDateFilter) {
+      result = result.filter(t => new Date(t.date) <= new Date(endDateFilter));
     }
     if (categoryFilter !== 'Todas') {
       result = result.filter(t => t.category === categoryFilter);
     }
     if (statusFilter !== 'Todos') {
       result = result.filter(t => t.status === (statusFilter === 'Completado' ? 'completed' : 'pending'));
+    }
+    if (paymentMethodFilter !== 'Todos') {
+      if (paymentMethodFilter === 'Tarjeta de Crédito') {
+        result = result.filter(t => t.isCreditCard === true);
+      } else if (paymentMethodFilter === 'Efectivo/Débito') {
+        result = result.filter(t => !t.isCreditCard);
+      }
     }
     if (searchTerm.trim() !== '') {
       const lower = searchTerm.toLowerCase();
@@ -86,7 +95,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       totalIngresos: ingresos,
       totalSalidas: salidas
     };
-  }, [initialTransactions, searchTerm, activeModule, responsibleFilter, dateFilter, categoryFilter, statusFilter]);
+  }, [initialTransactions, searchTerm, activeModule, responsibleFilter, startDateFilter, endDateFilter, categoryFilter, statusFilter, paymentMethodFilter]);
 
   const formatCurrency = (val: number) => {
     return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -96,9 +105,11 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
     setSearchTerm('');
     setActiveModule('Todos');
     setResponsibleFilter('Todos');
-    setDateFilter('Todas');
+    setStartDateFilter('');
+    setEndDateFilter('');
     setCategoryFilter('Todas');
     setStatusFilter('Todos');
+    setPaymentMethodFilter('Todos');
   };
 
   const getModuleStyle = (mod: string) => {
@@ -202,7 +213,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
         </div>
 
         {/* Secondary Filters Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3">
           
           <div className="flex flex-col gap-1.5">
             <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Responsable</label>
@@ -216,16 +227,23 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
             </select>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Temporalidad</label>
-            <select 
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer text-transform: capitalize"
-            >
-              <option value="Todas">Todas las Fechas</option>
-              {dates.map(d => <option key={d} value={d} className="capitalize">{d}</option>)}
-            </select>
+          <div className="flex flex-col gap-1.5 lg:col-span-2">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Fechas (Desde - Hasta)</label>
+            <div className="flex items-center gap-2">
+              <input 
+                type="date"
+                value={startDateFilter}
+                onChange={(e) => setStartDateFilter(e.target.value)}
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              />
+              <span className="text-slate-400 font-bold">-</span>
+              <input 
+                type="date"
+                value={endDateFilter}
+                onChange={(e) => setEndDateFilter(e.target.value)}
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -248,8 +266,21 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
               className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
             >
               <option value="Todos">Todos los Estatus</option>
-              <option value="Completado">Completado / Recibido</option>
+              <option value="Completado">Completado / Pagado</option>
               <option value="Pendiente">Pendiente</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Método de Pago</label>
+            <select 
+              value={paymentMethodFilter}
+              onChange={(e) => setPaymentMethodFilter(e.target.value)}
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+            >
+              <option value="Todos">Todos los Métodos</option>
+              <option value="Efectivo/Débito">Efectivo / Débito</option>
+              <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
             </select>
           </div>
 

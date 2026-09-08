@@ -13,6 +13,7 @@ interface AddDailyExpenseModalProps {
 export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Alimentación');
 
   useEffect(() => {
     setMounted(true);
@@ -102,7 +103,8 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                 <select
                   name="category"
                   required
-                  defaultValue="Alimentación"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
                 >
                   <option value="Supermercado">Supermercado</option>
@@ -119,6 +121,26 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                   <option value="Otros">Otros</option>
                 </select>
               </div>
+
+              {/* Subcategoría Restaurante */}
+              {selectedCategory === 'Restaurante' && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Tipo de Comida
+                  </label>
+                  <select
+                    name="sub_category"
+                    required
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value="Desayuno">Desayuno</option>
+                    <option value="Almuerzo">Almuerzo</option>
+                    <option value="Cena">Cena</option>
+                    <option value="Snack">Snack / Postre / Café</option>
+                  </select>
+                </div>
+              )}
 
               {/* Detalle / Comercio */}
               <div>

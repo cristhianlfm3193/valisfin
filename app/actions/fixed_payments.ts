@@ -8,7 +8,7 @@ export async function getFixedPayments() {
   
   const { data, error } = await supabase
     .from('fixed_payments')
-    .select('*')
+    .select('*, profiles:profile_id(first_name)')
     .order('created_at', { ascending: true });
 
   if (error) {
@@ -16,7 +16,13 @@ export async function getFixedPayments() {
     return [];
   }
 
-  return data;
+  // Transform data to map profiles.first_name to responsible
+  const mappedData = data.map((item: any) => ({
+    ...item,
+    responsible: item.profiles?.first_name || 'Desconocido'
+  }));
+
+  return mappedData;
 }
 
 export async function togglePaymentStatus(ids: string[], currentStatus: boolean) {
@@ -51,21 +57,21 @@ export async function addVariablePayment(formData: FormData) {
 
   // Derive category/responsible/subtitle based on title (simple mapping)
   let category = 'servicios';
-  let responsible = 'Hogar • Variable';
+  let profile_id = 'edc938dc-9fbc-4573-b007-0bdb95114f95';
   let subtitle = 'Servicio variable';
   let payment_cycle_days = 30; // Default cycle
   
   if (title === 'Gasolina') {
     category = 'autos';
-    responsible = 'Transporte • Variable';
+    profile_id = 'edc938dc-9fbc-4573-b007-0bdb95114f95';
     payment_cycle_days = 15; // Usually twice a month, but defaulting to 15 or 30
   } else if (title === 'Supermercado') {
     category = 'hogar';
-    responsible = 'Compras • Variable';
+    profile_id = 'edc938dc-9fbc-4573-b007-0bdb95114f95';
     payment_cycle_days = 15; // Often biweekly
   } else if (title === 'Electricidad Naturgy' || title === 'Luz') {
     category = 'servicios';
-    responsible = 'Hogar • Variable';
+    profile_id = 'edc938dc-9fbc-4573-b007-0bdb95114f95';
     subtitle = 'Servicio hogar';
     payment_cycle_days = 30;
   }
@@ -98,7 +104,7 @@ export async function addVariablePayment(formData: FormData) {
       .insert({
         category,
         is_paid: false,
-        responsible,
+        profile_id,
         title,
         amount,
         subtitle,
@@ -160,7 +166,7 @@ export async function partialPayment(id: string, partialAmount: number) {
     .insert({
       category: currentRecord.category,
       is_paid: true, // This is the paid part
-      responsible: currentRecord.responsible,
+      profile_id: currentRecord.profile_id,
       title: currentRecord.title,
       amount: partialAmount,
       subtitle: currentRecord.subtitle,
@@ -223,7 +229,7 @@ export async function createFixedPayment(formData: FormData) {
     .insert({
       category: 'otros',
       is_paid: false,
-      responsible: 'Hogar',
+      profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
       title,
       amount,
       subtitle: 'Obligación',
@@ -331,7 +337,7 @@ export async function generateMonthObligations(targetMonth: string, previousMont
       toInsert.push({
         category: record.category,
         is_paid: false,
-        responsible: record.responsible,
+        profile_id: record.profile_id,
         title: record.title,
         amount: record.amount,
         subtitle: record.subtitle,

@@ -11,6 +11,7 @@ export interface DailyExpense {
   profile_id: string;
   profiles?: { first_name: string };
   amount: number;
+  sub_category?: string;
   is_credit_card?: boolean;
   created_at?: string;
 }
@@ -42,6 +43,7 @@ export async function addDailyExpense(formData: FormData) {
   const detail = formData.get('detail') as string;
   const profile_id = formData.get('profile_id') as string;
   const amountStr = formData.get('amount') as string;
+  const sub_category = formData.get('sub_category') as string || null;
   let is_credit_card = formData.get('is_credit_card') === 'true';
   const amount = parseFloat(amountStr);
 
@@ -58,6 +60,7 @@ export async function addDailyExpense(formData: FormData) {
       detail,
       profile_id,
       amount,
+      sub_category,
       is_credit_card
     });
 
@@ -96,6 +99,7 @@ export async function updateDailyExpense(id: string, formData: FormData) {
   const detail = formData.get('detail') as string;
   const profile_id = formData.get('profile_id') as string;
   const amountStr = formData.get('amount') as string;
+  const sub_category = formData.get('sub_category') as string || null;
   let is_credit_card = formData.get('is_credit_card') === 'true';
   const amount = parseFloat(amountStr);
 
@@ -112,6 +116,7 @@ export async function updateDailyExpense(id: string, formData: FormData) {
       detail,
       profile_id,
       amount,
+      sub_category,
       is_credit_card
     })
     .eq('id', id);

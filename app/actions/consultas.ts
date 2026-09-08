@@ -12,6 +12,7 @@ export interface UnifiedTransaction {
   type: 'in' | 'out';
   status: 'completed' | 'pending';
   responsibleName: string | null;
+  isCreditCard?: boolean;
 }
 
 export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
@@ -69,7 +70,8 @@ export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
         amount: Number(inc.amount) || 0,
         type: 'in',
         status: inc.is_received ? 'completed' : 'pending',
-        responsibleName: profilesMap[inc.profile_id] || 'Desconocido'
+        responsibleName: profilesMap[inc.profile_id] || 'Desconocido',
+        isCreditCard: false
       });
     });
   }
@@ -86,7 +88,8 @@ export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
         amount: Number(exp.amount) || 0,
         type: 'out',
         status: 'completed',
-        responsibleName: profilesMap[exp.profile_id] || 'Desconocido'
+        responsibleName: profilesMap[exp.profile_id] || 'Desconocido',
+        isCreditCard: exp.is_credit_card || false
       });
     });
   }
@@ -103,7 +106,8 @@ export async function getUnifiedTransactions(): Promise<UnifiedTransaction[]> {
         amount: Number(pay.amount) || 0,
         type: 'out',
         status: pay.is_paid ? 'completed' : 'pending',
-        responsibleName: pay.responsible || 'Desconocido'
+        responsibleName: profilesMap[pay.profile_id] || 'Desconocido',
+        isCreditCard: false
       });
     });
   }
