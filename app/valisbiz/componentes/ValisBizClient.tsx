@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -50,16 +50,27 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
   const currentAnio = now.getFullYear();
   const isMesActual = mesPeriodo === currentMes && anioPeriodo === currentAnio;
 
+  const searchParams = useSearchParams();
+
   const navigateMes = (direction: 'prev' | 'next') => {
     let newMes = mesPeriodo + (direction === 'next' ? 1 : -1);
     let newAnio = anioPeriodo;
     if (newMes > 12) { newMes = 1; newAnio++; }
     if (newMes < 1) { newMes = 12; newAnio--; }
-    startTransition(() => { router.push(`/valisbiz?mes=${newMes}&anio=${newAnio}`); });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('mes', newMes.toString());
+    params.set('anio', newAnio.toString());
+    startTransition(() => {
+      router.push(`/valisbiz?${params.toString()}`, { scroll: false });
+      router.refresh();
+    });
   };
 
   const goToCurrentMonth = () => {
-    startTransition(() => { router.push('/valisbiz'); });
+    startTransition(() => {
+      router.push('/valisbiz', { scroll: false });
+      router.refresh();
+    });
   };
 
   const handleModalSuccess = () => {
@@ -139,7 +150,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   <span className="text-[9px] text-green-600 font-semibold leading-none">● En curso</span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending || isMesActual} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
+              <button onClick={() => navigateMes('next')} disabled={isPending || (isMesActual && mesPeriodo === currentMes && anioPeriodo === currentAnio)} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
                 <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
               </button>
             </div>
@@ -161,7 +172,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   </span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending || isMesActual} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
+              <button onClick={() => navigateMes('next')} disabled={isPending || (isMesActual && mesPeriodo === currentMes && anioPeriodo === currentAnio)} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
                 <ChevronRight className="w-4 h-4 text-slate-600" />
               </button>
             </div>

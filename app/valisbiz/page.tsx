@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getDashboardData } from "./acciones/dashboard";
 import ValisBizClient from "./componentes/ValisBizClient";
 import { createClient } from "@/lib/supabase/server";
@@ -26,10 +27,12 @@ export default async function ValisBizPage({ searchParams }: PageProps) {
   return (
     <div className="bg-[#faf8ff] min-h-screen flex flex-col justify-between font-sans">
       <main className="w-full flex-1 flex flex-col justify-start">
-        <ValisBizClient
-          initialData={data}
-          user={{ name: fullName, initial }}
-        />
+        <Suspense>
+          <ValisBizClient
+            initialData={data}
+            user={{ name: fullName, initial }}
+          />
+        </Suspense>
       </main>
     </div>
   );
