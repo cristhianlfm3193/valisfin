@@ -150,7 +150,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   <span className="text-[9px] text-green-600 font-semibold leading-none">● En curso</span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending || (isMesActual && mesPeriodo === currentMes && anioPeriodo === currentAnio)} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
+              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
                 <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
               </button>
             </div>
@@ -172,7 +172,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   </span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending || (isMesActual && mesPeriodo === currentMes && anioPeriodo === currentAnio)} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
+              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
                 <ChevronRight className="w-4 h-4 text-slate-600" />
               </button>
             </div>
