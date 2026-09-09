@@ -47,6 +47,7 @@ export function DashboardClient({
   const [aiFile, setAiFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
+  const [convertStatus, setConvertStatus] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [aiExpenseData, setAiExpenseData] = useState<any>(null);
 
@@ -59,20 +60,45 @@ export function DashboardClient({
       if (isHeic) {
         setIsConverting(true);
         try {
-          const heic2any = (await import('heic2any')).default;
-          const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.65 });
-          const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-          const newName = fileName.replace(/\.heic?$/i, '.jpg');
-          const jpegFile = new File([blob], newName, { type: 'image/jpeg' });
-          // Redimensiona para garantizar que cabe en el límite del servidor
-          const resized = await resizeImage(jpegFile);
-          setAiFile(resized);
+          let jpegFile: File | null = null;
+
+          // Intento 1: decodificación nativa del browser (instantáneo en iOS Safari)
+          setConvertStatus('🔄 Convirtiendo HEIC a JPG...');
+          try {
+            const bitmap = await createImageBitmap(file);
+            const canvas = document.createElement('canvas');
+            const max = 900;
+            let w = bitmap.width, h = bitmap.height;
+            if (w > max || h > max) {
+              if (w >= h) { h = Math.round(h * max / w); w = max; }
+              else { w = Math.round(w * max / h); h = max; }
+            }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d')!.drawImage(bitmap, 0, 0, w, h);
+            bitmap.close();
+            const blob = await new Promise<Blob | null>(res => canvas.toBlob(res, 'image/jpeg', 0.65));
+            if (blob) jpegFile = new File([blob], fileName.replace(/\.heic?$/i, '.jpg'), { type: 'image/jpeg' });
+          } catch { /* browser no soporta HEIC nativo, seguir al fallback */ }
+
+          // Intento 2: heic2any (WebAssembly) como fallback para Chrome/Firefox
+          if (!jpegFile) {
+            setConvertStatus('🔄 Convirtiendo con WebAssembly (puede tardar)...');
+            const heic2any = (await import('heic2any')).default;
+            const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.65 });
+            const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+            const rawFile = new File([blob], fileName.replace(/\.heic?$/i, '.jpg'), { type: 'image/jpeg' });
+            setConvertStatus('✂️ Comprimiendo imagen...');
+            jpegFile = await resizeImage(rawFile);
+          }
+
+          setAiFile(jpegFile!);
         } catch (error) {
           console.error('Error converting HEIC:', error);
           alert('No se pudo convertir la imagen automáticamente.\nPor favor conviértela manualmente a JPG o PNG.');
           if (fileInputRef.current) fileInputRef.current.value = '';
         } finally {
           setIsConverting(false);
+          setConvertStatus('');
         }
         return;
       }
@@ -102,7 +128,7 @@ export function DashboardClient({
 
   // Redimensiona y comprime cualquier imagen usando Canvas para
   // mantener el payload pequeño y la API de Gemini responda rápido.
-  const resizeImage = (file: File, maxDimension = 900, quality = 0.65): Promise<File> =>
+  const resizeImage = (file: File, maxDimension = 1100, quality = 0.7): Promise<File> =>
     new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
@@ -274,11 +300,16 @@ export function DashboardClient({
             </div>
             
             {/* File Thumbnail Indicator */}
-            {isConverting && (
+            {/* Estado de procesamiento */}
+            {(isConverting || isAnalyzing) && (
               <div className="w-full mt-2 flex items-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-xs font-medium">
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border ${
+                  isAnalyzing
+                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    : 'bg-amber-50 border-amber-200 text-amber-700'
+                }`}>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Convirtiendo imagen a JPG...</span>
+                  <span>{isAnalyzing ? '🧠 Analizando factura con IA...' : convertStatus || 'Procesando...'}</span>
                 </div>
               </div>
             )}

@@ -26,7 +26,7 @@ export async function analyzeUniversalText(text: string, base64Data?: string, mi
           type: Type.OBJECT,
           properties: {
             // Campos comunes y Gastos/Ingresos
-            fecha: { type: Type.STRING, description: "YYYY-MM-DD. Si hay una imagen o PDF, extrae la fecha que aparece EN el documento. Solo usa la fecha de hoy como fallback si no hay fecha visible en el documento ni en el texto." },
+            fecha: { type: Type.STRING, description: "YYYY-MM-DD. PRIORIDAD MÁXIMA: Si hay imagen o PDF, lee el campo 'FECHA:', 'Date:', 'Fecha de emisión:' o similar que aparezca impreso en el documento y conviértelo a formato YYYY-MM-DD. NUNCA uses la fecha de hoy si el documento tiene una fecha visible. Ejemplo: si el documento dice 'FECHA: 04/12/2024', devuelve '2024-12-04'. Solo usa la fecha de hoy como último recurso si no encuentras ninguna fecha en el documento." },
             monto: { type: Type.NUMBER, description: "Monto de la transacción." },
             detalle: { type: Type.STRING, description: "Concepto o descripción." },
             categoria: { type: Type.STRING, description: "Categoría inferida." },
@@ -61,7 +61,7 @@ REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
 2. Asigna una CATEGORÍA general lógica (ej. 'Supermercado', 'Farmacia', 'Ferretería', 'Restaurante').
 3. En el campo DETALLE, escribe el nombre del comercio y un resumen breve de los artículos principales (ej. 'Súper 99 - Compra de carnes, vegetales y artículos de limpieza').
 4. Devuelve la acción "gasto" y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
-5. En el campo FECHA: SIEMPRE busca y usa la fecha que aparece impresa/visible en la factura o recibo (puede estar como 'Fecha:', 'Date:', 'Emitida el:', etc.). Si la factura es del 2024 o cualquier otro año pasado, usa esa fecha exacta. Solo usa la fecha de hoy (${today}) si no hay ninguna fecha visible en el documento.
+5. FECHA OBLIGATORIA: Busca en la imagen el campo que diga 'FECHA:', 'FECHA DE EMISION:', 'Date:', 'Fecha:', o similar. Lee los números de ese campo y conviértelos a YYYY-MM-DD. Por ejemplo: si ves 'FECHA: 04/12/2024' → devuelve '2024-12-04'. Si ves 'FECHA: 12/04/2024' → devuelve '2024-04-12'. Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → ignora la hora y devuelve solo '2024-12-04'. NUNCA devuelvas la fecha de hoy (${today}) si el documento tiene una fecha impresa.
 
 EJEMPLOS DE MAPEO:
 - "Cristhian gastó 15 en el Súper 99 ayer": accion="gasto", parametros={pagador: "Cristhian", monto: 15, detalle: "Súper 99", categoria: "Supermercado", fecha: ayer}
@@ -87,7 +87,7 @@ Texto del usuario: "${text || 'Aquí está el archivo adjunto'}"`;
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-3.5-flash-lite',
       contents: contentsParams,
       config: {
         responseMimeType: 'application/json',
