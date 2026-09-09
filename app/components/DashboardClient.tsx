@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { 
   Calendar, CheckCircle2, TrendingUp, ArrowUpRight, ArrowDownRight, Sparkles, 
-  Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils
+  Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils, Send, Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,6 +23,7 @@ import {
   UpcomingPayment, 
   DashboardVehicleData 
 } from '@/app/actions/dashboard';
+import { analyzeExpenseText } from '@/app/actions/ai_expense';
 
 interface DashboardClientProps {
   metrics: DashboardMetrics;
@@ -42,12 +43,40 @@ export function DashboardClient({
   fixedPayments
 }: DashboardClientProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [aiText, setAiText] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiExpenseData, setAiExpenseData] = useState<any>(null);
+
+  const handleAiSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiText.trim()) return;
+    
+    setIsAnalyzing(true);
+    try {
+      const result = await analyzeExpenseText(aiText);
+      if (result.success && result.data) {
+        setAiExpenseData(result.data);
+        setActiveModal('gasto');
+        setAiText(''); // Clear input
+      } else {
+        alert(result.error || 'No se pudo analizar el texto.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Hubo un error al procesar la solicitud.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const formatCurrency = (amount: number) => {
     return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const closeModals = () => setActiveModal(null);
+  const closeModals = () => {
+    setActiveModal(null);
+    setAiExpenseData(null);
+  };
 
   const totalPagado = metrics.paymentsDone + metrics.dailyExpenses;
   const pendientePorPagar = metrics.pendingPayments;
@@ -66,6 +95,28 @@ export function DashboardClient({
             Acciones Rápidas
           </h2>
         </div>
+
+        {/* AI Quick Entry */}
+        <div className="mb-4">
+          <form onSubmit={handleAiSubmit} className="relative flex items-center">
+            <input 
+              type="text"
+              value={aiText}
+              onChange={(e) => setAiText(e.target.value)}
+              placeholder="Ej: Cristhian gastó 15 en Súper 99 ayer..."
+              className="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-200 shadow-sm text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              disabled={isAnalyzing}
+            />
+            <button 
+              type="submit" 
+              disabled={isAnalyzing || !aiText.trim()}
+              className="absolute right-2 p-2 rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:bg-slate-300 transition-colors"
+            >
+              {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            </button>
+          </form>
+        </div>
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <button onClick={() => setActiveModal('ingreso')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all active:scale-95 group">
             <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-100 transition-colors">
@@ -313,7 +364,7 @@ export function DashboardClient({
 
       {/* Embedded Modals */}
       <AddIncomeModal isOpen={activeModal === 'ingreso'} onClose={closeModals} />
-      <AddDailyExpenseModal isOpen={activeModal === 'gasto'} onClose={closeModals} />
+      <AddDailyExpenseModal isOpen={activeModal === 'gasto'} onClose={closeModals} initialData={aiExpenseData} />
       <AddKmModal isOpen={activeModal === 'km'} onClose={closeModals} vehicles={vehicles} />
       <AddMaintenanceModal isOpen={activeModal === 'mantenimiento'} onClose={closeModals} vehicles={vehicles} />
       <AddPendingModal isOpen={activeModal === 'pendiente'} onClose={closeModals} vehicles={vehicles} />

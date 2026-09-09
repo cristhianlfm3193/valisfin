@@ -8,9 +8,17 @@ import { addDailyExpense } from '@/app/actions/daily_expenses';
 interface AddDailyExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialData?: {
+    fecha?: string;
+    categoria?: string;
+    detalle?: string;
+    pagador?: string;
+    monto?: number;
+    uso_tarjeta?: boolean;
+  } | null;
 }
 
-export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalProps) {
+export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyExpenseModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Alimentación');
@@ -18,6 +26,15 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (initialData?.categoria) {
+      // Map general names returned by AI to actual select options if needed, or just set it
+      setSelectedCategory(initialData.categoria);
+    } else {
+      setSelectedCategory('Supermercado');
+    }
+  }, [initialData]);
 
   if (!isOpen) return null;
 
@@ -89,8 +106,8 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                 <input
                   type="date"
                   name="date"
-                  defaultValue={today}
                   required
+                  defaultValue={initialData?.fecha || today}
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all"
                 />
               </div>
@@ -151,6 +168,7 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                   type="text"
                   name="detail"
                   required
+                  defaultValue={initialData?.detalle || ''}
                   placeholder="Ej. Súper 99, McDonalds, Cine..."
                   className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all"
                 />
@@ -163,11 +181,11 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
-                    <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required defaultChecked />
+                    <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required defaultChecked={!initialData || initialData.pagador === 'Cristhian'} />
                     <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
                   </label>
                   <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
-                    <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required />
+                    <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required defaultChecked={initialData?.pagador === 'Jennifer'} />
                     <span className="font-semibold text-sm text-slate-700 peer-checked:text-pink-600">Jennifer</span>
                   </label>
                 </div>
@@ -186,6 +204,7 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
                     step="0.01"
                     min="0.01"
                     required
+                    defaultValue={initialData?.monto || ''}
                     placeholder="0.00"
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-base rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block pl-10 pr-4 py-3 outline-none transition-all"
                   />
@@ -196,7 +215,7 @@ export function AddDailyExpenseModal({ isOpen, onClose }: AddDailyExpenseModalPr
               <div className="pt-2">
                 <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
                   <div className="relative flex items-center">
-                    <input type="checkbox" name="is_credit_card" value="true" className="peer sr-only" />
+                    <input type="checkbox" name="is_credit_card" value="true" defaultChecked={initialData?.uso_tarjeta || false} className="peer sr-only" />
                     <div className="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                   </div>
                   <div>
