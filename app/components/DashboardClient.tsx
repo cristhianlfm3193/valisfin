@@ -23,7 +23,7 @@ import {
   UpcomingPayment, 
   DashboardVehicleData 
 } from '@/app/actions/dashboard';
-import { analyzeExpenseText } from '@/app/actions/ai_expense';
+import { analyzeUniversalText } from '@/app/actions/ai_expense';
 
 interface DashboardClientProps {
   metrics: DashboardMetrics;
@@ -53,10 +53,38 @@ export function DashboardClient({
     
     setIsAnalyzing(true);
     try {
-      const result = await analyzeExpenseText(aiText);
+      const result = await analyzeUniversalText(aiText);
       if (result.success && result.data) {
-        setAiExpenseData(result.data);
-        setActiveModal('gasto');
+        setAiExpenseData(result.data.parametros);
+        
+        switch (result.data.accion) {
+          case 'gasto':
+            setActiveModal('gasto');
+            break;
+          case 'ingreso':
+            setActiveModal('ingreso');
+            break;
+          case 'kilometraje':
+            setActiveModal('km');
+            break;
+          case 'mantenimiento_auto':
+            setActiveModal('mantenimiento');
+            break;
+          case 'pendiente_auto':
+            setActiveModal('pendiente');
+            break;
+          case 'trabajo_hogar':
+            setActiveModal('hogar');
+            break;
+          case 'meta_ahorro':
+            setActiveModal('meta');
+            break;
+          case 'pago_fijo':
+            setActiveModal('pago-fijo');
+            break;
+          default:
+            setActiveModal('gasto'); // fallback
+        }
         setAiText(''); // Clear input
       } else {
         alert(result.error || 'No se pudo analizar el texto.');
@@ -363,14 +391,14 @@ export function DashboardClient({
       </div>
 
       {/* Embedded Modals */}
-      <AddIncomeModal isOpen={activeModal === 'ingreso'} onClose={closeModals} />
+      <AddIncomeModal isOpen={activeModal === 'ingreso'} onClose={closeModals} initialData={aiExpenseData} />
       <AddDailyExpenseModal isOpen={activeModal === 'gasto'} onClose={closeModals} initialData={aiExpenseData} />
-      <AddKmModal isOpen={activeModal === 'km'} onClose={closeModals} vehicles={vehicles} />
-      <AddMaintenanceModal isOpen={activeModal === 'mantenimiento'} onClose={closeModals} vehicles={vehicles} />
-      <AddPendingModal isOpen={activeModal === 'pendiente'} onClose={closeModals} vehicles={vehicles} />
-      <AddHomeTaskModal isOpen={activeModal === 'hogar'} onClose={closeModals} />
-      <AddGoalModal isOpen={activeModal === 'meta'} onClose={closeModals} />
-      <PayFixedPaymentModal isOpen={activeModal === 'pago-fijo'} onClose={closeModals} fixedPayments={fixedPayments} />
+      <AddKmModal isOpen={activeModal === 'km'} onClose={closeModals} vehicles={vehicles} initialData={aiExpenseData} />
+      <AddMaintenanceModal isOpen={activeModal === 'mantenimiento'} onClose={closeModals} vehicles={vehicles} initialData={aiExpenseData} />
+      <AddPendingModal isOpen={activeModal === 'pendiente'} onClose={closeModals} vehicles={vehicles} initialData={aiExpenseData} />
+      <AddHomeTaskModal isOpen={activeModal === 'hogar'} onClose={closeModals} initialData={aiExpenseData} />
+      <AddGoalModal isOpen={activeModal === 'meta'} onClose={closeModals} initialData={aiExpenseData} />
+      <PayFixedPaymentModal isOpen={activeModal === 'pago-fijo'} onClose={closeModals} fixedPayments={fixedPayments} initialData={aiExpenseData} />
     </div>
   );
 }

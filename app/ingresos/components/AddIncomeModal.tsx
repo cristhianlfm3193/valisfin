@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlusCircle, Wallet, X, Check } from 'lucide-react';
 import { addIncome } from '@/app/actions/income';
 
 export function AddIncomeModal({
   isOpen: externalIsOpen,
-  onClose: externalOnClose
+  onClose: externalOnClose,
+  initialData
 }: {
   isOpen?: boolean;
   onClose?: () => void;
+  initialData?: any;
 } = {}) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +19,17 @@ export function AddIncomeModal({
   const [category, setCategory] = useState('extra');
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  useEffect(() => {
+    if (initialData) {
+      if (initialData.pagador) {
+        setPerson(initialData.pagador.toLowerCase() as 'cristhian' | 'jennifer');
+      }
+      if (initialData.categoria) {
+        setCategory('extra'); // default for quick entry
+      }
+    }
+  }, [initialData]);
 
   const handleClose = () => {
     if (externalOnClose) externalOnClose();
@@ -203,6 +216,7 @@ export function AddIncomeModal({
                 required 
                 placeholder="Ej. Venta de artículo" 
                 key={`title-${category}-${person}`}
+                defaultValue={initialData?.detalle || ''}
                 className="w-full px-4 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500" 
               />
             </div>
@@ -226,6 +240,7 @@ export function AddIncomeModal({
                     required 
                     placeholder="0.00" 
                     key={`amount-${category}-${person}`}
+                    defaultValue={initialData?.monto || ''}
                     className="w-full pl-11 pr-4 py-2.5 rounded-xl text-base font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-emerald-500" 
                   />
                 </div>
@@ -243,7 +258,7 @@ export function AddIncomeModal({
                     name="income-date" 
                     required 
                     suppressHydrationWarning
-                    defaultValue={isOpen ? new Date().toISOString().split('T')[0] : ''}
+                    defaultValue={initialData?.fecha || (isOpen ? new Date().toISOString().split('T')[0] : '')}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" 
                   />
                 </div>

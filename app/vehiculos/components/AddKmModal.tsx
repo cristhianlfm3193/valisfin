@@ -1,21 +1,40 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { addMileageLog } from '@/app/actions/vehicles';
 
 export default function AddKmModal({ 
   isOpen, 
   onClose, 
-  vehicles 
+  vehicles,
+  initialData 
 }: { 
   isOpen: boolean; 
   onClose: () => void;
   vehicles: any[];
+  initialData?: any;
 }) {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]?.id || '');
-  const [kmValue, setKmValue] = useState(vehicles[0]?.current_km || 0);
+  const [kmValue, setKmValue] = useState<number>(vehicles[0]?.current_km || 0);
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (initialData && isOpen) {
+      if (initialData.vehiculo) {
+        const match = vehicles.find(v => 
+          v.brand.toLowerCase().includes(initialData.vehiculo.toLowerCase()) || 
+          v.model.toLowerCase().includes(initialData.vehiculo.toLowerCase())
+        );
+        if (match) {
+          setSelectedVehicle(match.id);
+          setKmValue(initialData.km_lectura || match.current_km);
+        }
+      } else if (initialData.km_lectura) {
+        setKmValue(initialData.km_lectura);
+      }
+    }
+  }, [initialData, isOpen, vehicles]);
 
   if (!isOpen) return null;
 

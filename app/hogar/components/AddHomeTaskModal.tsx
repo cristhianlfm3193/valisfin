@@ -6,10 +6,12 @@ import { addHomeTask } from '@/app/actions/home';
 
 export default function AddHomeTaskModal({
   isOpen: externalIsOpen,
-  onClose: externalOnClose
+  onClose: externalOnClose,
+  initialData
 }: {
   isOpen?: boolean;
   onClose?: () => void;
+  initialData?: any;
 } = {}) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [state, formAction, isPending] = useActionState(addHomeTask, null);
@@ -29,6 +31,16 @@ export default function AddHomeTaskModal({
       handleClose();
     }
   }, [state]);
+
+  useEffect(() => {
+    if (initialData && isOpen && initialData.pagador) {
+      if (initialData.pagador.toLowerCase() === 'jennifer') {
+        setSelectedProfile('7b5c62be-58f1-48d6-b366-0f504c39bdcb');
+      } else {
+        setSelectedProfile('edc938dc-9fbc-4573-b007-0bdb95114f95');
+      }
+    }
+  }, [initialData, isOpen]);
 
   if (!isOpen && externalIsOpen === undefined) {
     return (
@@ -75,7 +87,7 @@ export default function AddHomeTaskModal({
             
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Área / Ubicación del Hogar</label>
-              <select name="area" required className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
+              <select name="area" required defaultValue={initialData?.hogar_area || "Sala / Comedor"} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
                 <option value="Sala / Comedor">🛋️ Sala / Comedor</option>
                 <option value="Baño de Visitas">🚿 Baño de Visitas</option>
                 <option value="Patio / Techo">🏡 Patio / Techo</option>
@@ -89,7 +101,7 @@ export default function AddHomeTaskModal({
 
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Tipo de Trabajo / Mantenimiento</label>
-              <input name="title" required type="text" placeholder="Ej. Limpieza profunda de Aire Acondicionado Inverter" className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2.5 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
+              <input name="title" required type="text" defaultValue={initialData?.detalle || ''} placeholder="Ej. Limpieza profunda de Aire Acondicionado Inverter" className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2.5 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
             </div>
 
             <div className="space-y-1.5">
@@ -100,7 +112,7 @@ export default function AddHomeTaskModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Fecha Estimada</label>
-                <input name="estimated_date" type="date" required className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
+                <input name="estimated_date" type="date" required defaultValue={initialData?.fecha || ''} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Presupuesto Estimado</label>
@@ -108,7 +120,7 @@ export default function AddHomeTaskModal({
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                     <span className="text-xs font-bold text-slate-500">B/.</span>
                   </div>
-                  <input name="budget" type="number" step="0.01" min="0" placeholder="0.00" className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 pl-9 pr-3.5 py-2 text-slate-900 font-bold placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20" />
+                  <input name="budget" type="number" step="0.01" min="0" placeholder="0.00" defaultValue={initialData?.costo_estimado || ''} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 pl-9 pr-3.5 py-2 text-slate-900 font-bold placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20" />
                 </div>
               </div>
             </div>
@@ -129,7 +141,7 @@ export default function AddHomeTaskModal({
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Prioridad / Estado</label>
-                <select name="priority" required className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
+                <select name="priority" required defaultValue={initialData?.hogar_prioridad || "Media"} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
                   <option value="Alta">🔴 Alta / Urgente</option>
                   <option value="Media">🟡 Media / En Proceso</option>
                   <option value="Planificado">⚪ Planificada / Normal</option>

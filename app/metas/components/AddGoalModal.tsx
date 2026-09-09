@@ -5,10 +5,12 @@ import { addSavingsGoal } from '@/app/actions/goals';
 
 export default function AddGoalModal({
   isOpen: externalIsOpen,
-  onClose: externalOnClose
+  onClose: externalOnClose,
+  initialData
 }: {
   isOpen?: boolean;
   onClose?: () => void;
+  initialData?: any;
 } = {}) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -80,7 +82,7 @@ export default function AddGoalModal({
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="goal-title">
                   Nombre de la Meta / Objetivo
                 </label>
-                <input className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none transition" id="goal-title" name="goal-title" placeholder="Ej: Celular Jennifer, Fondo de Emergencia, Muebles de Cocina..." required type="text"/>
+                <input className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 focus:outline-none transition" id="goal-title" name="goal-title" defaultValue={initialData?.obligacion || ''} placeholder="Ej: Celular Jennifer, Fondo de Emergencia, Muebles de Cocina..." required type="text"/>
               </div>
 
               <div>
@@ -122,7 +124,7 @@ export default function AddGoalModal({
                   </label>
                   <div className="relative rounded-xl border border-slate-200 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600 bg-white flex items-center transition">
                     <span className="pl-3.5 pr-1.5 text-sm font-bold text-emerald-600 select-none">B/.</span>
-                    <input className="w-full border-0 bg-transparent py-3 pr-4 text-sm font-semibold text-emerald-700 focus:ring-0 focus:outline-none" id="current-savings" name="current-savings" placeholder="0.00" step="0.01" type="number" defaultValue="0.00" />
+                    <input className="w-full border-0 bg-transparent py-3 pr-4 text-sm font-semibold text-emerald-700 focus:ring-0 focus:outline-none" id="current-savings" name="current-savings" placeholder="0.00" step="0.01" type="number" defaultValue={initialData?.monto || "0.00"} />
                   </div>
                 </div>
               </div>

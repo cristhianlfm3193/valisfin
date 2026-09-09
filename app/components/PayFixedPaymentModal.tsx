@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo } from 'react';
+import { useState, useTransition, useMemo, useEffect } from 'react';
 import { X, Calendar, DollarSign, Wallet } from 'lucide-react';
 import { togglePaymentStatus, partialPayment as partialPaymentAction } from '@/app/actions/fixed_payments';
 
@@ -8,9 +8,10 @@ interface PayFixedPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   fixedPayments: any[];
+  initialData?: any;
 }
 
-export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixedPaymentModalProps) {
+export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialData }: PayFixedPaymentModalProps) {
   const [isPending, startTransition] = useTransition();
   const [selectedPaymentId, setSelectedPaymentId] = useState<string>('');
   const [paymentMode, setPaymentMode] = useState<'total' | 'abono'>('total');
@@ -30,6 +31,30 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments }: PayFixe
   }, [fixedPayments]);
 
   const selectedPayment = pendingPayments.find(p => p.id === selectedPaymentId);
+
+  useEffect(() => {
+    if (initialData && isOpen) {
+      if (initialData.obligacion) {
+        // Find best match for obligation name
+        const match = pendingPayments.find(p => 
+          p.title.toLowerCase().includes(initialData.obligacion.toLowerCase()) || 
+          initialData.obligacion.toLowerCase().includes(p.title.toLowerCase())
+        );
+        if (match) {
+          setSelectedPaymentId(match.id);
+          
+          if (initialData.monto) {
+             if (Number(initialData.monto) < match.amount) {
+               setPaymentMode('abono');
+               setAbonoAmount(initialData.monto.toString());
+             } else {
+               setPaymentMode('total');
+             }
+          }
+        }
+      }
+    }
+  }, [initialData, isOpen, pendingPayments]);
 
   if (!isOpen) return null;
 

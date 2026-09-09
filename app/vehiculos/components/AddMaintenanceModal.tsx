@@ -1,21 +1,40 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { addMaintenanceLog } from '@/app/actions/vehicles';
 
 export default function AddMaintenanceModal({ 
   isOpen, 
   onClose, 
-  vehicles 
+  vehicles,
+  initialData 
 }: { 
   isOpen: boolean; 
   onClose: () => void;
   vehicles: any[];
+  initialData?: any;
 }) {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]?.id || '');
   const [serviceDesc, setServiceDesc] = useState('');
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (initialData && isOpen) {
+      if (initialData.vehiculo) {
+        const match = vehicles.find(v => 
+          v.brand.toLowerCase().includes(initialData.vehiculo.toLowerCase()) || 
+          v.model.toLowerCase().includes(initialData.vehiculo.toLowerCase())
+        );
+        if (match) {
+          setSelectedVehicle(match.id);
+        }
+      }
+      if (initialData.mantenimiento_tipo) {
+        setServiceDesc(initialData.mantenimiento_tipo);
+      }
+    }
+  }, [initialData, isOpen, vehicles]);
 
   if (!isOpen) return null;
 
@@ -110,7 +129,7 @@ export default function AddMaintenanceModal({
               <input 
                 name="km"
                 type="number" 
-                defaultValue={currentVehicleObj?.current_km || ''}
+                defaultValue={initialData?.km_lectura || currentVehicleObj?.current_km || ''}
                 required
                 className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" 
               />
@@ -134,6 +153,7 @@ export default function AddMaintenanceModal({
                 type="number" 
                 step="0.01"
                 required
+                defaultValue={initialData?.costo_estimado || ''}
                 placeholder="0.00"
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono font-bold text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" 
               />
@@ -141,10 +161,10 @@ export default function AddMaintenanceModal({
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">Fecha</label>
               <input 
-                name="date"
                 type="date" 
-                defaultValue={new Date().toISOString().split('T')[0]}
+                name="date"
                 required
+                defaultValue={initialData?.fecha || (isOpen ? new Date().toISOString().split('T')[0] : '')}
                 className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" 
               />
             </div>

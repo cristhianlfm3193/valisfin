@@ -15,11 +15,13 @@ const SUGGESTIONS = [
 export default function AddPendingModal({ 
   isOpen, 
   onClose, 
-  vehicles 
+  vehicles,
+  initialData 
 }: { 
   isOpen: boolean; 
   onClose: () => void;
   vehicles: any[];
+  initialData?: any;
 }) {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]?.id || '');
   const [service, setService] = useState('');
@@ -40,6 +42,24 @@ export default function AddPendingModal({
       alert(state.error);
     }
   }, [state, onClose]);
+
+  useEffect(() => {
+    if (initialData && isOpen) {
+      if (initialData.vehiculo) {
+        const match = vehicles.find(v => 
+          v.brand.toLowerCase().includes(initialData.vehiculo.toLowerCase()) || 
+          v.model.toLowerCase().includes(initialData.vehiculo.toLowerCase())
+        );
+        if (match) setSelectedVehicle(match.id);
+      }
+      if (initialData.mantenimiento_tipo) {
+        setService(initialData.mantenimiento_tipo);
+      }
+      if (initialData.costo_estimado) {
+        setCost(initialData.costo_estimado.toString());
+      }
+    }
+  }, [initialData, isOpen, vehicles]);
 
   if (!isOpen) return null;
 
