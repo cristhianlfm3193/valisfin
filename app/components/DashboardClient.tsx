@@ -60,7 +60,7 @@ export function DashboardClient({
         setIsConverting(true);
         try {
           const heic2any = (await import('heic2any')).default;
-          const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+          const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.65 });
           const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
           const newName = fileName.replace(/\.heic?$/i, '.jpg');
           const jpegFile = new File([blob], newName, { type: 'image/jpeg' });
@@ -101,8 +101,8 @@ export function DashboardClient({
   };
 
   // Redimensiona y comprime cualquier imagen usando Canvas para
-  // mantener el payload por debajo del límite de Next.js Server Actions (~1MB).
-  const resizeImage = (file: File, maxDimension = 1400, quality = 0.75): Promise<File> =>
+  // mantener el payload pequeño y la API de Gemini responda rápido.
+  const resizeImage = (file: File, maxDimension = 900, quality = 0.65): Promise<File> =>
     new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);

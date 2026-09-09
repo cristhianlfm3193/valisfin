@@ -87,7 +87,7 @@ Texto del usuario: "${text || 'Aquí está el archivo adjunto'}"`;
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-lite-latest',
+      model: 'gemini-2.0-flash',
       contents: contentsParams,
       config: {
         responseMimeType: 'application/json',
