@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { 
   Calendar, CheckCircle2, TrendingUp, ArrowUpRight, ArrowDownRight, Sparkles, 
-  Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils, Send, Loader2
+  Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils, Send, Loader2, Paperclip, X
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -44,16 +44,48 @@ export function DashboardClient({
 }: DashboardClientProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [aiText, setAiText] = useState('');
+  const [aiFile, setAiFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [aiExpenseData, setAiExpenseData] = useState<any>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setAiFile(e.target.files[0]);
+    }
+  };
+
+  const removeFile = () => {
+    setAiFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const getBase64 = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64Data = result.split(',')[1];
+      resolve(base64Data);
+    };
+    reader.onerror = error => reject(error);
+  });
 
   const handleAiSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!aiText.trim()) return;
+    if (!aiText.trim() && !aiFile) return;
     
     setIsAnalyzing(true);
     try {
-      const result = await analyzeUniversalText(aiText);
+      let base64Data: string | undefined;
+      let mimeType: string | undefined;
+
+      if (aiFile) {
+        base64Data = await getBase64(aiFile);
+        mimeType = aiFile.type;
+      }
+
+      const result = await analyzeUniversalText(aiText, base64Data, mimeType);
       if (result.success && result.data) {
         setAiExpenseData(result.data.parametros);
         
@@ -89,6 +121,7 @@ export function DashboardClient({
             setActiveModal('gasto'); // fallback
         }
         setAiText(''); // Clear input
+        removeFile(); // Clear file
       } else {
         alert(result.error || 'No se pudo analizar el texto.');
       }
@@ -129,22 +162,57 @@ export function DashboardClient({
 
         {/* AI Quick Entry */}
         <div className="mb-4">
-          <form onSubmit={handleAiSubmit} className="relative flex items-center">
-            <input 
-              type="text"
-              value={aiText}
-              onChange={(e) => setAiText(e.target.value)}
-              placeholder="Ej: Cristhian gastó 15 en Súper 99 ayer..."
-              className="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-200 shadow-sm text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
-              disabled={isAnalyzing}
-            />
-            <button 
-              type="submit" 
-              disabled={isAnalyzing || !aiText.trim()}
-              className="absolute right-2 p-2 rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:bg-slate-300 transition-colors"
-            >
-              {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            </button>
+          <form onSubmit={handleAiSubmit} className="relative flex flex-col items-center w-full">
+            <div className="relative flex items-center w-full">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                accept="image/*,application/pdf" 
+                className="hidden" 
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isAnalyzing}
+                className="absolute left-2 p-2 rounded-lg text-slate-400 hover:text-emerald-500 hover:bg-slate-100 disabled:opacity-50 transition-colors z-10"
+                title="Adjuntar factura o recibo (Imagen/PDF)"
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
+              <input 
+                type="text"
+                value={aiText}
+                onChange={(e) => setAiText(e.target.value)}
+                placeholder="Ej: Gasté 15 en Súper 99..."
+                className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-200 shadow-sm text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                disabled={isAnalyzing}
+              />
+              <button 
+                type="submit" 
+                disabled={isAnalyzing || (!aiText.trim() && !aiFile)}
+                className="absolute right-2 p-2 rounded-lg text-white bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:bg-slate-300 transition-colors z-10"
+              >
+                {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </button>
+            </div>
+            
+            {/* File Thumbnail Indicator */}
+            {aiFile && (
+              <div className="w-full mt-2 flex items-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-emerald-700 text-xs font-medium">
+                  <Paperclip className="w-3.5 h-3.5" />
+                  <span className="truncate max-w-[200px]">{aiFile.name}</span>
+                  <button 
+                    type="button" 
+                    onClick={removeFile}
+                    className="p-0.5 rounded-md hover:bg-emerald-200 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </form>
         </div>
 

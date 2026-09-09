@@ -3,7 +3,7 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { createClient } from '@/lib/supabase/server';
 
-export async function analyzeUniversalText(text: string) {
+export async function analyzeUniversalText(text: string, base64Data?: string, mimeType?: string) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -53,8 +53,14 @@ export async function analyzeUniversalText(text: string) {
 
     const today = new Date().toISOString().split('T')[0];
 
-    const prompt = `Analiza el siguiente texto, clasifica la intención en una de las acciones permitidas y extrae los parámetros relevantes.
+    const prompt = `Analiza el siguiente texto y/o imagen/PDF adjunto, clasifica la intención en una de las acciones permitidas y extrae los parámetros relevantes.
 La fecha de hoy es: ${today}.
+
+REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
+1. Si recibes una imagen o PDF de una factura con múltiples artículos, NO los registres por separado. Suma o identifica el MONTO TOTAL a pagar.
+2. Asigna una CATEGORÍA general lógica (ej. 'Supermercado', 'Farmacia', 'Ferretería', 'Restaurante').
+3. En el campo DETALLE, escribe el nombre del comercio y un resumen breve de los artículos principales (ej. 'Súper 99 - Compra de carnes, vegetales y artículos de limpieza').
+4. Devuelve la acción "gasto" y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
 
 EJEMPLOS DE MAPEO:
 - "Cristhian gastó 15 en el Súper 99 ayer": accion="gasto", parametros={pagador: "Cristhian", monto: 15, detalle: "Súper 99", categoria: "Supermercado", fecha: ayer}
@@ -66,11 +72,22 @@ EJEMPLOS DE MAPEO:
 - "Aboné 20 dolares al ahorro navideño": accion="meta_ahorro", parametros={obligacion: "Ahorro Navideño", monto: 20, fecha: hoy}
 - "Hola, ¿cómo estás?": accion="desconocido", parametros={}
 
-Texto del usuario: "${text}"`;
+Texto del usuario: "${text || 'Aquí está el archivo adjunto'}"`;
+
+    const contentsParams: any[] = [prompt];
+    
+    if (base64Data && mimeType) {
+      contentsParams.push({
+        inlineData: {
+          data: base64Data,
+          mimeType: mimeType
+        }
+      });
+    }
 
     const response = await ai.models.generateContent({
       model: 'gemini-flash-lite-latest',
-      contents: prompt,
+      contents: contentsParams,
       config: {
         responseMimeType: 'application/json',
         responseSchema: responseSchema,
