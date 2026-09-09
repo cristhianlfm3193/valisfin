@@ -1,0 +1,555 @@
+<!DOCTYPE html><html lang="es" style=""><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ValisPro - Tareas &amp; Cronograma de Supervisión</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf7',
+              100: '#dcfce9',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#004d36'
+            },
+            surface: {
+              base: '#faf8ff',
+              card: '#ffffff',
+              cardDim: '#f4f6fa'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface-base text-slate-800 font-sans min-h-screen pb-28 antialiased selection:bg-brand-100">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 bg-surface-card/90 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Brand & Section Context -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-brand-800 text-white flex items-center justify-center font-extrabold text-xl shadow-sm shadow-brand-900/10">
+          <span class="material-symbols-outlined text-[24px]">verified</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">ValisPro</h1>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800 border border-brand-500/20">
+              SUPERVISIÓN KEIKO
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 hidden sm:block">Panel Operativo &amp; Tareas de Mercaderistas en Ruta</p>
+        </div>
+      </div>
+
+      <!-- User Badge & ValisFin Bridge Button -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="hidden md:flex items-center gap-2.5 bg-slate-100/80 px-3 py-1.5 rounded-full border border-slate-200">
+          <div class="w-7 h-7 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
+            JC
+          </div>
+          <div class="text-left text-xs leading-tight">
+            <span class="font-semibold text-slate-800 block">Jennifer Camaño</span>
+            <span class="text-[10px] text-slate-500">Supervisora Regional</span>
+          </div>
+        </div>
+
+        <!-- Botón Retorno a ValisFin -->
+        <a href="#valisfin" class="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-300 transition-all shadow-sm hover:scale-[1.02] active:scale-95">
+          <span class="material-symbols-outlined text-base sm:text-lg text-emerald-700">sync_alt</span>
+          <span class="hidden sm:inline">Volver a <strong>ValisFin</strong></span>
+          <span class="sm:hidden"><strong>ValisFin</strong></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pt-6 space-y-6">
+
+    <!-- HERO BAR & QUICK ACTIONS -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-semibold text-emerald-700 mb-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          GESTIÓN OPERATIVA EN VIVO • CIERRE SEPTIEMBRE 2026
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Tareas, Rutas &amp; Cronograma de Supervisión
+        </h2>
+        <p class="text-sm text-slate-500 mt-0.5">
+          Supervisa el flujo en campo de Josep, Enrique y Andrés. Arrastra tarjetas o programa visitas críticas.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition">
+          <span class="material-symbols-outlined text-lg">filter_list</span>
+          <span class="">Filtrar Vendedor</span>
+        </button>
+        <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-xs sm:text-sm font-semibold shadow-md shadow-brand-900/10 transition active:scale-95">
+          <span class="material-symbols-outlined text-lg">add_task</span>
+          <span class="">+ Nueva Tarea / Visita</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS DE NAVEGACIÓN SUPERIOR RÁPIDA -->
+    <div class="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto text-xs sm:text-sm font-medium">
+      <button class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5 whitespace-nowrap">
+        <span class="material-symbols-outlined text-base">trending_up</span>
+        Ventas &amp; Métricas
+      </button>
+      <button class="px-3.5 py-1.5 rounded-lg bg-brand-100 text-brand-900 font-bold border border-brand-500/30 flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+        <span class="material-symbols-outlined text-base">checklist</span>
+        Tareas &amp; Cronograma (Activo)
+      </button>
+      <button class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-1.5 whitespace-nowrap">
+        <span class="material-symbols-outlined text-base">map</span>
+        Mapa &amp; Locales BI
+      </button>
+      <div class="ml-auto text-xs text-slate-500 flex items-center gap-1 whitespace-nowrap pl-2">
+        <span class="material-symbols-outlined text-sm text-emerald-600">sync</span>
+        Sincronizado con GPS: 11:48 AM
+      </div>
+    </div>
+
+    <!-- METRIC STATUS PILLS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined">pending_actions</span>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Por Hacer</div>
+          <div class="text-xl font-black font-mono text-slate-900">4 <span class="text-xs font-normal text-slate-500 font-sans">rutas</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined">directions_run</span>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">En Ruta / Proceso</div>
+          <div class="text-xl font-black font-mono text-slate-900">3 <span class="text-xs font-normal text-slate-500 font-sans">activas</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined">task_alt</span>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Completadas Hoy</div>
+          <div class="text-xl font-black font-mono text-slate-900">7 <span class="text-xs font-normal text-slate-500 font-sans">validadas</span></div>
+        </div>
+      </div>
+      <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined">priority_high</span>
+        </div>
+        <div>
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Alertas Quincena</div>
+          <div class="text-xl font-black font-mono text-rose-600">2 <span class="text-xs font-normal text-slate-500 font-sans">críticas</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSPACE: KANBAN (Left/Main) + CALENDARIO Y AGENDA (Right) -->
+    <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6">
+      <!-- LEFT: KANBAN BOARD ESTILO TRELLO (8 COLS) -->
+      <section class="w-full lg:col-span-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-brand-700 text-xl">view_kanban</span>
+            <h3 class="font-extrabold text-slate-900 text-base">Tablero de Rutas y Supervisión</h3>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-slate-400 hidden sm:inline">Arrastra para actualizar</span>
+            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-semibold font-mono">Keiko Operativo</span>
+          </div>
+        </div>
+
+        <!-- 3 KANBAN COLUMNS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <!-- COLUMNA 1: POR HACER -->
+          <div class="bg-slate-100/70 p-3.5 rounded-2xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between px-1">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span class="font-bold text-xs uppercase tracking-wider text-slate-700">Por Hacer</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-white text-slate-700 text-xs font-bold flex items-center justify-center shadow-xs">3</span>
+            </div>
+
+            <!-- Card 1: Urgente -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400 transition cursor-grab group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-rose-100 text-rose-700 uppercase">Urgente #RT-104</span>
+                <span class="text-[11px] font-mono text-slate-400">Hoy 2:00 PM</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug">Visita Ruta Crítica Albrook</h4>
+              <p class="text-xs text-slate-500 mt-1">Súper 99 Albrook Mall: Resolver desabastecimiento de arroz y enlatados de línea Keiko.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold flex items-center justify-center">AC</div>
+                  <span class="text-xs font-semibold text-slate-700">Andres Chavez</span>
+                </div>
+                <span class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Stock Out</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Inventario -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-grab group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-slate-100 text-slate-700 uppercase">Inventario #RT-108</span>
+                <span class="text-[11px] font-mono text-slate-400">Mañana</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug">Revisión de Vencimientos</h4>
+              <p class="text-xs text-slate-500 mt-1">Rey Versalles: Validar rotación de producto en góndola principal y fechas cortas.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center justify-center">JD</div>
+                  <span class="text-xs font-semibold text-slate-700">Josep Dominguez</span>
+                </div>
+                <span class="text-[11px] text-slate-500">Góndola 4</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Auditoría Precios -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-grab group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-indigo-50 text-indigo-700 uppercase">Auditoría #RT-112</span>
+                <span class="text-[11px] font-mono text-slate-400">Jueves</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug">Censo de Precios vs Competencia</h4>
+              <p class="text-xs text-slate-500 mt-1">Mr. Precios Calidonia: Levantar precios de marcas competidoras en salsas y aceites.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold flex items-center justify-center">ER</div>
+                  <span class="text-xs font-semibold text-slate-700">Enrique Rosario</span>
+                </div>
+                <span class="text-[11px] text-slate-400">Canal Trad.</span>
+              </div>
+            </div>
+
+            <button class="w-full py-2 rounded-xl border border-dashed border-slate-300 hover:border-brand-500 text-xs font-semibold text-slate-500 hover:text-brand-800 bg-white/50 hover:bg-white transition flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-base">add</span>
+              Añadir tarjeta a Por Hacer
+            </button>
+          </div>
+
+          <!-- COLUMNA 2: EN RUTA / EN PROCESO -->
+          <div class="bg-slate-100/70 p-3.5 rounded-2xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between px-1">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                <span class="font-bold text-xs uppercase tracking-wider text-slate-700">En Ruta</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-white text-slate-700 text-xs font-bold flex items-center justify-center shadow-xs">2</span>
+            </div>
+
+            <!-- Card 1: Coaching -->
+            <div class="bg-white p-3.5 rounded-xl border-2 border-emerald-500/60 shadow-md hover:shadow-lg transition cursor-grab group relative">
+              <div class="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-extrabold tracking-wider uppercase">En Curso Ahora</div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase">Coaching #RT-102</span>
+                <span class="text-[11px] font-mono text-emerald-700 font-bold">Activo</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug">Ruta de Coaching Comercial</h4>
+              <p class="text-xs text-slate-500 mt-1">Acompañamiento en técnica de negociación y colocación de planimetría en Riba Smith Costa del Este.</p>
+              <div class="bg-slate-50 p-2 rounded-lg mt-2 text-[11px] text-slate-600 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-brand-600">person_pin</span>
+                <span class="">Supervisora Jennifer acompañando a Enrique</span>
+              </div>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold flex items-center justify-center">ER</div>
+                  <span class="text-xs font-semibold text-slate-700">Enrique del Rosario</span>
+                </div>
+                <span class="text-[11px] font-bold text-blue-600">65% avance</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Trade Marketing -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-grab group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-purple-100 text-purple-800 uppercase">POP Trade #RT-105</span>
+                <span class="text-[11px] font-mono text-slate-400">11:30 AM</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug">Montaje de Material POP</h4>
+              <p class="text-xs text-slate-500 mt-1">Riba Smith Transístmica: Colocación de cenefas, glorificadores y cabecera en isla central.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center justify-center">JD</div>
+                  <span class="text-xs font-semibold text-slate-700">Josep Dominguez</span>
+                </div>
+                <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">80% avance</span>
+              </div>
+            </div>
+
+            <button class="w-full py-2 rounded-xl border border-dashed border-slate-300 hover:border-brand-500 text-xs font-semibold text-slate-500 hover:text-brand-800 bg-white/50 hover:bg-white transition flex items-center justify-center gap-1">
+              <span class="material-symbols-outlined text-base">add</span>
+              Añadir tarea en curso
+            </button>
+          </div>
+
+          <!-- COLUMNA 3: COMPLETADO -->
+          <div class="bg-slate-100/70 p-3.5 rounded-2xl border border-slate-200/80 space-y-3">
+            <div class="flex items-center justify-between px-1">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="font-bold text-xs uppercase tracking-wider text-slate-700">Completado</span>
+              </div>
+              <span class="w-5 h-5 rounded-full bg-white text-slate-700 text-xs font-bold flex items-center justify-center shadow-xs">3</span>
+            </div>
+
+            <!-- Card 1: Check-in -->
+            <div class="bg-white/90 p-3.5 rounded-xl border border-emerald-200 shadow-xs hover:shadow-sm transition group opacity-90 hover:opacity-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-800 uppercase flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">check_circle</span>
+                  Validado
+                </span>
+                <span class="text-[11px] font-mono text-slate-400">10:45 AM</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-700 line-through decoration-slate-300 leading-snug">Check-in Mr. Precios Los Andes</h4>
+              <p class="text-xs text-slate-400 mt-1">Reporte fotográfico de góndola Keiko validado con éxito vía app GPS.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <span class="text-xs text-slate-600 font-medium">Andres Chavez</span>
+                <span class="text-[11px] font-mono font-bold text-emerald-700">FOTOS OK</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Cobranza -->
+            <div class="bg-white/90 p-3.5 rounded-xl border border-emerald-200 shadow-xs hover:shadow-sm transition group opacity-90 hover:opacity-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-800 uppercase flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">receipt_long</span>
+                  Cobranza
+                </span>
+                <span class="text-[11px] font-mono text-slate-400">09:15 AM</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-700 line-through decoration-slate-300 leading-snug">Entrega de Facturas B/. 3,200</h4>
+              <p class="text-xs text-slate-400 mt-1">Riba Smith Costa del Este con sello de recibido y fecha compromiso.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <span class="text-xs text-slate-600 font-medium">Enrique del Rosario</span>
+                <span class="text-[11px] font-mono font-bold text-emerald-700">B/. 3,200</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Auditoría de frío -->
+            <div class="bg-white/90 p-3.5 rounded-xl border border-emerald-200 shadow-xs hover:shadow-sm transition group opacity-90 hover:opacity-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-800 uppercase flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">ac_unit</span>
+                  Cadena Frío
+                </span>
+                <span class="text-[11px] font-mono text-slate-400">Ayer 4:20 PM</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-700 line-through decoration-slate-300 leading-snug">Revisión Termógrafos Neveras</h4>
+              <p class="text-xs text-slate-400 mt-1">Rey Calle 50: Registro de temperatura en línea refrigerada aprobado.</p>
+              <div class="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                <span class="text-xs text-slate-600 font-medium">Josep Dominguez</span>
+                <span class="text-[11px] font-mono font-bold text-emerald-700">4°C CUMPLIDO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: CALENDARIO COMERCIAL & METAS DEL CICLO (4 COLS) -->
+      <aside class="w-full lg:col-span-4 space-y-4">
+        <!-- CALENDARIO INTERACTIVO -->
+        <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-brand-700">calendar_month</span>
+              <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">Septiembre 2026</h3>
+            </div>
+            <div class="flex items-center gap-1">
+              <button class="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition">
+                <span class="material-symbols-outlined text-lg">chevron_left</span>
+              </button>
+              <button class="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition">
+                <span class="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Días de semana -->
+          <div class="w-full grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-slate-400 uppercase">
+            <div class="">L</div><div class="">M</div><div class="">M</div><div class="">J</div><div class="">V</div><div class="">S</div><div class="">D</div>
+          </div>
+
+          <!-- Grilla de días -->
+          <div class="w-full grid grid-cols-7 gap-1 text-center text-xs sm:text-sm font-semibold">
+            <div class="py-2 text-slate-300">31</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">1</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">2</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">3</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">4</div>
+            <div class="py-2 text-slate-400">5</div>
+            <div class="py-2 text-slate-400">6</div>
+
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">7</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">8</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">9</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">10</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">11</div>
+            <div class="py-2 text-slate-400">12</div>
+            <div class="py-2 text-slate-400">13</div>
+
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">14</div>
+            <!-- Día 15 Corte Quincena -->
+            <div class="py-2 bg-emerald-700 text-white rounded-xl font-extrabold shadow-sm relative group cursor-pointer">
+              15
+              <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full ring-2 ring-white"></span>
+            </div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">16</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">17</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">18</div>
+            <div class="py-2 text-slate-400">19</div>
+            <div class="py-2 text-slate-400">20</div>
+
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">21</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">22</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">23</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">24</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">25</div>
+            <div class="py-2 text-slate-400">26</div>
+            <div class="py-2 text-slate-400">27</div>
+
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">28</div>
+            <div class="py-2 text-slate-700 hover:bg-slate-100 rounded-lg">29</div>
+            <!-- Día 30 Cierre Mes -->
+            <div class="py-2 bg-slate-900 text-white rounded-xl font-extrabold shadow-sm relative cursor-pointer">30</div>
+            <div class="py-2 text-slate-300">1</div>
+            <div class="py-2 text-slate-300">2</div>
+            <div class="py-2 text-slate-300">3</div>
+            <div class="py-2 text-slate-300">4</div>
+          </div>
+
+          <!-- Leyenda de fechas críticas -->
+          <div class="pt-3 border-t border-slate-100 space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-slate-600">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-700"></span>
+                <strong>15 Sep:</strong> Corte 1 Quincenal (50% Cuota)
+              </span>
+              <span class="font-mono text-emerald-700 font-bold">Faltan 6 días</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-slate-600">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-900"></span>
+                <strong>30 Sep:</strong> Cierre de Mes &amp; Bonos Keiko
+              </span>
+              <span class="font-mono text-slate-500 font-bold">Faltan 21 días</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRÓXIMAS AUDITORÍAS EN CAMPO -->
+        <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-700 text-lg">schedule</span>
+              Cronograma de Visitas Jennifer
+            </h4>
+            <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">3 Pendientes</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-brand-700 text-lg mt-0.5">location_on</span>
+              <div class="text-xs">
+                <div class="font-bold text-slate-800">Riba Smith Costa del Este</div>
+                <div class="text-slate-500">Supervisión planimetría con Enrique</div>
+                <div class="text-[10px] font-mono text-slate-400 mt-1">Hoy • 11:30 AM - 01:00 PM</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-amber-600 text-lg mt-0.5">warning</span>
+              <div class="text-xs">
+                <div class="font-bold text-slate-800">Super 99 Albrook Mall</div>
+                <div class="text-slate-500">Revisión de inventario con Andrés</div>
+                <div class="text-[10px] font-mono text-slate-400 mt-1">Hoy • 02:30 PM - 04:00 PM</div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-blue-600 text-lg mt-0.5">event</span>
+              <div class="text-xs">
+                <div class="font-bold text-slate-800">Reunión con Gerencia Keiko</div>
+                <div class="text-slate-500">Entrega de informe preliminar Q2</div>
+                <div class="text-[10px] font-mono text-slate-400 mt-1">Viernes • 09:00 AM (Virtual)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LINK CARD A MAPA BI -->
+        <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white p-5 rounded-3xl shadow-md relative overflow-hidden">
+          <div class="relative z-10 space-y-2">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/15 text-emerald-200 uppercase tracking-wider">Análisis Geográfico</span>
+            <h4 class="font-extrabold text-base">¿Deseas ver la cobertura en mapa?</h4>
+            <p class="text-xs text-slate-300">Visualiza los 18 supermercados y locales activos en tiempo real con datos de venta y cumplimiento.</p>
+            <button class="mt-2 inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl transition shadow-sm">
+              <span class="material-symbols-outlined text-base">explore</span>
+              Ir a Mapa &amp; Locales BI
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM FLOATING NAVIGATION BAR (PERSISTENTE PARA COMPUTADORA Y MÓVIL) -->
+  <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-white/95 backdrop-blur-xl px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full border border-slate-200/90 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-1 sm:gap-2 max-w-[95vw] overflow-x-auto" style="left: 50%; transform: translateX(-50%); position: fixed; bottom: 1rem; z-index: 50; margin: 0px auto; width: max-content; max-width: 95vw;"><!-- Tab 1: Ventas -->
+<a href="#ventas" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition text-xs sm:text-sm font-semibold whitespace-nowrap">
+  <span class="material-symbols-outlined text-lg sm:text-xl">trending_up</span>
+  <span class="">Ventas</span>
+</a>
+
+<!-- Tab 2: Tareas (Activo) -->
+<a href="#tareas" class="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full bg-brand-100 text-brand-900 font-extrabold transition text-xs sm:text-sm shadow-sm border border-brand-500/30 whitespace-nowrap">
+  <span class="material-symbols-outlined text-lg sm:text-xl text-brand-800">checklist</span>
+  <span class="">Tareas</span>
+</a>
+
+<!-- Tab 3: Mapa -->
+<a href="#mapa" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition text-xs sm:text-sm font-semibold whitespace-nowrap">
+  <span class="material-symbols-outlined text-lg sm:text-xl">map</span>
+  <span class="">Mapa</span>
+</a>
+
+<div class="h-5 sm:h-6 w-px bg-slate-200 mx-0.5 sm:mx-1"></div>
+
+<!-- Tab 4: ValisFin -->
+<a href="#valisfin" title="Volver a ValisFin" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition whitespace-nowrap">
+  <span class="material-symbols-outlined text-base sm:text-lg text-emerald-700">sync_alt</span>
+  <span class="">ValisFin</span>
+</a></nav>
+
+
+
+
+</body></html>

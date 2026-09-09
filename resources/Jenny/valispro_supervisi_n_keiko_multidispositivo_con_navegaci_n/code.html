@@ -1,0 +1,1072 @@
+<!DOCTYPE html><html lang="es" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline": "#6d7a72",
+          "background": "#faf8ff",
+          "on-primary-fixed": "#002114",
+          "surface-tint": "#006c4a",
+          "on-secondary-container": "#306d58",
+          "on-surface-variant": "#3d4a42",
+          "inverse-on-surface": "#eef0ff",
+          "secondary-container": "#adedd3",
+          "primary": "#006948",
+          "on-primary-container": "#f5fff7",
+          "inverse-surface": "#283044",
+          "secondary-fixed-dim": "#95d3ba",
+          "on-background": "#131b2e",
+          "tertiary": "#4648d4",
+          "surface-container-lowest": "#ffffff",
+          "outline-variant": "#bccac0",
+          "on-error": "#ffffff",
+          "on-error-container": "#93000a",
+          "on-primary": "#ffffff",
+          "primary-container": "#00855d",
+          "primary-fixed-dim": "#68dba9",
+          "tertiary-fixed": "#e1e0ff",
+          "on-tertiary-fixed": "#07006c",
+          "surface-container": "#eaedff",
+          "surface-container-low": "#f2f3ff",
+          "secondary": "#2b6954",
+          "inverse-primary": "#68dba9",
+          "surface": "#faf8ff",
+          "secondary-fixed": "#b0f0d6",
+          "error-container": "#ffdad6",
+          "on-secondary": "#ffffff",
+          "on-tertiary-fixed-variant": "#2f2ebe",
+          "surface-variant": "#dae2fd",
+          "tertiary-container": "#6063ee",
+          "surface-dim": "#d2d9f4",
+          "on-surface": "#131b2e",
+          "on-tertiary": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "surface-bright": "#faf8ff",
+          "on-tertiary-container": "#fffbff",
+          "on-primary-fixed-variant": "#005137",
+          "tertiary-fixed-dim": "#c0c1ff",
+          "surface-container-high": "#e2e7ff",
+          "on-secondary-fixed-variant": "#0b513d",
+          "primary-fixed": "#85f8c4",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#002117"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "bento-gap-mobile": "0.875rem",
+          "layout-margin-desktop": "2rem",
+          "space-md": "1rem",
+          "layout-margin-mobile": "1rem",
+          "space-xl": "2rem",
+          "space-xs": "0.5rem",
+          "space-sm": "0.75rem",
+          "space-2xs": "0.25rem",
+          "bento-gap-desktop": "1.5rem",
+          "space-2xl": "3rem",
+          "space-3xl": "4rem"
+        },
+        "fontFamily": {
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-body": [
+            "JetBrains Mono"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-display": [
+            "JetBrains Mono"
+          ]
+        },
+        "fontSize": {
+          "headline-lg": [
+            "2.25rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-sm": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.45",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "1.3",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "0.875rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.35",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "financial-body": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.4",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "1.75rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "1.1",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.75rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "financial-display": [
+            "2rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container"><main class="w-full flex-1 flex flex-col justify-center"><div class="flex flex-col w-full">
+<!-- Top Corporate Bar (Institutional Polish) -->
+<header class="w-full bg-surface-container-lowest/90 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-2xl font-bold">shield_with_house</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Valis<span class="text-primary">Pro</span></span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold uppercase tracking-wider">
+              Supervisión Keiko
+            </span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant hidden sm:inline">Panel Operativo &amp; Inteligencia de Campo</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2.5 bg-surface-container-low px-3 py-1.5 rounded-full">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed font-headline-sm text-label-md flex items-center justify-center font-bold">
+            JC
+          </div>
+<div class="flex flex-col text-left hidden md:flex">
+<span class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Jennifer Camaño</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-xs">Supervisora Regional</span>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 bg-surface-container hover:bg-surface-variant text-on-surface transition-colors px-3.5 py-2 rounded-full font-label-md text-label-md font-medium shadow-sm" href="#valisfin">
+<span class="material-symbols-outlined text-lg text-primary">swap_horiz</span>
+<span class="hidden sm:inline">Volver a</span> <span class="font-bold">ValisFin</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Main Viewport Shell with Bento Content -->
+<div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 pb-28">
+<!-- Hero / Operational Header Badge -->
+<section class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4"><div class="">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-financial-body text-xs sm:text-body-sm text-primary uppercase font-semibold tracking-wider">Cierre Ciclo Q2 • Panamá Centro</span>
+</div>
+<h1 class="font-headline-lg text-2xl sm:text-3xl lg:text-headline-lg text-on-surface tracking-tight font-bold">Centro de Control &amp; Cobertura</h1>
+</div>
+<div class="flex items-center gap-2.5 flex-wrap w-full md:w-auto">
+<button class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold shadow-sm hover:bg-tertiary hover:text-on-tertiary transition-all" id="btnOpenAIModal">
+<span class="material-symbols-outlined text-xl">document_scanner</span>
+<span class="text-xs sm:text-label-md whitespace-nowrap">Escanear OCR</span>
+</button>
+<button class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-md transition-all" id="btnOpenManualModal">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+<span class="text-xs sm:text-label-md whitespace-nowrap">+ Registrar Cuota</span>
+</button>
+</div></section>
+<!-- Desktop Switcher / Quick Tab Pills -->
+<div class="bg-surface-container-low p-1.5 rounded-2xl mb-6 sm:mb-8 flex items-center justify-between gap-2 shadow-inner overflow-x-auto">
+<div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-0.5 sm:pb-0">
+<button class="tab-btn active flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl font-label-md text-xs sm:text-label-md font-semibold transition-all bg-surface-container-lowest text-primary shadow-sm whitespace-nowrap" data-tab-target="tab-ventas">
+<span class="material-symbols-outlined text-base sm:text-lg">trending_up</span>
+<span class="">Ventas &amp; Métricas</span>
+</button>
+<button class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl font-label-md text-xs sm:text-label-md font-semibold transition-all text-on-surface-variant hover:text-on-surface whitespace-nowrap" data-tab-target="tab-tareas">
+<span class="material-symbols-outlined text-base sm:text-lg">view_kanban</span>
+<span class="">Tareas &amp; Cronograma</span>
+</button>
+<button class="tab-btn flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl font-label-md text-xs sm:text-label-md font-semibold transition-all text-on-surface-variant hover:text-on-surface whitespace-nowrap" data-tab-target="tab-mapa">
+<span class="material-symbols-outlined text-base sm:text-lg">storefront</span>
+<span class="">Mapa &amp; Locales BI</span>
+</button>
+</div>
+<div class="hidden lg:flex items-center gap-2 text-on-surface-variant font-financial-body text-body-sm pr-3 whitespace-nowrap">
+<span class="material-symbols-outlined text-base text-primary">sync</span>
+<span class="">Sincronizado: Hoy, 11:42 AM</span>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- PESTAÑA 1: VENTAS & MÉTRICAS (DEFAULT VIEW) -->
+<!-- ======================================================== -->
+<div class="tab-panel flex flex-col gap-6" id="tab-ventas">
+<!-- AI OCR Highlight Banner Card -->
+<div class="w-full bg-gradient-to-r from-surface-container to-secondary-container/30 rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+<div class="flex items-start sm:items-center gap-3 sm:gap-4">
+<div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-surface-container-lowest text-primary flex items-center justify-center shadow-md flex-shrink-0 mt-0.5 sm:mt-0">
+<span class="material-symbols-outlined text-2xl sm:text-3xl">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-headline-sm text-base sm:text-headline-sm font-bold text-on-surface">Smart Ingestion con Visión Computacional</span>
+<span class="bg-primary text-on-primary font-label-sm text-[10px] sm:text-label-sm px-2 py-0.5 rounded-full uppercase">OCR Activo</span>
+</div>
+<p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">
+Sube la foto del manifiesto diario o carga el Excel de consolidado Keiko para cuadrar facturación en segundos.
+</p>
+</div>
+</div>
+<label class="cursor-pointer w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-surface-container-lowest hover:bg-surface text-primary font-label-md text-label-md font-bold shadow-sm whitespace-nowrap transition-transform active:scale-95">
+<span class="material-symbols-outlined text-xl">upload_file</span>
+<span class="">Cargar Manifiesto / Excel</span>
+<input accept=".jpg,.png,.xlsx,.csv" class="hidden" onchange="window.handleFileUpload(this)" type="file">
+</label>
+</div>
+<!-- Bento Grid: Vendedores KPIs -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Vendedor 1: Josep Dominguez -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold">
+                  JD
+                </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Josep Dominguez</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ruta 01 • Panamá Este / San Miguelito</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full font-financial-body text-body-sm font-bold bg-secondary-container text-on-secondary-container">
+                82.5%
+              </span>
+</div>
+<div class="my-4">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Avance de Cuota</span>
+<span class="font-financial-body text-body-sm font-bold text-on-surface">B/. 16,500 / B/. 20,000</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-700" style="width: 82.5%"></div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-2 bg-surface-container-low/50 rounded-xl p-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Brecha / GAP</span>
+<span class="font-financial-body text-headline-sm font-bold text-primary">B/. 3,500.00</span>
+</div>
+<span class="material-symbols-outlined text-secondary-container bg-primary text-2xl p-2 rounded-xl">check_circle</span>
+</div>
+</div>
+<!-- Vendedor 2: Enrique del Rosario -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-on-surface font-headline-sm text-headline-sm flex items-center justify-center font-bold">
+                  ER
+                </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Enrique del Rosario</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ruta 02 • Transístmica &amp; Calidonia</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full font-financial-body text-body-sm font-bold bg-error-container text-on-error-container">
+                68.0%
+              </span>
+</div>
+<div class="my-4">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Avance de Cuota</span>
+<span class="font-financial-body text-body-sm font-bold text-on-surface">B/. 10,200 / B/. 15,000</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full transition-all duration-700" style="width: 68.0%"></div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-2 bg-surface-container-low/50 rounded-xl p-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Brecha / GAP</span>
+<span class="font-financial-body text-headline-sm font-bold text-error">B/. 4,800.00</span>
+</div>
+<span class="material-symbols-outlined text-error-container bg-error text-2xl p-2 rounded-xl">warning</span>
+</div>
+</div>
+<!-- Vendedor 3: Andres Chavez -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed font-headline-sm text-headline-sm flex items-center justify-center font-bold">
+                  AC
+                </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Andres Chavez</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ruta 03 • Cadenas Clave (Rey / 99)</span>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full font-financial-body text-body-sm font-bold bg-secondary-container text-on-secondary-container">
+                73.5%
+              </span>
+</div>
+<div class="my-4">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Avance de Cuota</span>
+<span class="font-financial-body text-body-sm font-bold text-on-surface">B/. 36,750 / B/. 50,000</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-700" style="width: 73.5%"></div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-2 bg-surface-container-low/50 rounded-xl p-3 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Brecha / GAP</span>
+<span class="font-financial-body text-headline-sm font-bold text-on-surface">B/. 13,250.00</span>
+</div>
+<span class="material-symbols-outlined text-surface-container-lowest bg-tertiary text-2xl p-2 rounded-xl">schedule</span>
+</div>
+</div>
+</div>
+<!-- General Performance Analytics Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+<div class="lg:col-span-5 flex flex-col gap-2">
+<span class="font-label-sm text-label-sm uppercase font-semibold text-primary">Consolidado Keiko Supervisión</span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">B/. 63,450.00 Recaudados</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Meta Global: <span class="font-financial-body font-bold text-on-surface">B/. 85,000.00</span> (74.6% alcanzado). Faltan 6 días hábiles para el corte quincenal de comisiones.
+          </p>
+<div class="flex gap-2 mt-2">
+<span class="inline-flex items-center gap-1 text-primary font-financial-body text-body-sm font-bold">
+<span class="material-symbols-outlined text-base">arrow_upward</span> +8.4% vs mes previo
+            </span>
+</div>
+</div>
+<div class="lg:col-span-7 flex flex-col gap-3">
+<!-- Inline Sparkline and Mini Bar Visualization -->
+<div class="flex items-center justify-between text-body-sm font-label-md text-on-surface-variant">
+<span class="">Distribución de Cumplimiento</span>
+<span class="">Objetivo Mínimo: 80%</span>
+</div>
+<div class="h-10 w-full flex rounded-xl overflow-hidden bg-surface-container p-1 gap-1">
+<div class="bg-primary rounded-lg flex items-center justify-center text-on-primary font-financial-body text-xs font-bold" style="width: 58%;" title="Andres Chavez (58%)">Andres: 58%</div>
+<div class="bg-secondary rounded-lg flex items-center justify-center text-on-secondary font-financial-body text-xs font-bold" style="width: 26%;" title="Josep Dominguez (26%)">Josep: 26%</div>
+<div class="bg-outline rounded-lg flex items-center justify-center text-surface font-financial-body text-xs font-bold" style="width: 16%;" title="Enrique del Rosario (16%)">Enrique: 16%</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-financial-body">
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span> Andrés (58%)</span>
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-secondary inline-block"></span> Josep (26%)</span>
+<span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-outline inline-block"></span> Enrique (16%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- PESTAÑA 2: TAREAS & CRONOGRAMA (KANBAN + CALENDARIO) -->
+<!-- ======================================================== -->
+<div class="tab-panel hidden flex flex-col gap-6" id="tab-tareas">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Kanban Board (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Tablero Operativo de Supervisión</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Flujo en tiempo real para mercaderistas y rutas</p>
+</div>
+<span class="bg-surface-container px-3 py-1 rounded-full font-financial-body text-body-sm text-primary font-semibold">6 Tareas Activas</span>
+</div>
+<!-- 3 Columns Kanban -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+<!-- Columna: Por Hacer -->
+<div class="bg-surface-container-low rounded-2xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2">
+<span class="font-headline-sm text-label-md font-bold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-outline"></span> Por Hacer
+                </span>
+<span class="w-6 h-6 rounded-full bg-surface-container-lowest font-financial-body text-xs font-bold flex items-center justify-center">2</span>
+</div>
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">Urgente</span>
+<span class="font-financial-body text-xs text-on-surface-variant">14:00</span>
+</div>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface">Auditoría Visita Crítica</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Super 99 Albrook Mall. Quiebre de stock en pasillo de galletas Keiko.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Josep D.</span>
+<span class="material-symbols-outlined text-base text-primary">assignment_late</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold w-fit">Ruta Quincenal</span>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface">Revisión de Cabeceras</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Mr. Precio Los Andes. Verificar precio sugerido exhibido.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Enrique R.</span>
+<span class="material-symbols-outlined text-base">inventory_2</span>
+</div>
+</div>
+</div>
+<!-- Columna: En Ruta -->
+<div class="bg-surface-container-low rounded-2xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2">
+<span class="font-headline-sm text-label-md font-bold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span> En Ruta
+                </span>
+<span class="w-6 h-6 rounded-full bg-surface-container-lowest font-financial-body text-xs font-bold flex items-center justify-center">2</span>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2 border-l-4 border-tertiary">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">Coaching</span>
+<span class="font-financial-body text-xs text-primary font-bold">En curso</span>
+</div>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface">Acompañamiento en Vivo</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ruta Coaching con Andres Chavez. Negociación de espacio en punta de góndola.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-tertiary">directions_car</span> Con Supervisor</span>
+<span class="font-financial-body font-semibold">Rey Calle 50</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow flex flex-col gap-2">
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold w-fit">Trade Marketing</span>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface">Instalación Material POP</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Riba Smith Multiplaza. Montaje de banner acrílico y cenefas promocionales.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Equipo Trade</span>
+<span class="material-symbols-outlined text-base text-primary">store</span>
+</div>
+</div>
+</div>
+<!-- Columna: Completado -->
+<div class="bg-surface-container-low rounded-2xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2">
+<span class="font-headline-sm text-label-md font-bold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span> Completado
+                </span>
+<span class="w-6 h-6 rounded-full bg-surface-container-lowest font-financial-body text-xs font-bold flex items-center justify-center">2</span>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm opacity-90 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">Firmado</span>
+<span class="font-financial-body text-xs text-on-surface-variant">09:15 AM</span>
+</div>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface line-through text-on-surface-variant">Check-in Mañana Riba Smith</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Recepción y sellado de factura con jefe de piso.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-primary font-semibold">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified</span> Conforme</span>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm opacity-90 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">Inventario</span>
+<span class="font-financial-body text-xs text-on-surface-variant">Ayer</span>
+</div>
+<h4 class="font-headline-sm text-label-md font-bold text-on-surface line-through text-on-surface-variant">Cierre Semanal Cuotas</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Subida al servidor ValisPro de notas de crédito.</p>
+<div class="pt-2 flex items-center justify-between text-xs text-primary font-semibold">
+<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm">cloud_done</span> Sync OK</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Calendar Widget (4 cols) -->
+<div class="lg:col-span-4 bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Calendario Supervisor</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Octubre 2024 • Cortes 15 y 30</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button class="p-1 rounded-lg hover:bg-surface-container"><span class="material-symbols-outlined text-lg">chevron_left</span></button>
+<button class="p-1 rounded-lg hover:bg-surface-container"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
+</div>
+</div>
+<!-- Mini Grid Calendar -->
+<div class="grid grid-cols-7 gap-1 text-center font-financial-body text-xs mb-2 text-on-surface-variant font-semibold">
+<span class="">Lu</span><span class="">Ma</span><span class="">Mi</span><span class="">Ju</span><span class="">Vi</span><span class="text-error">Sá</span><span class="text-error">Do</span>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center font-financial-body text-sm" id="calendarDays">
+<span class="p-2 text-outline-variant">29</span>
+<span class="p-2 text-outline-variant">30</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">1</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">2</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">3</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">4</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">5</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">6</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">7</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">8</span>
+<span class="p-2 rounded-lg bg-primary/15 text-primary font-bold cursor-pointer">9</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">10</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">11</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">12</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">13</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">14</span>
+<!-- Day 15: Critical Cut -->
+<span class="p-2 bg-error text-on-error font-bold rounded-xl cursor-pointer shadow-sm relative group" title="Corte Quincenal 15">
+                15
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-error-container rounded-full"></span>
+</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">16</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">17</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">18</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">19</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">20</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">21</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">22</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">23</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">24</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">25</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">26</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">27</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">28</span>
+<span class="p-2 rounded-lg hover:bg-surface-container cursor-pointer">29</span>
+<!-- Day 30: Final Cut -->
+<span class="p-2 bg-primary text-on-primary font-bold rounded-xl cursor-pointer shadow-sm relative" title="Corte Final de Mes">
+                30
+              </span>
+<span class="p-2 text-outline-variant">31</span>
+<span class="p-2 text-outline-variant">1</span>
+<span class="p-2 text-outline-variant">2</span>
+</div>
+<!-- Legend of Dates -->
+<div class="mt-6 flex flex-col gap-2.5">
+<div class="flex items-center gap-3 p-2.5 bg-surface-container-low rounded-xl">
+<span class="w-3 h-3 rounded-full bg-error flex-shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-md text-label-md font-bold text-on-surface">15 Oct • Corte Quincenal 1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Auditoría al 50% de cuotas vendedores</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2.5 bg-surface-container-low rounded-xl">
+<span class="w-3 h-3 rounded-full bg-primary flex-shrink-0"></span>
+<div class="flex flex-col text-left">
+<span class="font-label-md text-label-md font-bold text-on-surface">30 Oct • Cierre Mensual Keiko</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Liquidación de incentivos y bonos</span>
+</div>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">event_available</span>
+<span class="">Agendar Visita en Terreno</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- PESTAÑA 3: MAPA & LOCALES BI (POWER BI STYLE) -->
+<!-- ======================================================== -->
+<div class="tab-panel hidden flex flex-col gap-6" id="tab-mapa">
+<!-- Filter and Query Bar -->
+<div class="bg-surface-container-lowest p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-full bg-surface-container-low text-on-surface placeholder:text-on-surface-variant text-body-md focus:outline-none focus:bg-surface-container transition-all" id="storeSearchInput" placeholder="Buscar por sucursal, cadena o mercaderista..." type="text">
+</div>
+<div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+<button class="chain-filter active px-4 py-2 rounded-full font-label-md text-label-md font-semibold transition-all bg-primary text-on-primary" data-filter="all">Todas</button>
+<button class="chain-filter px-4 py-2 rounded-full font-label-md text-label-md font-semibold transition-all bg-surface-container text-on-surface hover:bg-surface-variant" data-filter="Rey">Rey</button>
+<button class="chain-filter px-4 py-2 rounded-full font-label-md text-label-md font-semibold transition-all bg-surface-container text-on-surface hover:bg-surface-variant" data-filter="Super 99">Super 99</button>
+<button class="chain-filter px-4 py-2 rounded-full font-label-md text-label-md font-semibold transition-all bg-surface-container text-on-surface hover:bg-surface-variant" data-filter="Riba Smith">Riba Smith</button>
+<button class="chain-filter px-4 py-2 rounded-full font-label-md text-label-md font-semibold transition-all bg-surface-container text-on-surface hover:bg-surface-variant" data-filter="Mr. Precio">Mr. Precio</button>
+</div>
+</div>
+<!-- Geospatial Map and BI Grid Split Panel -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Interactive Simulated Map Container (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col">
+<div class="flex items-center justify-between mb-3 px-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">pin_drop</span>
+<span class="font-headline-sm text-label-md font-bold text-on-surface">Puntos Georreferenciados</span>
+</div>
+<span class="font-financial-body text-xs text-on-surface-variant">Panamá Metro</span>
+</div>
+<!-- Interactive Graphic Map Canvas -->
+<div class="relative w-full h-80 sm:h-96 rounded-xl overflow-hidden bg-slate-900 shadow-inner flex items-center justify-center group" id="geoMapCanvas">
+<!-- Simulated Map Texture Background -->
+<div class="absolute inset-0 opacity-40 bg-[radial-gradient(#306d58_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<svg class="absolute inset-0 w-full h-full text-slate-800 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<path d="M-20,120 Q80,80 180,140 T380,110 T550,220" fill="none" stroke="#283044" stroke-dasharray="6,6" stroke-width="4"></path>
+<path d="M50,280 Q160,180 290,210 T520,160" fill="none" stroke="#283044" stroke-width="3"></path>
+</svg>
+<!-- Map Location Markers -->
+<!-- Marker 1: Super 99 Albrook -->
+<button class="map-pin absolute top-1/3 left-1/4 transform -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-125 focus:scale-125 group cursor-pointer" data-marker="loc-1">
+<span class="flex h-7 w-7 items-center justify-center rounded-full bg-error text-on-error shadow-lg animate-bounce">
+<span class="material-symbols-outlined text-sm font-bold">store</span>
+</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-2 py-0.5 rounded text-[10px] font-financial-body whitespace-nowrap shadow-md">Super 99 Albrook</span>
+</button>
+<!-- Marker 2: Rey Calle 50 -->
+<button class="map-pin absolute top-1/2 right-1/3 transform -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-125 focus:scale-125 cursor-pointer" data-marker="loc-2">
+<span class="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg ring-4 ring-primary/30">
+<span class="material-symbols-outlined text-sm font-bold">store</span>
+</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-2 py-0.5 rounded text-[10px] font-financial-body whitespace-nowrap shadow-md">Rey Calle 50</span>
+</button>
+<!-- Marker 3: Riba Smith Multiplaza -->
+<button class="map-pin absolute bottom-1/4 right-1/4 transform -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-125 focus:scale-125 cursor-pointer" data-marker="loc-3">
+<span class="flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-on-tertiary shadow-lg">
+<span class="material-symbols-outlined text-sm font-bold">store</span>
+</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-2 py-0.5 rounded text-[10px] font-financial-body whitespace-nowrap shadow-md">Riba Smith Multiplaza</span>
+</button>
+<!-- Marker 4: Mr. Precio Los Andes -->
+<button class="map-pin absolute top-1/5 right-1/5 transform -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-125 focus:scale-125 cursor-pointer" data-marker="loc-4">
+<span class="flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-on-secondary shadow-lg">
+<span class="material-symbols-outlined text-sm font-bold">store</span>
+</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-2 py-0.5 rounded text-[10px] font-financial-body whitespace-nowrap shadow-md">Mr. Precio Los Andes</span>
+</button>
+<!-- Selected info card overlay on map -->
+<div class="absolute bottom-3 left-3 right-3 bg-surface-container-lowest/95 backdrop-blur-sm p-3 rounded-xl shadow-lg border-l-4 border-primary transition-all" id="mapPopupCard">
+<div class="flex items-center justify-between">
+<div>
+<h5 class="font-headline-sm text-label-md font-bold text-on-surface" id="popupStoreName">Rey Calle 50</h5>
+<span class="font-label-sm text-label-sm text-primary font-semibold" id="popupStoreChain">Grupo Rey • Andres Chavez</span>
+</div>
+<div class="text-right">
+<span class="font-financial-body text-body-sm font-bold text-on-surface" id="popupStoreSales">B/. 14,200.00</span>
+<span class="block text-[10px] text-secondary font-bold">94.6% Cuota</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- PowerBI Synchronized Table (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col justify-between overflow-hidden">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Rendimiento por Punto de Venta</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Haz clic en una fila para centrar en el visualizador</p>
+</div>
+<span class="font-financial-body text-xs bg-surface-container px-2.5 py-1 rounded-md text-on-surface font-semibold">4 Puntos Auditados</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="biStoreTable">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-sm uppercase tracking-wider">
+<th class="py-3 px-3 rounded-l-xl">Cadena / Local</th>
+<th class="py-3 px-3">Mercaderista</th>
+<th class="py-3 px-3 text-right">Venta Acum.</th>
+<th class="py-3 px-3 text-center">Cumplimiento</th>
+<th class="py-3 px-3 rounded-r-xl text-right">Última Visita</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-on-surface">
+<!-- Row 1: Rey Calle 50 -->
+<tr class="store-row hover:bg-secondary-container/20 cursor-pointer transition-colors bg-secondary-container/10" data-chain="Rey" data-store-id="loc-2">
+<td class="py-3.5 px-3 font-semibold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<div>
+<span class="block font-bold">Rey Calle 50</span>
+<span class="text-xs text-on-surface-variant">Bella Vista</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Andres Chavez</td>
+<td class="py-3.5 px-3 text-right font-financial-body font-bold text-on-surface">B/. 14,200</td>
+<td class="py-3.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-financial-body text-xs font-bold">94.6%</span>
+</td>
+<td class="py-3.5 px-3 text-right text-xs text-on-surface-variant font-financial-body">Hoy, 09:30</td>
+</tr>
+<!-- Row 2: Super 99 Albrook -->
+<tr class="store-row hover:bg-secondary-container/20 cursor-pointer transition-colors" data-chain="Super 99" data-store-id="loc-1">
+<td class="py-3.5 px-3 font-semibold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<div>
+<span class="block font-bold">Super 99 Albrook</span>
+<span class="text-xs text-on-surface-variant">Mall Pasillo del Koala</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Josep Dominguez</td>
+<td class="py-3.5 px-3 text-right font-financial-body font-bold text-on-surface">B/. 9,850</td>
+<td class="py-3.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-financial-body text-xs font-bold">61.5%</span>
+</td>
+<td class="py-3.5 px-3 text-right text-xs text-on-surface-variant font-financial-body">Ayer, 16:15</td>
+</tr>
+<!-- Row 3: Riba Smith Multiplaza -->
+<tr class="store-row hover:bg-secondary-container/20 cursor-pointer transition-colors" data-chain="Riba Smith" data-store-id="loc-3">
+<td class="py-3.5 px-3 font-semibold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+<div>
+<span class="block font-bold">Riba Smith Multiplaza</span>
+<span class="text-xs text-on-surface-variant">Punta Pacífica</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Andres Chavez</td>
+<td class="py-3.5 px-3 text-right font-financial-body font-bold text-on-surface">B/. 22,550</td>
+<td class="py-3.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-financial-body text-xs font-bold">88.2%</span>
+</td>
+<td class="py-3.5 px-3 text-right text-xs text-on-surface-variant font-financial-body">Hoy, 10:10</td>
+</tr>
+<!-- Row 4: Mr. Precio Los Andes -->
+<tr class="store-row hover:bg-secondary-container/20 cursor-pointer transition-colors" data-chain="Mr. Precio" data-store-id="loc-4">
+<td class="py-3.5 px-3 font-semibold text-on-surface flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<div>
+<span class="block font-bold">Mr. Precio Los Andes</span>
+<span class="text-xs text-on-surface-variant">San Miguelito</span>
+</div>
+</td>
+<td class="py-3.5 px-3">Enrique del Rosario</td>
+<td class="py-3.5 px-3 text-right font-financial-body font-bold text-on-surface">B/. 10,200</td>
+<td class="py-3.5 px-3 text-center">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-financial-body text-xs font-bold">68.0%</span>
+</td>
+<td class="py-3.5 px-3 text-right text-xs text-on-surface-variant font-financial-body">08 Oct, 14:00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between text-xs text-on-surface-variant font-financial-body">
+<span class="">Fuente: Sincronizador BI Keiko Central</span>
+<span class="text-primary font-bold">100% de cobertura en ruta</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- MODAL: REGISTRAR VENTA / CUOTA RÁPIDO -->
+<!-- ======================================================== -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/60 backdrop-blur-sm p-4 hidden" id="quickEntryModal">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">add_chart</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Registrar Cuota / Venta</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ingreso manual de ruta Keiko</span>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface" id="btnCloseModal">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<form class="flex flex-col gap-4" id="quickEntryForm">
+<div>
+<label class="block font-label-md text-label-md font-semibold text-on-surface mb-1">Vendedor Asignado</label>
+<select class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface border-0 focus:ring-2 focus:ring-primary text-body-md">
+<option>Josep Dominguez (Ruta 01)</option>
+<option>Enrique del Rosario (Ruta 02)</option>
+<option>Andres Chavez (Ruta 03 - Cadenas)</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md font-semibold text-on-surface mb-1">Cadena / Tienda</label>
+<input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface border-0 focus:ring-2 focus:ring-primary text-body-md" placeholder="Ej. Super 99 San Francisco, Rey Dorado..." required="" type="text">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-md text-label-md font-semibold text-on-surface mb-1">Monto de Venta (B/.)</label>
+<input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface border-0 focus:ring-2 focus:ring-primary font-financial-body text-body-md" placeholder="0.00" required="" step="0.01" type="number">
+</div>
+<div>
+<label class="block font-label-md text-label-md font-semibold text-on-surface mb-1">Cuota Objetivo (B/.)</label>
+<input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface border-0 focus:ring-2 focus:ring-primary font-financial-body text-body-md" placeholder="0.00" step="0.01" type="number">
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md font-semibold text-on-surface mb-1">Evidencia / Notas de Entrega</label>
+<input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface border-0 focus:ring-2 focus:ring-primary text-body-md" placeholder="No. Factura o Comentarios de Góndola" type="text">
+</div>
+<div class="pt-2 flex items-center justify-end gap-3">
+<button class="px-5 py-2.5 rounded-full text-on-surface-variant hover:bg-surface-container font-label-md text-label-md font-medium" id="btnCancelModal" type="button">Cancelar</button>
+<button class="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-bold shadow-md" type="submit">Guardar Registro</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- PERSISTENT FLOATING BOTTOM NAVIGATION BAR (MOBILE & TABLET) -->
+<!-- ======================================================== -->
+<nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex justify-center px-2" style="left: 50%; transform: translateX(-50%); position: fixed; bottom: 1rem; z-index: 50; margin: 0px auto; width: max-content; max-width: 95vw;"><div class="pointer-events-auto bg-surface-container-lowest/95 backdrop-blur-md shadow-2xl border border-surface-container-high/60 rounded-full px-3 py-2 flex items-center justify-center gap-1 sm:gap-2"><button class="bottom-nav-btn min-h-[44px] py-1.5 px-3.5 sm:px-4 rounded-full flex flex-col items-center justify-center text-primary bg-secondary-container/40 transition-all font-label-sm text-[11px] font-bold active:scale-95" data-bottom-target="tab-ventas"><span class="material-symbols-outlined text-2xl">trending_up</span><span class="mt-0.5 leading-none">Ventas</span></button><button class="bottom-nav-btn min-h-[44px] py-1.5 px-3.5 sm:px-4 rounded-full flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all font-label-sm text-[11px] font-semibold active:scale-95" data-bottom-target="tab-tareas"><span class="material-symbols-outlined text-2xl">checklist</span><span class="mt-0.5 leading-none">Tareas</span></button><button class="bottom-nav-btn min-h-[44px] py-1.5 px-3.5 sm:px-4 rounded-full flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all font-label-sm text-[11px] font-semibold active:scale-95" data-bottom-target="tab-mapa"><span class="material-symbols-outlined text-2xl">map</span><span class="mt-0.5 leading-none">Mapa</span></button><a class="bottom-nav-btn min-h-[44px] py-1.5 px-3.5 sm:px-4 rounded-full flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all font-label-sm text-[11px] font-semibold active:scale-95" href="#valisfin"><span class="material-symbols-outlined text-2xl">sync_alt</span><span class="mt-0.5 leading-none">ValisFin</span></a></div></nav>
+</div>
+<script>
+  (function initValisPro() {
+    // Tab switching logic (syncs desktop pills with bottom nav)
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const bottomButtons = document.querySelectorAll('.bottom-nav-btn');
+
+    function setActiveTab(targetId) {
+      // Toggle panels
+      tabPanels.forEach(panel => {
+        if (panel.id === targetId) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+
+      // Update Desktop Buttons
+      tabButtons.forEach(btn => {
+        const target = btn.getAttribute('data-tab-target');
+        if (target === targetId) {
+          btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          btn.classList.remove('text-on-surface-variant');
+        } else {
+          btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+          btn.classList.add('text-on-surface-variant');
+        }
+      });
+
+      // Update Bottom Nav Buttons
+      bottomButtons.forEach(btn => {
+        const target = btn.getAttribute('data-bottom-target');
+        if (target === targetId) {
+          btn.classList.add('text-primary', 'bg-secondary-container/40', 'font-bold');
+          btn.classList.remove('text-on-surface-variant', 'font-semibold');
+        } else {
+          btn.classList.remove('text-primary', 'bg-secondary-container/40', 'font-bold');
+          btn.classList.add('text-on-surface-variant', 'font-semibold');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setActiveTab(btn.getAttribute('data-tab-target'));
+      });
+    });
+
+    bottomButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setActiveTab(btn.getAttribute('data-bottom-target'));
+      });
+    });
+
+    // Quick Entry Modal Handling
+    const modal = document.getElementById('quickEntryModal');
+    const openBtn = document.getElementById('btnOpenManualModal');
+    const closeBtn = document.getElementById('btnCloseModal');
+    const cancelBtn = document.getElementById('btnCancelModal');
+    const quickForm = document.getElementById('quickEntryForm');
+    const openOcrBtn = document.getElementById('btnOpenAIModal');
+
+    function toggleModal(show) {
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', () => toggleModal(true));
+    if (closeBtn) closeBtn.addEventListener('click', () => toggleModal(false));
+    if (cancelBtn) cancelBtn.addEventListener('click', () => toggleModal(false));
+
+    if (openOcrBtn) {
+      openOcrBtn.addEventListener('click', () => {
+        alert('Cámara / OCR activado: Escaneando hoja de ruta con IA...');
+      });
+    }
+
+    if (quickForm) {
+      quickForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Venta/Cuota registrada con éxito en el servidor Keiko de ValisPro.');
+        toggleModal(false);
+      });
+    }
+
+    window.handleFileUpload = function(input) {
+      if (input.files && input.files[0]) {
+        alert('Archivo "' + input.files[0].name + '" subido con éxito. El motor de OCR está extrayendo los subtotales de factura...');
+      }
+    };
+
+    // Store Filtering and Map Syncing
+    const storeRows = document.querySelectorAll('.store-row');
+    const chainFilters = document.querySelectorAll('.chain-filter');
+    const searchInput = document.getElementById('storeSearchInput');
+    const mapPins = document.querySelectorAll('.map-pin');
+    const popupStoreName = document.getElementById('popupStoreName');
+    const popupStoreChain = document.getElementById('popupStoreChain');
+    const popupStoreSales = document.getElementById('popupStoreSales');
+
+    const storeData = {
+      'loc-1': { name: 'Super 99 Albrook', chain: 'Super 99 • Josep Dominguez', sales: 'B/. 9,850.00' },
+      'loc-2': { name: 'Rey Calle 50', chain: 'Grupo Rey • Andres Chavez', sales: 'B/. 14,200.00' },
+      'loc-3': { name: 'Riba Smith Multiplaza', chain: 'Riba Smith • Andres Chavez', sales: 'B/. 22,550.00' },
+      'loc-4': { name: 'Mr. Precio Los Andes', chain: 'Mr. Precio • Enrique del Rosario', sales: 'B/. 10,200.00' }
+    };
+
+    function highlightStore(storeId) {
+      storeRows.forEach(row => {
+        if (row.getAttribute('data-store-id') === storeId) {
+          row.classList.add('bg-secondary-container/30', 'font-bold');
+        } else {
+          row.classList.remove('bg-secondary-container/30', 'font-bold');
+        }
+      });
+
+      if (storeData[storeId]) {
+        popupStoreName.textContent = storeData[storeId].name;
+        popupStoreChain.textContent = storeData[storeId].chain;
+        popupStoreSales.textContent = storeData[storeId].sales;
+      }
+    }
+
+    storeRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const id = row.getAttribute('data-store-id');
+        highlightStore(id);
+      });
+    });
+
+    mapPins.forEach(pin => {
+      pin.addEventListener('click', () => {
+        const id = pin.getAttribute('data-marker');
+        highlightStore(id);
+      });
+    });
+
+    // Chain Filter Switcher
+    chainFilters.forEach(filterBtn => {
+      filterBtn.addEventListener('click', () => {
+        chainFilters.forEach(b => {
+          b.classList.remove('bg-primary', 'text-on-primary');
+          b.classList.add('bg-surface-container', 'text-on-surface');
+        });
+        filterBtn.classList.add('bg-primary', 'text-on-primary');
+        filterBtn.classList.remove('bg-surface-container', 'text-on-surface');
+
+        const selectedChain = filterBtn.getAttribute('data-filter');
+        storeRows.forEach(row => {
+          const rowChain = row.getAttribute('data-chain');
+          if (selectedChain === 'all' || rowChain === selectedChain) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Search Box live filter
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        storeRows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+  })();
+</script></main>
+
+</body></html>
