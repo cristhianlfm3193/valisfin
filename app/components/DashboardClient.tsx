@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import heic2any from 'heic2any';
 import { 
   Calendar, CheckCircle2, TrendingUp, ArrowUpRight, ArrowDownRight, Sparkles, 
   Wallet, Car, Wrench, Home, Target, Banknote, FileText, Utensils, Send, Loader2, Paperclip, X
@@ -60,15 +59,32 @@ export function DashboardClient({
       if (isHeic) {
         setIsConverting(true);
         try {
+          const heic2any = (await import('heic2any')).default;
           const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
           const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
           const newName = fileName.replace(/\.heic?$/i, '.jpg');
-          const convertedFile = new File([blob], newName, { type: 'image/jpeg' });
-          setAiFile(convertedFile);
+          const jpegFile = new File([blob], newName, { type: 'image/jpeg' });
+          // Redimensiona para garantizar que cabe en el límite del servidor
+          const resized = await resizeImage(jpegFile);
+          setAiFile(resized);
         } catch (error) {
           console.error('Error converting HEIC:', error);
           alert('No se pudo convertir la imagen automáticamente.\nPor favor conviértela manualmente a JPG o PNG.');
           if (fileInputRef.current) fileInputRef.current.value = '';
+        } finally {
+          setIsConverting(false);
+        }
+        return;
+      }
+
+      // Para imágenes normales grandes (>2MB), también redimensiona
+      if (file.type.startsWith('image/') && file.size > 2 * 1024 * 1024) {
+        setIsConverting(true);
+        try {
+          const resized = await resizeImage(file);
+          setAiFile(resized);
+        } catch {
+          setAiFile(file); // si falla, usa el original
         } finally {
           setIsConverting(false);
         }
@@ -83,6 +99,42 @@ export function DashboardClient({
     setAiFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
+
+  // Redimensiona y comprime cualquier imagen usando Canvas para
+  // mantener el payload por debajo del límite de Next.js Server Actions (~1MB).
+  const resizeImage = (file: File, maxDimension = 1400, quality = 0.75): Promise<File> =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDimension || height > maxDimension) {
+          if (width >= height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+            else reject(new Error('No se pudo redimensionar la imagen'));
+          },
+          'image/jpeg',
+          quality
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('No se pudo cargar la imagen')); };
+      img.src = url;
+    });
 
   const getBase64 = (file: File) => new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
