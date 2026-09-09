@@ -71,7 +71,7 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
   // (tr_sync_fixed_payment_to_goal) when is_paid changes.
 
   revalidatePath('/pagos-fijos');
-}  revalidatePath('/metas');
+  revalidatePath('/metas');
 }
 
 export async function addVariablePayment(formData: FormData) {

@@ -26,12 +26,17 @@ export default function UnauthorizedPage() {
         </div>
 
         <div className="pt-4">
-          <Link 
-            href="/login"
+          <button 
+            onClick={async () => {
+              const { createClient } = await import('@/lib/supabase/client');
+              const supabase = createClient();
+              await supabase.auth.signOut();
+              window.location.href = '/login';
+            }}
             className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 text-sm font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
           >
             Volver a la pantalla de inicio
-          </Link>
+          </button>
         </div>
       </div>
       

@@ -119,9 +119,10 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
   const filteredLogs = logs.filter(log => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    const userName = log.profiles?.first_name || log.profiles?.email || 'Sistema';
-    const table = formatTableName(log.table_name);
-    return userName.toLowerCase().includes(q) || table.toLowerCase().includes(q) || log.action.toLowerCase().includes(q);
+    const userName = String(log.profiles?.first_name || log.profiles?.email || 'Sistema').toLowerCase();
+    const table = String(formatTableName(log.table_name) || '').toLowerCase();
+    const action = String(log.action || '').toLowerCase();
+    return userName.includes(q) || table.includes(q) || action.includes(q);
   });
 
   // Pagination Logic

@@ -22,9 +22,12 @@ export interface CoupleBreakdown {
   role: string;
   initials: string;
   color: string;
-  incomes: number;
-  expenses: number;
-  balance: number;
+  incomes: number; // Efectivo
+  expenses: number; // Asignaciones
+  balance: number; // Saldo Neto
+  projected: number;
+  pending: number;
+  abonos: number;
 }
 
 export interface UpcomingPayment {
@@ -162,13 +165,37 @@ export async function getDashboardData() {
   // Couple Breakdown
   let cIncomes = 0, cExpenses = 0;
   let jIncomes = 0, jExpenses = 0;
+  let cProjected = 0, jProjected = 0;
+  let cAbonos = 0, jAbonos = 0;
+  let cPending = 0, jPending = 0;
 
   inc.forEach(i => {
     if (i.date_expected?.startsWith(currentMonthPeriod)) {
-      if (i.responsible === 'Cristhian') cIncomes += i.amount;
-      else if (i.responsible === 'Jennifer') jIncomes += i.amount;
+      const isCf = i.profile_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' || i.responsible === 'Cristhian';
+      const isJc = i.profile_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb' || i.responsible === 'Jennifer';
+      
+      if (isCf) {
+        cAbonos++;
+        if (['salario', 'representacion', 'carro'].includes(i.category)) {
+          cProjected += i.amount;
+        }
+        if (i.is_received) cIncomes += i.amount;
+      } else if (isJc) {
+        jAbonos++;
+        if (['salario', 'representacion', 'carro'].includes(i.category)) {
+          jProjected += i.amount;
+        }
+        if (i.is_received) jIncomes += i.amount;
+      }
     }
   });
+
+  // Fallbacks if no projected data (like in ingresos page)
+  if (cProjected === 0 && cAbonos === 0) cProjected = 1189.68;
+  if (jProjected === 0 && jAbonos === 0) jProjected = 982.72;
+  
+  cPending = cProjected > 0 ? Math.max(0, cProjected - cIncomes) : 0;
+  jPending = jProjected > 0 ? Math.max(0, jProjected - jIncomes) : 0;
 
   de.forEach(e => {
     if (e.date.startsWith(currentMonthPeriod)) {
@@ -198,17 +225,23 @@ export async function getDashboardData() {
       color: "brand",
       incomes: cIncomes,
       expenses: cExpenses,
-      balance: cIncomes - cExpenses
+      balance: cIncomes - cExpenses,
+      projected: cProjected,
+      pending: cPending,
+      abonos: cAbonos
     },
     {
       id: "jennifer",
       name: "Jennifer Camaño",
       role: "Co-administradora",
       initials: "JC",
-      color: "teal",
+      color: "pink",
       incomes: jIncomes,
       expenses: jExpenses,
-      balance: jIncomes - jExpenses
+      balance: jIncomes - jExpenses,
+      projected: jProjected,
+      pending: jPending,
+      abonos: jAbonos
     }
   ];
 

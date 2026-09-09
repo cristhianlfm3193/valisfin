@@ -385,38 +385,61 @@ export function DashboardClient({
               Desglose por Cónyuge
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {coupleBreakdown.map((person) => (
-                <div key={person.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm
-                      ${person.color === 'brand' ? 'bg-[#09574a]' : 'bg-teal-600'}
-                    `}>
-                      {person.initials}
-                    </div>
+              {coupleBreakdown.map((person) => {
+                const isCf = person.id === 'cristhian';
+                const hoverClass = isCf ? "hover:border-emerald-300" : "hover:border-pink-300";
+                const initialsColor = isCf ? "bg-emerald-50 border-emerald-100 text-[#006655]" : "bg-pink-50 border-pink-100 text-pink-600";
+                const effectiveBoxBorder = isCf ? "border-emerald-100" : "border-pink-100";
+                const effectiveBoxText = isCf ? "text-emerald-700" : "text-pink-700";
+                const subtitle = isCf ? "Salarios & Gastos de Representación" : "Salario base, Carro & Comisión Meta";
+
+                return (
+                  <div key={person.id} className={`bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between transition-all ${hoverClass}`}>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{person.name}</p>
-                      <p className="text-xs text-slate-500">{person.role}</p>
+                      <div className="flex items-start sm:items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-10 h-10 rounded-full border flex items-center justify-center font-bold shrink-0 ${initialsColor}`}>
+                            {person.initials}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="font-semibold text-slate-900 text-sm sm:text-base leading-tight truncate">{person.name}</h3>
+                            <span className="text-[10px] sm:text-xs text-slate-500 line-clamp-2 sm:truncate">{subtitle}</span>
+                          </div>
+                        </div>
+                        <span className="px-2.5 py-1.5 rounded-full bg-slate-100 text-[10px] sm:text-xs text-slate-700 font-semibold whitespace-nowrap shrink-0">{person.abonos || 0} Abonos</span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
+                        <div className="px-0.5 sm:px-1">
+                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Proyectado</div>
+                          <div className="text-[11px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.projected || 0)}</div>
+                        </div>
+                        <div className={`bg-white rounded-lg py-1 shadow-sm border px-0.5 sm:px-1 ${effectiveBoxBorder}`}>
+                          <div className={`text-[9px] sm:text-[11px] font-medium ${effectiveBoxText}`}>Efectivo</div>
+                          <div className={`text-[11px] sm:text-sm font-bold font-mono mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal ${effectiveBoxText}`}>B/. {formatCurrency(person.incomes || 0)}</div>
+                        </div>
+                        <div className="px-0.5 sm:px-1">
+                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Pendiente</div>
+                          <div className="text-[11px] sm:text-sm font-medium font-mono text-slate-500 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.pending || 0)}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 mt-2 border-t border-slate-100 space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-500 font-medium">Asignaciones / Gastos</span>
+                        <span className="font-bold text-rose-600">-{formatCurrency(person.expenses || 0)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-700 uppercase">Saldo Neto (Bolsillo)</span>
+                        <span className={`text-sm font-extrabold ${(person.balance || 0) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                          {formatCurrency(person.balance || 0)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-slate-500 font-medium">Aportes (Ingreso)</span>
-                      <span className="font-bold text-slate-900">{formatCurrency(person.incomes)}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-slate-500 font-medium">Asignaciones</span>
-                      <span className="font-bold text-rose-600">-{formatCurrency(person.expenses)}</span>
-                    </div>
-                    <div className="h-px bg-slate-200 w-full my-1"></div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-slate-700 uppercase">Saldo Neto</span>
-                      <span className={`text-sm font-extrabold ${person.balance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                        {formatCurrency(person.balance)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         </div>
