@@ -9,38 +9,43 @@ export async function getDashboardData(mes?: number, anio?: number) {
   const targetMes = mes ?? (now.getMonth() + 1);
   const targetAnio = anio ?? now.getFullYear();
 
-  // Vendedores (datos maestros)
-  const { data: vendedores } = await supabase
-    .from('vendedores')
-    .select('*')
-    .order('nombre', { ascending: true });
+  // ── Todas las queries en paralelo ──────────────────────────────────────────
+  const [
+    { data: vendedores },
+    { data: locales },
+    { data: tareas },
+    { data: facturado },
+    { data: registrosVentas },
+  ] = await Promise.all([
+    supabase
+      .from('vendedores')
+      .select('*')
+      .order('nombre', { ascending: true }),
 
-  // Locales
-  const { data: locales } = await supabase
-    .from('locales')
-    .select('*');
+    supabase
+      .from('locales')
+      .select('*'),
 
-  // Tareas
-  const { data: tareas } = await supabase
-    .from('tareas')
-    .select(`*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)`)
-    .order('fecha_programada', { ascending: true });
+    supabase
+      .from('tareas')
+      .select(`*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)`)
+      .order('fecha_programada', { ascending: true }),
 
-  // FACTURADO del mes (Finanzas) → base oficial para % y bono
-  const { data: facturado } = await supabase
-    .from('facturado')
-    .select('*, vendedor:vendedores(nombre)')
-    .eq('mes_periodo', targetMes)
-    .eq('anio_periodo', targetAnio)
-    .order('fecha', { ascending: false });
+    supabase
+      .from('facturado')
+      .select('*, vendedor:vendedores(nombre)')
+      .eq('mes_periodo', targetMes)
+      .eq('anio_periodo', targetAnio)
+      .order('fecha', { ascending: false }),
 
-  // VENDIDO REPORTADO del mes (Vendedores) → solo informativo
-  const { data: registrosVentas } = await supabase
-    .from('registros_ventas')
-    .select('*, vendedor:vendedores(nombre)')
-    .eq('mes_periodo', targetMes)
-    .eq('anio_periodo', targetAnio)
-    .order('fecha_registro', { ascending: false });
+    supabase
+      .from('registros_ventas')
+      .select('*, vendedor:vendedores(nombre)')
+      .eq('mes_periodo', targetMes)
+      .eq('anio_periodo', targetAnio)
+      .order('fecha_registro', { ascending: false }),
+  ]);
+
 
   // Construir resumen mensual por vendedor
   // % de cuota y GAP se calculan con FACTURADO, no con vendido reportado

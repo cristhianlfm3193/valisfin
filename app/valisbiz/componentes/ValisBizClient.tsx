@@ -250,21 +250,15 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
 
         {/* Tab Contents */}
         {activeTab === 'ventas' && (
-          <div className="flex flex-col gap-6">
-            <AccionesRapidasIA
-              vendedores={initialData.vendedores.map(v => ({ id: v.id, nombre: v.nombre }))}
-              onSuccess={() => startTransition(() => { router.refresh(); })}
-            />
-            <MetricasVentas
-              metas={initialData.metas}
-              resumenMensual={initialData.resumenMensual}
-              mesPeriodo={mesPeriodo}
-              anioPeriodo={anioPeriodo}
-              isMesCerrado={!isMesActual}
-              registrosFacturado={initialData.registrosFacturado}
-              registrosVendido={initialData.registrosVendido}
-            />
-          </div>
+          <MetricasVentas
+            metas={initialData.metas}
+            resumenMensual={initialData.resumenMensual}
+            mesPeriodo={mesPeriodo}
+            anioPeriodo={anioPeriodo}
+            isMesCerrado={!isMesActual}
+            registrosFacturado={initialData.registrosFacturado}
+            registrosVendido={initialData.registrosVendido}
+          />
         )}
         {activeTab === 'tareas' && (
           <KanbanBoard initialTareas={initialData.tareas} />
@@ -273,6 +267,12 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           <MapaLocales locales={initialData.locales} />
         )}
       </div>
+
+      {/* Widget IA flotante — siempre visible en ValisBiz */}
+      <AccionesRapidasIA
+        vendedores={initialData.vendedores.map(v => ({ id: v.id, nombre: v.nombre }))}
+        onSuccess={() => startTransition(() => { router.refresh(); })}
+      />
     </div>
   );
 }
