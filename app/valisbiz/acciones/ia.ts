@@ -38,11 +38,29 @@ function detectarFecha(texto: string, today: string): string {
     d.setDate(d.getDate() - 1);
     return d.toISOString().split('T')[0];
   }
-  // Fecha DD/MM/YYYY o YYYY-MM-DD en el texto
+
+  // Fecha en español: "1 de septiembre 2026", "01 de sept 2026", "15 de enero"
+  const MESES: Record<string, string> = {
+    enero:'01', febrero:'02', marzo:'03', abril:'04', mayo:'05', junio:'06',
+    julio:'07', agosto:'08', septiembre:'09', sept:'09', sep:'09',
+    octubre:'10', oct:'10', noviembre:'11', nov:'11', diciembre:'12', dic:'12',
+  };
+  const espMatch = texto.match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\.?(?:\s+(\d{4}))?/i);
+  if (espMatch) {
+    const mes = MESES[espMatch[2].toLowerCase()];
+    if (mes) {
+      const anio = espMatch[3] || today.split('-')[0];
+      return `${anio}-${mes}-${espMatch[1].padStart(2,'0')}`;
+    }
+  }
+
+  // Fecha DD/MM/YYYY
   const m = texto.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  // Fecha YYYY-MM-DD
   const iso = texto.match(/(\d{4})-(\d{2})-(\d{2})/);
   if (iso) return iso[0];
+
   return today;
 }
 
@@ -57,18 +75,25 @@ function detectarVendedor(texto: string): string | undefined {
 function parsearTextoWhatsApp(texto: string, today: string): ResultadoIAValisBiz | null {
   const t = texto.toLowerCase();
 
-  // Patrones de visitas
-  const visitasMatch = texto.match(/(?:clientes?\s+visitados?|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?)\s*[:\-]?\s*(\d+)/i);
-  // Patrones de efectivos / con compra
-  const efectivosMatch = texto.match(/(?:clientes?\s+efectivos?|efectivos?|con\s+compra|compraron)\s*[:\-]?\s*(\d+)/i);
+  // Patrones de visitas / clientes visitados
+  const visitasMatch = texto.match(
+    /(?:clientes?\s+(?:visitados?|atendidos?|del\s+d[ií]a)|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?|recorridos?|clientes?\s+recorridos?)\s*[:\-]?\s*(\d+)/i
+  );
+
+  // Patrones de con compra / efectivos (todos los sinónimos del equipo)
+  const efectivosMatch = texto.match(
+    /(?:clientes?\s+(?:efectivos?|con\s+p(?:e|e)didos?|con\s+compra?|facturados?|cerrados?)|efectivos?|con\s+p(?:e|e)didos?|con\s+compra|compraron|ventas?\s+cerradas?|p(?:e|e)didos?\s+tomados?)\s*[:\-]?\s*(\d+)/i
+  );
+
   // Sin compra explícito
-  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron)\s*[:\-]?\s*(\d+)/i);
+  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron|sin\s+p(?:e|e)didos?|clientes?\s+sin\s+(?:compra|pedido))\s*[:\-]?\s*(\d+)/i);
+
   // Contado
   const contadoMatch = texto.match(/(?:al?\s+contado|en\s+efectivo|contado)\s*[:\-]?\s*(\d[\d,\.]*)/i);
   // Crédito
   const creditoMatch = texto.match(/(?:a?\s*cr[eé]dito|en\s+cr[eé]dito)\s*[:\-]?\s*(\d[\d,\.]*)/i);
-  // Valor recaudado / total (cuando no dice contado ni crédito)
-  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  // Valor recaudado / total
+  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total\s+del\s+d[ií]a|monto\s+total|total\s+recaudado|valor\s+cobrado|cobrado)\s*[:\-]?\s*(\d[\d,\.]*)/i);
 
   const tieneVentas = visitasMatch || efectivosMatch || contadoMatch || creditoMatch || recaudadoMatch;
 
