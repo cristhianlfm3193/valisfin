@@ -3,52 +3,58 @@
 import { createClient } from "@/lib/supabase/server";
 import type { MetaSupervisor, Vendedor, Local, Tarea, ResumenMensualVendedor } from "@/types/valisbiz";
 
-// Obtener datos del dashboard filtrados por mes/año
 export async function getDashboardData(mes?: number, anio?: number) {
   const supabase = await createClient();
   const now = new Date();
   const targetMes = mes ?? (now.getMonth() + 1);
   const targetAnio = anio ?? now.getFullYear();
 
-  // Fetch Vendedores (datos maestros)
+  // Vendedores (datos maestros)
   const { data: vendedores } = await supabase
     .from('vendedores')
     .select('*')
     .order('nombre', { ascending: true });
 
-  // Fetch Locales
+  // Locales
   const { data: locales } = await supabase
     .from('locales')
     .select('*');
 
-  // Fetch Tareas activas
+  // Tareas
   const { data: tareas } = await supabase
     .from('tareas')
     .select(`*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)`)
     .order('fecha_programada', { ascending: true });
 
-  // Fetch registros_ventas del mes seleccionado (lo que vendieron los vendedores)
-  const { data: registrosVentas } = await supabase
-    .from('registros_ventas')
-    .select('*')
-    .eq('mes_periodo', targetMes)
-    .eq('anio_periodo', targetAnio);
-
-  // Fetch facturado del mes seleccionado (lo que finanzas confirmó)
+  // FACTURADO del mes (Finanzas) → base oficial para % y bono
   const { data: facturado } = await supabase
     .from('facturado')
     .select('*')
     .eq('mes_periodo', targetMes)
     .eq('anio_periodo', targetAnio);
 
+  // VENDIDO REPORTADO del mes (Vendedores) → solo informativo
+  const { data: registrosVentas } = await supabase
+    .from('registros_ventas')
+    .select('*')
+    .eq('mes_periodo', targetMes)
+    .eq('anio_periodo', targetAnio);
+
   // Construir resumen mensual por vendedor
+  // % de cuota y GAP se calculan con FACTURADO, no con vendido reportado
   const resumenMensual: ResumenMensualVendedor[] = (vendedores || []).map(v => {
-    const ventas = (registrosVentas || []).filter(r => r.vendedor_id === v.id);
-    const totalVendido = ventas.reduce((acc, r) => acc + Number(r.monto_facturado), 0);
+    const cuota = Number(v.cuota_mensual);
+
+    // Facturado (Finanzas) — determina bono y logro oficial
     const facturadoVendedor = (facturado || []).filter(f => f.vendedor_id === v.id);
     const totalFacturado = facturadoVendedor.reduce((acc, f) => acc + Number(f.monto_facturado), 0);
-    const cuota = Number(v.cuota_mensual);
-    const porcentaje = cuota > 0 ? (totalVendido / cuota) * 100 : 0;
+    const porcentajeFacturado = cuota > 0 ? (totalFacturado / cuota) * 100 : 0;
+    const gapFacturado = cuota - totalFacturado;
+
+    // Vendido reportado (Vendedor) — solo informativo
+    const ventasVendedor = (registrosVentas || []).filter(r => r.vendedor_id === v.id);
+    const totalVendidoReportado = ventasVendedor.reduce((acc, r) => acc + Number(r.monto_facturado), 0);
+
     return {
       vendedor_id: v.id,
       nombre: v.nombre,
@@ -56,21 +62,21 @@ export async function getDashboardData(mes?: number, anio?: number) {
       cuota_mensual: cuota,
       mes_periodo: targetMes,
       anio_periodo: targetAnio,
-      total_vendido: totalVendido,
       total_facturado: totalFacturado,
-      porcentaje_vendido: porcentaje,
-      gap_vendido: cuota - totalVendido,
+      porcentaje_facturado: porcentajeFacturado,
+      gap_facturado: gapFacturado,
+      total_vendido_reportado: totalVendidoReportado,
     };
   });
 
-  // Calcular metas globales del mes
+  // Metas globales de Jennifer — basadas en FACTURADO
   const cuotaGlobal = resumenMensual.reduce((acc, r) => acc + r.cuota_mensual, 0);
-  const ventaGlobal = resumenMensual.reduce((acc, r) => acc + r.total_vendido, 0);
+  const facturadoGlobal = resumenMensual.reduce((acc, r) => acc + r.total_facturado, 0);
   const metas: MetaSupervisor = {
     cuota_global: cuotaGlobal || 85000,
-    venta_global_acumulada: ventaGlobal,
-    gap_global: (cuotaGlobal || 85000) - ventaGlobal,
-    porcentaje_global: cuotaGlobal > 0 ? (ventaGlobal / cuotaGlobal) * 100 : 0,
+    venta_global_acumulada: facturadoGlobal, // representa el facturado global del mes
+    gap_global: (cuotaGlobal || 85000) - facturadoGlobal,
+    porcentaje_global: cuotaGlobal > 0 ? (facturadoGlobal / cuotaGlobal) * 100 : 0,
   };
 
   return {
@@ -90,18 +96,14 @@ export async function updateTareaEstado(tareaId: string, nuevoEstado: string) {
     .from('tareas')
     .update({ estado: nuevoEstado })
     .eq('id', tareaId);
-
-  if (error) {
-    console.error("Error updating tarea:", error);
-    return { success: false, error: error.message };
-  }
+  if (error) return { success: false, error: error.message };
   return { success: true };
 }
 
-// Registrar una venta de vendedor
+// Registrar venta diaria del vendedor (solo informativo)
 export async function registrarVenta(
   vendedorId: string,
-  montoFacturado: number,
+  montoVendido: number,
   localId?: string,
   fecha?: Date
 ) {
@@ -110,7 +112,7 @@ export async function registrarVenta(
   const { error } = await supabase.from('registros_ventas').insert({
     vendedor_id: vendedorId,
     local_id: localId || null,
-    monto_facturado: montoFacturado,
+    monto_facturado: montoVendido, // campo heredado, representa lo que el vendedor reportó
     fecha_registro: fechaRegistro.toISOString(),
     mes_periodo: fechaRegistro.getMonth() + 1,
     anio_periodo: fechaRegistro.getFullYear(),
@@ -119,7 +121,7 @@ export async function registrarVenta(
   return { success: true };
 }
 
-// Registrar facturación de finanzas
+// Registrar facturación oficial de Finanzas (base para bono y cuota)
 export async function registrarFacturado(
   vendedorId: string,
   montoFacturado: number,

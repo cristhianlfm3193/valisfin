@@ -76,10 +76,12 @@ export interface ResumenMensualVendedor {
   cuota_mensual: number;
   mes_periodo: number | null;
   anio_periodo: number | null;
-  total_vendido: number;
-  porcentaje_vendido: number;
-  gap_vendido: number;
-  total_facturado?: number; // Lo que finanzas confirmó ese mes
+  // FACTURADO (Finanzas) → base oficial para cuota, % alcance y bono de Jennifer
+  total_facturado: number;
+  porcentaje_facturado: number;
+  gap_facturado: number;
+  // VENDIDO REPORTADO (Vendedor) → solo informativo, no genera bono
+  total_vendido_reportado: number;
 }
 
 // Tabla de bonos de Jennifer según el contrato
