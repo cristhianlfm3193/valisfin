@@ -411,16 +411,16 @@ export function DashboardClient({
 
                       <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
                         <div className="px-0.5 sm:px-1">
-                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Proyectado</div>
-                          <div className="text-[11px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.projected || 0)}</div>
+                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500 truncate">Proyectado</div>
+                          <div className="text-[10px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 tracking-tight">{formatCurrency(person.projected || 0)}</div>
                         </div>
                         <div className={`bg-white rounded-lg py-1 shadow-sm border px-0.5 sm:px-1 ${effectiveBoxBorder}`}>
-                          <div className={`text-[9px] sm:text-[11px] font-medium ${effectiveBoxText}`}>Efectivo</div>
-                          <div className={`text-[11px] sm:text-sm font-bold font-mono mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal ${effectiveBoxText}`}>B/. {formatCurrency(person.incomes || 0)}</div>
+                          <div className={`text-[9px] sm:text-[11px] font-medium truncate ${effectiveBoxText}`}>Efectivo</div>
+                          <div className={`text-[10px] sm:text-sm font-bold font-mono mt-0.5 tracking-tight ${effectiveBoxText}`}>{formatCurrency(person.incomes || 0)}</div>
                         </div>
                         <div className="px-0.5 sm:px-1">
-                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500">Pendiente</div>
-                          <div className="text-[11px] sm:text-sm font-medium font-mono text-slate-500 mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.pending || 0)}</div>
+                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500 truncate">Pendiente</div>
+                          <div className="text-[10px] sm:text-sm font-medium font-mono text-slate-500 mt-0.5 tracking-tight">{formatCurrency(person.pending || 0)}</div>
                         </div>
                       </div>
                     </div>
