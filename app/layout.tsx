@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { DesktopSidebar } from "./components/DesktopSidebar";
 import { MobileNavigation } from "./components/MobileNavigation";
-import { AssistantWidget } from "./components/AssistantWidget";
+
 import { createClient } from "@/lib/supabase/server";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -52,7 +52,7 @@ export default async function RootLayout({
           {children}
         </div>
         {user && <MobileNavigation user={user} profile={profile} />}
-        {user && <AssistantWidget />}
+
       </body>
     </html>
   );
