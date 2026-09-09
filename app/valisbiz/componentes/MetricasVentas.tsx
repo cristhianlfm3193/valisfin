@@ -3,9 +3,18 @@
 import { CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
 import type { MetaSupervisor, ResumenMensualVendedor } from '@/types/valisbiz';
 import { calcularBonoJennifer, TABLA_BONOS_JENNIFER } from '@/types/valisbiz';
+import TablasHistorial from './TablasHistorial';
 
 const MESES = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+interface RegistroFila {
+  id: string;
+  vendedor_nombre: string;
+  fecha: string;
+  monto: number;
+  notas?: string | null;
+}
 
 interface MetricasVentasProps {
   metas: MetaSupervisor;
@@ -13,6 +22,8 @@ interface MetricasVentasProps {
   mesPeriodo: number;
   anioPeriodo: number;
   isMesCerrado: boolean;
+  registrosFacturado: RegistroFila[];
+  registrosVendido: RegistroFila[];
 }
 
 function getColors(pct: number) {
@@ -29,7 +40,7 @@ function fmt(n: number) {
   return n.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anioPeriodo, isMesCerrado }: MetricasVentasProps) {
+export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anioPeriodo, isMesCerrado, registrosFacturado, registrosVendido }: MetricasVentasProps) {
   const porcentajeGlobal = Number(metas.porcentaje_global || 0);
   const facturadoGlobal = Number(metas.venta_global_acumulada || 0);
   const cuotaGlobal = Number(metas.cuota_global || 85000);
@@ -288,6 +299,13 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
           </table>
         </div>
       </div>
+
+      {/* ── TABLAS DE HISTORIAL ── */}
+      <TablasHistorial
+        registrosFacturado={registrosFacturado}
+        registrosVendido={registrosVendido}
+      />
+
     </div>
   );
 }

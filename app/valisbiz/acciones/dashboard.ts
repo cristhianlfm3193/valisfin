@@ -29,16 +29,18 @@ export async function getDashboardData(mes?: number, anio?: number) {
   // FACTURADO del mes (Finanzas) → base oficial para % y bono
   const { data: facturado } = await supabase
     .from('facturado')
-    .select('*')
+    .select('*, vendedor:vendedores(nombre)')
     .eq('mes_periodo', targetMes)
-    .eq('anio_periodo', targetAnio);
+    .eq('anio_periodo', targetAnio)
+    .order('fecha', { ascending: false });
 
   // VENDIDO REPORTADO del mes (Vendedores) → solo informativo
   const { data: registrosVentas } = await supabase
     .from('registros_ventas')
-    .select('*')
+    .select('*, vendedor:vendedores(nombre)')
     .eq('mes_periodo', targetMes)
-    .eq('anio_periodo', targetAnio);
+    .eq('anio_periodo', targetAnio)
+    .order('fecha_registro', { ascending: false });
 
   // Construir resumen mensual por vendedor
   // % de cuota y GAP se calculan con FACTURADO, no con vendido reportado
@@ -87,6 +89,20 @@ export async function getDashboardData(mes?: number, anio?: number) {
     tareas: (tareas as any[]) || [],
     mesPeriodo: targetMes,
     anioPeriodo: targetAnio,
+    // Registros detallados para las tablas de historial
+    registrosFacturado: (facturado || []).map((f: any) => ({
+      id: f.id,
+      vendedor_nombre: f.vendedor?.nombre || 'Desconocido',
+      fecha: f.fecha,
+      monto: Number(f.monto_facturado),
+      notas: f.notas,
+    })),
+    registrosVendido: (registrosVentas || []).map((r: any) => ({
+      id: r.id,
+      vendedor_nombre: r.vendedor?.nombre || 'Desconocido',
+      fecha: r.fecha_registro?.split('T')[0] || '',
+      monto: Number(r.monto_facturado),
+    })),
   };
 }
 

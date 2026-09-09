@@ -2,15 +2,25 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import MetricasVentas from './MetricasVentas';
 import KanbanBoard from './KanbanBoard';
 import MapaLocales from './MapaLocales';
+import ModalRegistrar from './ModalRegistrar';
 import type { ResumenMensualVendedor, MetaSupervisor } from '@/types/valisbiz';
 
 const MESES = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+interface RegistroFila {
+  id: string;
+  vendedor_nombre: string;
+  fecha: string;
+  monto: number;
+  notas?: string | null;
+}
 
 interface ValisBizClientProps {
   initialData: {
@@ -21,12 +31,15 @@ interface ValisBizClientProps {
     tareas: any[];
     mesPeriodo: number;
     anioPeriodo: number;
+    registrosFacturado: RegistroFila[];
+    registrosVendido: RegistroFila[];
   };
   user: { name: string; initial: string };
 }
 
 export default function ValisBizClient({ initialData, user }: ValisBizClientProps) {
   const [activeTab, setActiveTab] = useState<'ventas' | 'tareas' | 'mapa'>('ventas');
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -41,19 +54,29 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
     let newAnio = anioPeriodo;
     if (newMes > 12) { newMes = 1; newAnio++; }
     if (newMes < 1) { newMes = 12; newAnio--; }
-    startTransition(() => {
-      router.push(`/valisbiz?mes=${newMes}&anio=${newAnio}`);
-    });
+    startTransition(() => { router.push(`/valisbiz?mes=${newMes}&anio=${newAnio}`); });
   };
 
   const goToCurrentMonth = () => {
-    startTransition(() => {
-      router.push('/valisbiz');
-    });
+    startTransition(() => { router.push('/valisbiz'); });
+  };
+
+  const handleModalSuccess = () => {
+    setShowModal(false);
+    startTransition(() => { router.refresh(); });
   };
 
   return (
     <div className="flex flex-col w-full text-[#131b2e]">
+      {/* Modal */}
+      {showModal && (
+        <ModalRegistrar
+          vendedores={initialData.vendedores.map(v => ({ id: v.id, nombre: v.nombre }))}
+          onClose={() => setShowModal(false)}
+          onSuccess={handleModalSuccess}
+        />
+      )}
+
       {/* Unified Header */}
       <header className="w-full bg-white/95 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 shadow-sm border-b border-pink-100">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6 py-3">
@@ -79,7 +102,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
             </div>
           </div>
 
-          {/* Right: Month selector + Action */}
+          {/* Right: Month selector + Register button */}
           <div className="flex items-center gap-3 flex-shrink-0">
             {/* Month Navigator */}
             <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-xl px-1 py-1">
@@ -94,17 +117,13 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                 <span className="text-xs font-bold text-slate-800 whitespace-nowrap">
                   {MESES[mesPeriodo]} {anioPeriodo}
                 </span>
-                {!isMesActual && (
-                  <button
-                    onClick={goToCurrentMonth}
-                    className="text-[10px] text-pink-500 font-semibold hover:underline leading-none"
-                  >
+                {!isMesActual ? (
+                  <button onClick={goToCurrentMonth} className="text-[10px] text-pink-500 font-semibold hover:underline leading-none">
                     ir al actual
                   </button>
-                )}
-                {isMesActual && (
+                ) : (
                   <span className="text-[10px] text-green-600 font-semibold leading-none flex items-center gap-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block" />
                     En curso
                   </span>
                 )}
@@ -118,9 +137,13 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
               </button>
             </div>
 
-            {/* Register Venta button */}
-            <button className="hidden sm:inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold shadow-md transition-all whitespace-nowrap">
-              + Registrar Venta
+            {/* Single Register button */}
+            <button
+              onClick={() => setShowModal(true)}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold shadow-md transition-all whitespace-nowrap"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Registrar</span>
             </button>
           </div>
         </div>
@@ -132,7 +155,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
         {/* Mes cerrado banner */}
         {!isMesActual && (
           <div className="mb-4 flex items-center gap-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-2.5 text-sm font-medium">
-            <span className="text-base">📅</span>
+            <span>📅</span>
             Viendo datos históricos de <strong>{MESES[mesPeriodo]} {anioPeriodo}</strong> — Mes cerrado
           </div>
         )}
@@ -140,30 +163,23 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
         {/* Tab Switcher */}
         <div className="bg-[#f2f3ff] p-1.5 rounded-2xl mb-6 flex items-center justify-between gap-2 shadow-inner overflow-x-auto">
           <div className="flex items-center gap-1.5 w-full sm:w-auto">
-            <button
-              onClick={() => setActiveTab('ventas')}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'ventas' ? 'bg-white text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
-            >
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Ventas & Métricas</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('tareas')}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'tareas' ? 'bg-white text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
-            >
-              <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Tareas & Cronograma</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('mapa')}
-              className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === 'mapa' ? 'bg-white text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
-            >
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Mapa & Locales BI</span>
-            </button>
+            {[
+              { id: 'ventas', label: 'Ventas & Métricas', Icon: TrendingUp },
+              { id: 'tareas', label: 'Tareas & Cronograma', Icon: LayoutGrid },
+              { id: 'mapa', label: 'Mapa & Locales BI', Icon: MapPin },
+            ].map(({ id, label, Icon: TabIcon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id as any)}
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === id ? 'bg-white text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
+              >
+                <TabIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>{label}</span>
+              </button>
+            ))}
           </div>
-          <div className="hidden lg:flex items-center gap-2 text-[#3d4a42] font-mono text-xs pr-3 whitespace-nowrap">
-            <RefreshCw className={`w-4 h-4 text-pink-500 ${isPending ? 'animate-spin' : ''}`} />
+          <div className="hidden lg:flex items-center gap-2 text-slate-400 font-mono text-xs pr-3 whitespace-nowrap">
+            <RefreshCw className={`w-4 h-4 text-pink-400 ${isPending ? 'animate-spin' : ''}`} />
             <span>{isPending ? 'Cargando...' : 'Sincronizado'}</span>
           </div>
         </div>
@@ -176,6 +192,8 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
             mesPeriodo={mesPeriodo}
             anioPeriodo={anioPeriodo}
             isMesCerrado={!isMesActual}
+            registrosFacturado={initialData.registrosFacturado}
+            registrosVendido={initialData.registrosVendido}
           />
         )}
         {activeTab === 'tareas' && (
