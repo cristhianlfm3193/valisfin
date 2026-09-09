@@ -25,45 +25,38 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
   // or fetch a slightly wider range. For now, fetch all active/recent.
   // In a real large app, we'd filter at the DB level, but here the datasets are small.
 
-  // 1. Incomes (Extrapolate to current month based on their original day)
-  const { data: incomes } = await supabase.from('incomes').select('*');
+  // 1. Incomes - use actual date_expected for the current month only
+  const incFirstDay = `${year}-${String(month).padStart(2, '0')}-01`;
+  const incLastDayDate = new Date(year, month, 0);
+  const incLastDay = `${year}-${String(month).padStart(2, '0')}-${String(incLastDayDate.getDate()).padStart(2, '0')}`;
+
+  const { data: incomes } = await supabase
+    .from('incomes')
+    .select('*')
+    .gte('date_expected', incFirstDay)
+    .lte('date_expected', incLastDay);
+
   if (incomes) {
     incomes.forEach(inc => {
-      if (!inc.date) return;
-      const incDate = new Date(inc.date);
-      if (isNaN(incDate.getTime())) return; // Skip invalid dates
-      
-      // We extrapolate the income to happen on the same day every month
-      const day = incDate.getDate();
-      const daysInMonth = new Date(year, month, 0).getDate();
-      const finalDay = Math.min(day, daysInMonth);
-      const extrapolatedDate = new Date(year, month - 1, finalDay);
-      
-      // Avoid duplicates if they entered multiple incomes with same name/day? 
-      // For now, let's just project all unique ones. Actually, incomes might be added every month manually.
-      // If we project all of them, they might duplicate if the user logs "Quincena" every month.
-      // So we can group them by 'description' and 'day' to avoid duplicating "Quincena" 5 times on the 15th.
-      // But let's keep it simple first:
+      if (!inc.date_expected) return;
       events.push({
-        id: `inc_${inc.id}_${year}_${month}`,
+        id: `inc_${inc.id}`,
         title: inc.description || 'Ingreso',
-        amount: inc.amount,
-        date: extrapolatedDate.toISOString().split('T')[0],
+        amount: parseFloat(inc.amount) || 0,
+        date: inc.date_expected.split('T')[0],
         category: 'Ingresos',
+        isCompleted: inc.is_received
       });
     });
   }
 
-  // To remove duplicated extrapolated incomes (since they might log it manually every month)
+  // Deduplicate incomes by title + date
   const uniqueIncomes = new Map();
   events.filter(e => e.category === 'Ingresos').forEach(e => {
     const key = `${e.title}_${e.date}`;
-    if (!uniqueIncomes.has(key)) {
-      uniqueIncomes.set(key, e);
-    }
+    if (!uniqueIncomes.has(key)) uniqueIncomes.set(key, e);
   });
 
-  // Filter out the raw incomes from events and push the unique ones back
   let finalEvents = events.filter(e => e.category !== 'Ingresos');
   finalEvents.push(...Array.from(uniqueIncomes.values()));
 
@@ -151,12 +144,19 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
   }
 
   // 6. Daily Expenses (Gastos Diarios) - Actuals only, no extrapolation
-  const currentMonthStr = `${year}-${String(month).padStart(2, '0')}`;
-  const { data: dailyExpenses } = await supabase
+  const firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
+  // Get last day of month correctly
+  const lastDayDate = new Date(year, month, 0); // day=0 gives last day of previous month
+  const lastDay = `${year}-${String(month).padStart(2, '0')}-${String(lastDayDate.getDate()).padStart(2, '0')}`;
+
+  const { data: dailyExpenses, error: deError } = await supabase
     .from('daily_expenses')
     .select('*')
-    .gte('date', `${currentMonthStr}-01`)
-    .lte('date', `${currentMonthStr}-31`);
+    .gte('date', firstDay)
+    .lte('date', lastDay)
+    .order('date', { ascending: true });
+
+  console.log(`[Calendar] Daily expenses query: ${firstDay} to ${lastDay} → found ${dailyExpenses?.length ?? 0} rows. Error: ${deError?.message ?? 'none'}`);
     
   if (dailyExpenses) {
     dailyExpenses.forEach(de => {
@@ -164,10 +164,10 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
       finalEvents.push({
         id: `de_${de.id}`,
         title: title,
-        amount: de.amount,
+        amount: parseFloat(de.amount) || 0,
         date: de.date,
         category: 'Gastos Diarios',
-        isCompleted: true // They are actual expenses, so they are done
+        isCompleted: true
       });
     });
   }
