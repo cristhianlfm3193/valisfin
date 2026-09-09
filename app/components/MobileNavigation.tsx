@@ -16,7 +16,8 @@ import {
   Calendar, 
   BarChart2, 
   Shield,
-  MapPin
+  MapPin,
+  Heart
 } from 'lucide-react';
 import { LogoutButton } from './LogoutButton';
 import type { User } from '@supabase/supabase-js';
@@ -120,9 +121,9 @@ export function MobileNavigation({ user, profile }: { user?: User, profile?: any
                 <Link
                   href="/valisbiz"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full p-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-sm font-bold shadow-md hover:from-blue-700 hover:to-indigo-800 transition-colors"
+                  className="flex items-center justify-center gap-2 w-full p-3.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white text-sm font-bold shadow-md hover:from-pink-600 hover:to-rose-700 transition-colors"
                 >
-                  <MapPin className="w-4 h-4 text-blue-100" />
+                  <Heart className="w-4 h-4 text-pink-100 fill-pink-100" />
                   ValisBiz Supervisión
                 </Link>
 

@@ -52,10 +52,6 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                 <span className="text-xs text-[#3d4a42]">Supervisor(a)</span>
               </div>
             </div>
-            <Link className="inline-flex items-center gap-1.5 bg-[#eaedff] hover:bg-[#dae2fd] transition-colors px-3.5 py-2 rounded-full text-sm font-medium shadow-sm" href="/">
-              <LayoutDashboard className="w-4 h-4 text-[#006948]" />
-              <span className="hidden sm:inline">Volver a</span> <span className="font-bold">ValisFin</span>
-            </Link>
           </div>
         </div>
       </header>
