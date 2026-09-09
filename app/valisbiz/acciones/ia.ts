@@ -85,36 +85,85 @@ CONTEXTO DEL SISTEMA:
 - VENDIDO (Vendedor): reporte diario de campo. Campos: vendedor, fecha, vistas (locales visitados), con_compra (compraron), sin_compra (no compraron), contado (B/.), crédito (B/.).
 - Vendedores del equipo: Andrés Chávez, Joseph Domínguez, Enrique del Rosario.
 
-REGLAS CRÍTICAS:
-1. Si ves una tabla o imagen con VARIOS vendedores (puede ser el Excel tipo Keiko con filas por vendedor), extrae UN registro por cada vendedor visible. Devuelve TODOS en el arreglo 'registros'.
-2. Si la tabla tiene columnas: vistas / con compra / sin compra / contado / credito / total → tipo='vendido'.
-3. Si hay una sola línea o monto sin actividad de campo → tipo='facturado'.
-4. Lee la fecha impresa en la imagen si existe (formato DD/MM/YYYY en Panamá → conviértela a YYYY-MM-DD).
-5. Si un vendedor tiene todos los valores en 0 (ej: Enrique: 0, 0, 0, 0.00, 0.00) igualmente inclúyelo.
-6. NO omitas ningún vendedor que veas en la imagen aunque sus datos sean 0.
+══════════════════════════════════════════
+VOCABULARIO WHATSAPP DEL EQUIPO KEIKO
+══════════════════════════════════════════
+Los vendedores envían mensajes de WhatsApp en lenguaje natural. Debes mapear el vocabulario así:
 
-EJEMPLO DE IMAGEN KEIKO:
-Si ves una tabla con:
+VISITAS (campo: vistas):
+  "clientes visitados", "visitas", "locales visitados", "clientes del día", "visitas del día" → vistas
+
+CON COMPRA (campo: con_compra):
+  "clientes efectivos", "efectivos", "con compra", "compraron", "clientes que compraron" → con_compra
+
+SIN COMPRA (campo: sin_compra):
+  "sin compra", "no compraron", "clientes sin efectividad" → sin_compra
+  ⚠️ Si NO mencionan sin_compra pero SÍ dan vistas y con_compra: calcula sin_compra = vistas - con_compra
+
+MONTOS (campos: contado, credito):
+  REGLA PRINCIPAL: Si el mensaje NO menciona "crédito" ni "a crédito", TODO el valor va a CONTADO.
+  - "valor recaudado", "total recaudado", "vendido", "recaudé", "recaudado" sin especificar → contado
+  - "al contado", "en efectivo", "contado" → contado
+  - "a crédito", "crédito", "en crédito", "en credito" → credito
+  - Si menciona AMBOS (contado y crédito) → separa los valores correctamente
+  - El campo "total" en el sistema = contado + crédito
+
+FECHA:
+  - Si no menciona fecha → usa hoy (${today})
+  - "hoy" → ${today}
+  - "ayer" → día anterior
+
+VENDEDOR:
+  - Si el mensaje no identifica al vendedor, deja vendedor_nombre vacío y el usuario lo seleccionará
+
+══════════════════════════════════════════
+EJEMPLOS REALES DEL EQUIPO
+══════════════════════════════════════════
+Ejemplo 1 (típico mensaje WhatsApp):
+  "Clientes visitados 12
+   Clientes efectivos 7
+   Valor recaudado 588.28"
+→ tipo='vendido', vistas=12, con_compra=7, sin_compra=5 (12-7), contado=588.28, credito=0
+
+Ejemplo 2 (con crédito explícito):
+  "Andrés: 10 visitas, 6 efectivos, 400 contado, 150 crédito"
+→ tipo='vendido', vendedor='Andrés', vistas=10, con_compra=6, sin_compra=4, contado=400, credito=150
+
+Ejemplo 3 (imagen Excel Keiko con columnas):
   Andres Chavez    | 12 | 9 | 3 | 1877.61 | 2162.05 | 4039.66
   Joseph Dominguez | 12 | 7 | 5 | 686.46  |         | 686.46
   Enrique del Rosario | 0 | 0 | 0 | 0.00 |         | 0.00
-→ Devuelves 3 registros tipo='vendido', uno por vendedor.
+→ 3 registros tipo='vendido', uno por vendedor.
+
+REGLAS ADICIONALES:
+1. Si ves una tabla con VARIOS vendedores → extrae UN registro por cada vendedor visible, devuélvelos TODOS.
+2. Si un vendedor tiene todos los valores en 0, inclúyelo igual.
+3. Lee la fecha impresa si existe (formato DD/MM/YYYY en Panamá → YYYY-MM-DD).
+4. Si hay una sola línea de monto sin actividad de campo → tipo='facturado'.
 
 Analiza ahora: "${texto || 'Imagen adjunta, extrae todos los vendedores visibles.'}"`
+
 
     const contenido: any[] = [prompt];
     if (base64Data && mimeType) {
       contenido.push({ inlineData: { data: base64Data, mimeType } });
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash-lite',
-      contents: contenido,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: schema,
-      }
-    });
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('La IA tardó demasiado (30s). Intenta de nuevo.')), 30000)
+    );
+
+    const response = await Promise.race([
+      ai.models.generateContent({
+        model: 'gemini-3.5-flash-lite',
+        contents: contenido,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: schema,
+        }
+      }),
+      timeoutPromise,
+    ]);
 
     if (!response.text) return { success: false, error: 'La IA no devolvió respuesta' };
 

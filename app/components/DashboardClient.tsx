@@ -194,8 +194,13 @@ export function DashboardClient({
       let mimeType: string | undefined;
 
       if (aiFile) {
-        base64Data = await getBase64(aiFile);
-        mimeType = aiFile.type;
+        // Comprimir siempre antes de enviar, independientemente del tamaño
+        let fileToSend = aiFile;
+        if (aiFile.type.startsWith('image/')) {
+          try { fileToSend = await resizeImage(aiFile, 900, 0.75); } catch { /* usar original */ }
+        }
+        base64Data = await getBase64(fileToSend);
+        mimeType = fileToSend.type;
       }
 
       const result = await analyzeUniversalText(aiText, base64Data, mimeType);
@@ -243,13 +248,14 @@ export function DashboardClient({
       } else {
         alert(result.error || 'No se pudo analizar el texto.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Hubo un error al procesar la solicitud.');
+      alert(error?.message || 'Hubo un error al procesar la solicitud. Intenta de nuevo.');
     } finally {
       setIsAnalyzing(false);
     }
   };
+
 
   const formatCurrency = (amount: number) => {
     return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

@@ -86,19 +86,26 @@ Texto del usuario: "${text || 'Aquí está el archivo adjunto'}"`;
       });
     }
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash-lite',
-      contents: contentsParams,
-      config: {
-        systemInstruction: `Eres un asistente experto en extraer datos de facturas y recibos panameños.
-        REGLA CRÍTICA SOBRE FECHAS: Cuando analices una imagen o PDF de factura/recibo, DEBES leer la fecha impresa en el documento (campos como 'FECHA:', 'Date:', 'Fecha de emisión:', etc.) y convertirla a formato YYYY-MM-DD.
-        El formato de fecha en Panamá es DD/MM/YYYY, es decir 'FECHA: 04/12/2024' significa el 4 de diciembre de 2024, que se escribe como 2024-12-04.
-        NUNCA devuelvas la fecha actual del sistema si el documento tiene una fecha visible. La fecha del documento SIEMPRE tiene prioridad absoluta.
-        Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → extrae solo '2024-12-04', ignora la hora.`,
-        responseMimeType: 'application/json',
-        responseSchema: responseSchema,
-      }
-    });
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('La IA tardó demasiado (30s). Intenta de nuevo.')), 30000)
+    );
+
+    const response = await Promise.race([
+      ai.models.generateContent({
+        model: 'gemini-3.5-flash-lite',
+        contents: contentsParams,
+        config: {
+          systemInstruction: `Eres un asistente experto en extraer datos de facturas y recibos panameños.
+          REGLA CRÍTICA SOBRE FECHAS: Cuando analices una imagen o PDF de factura/recibo, DEBES leer la fecha impresa en el documento (campos como 'FECHA:', 'Date:', 'Fecha de emisión:', etc.) y convertirla a formato YYYY-MM-DD.
+          El formato de fecha en Panamá es DD/MM/YYYY, es decir 'FECHA: 04/12/2024' significa el 4 de diciembre de 2024, que se escribe como 2024-12-04.
+          NUNCA devuelvas la fecha actual del sistema si el documento tiene una fecha visible. La fecha del documento SIEMPRE tiene prioridad absoluta.
+          Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → extrae solo '2024-12-04', ignora la hora.`,
+          responseMimeType: 'application/json',
+          responseSchema: responseSchema,
+        }
+      }),
+      timeoutPromise,
+    ]);
 
     if (!response.text) {
       return { success: false, error: 'No se pudo generar la respuesta de la IA' };
