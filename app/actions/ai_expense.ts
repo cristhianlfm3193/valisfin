@@ -19,8 +19,8 @@ export async function analyzeUniversalText(text: string) {
       properties: {
         accion: {
           type: Type.STRING,
-          enum: ["gasto", "ingreso", "kilometraje", "mantenimiento_auto", "trabajo_hogar", "meta_ahorro", "pago_fijo", "pendiente_auto"],
-          description: "Clasifica la intención del usuario. Usa 'pendiente_auto' si es un trabajo por hacer al auto."
+          enum: ["gasto", "ingreso", "kilometraje", "mantenimiento_auto", "trabajo_hogar", "meta_ahorro", "pago_fijo", "pendiente_auto", "desconocido"],
+          description: "Clasifica la intención del usuario. Usa 'pendiente_auto' si es un trabajo por hacer al auto. Usa 'desconocido' si el texto no tiene relación con el sistema."
         },
         parametros: {
           type: Type.OBJECT,
@@ -64,6 +64,7 @@ EJEMPLOS DE MAPEO:
 - "Limpieza de aire en la sala urgente por 40 dolares": accion="trabajo_hogar", parametros={hogar_area: "Sala", detalle: "Limpieza de aire", hogar_prioridad: "Urgente", costo_estimado: 40}
 - "Pagué el internet de Tigo hoy por 45": accion="pago_fijo", parametros={obligacion: "Tigo Internet", monto: 45, fecha: hoy}
 - "Aboné 20 dolares al ahorro navideño": accion="meta_ahorro", parametros={obligacion: "Ahorro Navideño", monto: 20, fecha: hoy}
+- "Hola, ¿cómo estás?": accion="desconocido", parametros={}
 
 Texto del usuario: "${text}"`;
 

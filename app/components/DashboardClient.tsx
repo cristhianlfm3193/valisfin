@@ -82,6 +82,9 @@ export function DashboardClient({
           case 'pago_fijo':
             setActiveModal('pago-fijo');
             break;
+          case 'desconocido':
+            alert('No pude entender la instrucción. Intenta ser más específico, por ejemplo: "Gasté 15 en el súper" o "Pagué la luz".');
+            break;
           default:
             setActiveModal('gasto'); // fallback
         }
