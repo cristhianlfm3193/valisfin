@@ -15,7 +15,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Calendar,
-  Shield
+  Shield,
+  MapPin
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -110,6 +111,23 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
       </div>
 
       <div className={`pt-4 border-t border-slate-100 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
+        <Link
+          href="/valisbiz"
+          title={isCollapsed ? "ValisBiz" : undefined}
+          className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden ${
+            pathname.startsWith('/valisbiz') 
+              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border border-blue-600 hover:from-blue-700 hover:to-blue-800'
+              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+          } shadow-sm hover:shadow-md ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+        >
+          <MapPin className={`shrink-0 w-4 h-4 ${pathname.startsWith('/valisbiz') ? 'text-blue-100' : 'text-blue-600'} group-hover:scale-110 transition-transform`} />
+          {!isCollapsed && (
+            <span className="truncate whitespace-nowrap">
+              ValisBiz
+            </span>
+          )}
+        </Link>
+
         {profile?.role === 'administrador' && (
           <Link
             href={pathname === '/admin' ? '/' : '/admin'}
