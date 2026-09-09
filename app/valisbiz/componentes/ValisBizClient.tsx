@@ -9,6 +9,7 @@ import MetricasVentas from './MetricasVentas';
 import KanbanBoard from './KanbanBoard';
 import MapaLocales from './MapaLocales';
 import ModalRegistrar from './ModalRegistrar';
+import LoadingOverlay from './LoadingOverlay';
 import type { ResumenMensualVendedor, MetaSupervisor } from '@/types/valisbiz';
 
 const MESES = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -68,6 +69,9 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
 
   return (
     <div className="flex flex-col w-full text-[#131b2e]">
+      {/* Loading overlay al navegar entre meses */}
+      {isPending && <LoadingOverlay />}
+
       {/* Modal */}
       {showModal && (
         <ModalRegistrar
