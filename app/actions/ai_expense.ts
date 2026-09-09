@@ -57,9 +57,9 @@ export async function analyzeUniversalText(text: string, base64Data?: string, mi
 La fecha de hoy es: ${today}.
 
 REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
-1. Si recibes una imagen o PDF de una factura con múltiples artículos, NO los registres por separado. Suma o identifica el MONTO TOTAL a pagar.
-2. Asigna una CATEGORÍA general lógica (ej. 'Supermercado', 'Farmacia', 'Ferretería', 'Restaurante').
-3. En el campo DETALLE, escribe el nombre del comercio y un resumen breve de los artículos principales (ej. 'Súper 99 - Compra de carnes, vegetales y artículos de limpieza').
+1. Si recibes una imagen o PDF de una factura con múltiples artículos, NO los registres por separado. Suma o identifica el MONTO TOTAL a pagar (busca campos como 'TOTAL A PAGAR', 'TOTAL IMPORTE', 'GRAND TOTAL').
+2. NOMBRE DEL COMERCIO (DETALLE): Lee el nombre de la empresa/negocio que aparece en la PARTE SUPERIOR del recibo (generalmente en la cabecera/encabezado en letras grandes). Luego agrega un guión y un resumen de los artículos. Ejemplo: si el encabezado dice 'DISTRIBUIDORA IRIS PANAMA' y vendió bandejas de aluminio → detalle = 'Distribuidora Iris Panamá - Bandejas de aluminio extra grande'.
+3. CATEGORÍA: Infiere la categoría lógica según el tipo de negocio y productos (ej: ferretería, farmacia, supermercado, restaurante, tecnología).
 4. Devuelve la acción "gasto" y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
 5. FECHA OBLIGATORIA: Busca en la imagen el campo que diga 'FECHA:', 'FECHA DE EMISION:', 'Date:', 'Fecha:', o similar. Lee los números de ese campo y conviértelos a YYYY-MM-DD. Por ejemplo: si ves 'FECHA: 04/12/2024' → devuelve '2024-12-04'. Si ves 'FECHA: 12/04/2024' → devuelve '2024-04-12'. Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → ignora la hora y devuelve solo '2024-12-04'. NUNCA devuelvas la fecha de hoy (${today}) si el documento tiene una fecha impresa.
 

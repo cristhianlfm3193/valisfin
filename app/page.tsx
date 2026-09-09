@@ -58,6 +58,8 @@ export default async function Home() {
           vehicleData={dashboardData.vehicleData}
           vehicles={vehicles || []}
           fixedPayments={fixedPayments || []}
+          currentUserEmail={user?.email || ''}
+          currentUserName={fullName}
         />
       </main>
     </>

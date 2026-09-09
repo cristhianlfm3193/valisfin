@@ -32,6 +32,8 @@ interface DashboardClientProps {
   vehicleData: DashboardVehicleData;
   vehicles: any[];
   fixedPayments: any[];
+  currentUserEmail?: string;
+  currentUserName?: string;
 }
 
 export function DashboardClient({
@@ -40,8 +42,17 @@ export function DashboardClient({
   upcomingBills,
   vehicleData,
   vehicles,
-  fixedPayments
+  fixedPayments,
+  currentUserEmail = '',
+  currentUserName = '',
 }: DashboardClientProps) {
+  // Determina el pagador según el usuario activo
+  const getDefaultPagador = (): 'Cristhian' | 'Jennifer' => {
+    const email = currentUserEmail.toLowerCase();
+    const name = currentUserName.toLowerCase();
+    if (email === 'jenniferyohana.yco@gmail.com' || name.includes('jennifer')) return 'Jennifer';
+    return 'Cristhian'; // cristhianf3193@gmail.com o cualquier otro usuario
+  };
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [aiText, setAiText] = useState('');
   const [aiFile, setAiFile] = useState<File | null>(null);
@@ -189,7 +200,12 @@ export function DashboardClient({
 
       const result = await analyzeUniversalText(aiText, base64Data, mimeType);
       if (result.success && result.data) {
-        setAiExpenseData(result.data.parametros);
+        // Siempre usamos el pagador del usuario activo, sin depender de la IA
+        const parametros = {
+          ...result.data.parametros,
+          pagador: getDefaultPagador(),
+        };
+        setAiExpenseData(parametros);
         
         switch (result.data.accion) {
           case 'gasto':
