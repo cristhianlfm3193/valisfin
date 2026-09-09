@@ -363,11 +363,13 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
         </div>
       </main>
 
-      <EditHomeTaskModal 
-        task={editingTask} 
-        isOpen={!!editingTask} 
-        onClose={() => setEditingTask(null)} 
-      />
+      {editingTask && (
+        <EditHomeTaskModal 
+          task={editingTask} 
+          isOpen={true} 
+          onClose={() => setEditingTask(null)} 
+        />
+      )}
     </>
   );
 }

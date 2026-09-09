@@ -8,6 +8,13 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
   const [state, formAction, isPending] = useActionState(updateHomeTask, null);
   const [selectedProfile, setSelectedProfile] = useState(task?.profile_id || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
 
+  // Sync state if task changes while modal is open or if it wasn't unmounted
+  useEffect(() => {
+    if (task?.profile_id) {
+      setSelectedProfile(task.profile_id);
+    }
+  }, [task]);
+
   useEffect(() => {
     if (state?.success) {
       onClose();
@@ -72,7 +79,7 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Fecha Estimada</label>
-                <input name="estimated_date" type="date" required defaultValue={task.estimated_date} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 shadow-sm" />
+                <input name="estimated_date" type="date" required defaultValue={task.estimated_date ? task.estimated_date.split('T')[0] : ''} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 shadow-sm" />
               </div>
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Presupuesto / Costo Final</label>
