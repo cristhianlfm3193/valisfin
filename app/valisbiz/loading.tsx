@@ -1,4 +1,4 @@
-// loading.tsx global — ValisFin (verde #14b886)
+// loading.tsx ValisBiz — rosa #ec4899 (pink-500)
 export default function Loading() {
   return (
     <div
@@ -15,7 +15,7 @@ export default function Loading() {
         WebkitBackdropFilter: 'blur(6px)',
       }}
     >
-      <div className="spinner-valisfin">
+      <div className="spinner-valisbiz">
         <div></div>
         <div></div>
         <div></div>
@@ -28,42 +28,42 @@ export default function Loading() {
           marginTop: '1.5rem',
           fontSize: '0.875rem',
           fontWeight: 600,
-          color: '#14b886',
+          color: '#ec4899',
           letterSpacing: '0.05em',
-          animation: 'pulse-text 1.4s ease-in-out infinite',
+          animation: 'pulse-biz 1.4s ease-in-out infinite',
         }}
       >
-        Cargando ValisFin…
+        Cargando ValisBiz…
       </p>
 
       <style>{`
-        .spinner-valisfin {
+        .spinner-valisbiz {
           width: 70.4px;
           height: 70.4px;
-          --clr: #14b886;
-          --clr-alpha: rgba(20, 184, 134, 0.12);
-          animation: spinner-vf 1.6s infinite ease;
+          --clr: #ec4899;
+          --clr-alpha: rgba(236, 72, 153, 0.12);
+          animation: spinner-biz 1.6s infinite ease;
           transform-style: preserve-3d;
         }
-        .spinner-valisfin > div {
+        .spinner-valisbiz > div {
           background-color: var(--clr-alpha);
           height: 100%;
           position: absolute;
           width: 100%;
           border: 3.5px solid var(--clr);
         }
-        .spinner-valisfin div:nth-of-type(1) { transform: translateZ(-35.2px) rotateY(180deg); }
-        .spinner-valisfin div:nth-of-type(2) { transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
-        .spinner-valisfin div:nth-of-type(3) { transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
-        .spinner-valisfin div:nth-of-type(4) { transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
-        .spinner-valisfin div:nth-of-type(5) { transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
-        .spinner-valisfin div:nth-of-type(6) { transform: translateZ(35.2px); }
-        @keyframes spinner-vf {
+        .spinner-valisbiz div:nth-of-type(1) { transform: translateZ(-35.2px) rotateY(180deg); }
+        .spinner-valisbiz div:nth-of-type(2) { transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
+        .spinner-valisbiz div:nth-of-type(3) { transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
+        .spinner-valisbiz div:nth-of-type(4) { transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
+        .spinner-valisbiz div:nth-of-type(5) { transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
+        .spinner-valisbiz div:nth-of-type(6) { transform: translateZ(35.2px); }
+        @keyframes spinner-biz {
           0%   { transform: rotate(45deg) rotateX(-25deg)  rotateY(25deg); }
           50%  { transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
           100% { transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
         }
-        @keyframes pulse-text {
+        @keyframes pulse-biz {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }
         }
