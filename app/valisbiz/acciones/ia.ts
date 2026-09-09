@@ -20,7 +20,103 @@ export interface DatosIAVendedor {
 
 export interface ResultadoIAValisBiz {
   registros: DatosIAVendedor[];
-  resumen: string;  // Ej: "Encontré datos de 3 vendedores en la imagen"
+  resumen: string;
+}
+
+// ── Parser local de mensajes WhatsApp (sin IA, instantáneo) ──────────────────
+const VENDEDORES_CONOCIDOS = [
+  { nombre: 'Andrés Chávez', aliases: ['andres', 'andrés', 'chavez', 'chávez'] },
+  { nombre: 'Joseph Domínguez', aliases: ['joseph', 'josep', 'dominguez', 'domínguez'] },
+  { nombre: 'Enrique del Rosario', aliases: ['enrique', 'del rosario', 'rosario'] },
+];
+
+function num(s: string | undefined): number { return s ? parseFloat(s.replace(',', '.')) : 0; }
+
+function detectarFecha(texto: string, today: string): string {
+  if (/\bayer\b/i.test(texto)) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().split('T')[0];
+  }
+  // Fecha DD/MM/YYYY o YYYY-MM-DD en el texto
+  const m = texto.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  const iso = texto.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return iso[0];
+  return today;
+}
+
+function detectarVendedor(texto: string): string | undefined {
+  const t = texto.toLowerCase();
+  for (const v of VENDEDORES_CONOCIDOS) {
+    if (v.aliases.some(a => t.includes(a))) return v.nombre;
+  }
+  return undefined;
+}
+
+function parsearTextoWhatsApp(texto: string, today: string): ResultadoIAValisBiz | null {
+  const t = texto.toLowerCase();
+
+  // Patrones de visitas
+  const visitasMatch = texto.match(/(?:clientes?\s+visitados?|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?)\s*[:\-]?\s*(\d+)/i);
+  // Patrones de efectivos / con compra
+  const efectivosMatch = texto.match(/(?:clientes?\s+efectivos?|efectivos?|con\s+compra|compraron)\s*[:\-]?\s*(\d+)/i);
+  // Sin compra explícito
+  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron)\s*[:\-]?\s*(\d+)/i);
+  // Contado
+  const contadoMatch = texto.match(/(?:al?\s+contado|en\s+efectivo|contado)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  // Crédito
+  const creditoMatch = texto.match(/(?:a?\s*cr[eé]dito|en\s+cr[eé]dito)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  // Valor recaudado / total (cuando no dice contado ni crédito)
+  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+
+  const tieneVentas = visitasMatch || efectivosMatch || contadoMatch || creditoMatch || recaudadoMatch;
+
+  // Si no hay ningún dato reconocible, no parsear localmente → dejar a Gemini
+  if (!tieneVentas) return null;
+
+  const vistas = visitasMatch ? parseInt(visitasMatch[1]) : undefined;
+  const con_compra = efectivosMatch ? parseInt(efectivosMatch[1]) : undefined;
+  const sin_compra_explicito = sinCompraMatch ? parseInt(sinCompraMatch[1]) : undefined;
+  const sin_compra = sin_compra_explicito ?? (vistas !== undefined && con_compra !== undefined ? Math.max(0, vistas - con_compra) : undefined);
+
+  // Lógica de montos: si no dice crédito → todo es contado
+  let contado = contadoMatch ? num(contadoMatch[1]) : 0;
+  const credito = creditoMatch ? num(creditoMatch[1]) : 0;
+  if (!contadoMatch && recaudadoMatch && !creditoMatch) {
+    // "valor recaudado X" sin especificar → todo contado
+    contado = num(recaudadoMatch[1]);
+  } else if (!contadoMatch && recaudadoMatch && creditoMatch) {
+    // Recaudado total con crédito mencionado → contado = total - crédito
+    contado = Math.max(0, num(recaudadoMatch[1]) - credito);
+  }
+
+  const vendedor_nombre = detectarVendedor(texto);
+  const fecha = detectarFecha(texto, today);
+
+  const registro: DatosIAVendedor = {
+    tipo: 'vendido',
+    vendedor_nombre,
+    fecha,
+    vistas,
+    con_compra,
+    sin_compra,
+    contado,
+    credito,
+  };
+
+  const partes: string[] = [];
+  if (vendedor_nombre) partes.push(vendedor_nombre);
+  if (vistas !== undefined) partes.push(`${vistas} vistas`);
+  if (con_compra !== undefined) partes.push(`${con_compra} con compra`);
+  if (sin_compra !== undefined) partes.push(`${sin_compra} sin compra`);
+  if (contado) partes.push(`B/.${contado.toFixed(2)} contado`);
+  if (credito) partes.push(`B/.${credito.toFixed(2)} crédito`);
+
+  return {
+    registros: [registro],
+    resumen: `✅ Parseado al instante: ${partes.join(' · ')}`,
+  };
 }
 
 export async function analizarReporteValisBiz(
@@ -33,8 +129,19 @@ export async function analizarReporteValisBiz(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { success: false, error: 'No autorizado' };
 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const today = new Date().toISOString().split('T')[0];
+
+    // ══════════════════════════════════════════════════════════════════
+    // PARSER LOCAL — procesa texto simple sin llamar a Gemini (~0ms)
+    // Solo se activa cuando NO hay imagen adjunta
+    // ══════════════════════════════════════════════════════════════════
+    if (!base64Data && texto.trim()) {
+      const local = parsearTextoWhatsApp(texto, today);
+      if (local) return { success: true, data: local };
+    }
+
+    // ── Si hay imagen o el texto no es reconocible → usa Gemini ──────
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const schema: Schema = {
       type: Type.OBJECT,

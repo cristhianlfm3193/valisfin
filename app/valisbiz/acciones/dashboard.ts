@@ -105,7 +105,7 @@ export async function getDashboardData(mes?: number, anio?: number) {
     registrosVendido: (registrosVentas || []).map((r: any) => ({
       id: r.id,
       vendedor_nombre: r.vendedor?.nombre || 'Desconocido',
-      fecha: r.fecha_registro?.split('T')[0] || '',
+      fecha: r.fecha_registro ? r.fecha_registro.replace(' ', 'T').split('T')[0] : '',
       monto: Number(r.monto_facturado),
       vistas: r.vistas ?? 0,
       con_compra: r.con_compra ?? 0,
