@@ -57,12 +57,6 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
-  // Fetch records to get amount and linked_goal_id
-  const { data: records } = await supabase
-    .from('fixed_payments')
-    .select('id, amount, linked_goal_id')
-    .in('id', ids);
-
   const { error } = await supabase
     .from('fixed_payments')
     .update({ is_paid: !currentStatus })
@@ -73,33 +67,11 @@ export async function togglePaymentStatus(ids: string[], currentStatus: boolean)
     throw new Error('Failed to toggle fixed payment');
   }
 
-  // Update savings goals if linked
-  if (records && records.length > 0) {
-    for (const record of records) {
-      if (record.linked_goal_id) {
-        // Fetch current goal amount
-        const { data: goalData } = await supabase
-          .from('savings_goals')
-          .select('saved_amount')
-          .eq('id', record.linked_goal_id)
-          .single();
-          
-        if (goalData) {
-          // If we are marking as paid (!currentStatus == true), we add. If unpaid, we subtract.
-          const modifier = !currentStatus ? record.amount : -record.amount;
-          const newAmount = Math.max(0, (parseFloat(goalData.saved_amount as any) || 0) + modifier);
-          
-          await supabase
-            .from('savings_goals')
-            .update({ saved_amount: newAmount })
-            .eq('id', record.linked_goal_id);
-        }
-      }
-    }
-  }
+  // Savings goals are now automatically updated via a Postgres Trigger 
+  // (tr_sync_fixed_payment_to_goal) when is_paid changes.
 
   revalidatePath('/pagos-fijos');
-  revalidatePath('/metas');
+}  revalidatePath('/metas');
 }
 
 export async function addVariablePayment(formData: FormData) {
