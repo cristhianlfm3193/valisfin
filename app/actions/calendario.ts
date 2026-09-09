@@ -155,13 +155,15 @@ export async function getCalendarEvents(year: number, month: number): Promise<Ca
   const { data: dailyExpenses } = await supabase
     .from('daily_expenses')
     .select('*')
-    .like('date', `${currentMonthStr}%`);
+    .gte('date', `${currentMonthStr}-01`)
+    .lte('date', `${currentMonthStr}-31`);
     
   if (dailyExpenses) {
     dailyExpenses.forEach(de => {
+      const title = de.detail || de.category || 'Gasto';
       finalEvents.push({
         id: `de_${de.id}`,
-        title: `${de.category} - ${de.description || ''}`,
+        title: title,
         amount: de.amount,
         date: de.date,
         category: 'Gastos Diarios',
