@@ -51,32 +51,38 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
           </div>
 
           <div className="p-4 overflow-y-auto space-y-2 custom-scrollbar">
-            {events.map(event => {
-              const style = categoryStyles[event.category] || categoryStyles['Recordatorios'];
-              return (
-                <div 
-                  key={event.id}
-                  onClick={() => {
-                    onEventClick(event);
-                  }}
-                  className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-between gap-3 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
-                    ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50' : ''}
-                  `}
-                >
-                  <div className="flex items-center gap-2 overflow-hidden">
-                    <span className={`w-2 h-2 rounded-full shrink-0 ${style.dot}`}></span>
-                    <span className={`truncate ${event.isCompleted ? 'line-through' : ''}`}>
-                      {event.title}
-                    </span>
+            {events.length === 0 ? (
+              <div className="text-center py-6 text-slate-500 text-sm">
+                No hay eventos programados para este día.
+              </div>
+            ) : (
+              events.map(event => {
+                const style = categoryStyles[event.category] || categoryStyles['Recordatorios'];
+                return (
+                  <div 
+                    key={event.id}
+                    onClick={() => {
+                      onEventClick(event);
+                    }}
+                    className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-between gap-3 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
+                      ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50' : ''}
+                    `}
+                  >
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${style.dot}`}></span>
+                      <span className={`truncate ${event.isCompleted ? 'line-through' : ''}`}>
+                        {event.title}
+                      </span>
+                    </div>
+                    {event.amount && (
+                      <span className="shrink-0 text-xs font-bold opacity-80">
+                        {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                      </span>
+                    )}
                   </div>
-                  {event.amount && (
-                    <span className="shrink-0 text-xs font-bold opacity-80">
-                      {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                    </span>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })
+            )}
           </div>
         </div>
       </div>

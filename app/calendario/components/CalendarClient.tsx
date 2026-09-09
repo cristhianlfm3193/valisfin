@@ -259,7 +259,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                 const dayEvents = d.fullDate ? (eventsByDate[d.fullDate] || []) : [];
 
                 return (
-                  <div key={i} className={`min-h-[100px] md:min-h-[120px] p-2 flex flex-col justify-between transition-colors
+                  <div key={i} onClick={() => d.fullDate && setSelectedDay(d.fullDate)} className={`min-h-[100px] md:min-h-[120px] p-2 flex flex-col justify-between transition-colors cursor-pointer
                     ${!d.isCurrentMonth ? 'bg-slate-50/40 text-slate-400' : 'hover:bg-slate-50/50 text-slate-700'}
                     ${isToday ? 'bg-emerald-50/30 ring-2 ring-inset ring-brand-500 rounded-lg relative z-10' : ''}
                   `}>
@@ -280,7 +280,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                         return (
                           <div 
                             key={event.id}
-                            onClick={() => setSelectedEvent(event)}
+                            onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
                             className={`px-1.5 py-0.5 md:py-1 rounded-md border text-[9px] md:text-[10px] font-semibold truncate flex items-center gap-1 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
                               ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50 line-through' : ''}
                             `}
@@ -298,7 +298,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                       
                       {dayEvents.length > 3 && (
                         <button 
-                          onClick={() => setSelectedDay(d.fullDate)}
+                          onClick={(e) => { e.stopPropagation(); setSelectedDay(d.fullDate); }}
                           className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
                         >
                           + {dayEvents.length - 3} más...
@@ -403,7 +403,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
       <AddReminderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <DayEventsListModal 
         date={selectedDay} 
-        events={selectedDay ? eventsByDate[selectedDay] : []} 
+        events={selectedDay ? (eventsByDate[selectedDay] || []) : []} 
         categoryStyles={CATEGORY_STYLES}
         onEventClick={(ev) => {
           setSelectedEvent(ev);
