@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useTransition } from 'react';
+import { useState, useMemo, useTransition, Fragment } from 'react';
 import { Search, ChevronLeft, ChevronRight, Building2, FileText, Pencil, Trash2, X, Loader2, AlertTriangle, Eye, ShoppingCart, XCircle, Banknote, CreditCard, Calculator } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -594,13 +594,14 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
         {Array.from({ length: totalPaginas }, (_, i) => i + 1)
           .filter(p => p === 1 || p === totalPaginas || Math.abs(p - pagina) <= 1)
           .map((p, i, arr) => (
-            <>
-              {i > 0 && arr[i - 1] !== p - 1 && <span key={`dots-${p}`} className="text-slate-300 text-xs px-1">…</span>}
-              <button key={p} onClick={() => setPagina(() => p)}
+            <Fragment key={p}>
+              {i > 0 && arr[i - 1] !== p - 1 && <span className="text-slate-300 text-xs px-1">…</span>}
+              <button
+                onClick={() => setPagina(() => p)}
                 className={`w-7 h-7 rounded-lg text-xs font-mono font-semibold transition-colors ${p === pagina ? active : 'border border-slate-200 text-slate-600 hover:bg-slate-100'}`}>
                 {p}
               </button>
-            </>
+            </Fragment>
           ))}
         <button onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))} disabled={pagina === totalPaginas}
           className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
