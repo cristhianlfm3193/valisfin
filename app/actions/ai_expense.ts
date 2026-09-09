@@ -26,7 +26,7 @@ export async function analyzeUniversalText(text: string, base64Data?: string, mi
           type: Type.OBJECT,
           properties: {
             // Campos comunes y Gastos/Ingresos
-            fecha: { type: Type.STRING, description: "YYYY-MM-DD. Calcula relativo a la fecha de hoy." },
+            fecha: { type: Type.STRING, description: "YYYY-MM-DD. Si hay una imagen o PDF, extrae la fecha que aparece EN el documento. Solo usa la fecha de hoy como fallback si no hay fecha visible en el documento ni en el texto." },
             monto: { type: Type.NUMBER, description: "Monto de la transacción." },
             detalle: { type: Type.STRING, description: "Concepto o descripción." },
             categoria: { type: Type.STRING, description: "Categoría inferida." },
@@ -61,6 +61,7 @@ REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
 2. Asigna una CATEGORÍA general lógica (ej. 'Supermercado', 'Farmacia', 'Ferretería', 'Restaurante').
 3. En el campo DETALLE, escribe el nombre del comercio y un resumen breve de los artículos principales (ej. 'Súper 99 - Compra de carnes, vegetales y artículos de limpieza').
 4. Devuelve la acción "gasto" y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
+5. En el campo FECHA: SIEMPRE busca y usa la fecha que aparece impresa/visible en la factura o recibo (puede estar como 'Fecha:', 'Date:', 'Emitida el:', etc.). Si la factura es del 2024 o cualquier otro año pasado, usa esa fecha exacta. Solo usa la fecha de hoy (${today}) si no hay ninguna fecha visible en el documento.
 
 EJEMPLOS DE MAPEO:
 - "Cristhian gastó 15 en el Súper 99 ayer": accion="gasto", parametros={pagador: "Cristhian", monto: 15, detalle: "Súper 99", categoria: "Supermercado", fecha: ayer}

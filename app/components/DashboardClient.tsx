@@ -51,7 +51,15 @@ export function DashboardClient({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setAiFile(e.target.files[0]);
+      const file = e.target.files[0];
+      const fileName = file.name.toLowerCase();
+      const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || fileName.endsWith('.heic') || fileName.endsWith('.heif');
+      if (isHeic) {
+        alert('⚠️ El formato .HEIC no es compatible.\n\nPor favor convierte la fotografía a JPG o PNG antes de adjuntarla.\n\nEn iPhone: al compartir la foto, selecciona "Más compatible" o usa la opción "Exportar como JPEG".');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+      setAiFile(file);
     }
   };
 
