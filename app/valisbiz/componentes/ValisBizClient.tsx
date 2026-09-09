@@ -10,6 +10,7 @@ import KanbanBoard from './KanbanBoard';
 import MapaLocales from './MapaLocales';
 import ModalRegistrar from './ModalRegistrar';
 import ModalReporte from './ModalReporte';
+import AccionesRapidasIA from './AccionesRapidasIA';
 import LoadingOverlay from './LoadingOverlay';
 import type { ResumenMensualVendedor, MetaSupervisor } from '@/types/valisbiz';
 
@@ -249,15 +250,21 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
 
         {/* Tab Contents */}
         {activeTab === 'ventas' && (
-          <MetricasVentas
-            metas={initialData.metas}
-            resumenMensual={initialData.resumenMensual}
-            mesPeriodo={mesPeriodo}
-            anioPeriodo={anioPeriodo}
-            isMesCerrado={!isMesActual}
-            registrosFacturado={initialData.registrosFacturado}
-            registrosVendido={initialData.registrosVendido}
-          />
+          <div className="flex flex-col gap-6">
+            <AccionesRapidasIA
+              vendedores={initialData.vendedores.map(v => ({ id: v.id, nombre: v.nombre }))}
+              onSuccess={() => startTransition(() => { router.refresh(); })}
+            />
+            <MetricasVentas
+              metas={initialData.metas}
+              resumenMensual={initialData.resumenMensual}
+              mesPeriodo={mesPeriodo}
+              anioPeriodo={anioPeriodo}
+              isMesCerrado={!isMesActual}
+              registrosFacturado={initialData.registrosFacturado}
+              registrosVendido={initialData.registrosVendido}
+            />
+          </div>
         )}
         {activeTab === 'tareas' && (
           <KanbanBoard initialTareas={initialData.tareas} />
