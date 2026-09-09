@@ -174,3 +174,76 @@ export async function registrarFacturado(
   if (error) return { success: false, error: error.message };
   return { success: true };
 }
+
+// ── Editar registro de facturado ───────────────────────────────────────────────
+export async function editarFacturado(
+  id: string,
+  monto: number,
+  fecha: string,
+  notas?: string
+) {
+  const supabase = await createClient();
+  const fechaDate = new Date(fecha + 'T12:00:00');
+  const { error } = await supabase
+    .from('facturado')
+    .update({
+      monto_facturado: monto,
+      fecha: fecha,
+      mes_periodo: fechaDate.getMonth() + 1,
+      anio_periodo: fechaDate.getFullYear(),
+      notas: notas || null,
+    })
+    .eq('id', id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ── Borrar registro de facturado ───────────────────────────────────────────────
+export async function borrarFacturado(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from('facturado').delete().eq('id', id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ── Editar registro de vendido (vendedor) ──────────────────────────────────────
+export async function editarVendido(
+  id: string,
+  data: {
+    fecha: string;
+    vistas: number;
+    con_compra: number;
+    sin_compra: number;
+    contado: number;
+    credito: number;
+  }
+) {
+  const supabase = await createClient();
+  const fechaDate = new Date(data.fecha + 'T12:00:00');
+  const total = data.contado + data.credito;
+  const { error } = await supabase
+    .from('registros_ventas')
+    .update({
+      fecha_registro: data.fecha + 'T12:00:00',
+      mes_periodo: fechaDate.getMonth() + 1,
+      anio_periodo: fechaDate.getFullYear(),
+      vistas: data.vistas,
+      con_compra: data.con_compra,
+      sin_compra: data.sin_compra,
+      contado: data.contado,
+      credito: data.credito,
+      monto_facturado: total,
+    })
+    .eq('id', id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ── Borrar registro de vendido (vendedor) ──────────────────────────────────────
+export async function borrarVendido(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from('registros_ventas').delete().eq('id', id);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+

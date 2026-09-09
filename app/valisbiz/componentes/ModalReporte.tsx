@@ -26,110 +26,106 @@ function fmt(n: number) {
 }
 
 async function generarPDF(datos: DatosReporteDia): Promise<Blob> {
-  // Importación dinámica para evitar SSR
   const { jsPDF } = await import('jspdf');
   const { default: autoTable } = await import('jspdf-autotable');
 
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-  const PW = 297; // A4 landscape width
-  const MARGIN = 14;
-  const CONTENT_W = PW - MARGIN * 2;
+  // ── Formato Carta vertical (8.5 × 11 pulgadas = 216 × 279 mm) ──
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' });
+  const PW = 216;   // ancho carta
+  const MARGIN = 15;
+  const CONTENT_W = PW - MARGIN * 2;  // 186 mm
 
-  // ── 1. Logo Keiko ──────────────────────────────────────────────────
+  // ── 1. Logo Keiko (esquina superior izquierda, proporciones correctas) ──
   try {
     const response = await fetch('/keiko-logo.png');
     const blob = await response.blob();
-    const reader = new FileReader();
     const logoBase64 = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result as string);
       reader.readAsDataURL(blob);
     });
-    doc.addImage(logoBase64, 'PNG', MARGIN, 8, 38, 22);
+    // Logo ~42×27 mm para que no se vea aplastado (ratio ~1.55)
+    doc.addImage(logoBase64, 'PNG', MARGIN, 8, 42, 27);
   } catch {
-    // Si no carga el logo, continúa sin él
+    // continúa sin logo
   }
 
   // ── 2. Banner rojo: INFORMES DE VENTAS DIARIAS ─────────────────────
-  const bannerY = 36;
-  doc.setFillColor(220, 0, 0); // rojo Keiko
-  doc.rect(MARGIN, bannerY, CONTENT_W, 12, 'F');
+  const bannerY = 40;
+  doc.setFillColor(210, 0, 0);
+  doc.rect(MARGIN, bannerY, CONTENT_W, 13, 'F');
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
+  doc.setFontSize(15);
   doc.setTextColor(255, 255, 255);
-  doc.text('INFORMES DE VENTAS DIARIAS', PW / 2, bannerY + 8.5, { align: 'center' });
+  doc.text('INFORMES DE VENTAS DIARIAS', PW / 2, bannerY + 9, { align: 'center' });
 
   // ── 3. Fila amarilla: etiquetas SUPERVISOR / AGENCIA / FECHA ───────
-  const labelY = bannerY + 12;
-  const col1W = CONTENT_W * 0.4;
-  const col2W = CONTENT_W * 0.35;
-  const col3W = CONTENT_W * 0.25;
+  const labelY = bannerY + 13;
+  const col1W = CONTENT_W * 0.42;   // ~78 mm
+  const col2W = CONTENT_W * 0.33;   // ~61 mm
+  const col3W = CONTENT_W - col1W - col2W; // ~47 mm
 
-  doc.setFillColor(255, 220, 0); // amarillo Keiko
+  doc.setFillColor(255, 215, 0);
   doc.rect(MARGIN, labelY, col1W, 8, 'F');
   doc.rect(MARGIN + col1W, labelY, col2W, 8, 'F');
   doc.rect(MARGIN + col1W + col2W, labelY, col3W, 8, 'F');
 
-  // Líneas negras separadoras
   doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.5);
+  doc.setLineWidth(0.6);
   doc.rect(MARGIN, labelY, CONTENT_W, 8);
   doc.line(MARGIN + col1W, labelY, MARGIN + col1W, labelY + 8);
   doc.line(MARGIN + col1W + col2W, labelY, MARGIN + col1W + col2W, labelY + 8);
 
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(0, 0, 0);
   doc.setFont('helvetica', 'bold');
   doc.text('SUPERVISOR', MARGIN + col1W / 2, labelY + 5.5, { align: 'center' });
   doc.text('AGENCIA', MARGIN + col1W + col2W / 2, labelY + 5.5, { align: 'center' });
   doc.text('FECHA', MARGIN + col1W + col2W + col3W / 2, labelY + 5.5, { align: 'center' });
 
-  // ── 4. Fila datos: Jennifer Camaño / Panamá Oeste / fecha ──────────
+  // ── 4. Fila de datos: Jennifer / Panamá Oeste / fecha ───────────────
   const dataY = labelY + 8;
   doc.setFillColor(255, 255, 255);
-  doc.rect(MARGIN, dataY, CONTENT_W, 10, 'F');
+  doc.rect(MARGIN, dataY, CONTENT_W, 11, 'F');
   doc.setDrawColor(0, 0, 0);
-  doc.rect(MARGIN, dataY, CONTENT_W, 10);
-  doc.line(MARGIN + col1W, dataY, MARGIN + col1W, dataY + 10);
-  doc.line(MARGIN + col1W + col2W, dataY, MARGIN + col1W + col2W, dataY + 10);
+  doc.setLineWidth(0.4);
+  doc.rect(MARGIN, dataY, CONTENT_W, 11);
+  doc.line(MARGIN + col1W, dataY, MARGIN + col1W, dataY + 11);
+  doc.line(MARGIN + col1W + col2W, dataY, MARGIN + col1W + col2W, dataY + 11);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
-  doc.text(datos.supervisor, MARGIN + col1W / 2, dataY + 6.5, { align: 'center' });
-  doc.text(datos.agencia, MARGIN + col1W + col2W / 2, dataY + 6.5, { align: 'center' });
-  doc.text(fechaElegante(datos.fecha), MARGIN + col1W + col2W + col3W / 2, dataY + 6.5, { align: 'center' });
+  doc.text(datos.supervisor, MARGIN + col1W / 2, dataY + 7, { align: 'center' });
+  doc.text(datos.agencia, MARGIN + col1W + col2W / 2, dataY + 7, { align: 'center' });
+  doc.setFontSize(9);
+  doc.text(fechaElegante(datos.fecha), MARGIN + col1W + col2W + col3W / 2, dataY + 7, { align: 'center' });
 
   // ── 5. Observación ──────────────────────────────────────────────────
-  const obsY = dataY + 10;
+  const obsY = dataY + 11;
   doc.setFillColor(255, 255, 255);
-  doc.rect(MARGIN, obsY, CONTENT_W, 18, 'F');
+  doc.rect(MARGIN, obsY, CONTENT_W, 22, 'F');
   doc.setDrawColor(0, 0, 0);
-  doc.rect(MARGIN, obsY, CONTENT_W, 18);
+  doc.setLineWidth(0.4);
+  doc.rect(MARGIN, obsY, CONTENT_W, 22);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(`OBSERVACION:  ${datos.observacion}`, MARGIN + 3, obsY + 6);
+  doc.text(`OBSERVACION:  ${datos.observacion}`, MARGIN + 3, obsY + 7);
 
   // ── 6. Tabla de vendedores ──────────────────────────────────────────
-  const tableY = obsY + 18;
-
-  const totalVistas = datos.registros.reduce((s, r) => s + r.vistas, 0);
-  const totalConCompra = datos.registros.reduce((s, r) => s + r.con_compra, 0);
-  const totalSinCompra = datos.registros.reduce((s, r) => s + r.sin_compra, 0);
-  const totalContado = datos.registros.reduce((s, r) => s + r.contado, 0);
-  const totalCredito = datos.registros.reduce((s, r) => s + r.credito, 0);
+  const tableY = obsY + 22;
   const totalGeneral = datos.registros.reduce((s, r) => s + r.total, 0);
 
-  // Filas de datos (rellenar hasta al menos 8 filas para mantener el formato)
   const filas = datos.registros.map(r => [
     r.vendedor_nombre,
-    r.vistas.toString(),
-    r.con_compra.toString(),
-    r.sin_compra.toString(),
+    r.vistas > 0 ? r.vistas.toString() : '0',
+    r.con_compra > 0 ? r.con_compra.toString() : '0',
+    r.sin_compra > 0 ? r.sin_compra.toString() : '0',
     fmt(r.contado),
     fmt(r.credito),
     fmt(r.total),
   ]);
 
-  // Rellenar filas vacías hasta completar 8
+  // Rellenar hasta 8 filas para el look del formato original
   while (filas.length < 8) {
     filas.push(['', '', '', '', '', '', '']);
   }
@@ -148,36 +144,39 @@ async function generarPDF(datos: DatosReporteDia): Promise<Blob> {
     ]],
     body: [
       ...filas,
-      // Fila total con fondo amarillo
+      // Fila de total — fondo amarillo
       ['', '', '', '', '', '', fmt(totalGeneral)],
     ],
     foot: [],
     columnStyles: {
-      0: { cellWidth: CONTENT_W * 0.22, halign: 'left' },
-      1: { cellWidth: CONTENT_W * 0.1, halign: 'center' },
+      0: { cellWidth: CONTENT_W * 0.26, halign: 'left' },
+      1: { cellWidth: CONTENT_W * 0.09, halign: 'center' },
       2: { cellWidth: CONTENT_W * 0.12, halign: 'center' },
       3: { cellWidth: CONTENT_W * 0.12, halign: 'center' },
       4: { cellWidth: CONTENT_W * 0.14, halign: 'right' },
-      5: { cellWidth: CONTENT_W * 0.14, halign: 'right' },
-      6: { cellWidth: CONTENT_W * 0.16, halign: 'right', fontStyle: 'bold' },
+      5: { cellWidth: CONTENT_W * 0.13, halign: 'right' },
+      6: { cellWidth: CONTENT_W * 0.14, halign: 'right', fontStyle: 'bold' },
     },
     headStyles: {
       fillColor: [0, 0, 0],
       textColor: [255, 255, 255],
       fontStyle: 'bold',
-      fontSize: 9,
+      fontSize: 8.5,
       halign: 'center',
+      cellPadding: 2.5,
     },
     bodyStyles: {
       fontSize: 9,
       lineColor: [0, 0, 0],
       lineWidth: 0.3,
+      cellPadding: 2,
+      minCellHeight: 7,
     },
     alternateRowStyles: { fillColor: [255, 255, 255] },
-    // Colorear fila de total en amarillo
     didParseCell: (data) => {
+      // Fila de total: fondo amarillo
       if (data.section === 'body' && data.row.index === filas.length) {
-        data.cell.styles.fillColor = [255, 220, 0];
+        data.cell.styles.fillColor = [255, 215, 0];
         data.cell.styles.fontStyle = 'bold';
         data.cell.styles.textColor = [0, 0, 0];
       }
