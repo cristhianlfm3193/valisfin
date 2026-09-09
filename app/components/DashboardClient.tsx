@@ -139,7 +139,7 @@ export function DashboardClient({
 
   // Redimensiona y comprime cualquier imagen usando Canvas para
   // mantener el payload pequeño y la API de Gemini responda rápido.
-  const resizeImage = (file: File, maxDimension = 1100, quality = 0.7): Promise<File> =>
+  const resizeImage = (file: File, maxDimension = 700, quality = 0.6): Promise<File> =>
     new Promise((resolve, reject) => {
       const img = new Image();
       const url = URL.createObjectURL(file);
