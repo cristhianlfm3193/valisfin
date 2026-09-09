@@ -102,6 +102,11 @@ export async function getDashboardData(mes?: number, anio?: number) {
       vendedor_nombre: r.vendedor?.nombre || 'Desconocido',
       fecha: r.fecha_registro?.split('T')[0] || '',
       monto: Number(r.monto_facturado),
+      vistas: r.vistas ?? 0,
+      con_compra: r.con_compra ?? 0,
+      sin_compra: r.sin_compra ?? 0,
+      contado: Number(r.contado ?? 0),
+      credito: Number(r.credito ?? 0),
     })),
   };
 }
@@ -121,21 +126,34 @@ export async function registrarVenta(
   vendedorId: string,
   montoVendido: number,
   localId?: string,
-  fecha?: Date
+  fecha?: Date,
+  extras?: {
+    vistas?: number;
+    con_compra?: number;
+    sin_compra?: number;
+    contado?: number;
+    credito?: number;
+  }
 ) {
   const supabase = await createClient();
   const fechaRegistro = fecha ?? new Date();
   const { error } = await supabase.from('registros_ventas').insert({
     vendedor_id: vendedorId,
     local_id: localId || null,
-    monto_facturado: montoVendido, // campo heredado, representa lo que el vendedor reportó
+    monto_facturado: montoVendido, // Total del día = contado + crédito
     fecha_registro: fechaRegistro.toISOString(),
     mes_periodo: fechaRegistro.getMonth() + 1,
     anio_periodo: fechaRegistro.getFullYear(),
+    vistas: extras?.vistas ?? 0,
+    con_compra: extras?.con_compra ?? 0,
+    sin_compra: extras?.sin_compra ?? 0,
+    contado: extras?.contado ?? 0,
+    credito: extras?.credito ?? 0,
   });
   if (error) return { success: false, error: error.message };
   return { success: true };
 }
+
 
 // Registrar facturación oficial de Finanzas (base para bono y cuota)
 export async function registrarFacturado(

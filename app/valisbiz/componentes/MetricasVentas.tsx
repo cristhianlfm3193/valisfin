@@ -16,6 +16,18 @@ interface RegistroFila {
   notas?: string | null;
 }
 
+interface RegistroVendidoFila {
+  id: string;
+  vendedor_nombre: string;
+  fecha: string;
+  monto: number;
+  vistas: number;
+  con_compra: number;
+  sin_compra: number;
+  contado: number;
+  credito: number;
+}
+
 interface MetricasVentasProps {
   metas: MetaSupervisor;
   resumenMensual: ResumenMensualVendedor[];
@@ -23,7 +35,7 @@ interface MetricasVentasProps {
   anioPeriodo: number;
   isMesCerrado: boolean;
   registrosFacturado: RegistroFila[];
-  registrosVendido: RegistroFila[];
+  registrosVendido: RegistroVendidoFila[];
 }
 
 function getColors(pct: number) {

@@ -23,6 +23,18 @@ interface RegistroFila {
   notas?: string | null;
 }
 
+interface RegistroVendidoFila {
+  id: string;
+  vendedor_nombre: string;
+  fecha: string;
+  monto: number;
+  vistas: number;
+  con_compra: number;
+  sin_compra: number;
+  contado: number;
+  credito: number;
+}
+
 interface ValisBizClientProps {
   initialData: {
     metas: MetaSupervisor;
@@ -33,7 +45,7 @@ interface ValisBizClientProps {
     mesPeriodo: number;
     anioPeriodo: number;
     registrosFacturado: RegistroFila[];
-    registrosVendido: RegistroFila[];
+    registrosVendido: RegistroVendidoFila[];
   };
   user: { name: string; initial: string };
 }
