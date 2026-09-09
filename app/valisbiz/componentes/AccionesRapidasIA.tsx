@@ -33,6 +33,34 @@ interface ItemCola extends DatosIAVendedor {
   _tab: 'facturado' | 'vendido';
 }
 
+// ── Compresión de imagen en cliente (Canvas) ────────────────────────────────
+async function comprimirImagen(file: File, maxPx = 900, calidad = 0.75): Promise<{ base64: string; mime: string }> {
+  // PDFs: enviar sin comprimir
+  if (file.type === 'application/pdf') {
+    const buf = await file.arrayBuffer();
+    return { base64: Buffer.from(buf).toString('base64'), mime: file.type };
+  }
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const ratio = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const w = Math.round(img.width * ratio);
+      const h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', calidad);
+      const base64 = dataUrl.split(',')[1];
+      resolve({ base64, mime: 'image/jpeg' });
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 function fmt2(n: number) {
   return n.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -221,9 +249,17 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
       let base64: string | undefined;
       let mimeT: string | undefined;
       if (archivo) {
-        const buf = await archivo.arrayBuffer();
-        base64 = Buffer.from(buf).toString('base64');
-        mimeT = archivo.type;
+        try {
+          // Comprime la imagen antes de enviar (4MB → ~150KB)
+          const comprimido = await comprimirImagen(archivo);
+          base64 = comprimido.base64;
+          mimeT = comprimido.mime;
+        } catch {
+          // fallback sin comprimir
+          const buf = await archivo.arrayBuffer();
+          base64 = Buffer.from(buf).toString('base64');
+          mimeT = archivo.type;
+        }
       }
       const r = await analizarReporteValisBiz(texto, base64, mimeT);
       if (!r.success || !r.data || r.data.registros.length === 0) {
