@@ -277,6 +277,29 @@ function ModalEditarVendido({
   );
 }
 
+
+// ─── Helper: columna sorteable ─────────────────────────────────────────────────
+type SortDir = 'asc' | 'desc';
+function SortTh({ label, col, sort, dir, onSort, className = '' }: {
+  label: string; col: string; sort: string; dir: SortDir;
+  onSort: (col: string) => void; className?: string;
+}) {
+  const active = sort === col;
+  return (
+    <th
+      onClick={() => onSort(col)}
+      className={`py-2.5 px-3 select-none cursor-pointer hover:text-slate-700 transition-colors whitespace-nowrap group ${className}`}
+    >
+      <span className="flex items-center gap-1">
+        {label}
+        <span className={`text-[10px] transition-opacity ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`}>
+          {active ? (dir === 'asc' ? '↑' : '↓') : '↕'}
+        </span>
+      </span>
+    </th>
+  );
+}
+
 // ─── Tabla Facturado ───────────────────────────────────────────────────────────
 function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturadoFila[]; onRefresh: () => void }) {
   const [busqueda, setBusqueda] = useState('');
@@ -284,16 +307,30 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
   const [editando, setEditando] = useState<RegistroFacturadoFila | null>(null);
   const [borrando, setBorrando] = useState<RegistroFacturadoFila | null>(null);
   const [isPendingBorrar, startBorrar] = useTransition();
+  const [sortCol, setSortCol] = useState<string>('fecha');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  const handleSort = (col: string) => {
+    if (col === sortCol) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortCol(col); setSortDir(col === 'fecha' ? 'desc' : 'desc'); }
+    setPagina(1);
+  };
 
   const filtrados = useMemo(() => {
     const q = busqueda.toLowerCase().trim();
-    if (!q) return registros;
-    return registros.filter(r =>
+    const base = !q ? registros : registros.filter(r =>
       r.vendedor_nombre.toLowerCase().includes(q) ||
       r.fecha.includes(q) ||
       (r.notas && r.notas.toLowerCase().includes(q))
     );
-  }, [registros, busqueda]);
+    return [...base].sort((a, b) => {
+      let v = 0;
+      if (sortCol === 'fecha') v = a.fecha.localeCompare(b.fecha);
+      else if (sortCol === 'vendedor') v = a.vendedor_nombre.localeCompare(b.vendedor_nombre);
+      else if (sortCol === 'monto') v = a.monto - b.monto;
+      return sortDir === 'asc' ? v : -v;
+    });
+  }, [registros, busqueda, sortCol, sortDir]);
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / PAGE_SIZE));
   const paginaActual = Math.min(pagina, totalPaginas);
@@ -357,11 +394,11 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
-                <th className="py-2.5 px-4">Fecha</th>
-                <th className="py-2.5 px-4">Vendedor</th>
-                <th className="py-2.5 px-4 text-right">Facturado</th>
-                <th className="py-2.5 px-4">Notas</th>
-                <th className="py-2.5 px-4 text-center">Acciones</th>
+                <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
+                <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
+                <SortTh label="Facturado" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
+                <th className="py-2.5 px-3">Notas</th>
+                <th className="py-2.5 px-3 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -421,14 +458,33 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
   const [editando, setEditando] = useState<RegistroVendidoFila | null>(null);
   const [borrando, setBorrando] = useState<RegistroVendidoFila | null>(null);
   const [isPendingBorrar, startBorrar] = useTransition();
+  const [sortCol, setSortCol] = useState<string>('fecha');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  const handleSort = (col: string) => {
+    if (col === sortCol) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortCol(col); setSortDir('desc'); }
+    setPagina(1);
+  };
 
   const filtrados = useMemo(() => {
     const q = busqueda.toLowerCase().trim();
-    if (!q) return registros;
-    return registros.filter(r =>
+    const base = !q ? registros : registros.filter(r =>
       r.vendedor_nombre.toLowerCase().includes(q) || r.fecha.includes(q)
     );
-  }, [registros, busqueda]);
+    return [...base].sort((a, b) => {
+      let v = 0;
+      if (sortCol === 'fecha') v = a.fecha.localeCompare(b.fecha);
+      else if (sortCol === 'vendedor') v = a.vendedor_nombre.localeCompare(b.vendedor_nombre);
+      else if (sortCol === 'vistas') v = a.vistas - b.vistas;
+      else if (sortCol === 'con_compra') v = a.con_compra - b.con_compra;
+      else if (sortCol === 'sin_compra') v = a.sin_compra - b.sin_compra;
+      else if (sortCol === 'contado') v = a.contado - b.contado;
+      else if (sortCol === 'credito') v = a.credito - b.credito;
+      else if (sortCol === 'total') v = a.monto - b.monto;
+      return sortDir === 'asc' ? v : -v;
+    });
+  }, [registros, busqueda, sortCol, sortDir]);
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / PAGE_SIZE));
   const paginaActual = Math.min(pagina, totalPaginas);
@@ -497,14 +553,14 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
-                <th className="py-2.5 px-3 whitespace-nowrap">Fecha</th>
-                <th className="py-2.5 px-3">Vendedor</th>
-                <th className="py-2.5 px-3 text-center">Vistas</th>
-                <th className="py-2.5 px-3 text-center text-emerald-600">Con Compra</th>
-                <th className="py-2.5 px-3 text-center text-red-500">Sin Compra</th>
-                <th className="py-2.5 px-3 text-right">Contado</th>
-                <th className="py-2.5 px-3 text-right">Crédito</th>
-                <th className="py-2.5 px-3 text-right font-bold text-blue-600">Total</th>
+                <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
+                <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
+                <SortTh label="Vistas" col="vistas" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center" />
+                <SortTh label="Con Compra" col="con_compra" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center text-emerald-600" />
+                <SortTh label="Sin Compra" col="sin_compra" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center text-red-500" />
+                <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
+                <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
+                <SortTh label="Total" col="total" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-blue-600" />
                 <th className="py-2.5 px-3 text-center">Acciones</th>
               </tr>
             </thead>
