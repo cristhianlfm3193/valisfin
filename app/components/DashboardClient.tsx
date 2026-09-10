@@ -25,6 +25,79 @@ import {
 } from '@/app/actions/dashboard';
 import { analyzeUniversalText } from '@/app/actions/ai_expense';
 
+// ─── Pill-tab Quick Action Group ─────────────────────────────────────────────
+type QAColor = 'emerald' | 'blue' | 'teal';
+
+interface QAOption { id: string; label: string; icon: React.ReactNode; }
+
+function QuickActionGroup({ label, color, options, onSelect }: {
+  label: string;
+  color: QAColor;
+  options: QAOption[];
+  onSelect: (id: string) => void;
+}) {
+  const [selected, setSelected] = useState(options[0].id);
+
+  const ring: Record<QAColor, string> = {
+    emerald: 'ring-emerald-500',
+    blue:    'ring-blue-500',
+    teal:    'ring-teal-500',
+  };
+  const activePill: Record<QAColor, string> = {
+    emerald: 'bg-emerald-700 text-white shadow-emerald-900/30',
+    blue:    'bg-blue-700 text-white shadow-blue-900/30',
+    teal:    'bg-teal-700 text-white shadow-teal-900/30',
+  };
+  const actionBtn: Record<QAColor, string> = {
+    emerald: 'bg-emerald-600 hover:bg-emerald-700 focus-visible:ring-emerald-500',
+    blue:    'bg-blue-600 hover:bg-blue-700 focus-visible:ring-blue-500',
+    teal:    'bg-teal-600 hover:bg-teal-700 focus-visible:ring-teal-500',
+  };
+
+  return (
+    <div className="flex items-center gap-3 bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3">
+      {/* Label */}
+      <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 w-24 hidden sm:block">
+        {label}
+      </span>
+      {/* Pills */}
+      <div
+        role="tablist"
+        className="flex items-center gap-1 flex-1 flex-wrap p-1 bg-slate-100 rounded-full border border-slate-200"
+      >
+        {options.map(opt => (
+          <label
+            key={opt.id}
+            className={`inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 select-none ${
+              selected === opt.id
+                ? `${activePill[color]} shadow`
+                : 'text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <input
+              type="radio"
+              name={`qa-${label}`}
+              value={opt.id}
+              checked={selected === opt.id}
+              onChange={() => setSelected(opt.id)}
+              className="sr-only"
+            />
+            {opt.icon}
+            {opt.label}
+          </label>
+        ))}
+      </div>
+      {/* Action button */}
+      <button
+        onClick={() => onSelect(selected)}
+        className={`shrink-0 h-8 px-4 rounded-full text-xs font-bold text-white transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${actionBtn[color]}`}
+      >
+        Abrir →
+      </button>
+    </div>
+  );
+}
+
 interface DashboardClientProps {
   metrics: DashboardMetrics;
   coupleBreakdown: CoupleBreakdown[];
@@ -353,62 +426,43 @@ export function DashboardClient({
           </form>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-          <button onClick={() => setActiveModal('ingreso')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-100 transition-colors">
-              <Banknote className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Ingreso<br/>Eventual</span>
-          </button>
-          
-          <button onClick={() => setActiveModal('gasto')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-rose-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 group-hover:bg-rose-100 transition-colors">
-              <Wallet className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Registrar<br/>Gasto</span>
-          </button>
+        {/* ── Pill-tab groups ──────────────────────────────────────────── */}
+        <div className="flex flex-col gap-3">
 
-          <button onClick={() => setActiveModal('km')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-100 transition-colors">
-              <Car className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Kilometraje</span>
-          </button>
+          {/* FINANZAS */}
+          <QuickActionGroup
+            label="💰 Finanzas"
+            color="emerald"
+            options={[
+              { id: 'ingreso', label: 'Ingreso', icon: <Banknote className="w-3.5 h-3.5" /> },
+              { id: 'gasto',   label: 'Gasto',   icon: <Wallet className="w-3.5 h-3.5" /> },
+              { id: 'pago-fijo', label: 'Pago Fijo', icon: <Calendar className="w-3.5 h-3.5" /> },
+            ]}
+            onSelect={(id) => setActiveModal(id)}
+          />
 
-          <button onClick={() => setActiveModal('mantenimiento')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-100 transition-colors">
-              <Wrench className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Mantenimiento<br/>Vehículo</span>
-          </button>
-          
-          <button onClick={() => setActiveModal('pendiente')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-amber-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-100 transition-colors">
-              <FileText className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Trabajo<br/>Pendiente (Auto)</span>
-          </button>
+          {/* VEHÍCULO */}
+          <QuickActionGroup
+            label="🚗 Vehículo"
+            color="blue"
+            options={[
+              { id: 'km',           label: 'Kilometraje',  icon: <Car className="w-3.5 h-3.5" /> },
+              { id: 'mantenimiento',label: 'Mantenimiento',icon: <Wrench className="w-3.5 h-3.5" /> },
+              { id: 'pendiente',    label: 'Pendiente',    icon: <FileText className="w-3.5 h-3.5" /> },
+            ]}
+            onSelect={(id) => setActiveModal(id)}
+          />
 
-          <button onClick={() => setActiveModal('hogar')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-teal-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 group-hover:bg-teal-100 transition-colors">
-              <Home className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Trabajo<br/>Hogar</span>
-          </button>
-
-          <button onClick={() => setActiveModal('meta')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
-              <Target className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Nueva<br/>Meta de Ahorro</span>
-          </button>
-
-          <button onClick={() => setActiveModal('pago-fijo')} className="flex flex-col items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-violet-300 hover:shadow-md transition-all active:scale-95 group">
-            <div className="w-10 h-10 rounded-full bg-violet-50 flex items-center justify-center text-violet-600 group-hover:bg-violet-100 transition-colors">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-700 text-center leading-tight">Pago<br/>Gasto Fijo</span>
-          </button>
+          {/* HOGAR & METAS */}
+          <QuickActionGroup
+            label="🏠 Hogar & Metas"
+            color="teal"
+            options={[
+              { id: 'hogar', label: 'Tarea Hogar', icon: <Home className="w-3.5 h-3.5" /> },
+              { id: 'meta',  label: 'Nueva Meta',  icon: <Target className="w-3.5 h-3.5" /> },
+            ]}
+            onSelect={(id) => setActiveModal(id)}
+          />
         </div>
       </section>
 
