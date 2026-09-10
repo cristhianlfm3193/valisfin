@@ -8,7 +8,6 @@ export interface DatosIAVendedor {
   vendedor_nombre?: string;
   fecha?: string;             // YYYY-MM-DD
   // Facturado
-  monto_facturado?: number;
   notas?: string;
   // Vendido
   vistas?: number;
@@ -207,7 +206,6 @@ export async function analizarReporteValisBiz(
                 type: Type.STRING,
                 description: `Fecha YYYY-MM-DD. Si hay fecha en la imagen úsala. 'hoy'=${today}.`
               },
-              monto_facturado: { type: Type.NUMBER, description: "Monto facturado. Solo para tipo='facturado'." },
               notas: { type: Type.STRING, description: "Observaciones del registro." },
               vistas: { type: Type.NUMBER, description: "Locales visitados." },
               con_compra: { type: Type.NUMBER, description: "Locales que compraron." },
@@ -230,9 +228,15 @@ export async function analizarReporteValisBiz(
 La fecha de hoy es: ${today}.
 
 CONTEXTO DEL SISTEMA:
-- FACTURADO (Finanzas): facturación oficial. Campos: vendedor, fecha, monto total, notas.
+- FACTURADO (Finanzas): facturación oficial de Excel. Campos: vendedor, fecha, contado (B/.), crédito (B/.), notas.
 - VENDIDO (Vendedor): reporte diario de campo. Campos: vendedor, fecha, vistas (locales visitados), con_compra (compraron), sin_compra (no compraron), contado (B/.), crédito (B/.).
 - Vendedores del equipo: Andrés Chávez, Joseph Domínguez, Enrique del Rosario.
+
+MAPEO DE NOMBRES EN EXCEL DE FINANZAS:
+Si estás leyendo el Excel de finanzas, mapea las columnas así:
+- "CAROLINA SUCRE" o "Carolina Sucre - Vend. Mercaderista" → "Joseph Domínguez"
+- "ENRIQUE DEL ROSARIO" → "Enrique del Rosario"
+- "ANDRES CHAVEZ" o "Andres Chavez - Vend. Pre-Venta" → "Andrés Chávez"
 
 ══════════════════════════════════════════
 VOCABULARIO WHATSAPP DEL EQUIPO KEIKO

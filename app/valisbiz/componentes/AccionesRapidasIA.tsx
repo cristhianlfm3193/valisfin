@@ -23,7 +23,6 @@ interface ItemCola extends DatosIAVendedor {
   _estado: EstadoItem;
   _vendedorId: string;
   _fecha: string;
-  _monto: string;
   _notas: string;
   _vistas: string;
   _conCompra: string;
@@ -83,7 +82,6 @@ function construirItem(d: DatosIAVendedor, vendedores: Vendedor[]): ItemCola {
     _estado: 'pendiente',
     _vendedorId: buscarVendedor(d.vendedor_nombre, vendedores),
     _fecha: d.fecha || today,
-    _monto: d.monto_facturado?.toString() || '',
     _notas: d.notas || '',
     _vistas: d.vistas?.toString() || '0',
     _conCompra: d.con_compra?.toString() || '0',
