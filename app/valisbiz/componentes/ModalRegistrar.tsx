@@ -28,8 +28,10 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
 
   // Campos Facturado
-  const [montoFacturado, setMontoFacturado] = useState('');
+  const [facContado, setFacContado] = useState('');
+  const [facCredito, setFacCredito] = useState('');
   const [notas, setNotas] = useState('');
+  const totalFacturado = (parseFloat(facContado) || 0) + (parseFloat(facCredito) || 0);
 
   // Campos Vendido (Vendedor) — nuevos campos diarios
   const [vistas, setVistas] = useState('');
@@ -44,7 +46,8 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
   const reset = () => {
     setVendedorId('');
     setFecha(new Date().toISOString().split('T')[0]);
-    setMontoFacturado('');
+    setFacContado('');
+    setFacCredito('');
     setNotas('');
     setVistas('');
     setConCompra('');
@@ -71,13 +74,14 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
     }
 
     if (tab === 'facturado') {
-      const montoNum = parseFloat(montoFacturado);
-      if (!montoFacturado || isNaN(montoNum) || montoNum <= 0) {
-        setError('El monto debe ser un número mayor a cero.');
+      const contadoNum = parseFloat(facContado) || 0;
+      const creditoNum = parseFloat(facCredito) || 0;
+      if (contadoNum + creditoNum <= 0) {
+        setError('Contado + Crédito debe ser mayor a cero.');
         return;
       }
       startTransition(async () => {
-        const result = await registrarFacturado(vendedorId, montoNum, new Date(fecha + 'T12:00:00'), notas);
+        const result = await registrarFacturado(vendedorId, contadoNum, creditoNum, new Date(fecha + 'T12:00:00'), notas);
         if (result.success) {
           setSuccess('✅ Facturación registrada correctamente.');
           reset();
@@ -196,28 +200,44 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
             {/* ── FACTURADO ── */}
             {tab === 'facturado' && (
               <>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Monto Facturado (B/.) *</label>
-                  <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono font-bold text-sm">B/.</span>
-                    <input
-                      type="number" step="0.01" min="0"
-                      value={montoFacturado}
-                      onChange={e => setMontoFacturado(e.target.value)}
-                      placeholder="0.00"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
-                    />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-emerald-700 mb-1.5 flex items-center gap-1">
+                      <Banknote className="w-3.5 h-3.5" /> Contado (B/.)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                      <input type="number" step="0.01" min="0" value={facContado}
+                        onChange={e => setFacContado(e.target.value)} placeholder="0.00"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+                    </div>
                   </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-blue-700 mb-1.5 flex items-center gap-1">
+                      <CreditCard className="w-3.5 h-3.5" /> Crédito (B/.)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                      <input type="number" step="0.01" min="0" value={facCredito}
+                        onChange={e => setFacCredito(e.target.value)} placeholder="0.00"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+                    </div>
+                  </div>
+                </div>
+                {/* Total calculado */}
+                <div className="flex items-center justify-between bg-pink-50 rounded-xl px-4 py-2.5 border border-pink-200">
+                  <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                    <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
+                  </span>
+                  <span className="font-mono font-bold text-pink-700 text-sm">
+                    B/.{totalFacturado.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1.5">Notas (opcional)</label>
-                  <input
-                    type="text"
-                    value={notas}
-                    onChange={e => setNotas(e.target.value)}
+                  <input type="text" value={notas} onChange={e => setNotas(e.target.value)}
                     placeholder="Ej: Reporte finanzas 09/09/2026"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
-                  />
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                 </div>
               </>
             )}

@@ -100,6 +100,8 @@ export async function getDashboardData(mes?: number, anio?: number) {
       vendedor_nombre: f.vendedor?.nombre || 'Desconocido',
       fecha: f.fecha,
       monto: Number(f.monto_facturado),
+      contado: Number(f.contado ?? 0),
+      credito: Number(f.credito ?? 0),
       notas: f.notas,
     })),
     registrosVendido: (registrosVentas || []).map((r: any) => ({
@@ -163,14 +165,18 @@ export async function registrarVenta(
 // Registrar facturación oficial de Finanzas (base para bono y cuota)
 export async function registrarFacturado(
   vendedorId: string,
-  montoFacturado: number,
+  contado: number,
+  credito: number,
   fecha: Date,
   notas?: string
 ) {
   const supabase = await createClient();
+  const monto_facturado = contado + credito;
   const { error } = await supabase.from('facturado').insert({
     vendedor_id: vendedorId,
-    monto_facturado: montoFacturado,
+    monto_facturado,
+    contado,
+    credito,
     fecha: fecha.toISOString().split('T')[0],
     mes_periodo: fecha.getMonth() + 1,
     anio_periodo: fecha.getFullYear(),
@@ -180,19 +186,23 @@ export async function registrarFacturado(
   return { success: true };
 }
 
-// ── Editar registro de facturado ───────────────────────────────────────────────
+// ── Editar registro de facturado ───────────────────────────────────────────────────────
 export async function editarFacturado(
   id: string,
-  monto: number,
+  contado: number,
+  credito: number,
   fecha: string,
   notas?: string
 ) {
   const supabase = await createClient();
   const fechaDate = new Date(fecha + 'T12:00:00');
+  const monto_facturado = contado + credito;
   const { error } = await supabase
     .from('facturado')
     .update({
-      monto_facturado: monto,
+      monto_facturado,
+      contado,
+      credito,
       fecha: fecha,
       mes_periodo: fechaDate.getMonth() + 1,
       anio_periodo: fechaDate.getFullYear(),

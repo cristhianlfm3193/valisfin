@@ -157,12 +157,34 @@ function FormularioItem({ item, vendedores, onChange }: {
 
       {item._tab === 'facturado' && (
         <>
-          <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Monto (B/.)</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
-              <input type="number" step="0.01" min="0" value={item._monto} onChange={e => onChange({ _monto: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 uppercase tracking-wider mb-1">
+                <Banknote className="w-3 h-3" /> Contado (B/.)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <input type="number" step="0.01" min="0" value={item._contado} onChange={e => onChange({ _contado: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
+              </div>
             </div>
+            <div>
+              <label className="flex items-center gap-1 text-[11px] font-bold text-blue-700 uppercase tracking-wider mb-1">
+                <CreditCard className="w-3 h-3" /> Crédito (B/.)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <input type="number" step="0.01" min="0" value={item._credito} onChange={e => onChange({ _credito: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
+              </div>
+            </div>
+          </div>
+          {/* Total calculado */}
+          <div className="flex items-center justify-between bg-pink-50 rounded-xl px-3 py-2 border border-pink-200">
+            <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1">
+              <Calculator className="w-3 h-3 text-pink-500" /> Total del día
+            </span>
+            <span className="font-mono font-bold text-pink-700 text-sm">
+              B/.{((parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0)).toLocaleString('es-PA', { minimumFractionDigits: 2 })}
+            </span>
           </div>
           <div>
             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Notas</label>
@@ -287,9 +309,10 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
       const fecha = new Date(item._fecha + 'T12:00:00');
       let res;
       if (item._tab === 'facturado') {
-        const monto = parseFloat(item._monto);
-        if (!monto || monto <= 0) { setErrorMsg('El monto debe ser mayor a 0.'); setEstado('cola'); return; }
-        res = await registrarFacturado(item._vendedorId, monto, fecha, item._notas);
+        const contado = parseFloat(item._contado) || 0;
+        const credito = parseFloat(item._credito) || 0;
+        if (contado + credito <= 0) { setErrorMsg('Contado + Crédito debe ser mayor a 0.'); setEstado('cola'); return; }
+        res = await registrarFacturado(item._vendedorId, contado, credito, fecha, item._notas);
       } else {
         const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
         res = await registrarVenta(item._vendedorId, total, undefined, fecha, {

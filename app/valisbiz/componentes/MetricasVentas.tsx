@@ -13,6 +13,8 @@ interface RegistroFila {
   vendedor_nombre: string;
   fecha: string;
   monto: number;
+  contado: number;
+  credito: number;
   notas?: string | null;
 }
 

@@ -14,6 +14,8 @@ interface RegistroFacturadoFila {
   vendedor_nombre: string;
   fecha: string;
   monto: number;
+  contado: number;
+  credito: number;
   notas?: string | null;
 }
 
@@ -74,26 +76,35 @@ function ModalConfirmarBorrado({
   );
 }
 
-// ─── Modal Editar Facturado ───────────────────────────────────────────────────
 function ModalEditarFacturado({
   registro, onClose, onSuccess,
 }: { registro: RegistroFacturadoFila; onClose: () => void; onSuccess: () => void }) {
-  const [monto, setMonto] = useState(registro.monto.toString());
+  const [contado, setContado] = useState(registro.contado > 0 ? registro.contado.toString() : '');
+  const [credito, setCredito] = useState(registro.credito > 0 ? registro.credito.toString() : '');
   const [fecha, setFecha] = useState(registro.fecha);
   const [notas, setNotas] = useState(registro.notas || '');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
 
+  const total = (parseFloat(contado) || 0) + (parseFloat(credito) || 0);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const montoNum = parseFloat(monto);
-    if (isNaN(montoNum) || montoNum <= 0) { setError('El monto debe ser mayor a cero.'); return; }
+    if (total <= 0) { setError('Contado + Crédito debe ser mayor a cero.'); return; }
     startTransition(async () => {
-      const r = await editarFacturado(registro.id, montoNum, fecha, notas);
+      const r = await editarFacturado(
+        registro.id,
+        parseFloat(contado) || 0,
+        parseFloat(credito) || 0,
+        fecha,
+        notas
+      );
       if (r.success) onSuccess();
       else setError('Error: ' + r.error);
     });
   };
+
+  const inputBase = 'w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -114,13 +125,34 @@ function ModalEditarFacturado({
             <input type="date" value={fecha} onChange={e => setFecha(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Monto Facturado (B/.)</label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono font-bold text-sm">B/.</span>
-              <input type="number" step="0.01" min="0" value={monto} onChange={e => setMonto(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+                <Banknote className="w-3.5 h-3.5 text-emerald-600" /> Contado (B/.)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <input type="number" step="0.01" min="0" value={contado} onChange={e => setContado(e.target.value)}
+                  placeholder="0.00" className={inputBase} />
+              </div>
             </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+                <CreditCard className="w-3.5 h-3.5 text-blue-600" /> Crédito (B/.)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <input type="number" step="0.01" min="0" value={credito} onChange={e => setCredito(e.target.value)}
+                  placeholder="0.00" className={inputBase} />
+              </div>
+            </div>
+          </div>
+          {/* Total calculado */}
+          <div className="flex items-center justify-between bg-pink-50 rounded-xl px-4 py-2.5 border border-pink-200">
+            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+              <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
+            </span>
+            <span className="font-mono font-bold text-pink-700 text-sm">B/.{fmt(total)}</span>
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-600 mb-1.5">Notas</label>
@@ -141,6 +173,7 @@ function ModalEditarFacturado({
     </div>
   );
 }
+
 
 // ─── Modal Editar Vendido ─────────────────────────────────────────────────────
 function ModalEditarVendido({
@@ -329,6 +362,8 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
       if (sortCol === 'fecha') v = a.fecha.localeCompare(b.fecha);
       else if (sortCol === 'vendedor') v = a.vendedor_nombre.localeCompare(b.vendedor_nombre);
       else if (sortCol === 'monto') v = a.monto - b.monto;
+      else if (sortCol === 'contado') v = a.contado - b.contado;
+      else if (sortCol === 'credito') v = a.credito - b.credito;
       return sortDir === 'asc' ? v : -v;
     });
   }, [registros, busqueda, sortCol, sortDir]);
@@ -337,6 +372,8 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
   const paginaActual = Math.min(pagina, totalPaginas);
   const filas = verTodos ? filtrados : filtrados.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
   const totalMonto = filtrados.reduce((acc, r) => acc + r.monto, 0);
+  const totalContado = filtrados.reduce((acc, r) => acc + r.contado, 0);
+  const totalCredito = filtrados.reduce((acc, r) => acc + r.credito, 0);
 
   const handleBorrar = () => {
     if (!borrando) return;
@@ -409,7 +446,9 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
               <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
                 <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
-                <SortTh label="Facturado" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
+                <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-emerald-600" />
+                <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-blue-600" />
+                <SortTh label="Total" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-pink-600" />
                 <th className="py-2.5 px-3">Notas</th>
                 <th className="py-2.5 px-3 text-center">Acciones</th>
               </tr>
@@ -417,7 +456,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             <tbody className="divide-y divide-slate-50">
               {filas.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-sm text-slate-400">
+                  <td colSpan={7} className="py-8 text-center text-sm text-slate-400">
                     {busqueda ? 'No hay resultados para tu búsqueda.' : 'No hay registros para este mes.'}
                   </td>
                 </tr>
@@ -431,8 +470,14 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                       <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-pink-100 text-pink-700">{r.vendedor_nombre.split(' ')[0]}</span>
                       <span className="text-sm text-slate-700 ml-2">{r.vendedor_nombre}</span>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-600">B/.{fmt(r.monto)}</td>
-                    <td className="py-3 px-4 text-xs text-slate-400 max-w-[180px] truncate">{r.notas || '—'}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-emerald-700">
+                      {r.contado > 0 ? `B/.${fmt(r.contado)}` : '—'}
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-blue-700">
+                      {r.credito > 0 ? `B/.${fmt(r.credito)}` : '—'}
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-600">B/.{fmt(r.monto)}</td>
+                    <td className="py-3 px-3 text-xs text-slate-400 max-w-[160px] truncate">{r.notas || '—'}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
@@ -455,6 +500,17 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                 ))
               )}
             </tbody>
+            {filtrados.length > 0 && (
+              <tfoot>
+                <tr className="bg-pink-50 border-t-2 border-pink-200 text-[11px] font-bold">
+                  <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>Totales del período</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-emerald-700">B/.{fmt(totalContado)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalCredito)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalMonto)}</td>
+                  <td className="py-2.5 px-3" colSpan={2} />
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
 
@@ -694,6 +750,175 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
   );
 }
 
+
+// ─── Tabla Comparativa Diaria (Reportado vs Facturado) ────────────────────────
+function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
+  registrosFacturado: RegistroFacturadoFila[];
+  registrosVendido: RegistroVendidoFila[];
+}) {
+  const [busqueda, setBusqueda] = useState('');
+  const [sortCol, setSortCol] = useState<string>('fecha');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [verTodos, setVerTodos] = useState(false);
+  const [pagina, setPagina] = useState(1);
+
+  const handleSort = (col: string) => {
+    if (col === sortCol) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortCol(col); setSortDir('desc'); }
+    setPagina(1);
+  };
+
+  // Generar filas comparativas: agrupar por fecha + vendedor
+  const comparativa = useMemo(() => {
+    const mapa = new Map<string, { fecha: string; vendedor: string; reportado: number; facturado: number }>();
+
+    for (const r of registrosVendido) {
+      const key = `${r.fecha}|${r.vendedor_nombre}`;
+      const prev = mapa.get(key) || { fecha: r.fecha, vendedor: r.vendedor_nombre, reportado: 0, facturado: 0 };
+      prev.reportado += r.monto;
+      mapa.set(key, prev);
+    }
+    for (const f of registrosFacturado) {
+      const key = `${f.fecha}|${f.vendedor_nombre}`;
+      const prev = mapa.get(key) || { fecha: f.fecha, vendedor: f.vendedor_nombre, reportado: 0, facturado: 0 };
+      prev.facturado += f.monto;
+      mapa.set(key, prev);
+    }
+
+    let filas = Array.from(mapa.values());
+
+    // Filtrar
+    const q = busqueda.toLowerCase().trim();
+    if (q) {
+      filas = filas.filter(r => r.vendedor.toLowerCase().includes(q) || r.fecha.includes(q));
+    }
+
+    // Sortear
+    filas.sort((a, b) => {
+      let v = 0;
+      if (sortCol === 'fecha') v = a.fecha.localeCompare(b.fecha);
+      else if (sortCol === 'vendedor') v = a.vendedor.localeCompare(b.vendedor);
+      else if (sortCol === 'reportado') v = a.reportado - b.reportado;
+      else if (sortCol === 'facturado') v = a.facturado - b.facturado;
+      else if (sortCol === 'diferencia') v = (a.reportado - a.facturado) - (b.reportado - b.facturado);
+      return sortDir === 'asc' ? v : -v;
+    });
+
+    return filas;
+  }, [registrosFacturado, registrosVendido, busqueda, sortCol, sortDir]);
+
+  const totalPaginas = Math.max(1, Math.ceil(comparativa.length / PAGE_SIZE));
+  const paginaActual = Math.min(pagina, totalPaginas);
+  const filas = verTodos ? comparativa : comparativa.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
+
+  const totalReportado = comparativa.reduce((acc, r) => acc + r.reportado, 0);
+  const totalFacturado = comparativa.reduce((acc, r) => acc + r.facturado, 0);
+  const totalDiferencia = totalReportado - totalFacturado;
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-amber-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+            <Calculator className="w-4 h-4 text-amber-600" />
+          </div>
+          <div>
+            <h4 className="font-bold text-slate-900 text-sm">Comparativa: Reportado vs Facturado</h4>
+            <p className="text-[11px] text-slate-400">Cruce diario por vendedor · diferencia = reportado − facturado</p>
+          </div>
+        </div>
+        <div className="font-mono text-sm font-bold whitespace-nowrap flex items-center gap-3">
+          <span className={totalDiferencia >= 0 ? 'text-emerald-600' : 'text-red-600'}>
+            Δ B/.{fmt(Math.abs(totalDiferencia))} {totalDiferencia >= 0 ? '↑' : '↓'}
+          </span>
+          <button
+            onClick={() => setVerTodos(v => !v)}
+            className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+              verTodos
+                ? 'bg-amber-600 text-white border-amber-600'
+                : 'bg-white text-amber-600 border-amber-300 hover:bg-amber-50'
+            }`}
+          >
+            {verTodos ? 'Paginar' : `Ver todos (${comparativa.length})`}
+          </button>
+        </div>
+      </div>
+
+      {/* Buscador */}
+      <div className="px-5 py-3 border-b border-slate-100">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
+            placeholder="Buscar por vendedor o fecha..."
+            className="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all" />
+        </div>
+      </div>
+
+      {/* Tabla */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+              <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
+              <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
+              <SortTh label="Total Reportado" col="reportado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-blue-600" />
+              <SortTh label="Total Facturado" col="facturado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-pink-600" />
+              <SortTh label="Diferencia" col="diferencia" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {filas.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="py-8 text-center text-sm text-slate-400">
+                  {busqueda ? 'No hay resultados.' : 'No hay datos para comparar este mes.'}
+                </td>
+              </tr>
+            ) : (
+              filas.map((r, i) => {
+                const diff = r.reportado - r.facturado;
+                return (
+                  <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-3 px-3 text-sm font-mono text-slate-600 whitespace-nowrap">
+                      {new Date(r.fecha + 'T12:00:00').toLocaleDateString('es-PA', { day: '2-digit', month: 'short' })}
+                    </td>
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-100 text-amber-700">{r.vendedor.split(' ')[0]}</span>
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-blue-700">
+                      {r.reportado > 0 ? `B/.${fmt(r.reportado)}` : '—'}
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-pink-700">
+                      {r.facturado > 0 ? `B/.${fmt(r.facturado)}` : '—'}
+                    </td>
+                    <td className={`py-3 px-3 text-right font-mono text-sm font-bold ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-red-600' : 'text-slate-400'}`}>
+                      {diff === 0 ? '—' : `${diff > 0 ? '+' : ''}B/.${fmt(diff)}`}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+          {comparativa.length > 0 && (
+            <tfoot>
+              <tr className="bg-amber-50 border-t-2 border-amber-200 text-[11px] font-bold">
+                <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>Totales del período</td>
+                <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalReportado)}</td>
+                <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalFacturado)}</td>
+                <td className={`py-2.5 px-3 text-right font-mono font-bold ${totalDiferencia > 0 ? 'text-emerald-700' : totalDiferencia < 0 ? 'text-red-700' : 'text-slate-400'}`}>
+                  {totalDiferencia === 0 ? '—' : `${totalDiferencia > 0 ? '+' : ''}B/.${fmt(totalDiferencia)}`}
+                </td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
+      </div>
+
+      {!verTodos && <Paginacion pagina={paginaActual} totalPaginas={totalPaginas} total={comparativa.length} pageSize={PAGE_SIZE} setPagina={setPagina} color="pink" />}
+    </div>
+  );
+}
+
 // ─── Componente principal ─────────────────────────────────────────────────────
 interface TablasHistorialProps {
   registrosFacturado: RegistroFacturadoFila[];
@@ -707,6 +932,7 @@ export default function TablasHistorial({ registrosFacturado, registrosVendido }
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-base font-bold text-slate-800 mt-2">Historial de Registros del Mes</h3>
+      <TablaComparativaDiaria registrosFacturado={registrosFacturado} registrosVendido={registrosVendido} />
       <TablaFacturado registros={registrosFacturado} onRefresh={handleRefresh} />
       <TablaVendido registros={registrosVendido} onRefresh={handleRefresh} />
     </div>
