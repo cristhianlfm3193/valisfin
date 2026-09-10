@@ -479,11 +479,11 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                     <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-600">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3 text-xs text-slate-400 max-w-[160px] truncate">{r.notas || '—'}</td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
                         <button
                           onClick={() => setEditando(r)}
                           title="Editar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-500 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-600 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -669,18 +669,18 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
                     <td className="py-3 px-3 text-right font-mono text-sm text-slate-600">B/.{fmt(r.credito)}</td>
                     <td className="py-3 px-3 text-right font-mono text-sm font-bold text-blue-600">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3">
-                      <div className="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
                         <button
                           onClick={() => setEditando(r)}
                           title="Editar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-blue-100 hover:text-blue-600 text-slate-500 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setBorrando(r)}
                           title="Borrar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-red-100 hover:text-red-600 text-slate-500 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -800,7 +800,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       else if (sortCol === 'vendedor') v = a.vendedor.localeCompare(b.vendedor);
       else if (sortCol === 'reportado') v = a.reportado - b.reportado;
       else if (sortCol === 'facturado') v = a.facturado - b.facturado;
-      else if (sortCol === 'diferencia') v = (a.reportado - a.facturado) - (b.reportado - b.facturado);
+      else if (sortCol === 'diferencia') v = (a.facturado - a.reportado) - (b.facturado - b.reportado);
       return sortDir === 'asc' ? v : -v;
     });
 
@@ -813,7 +813,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
 
   const totalReportado = comparativa.reduce((acc, r) => acc + r.reportado, 0);
   const totalFacturado = comparativa.reduce((acc, r) => acc + r.facturado, 0);
-  const totalDiferencia = totalReportado - totalFacturado;
+  const totalDiferencia = totalFacturado - totalReportado;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
@@ -825,7 +825,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           </div>
           <div>
             <h4 className="font-bold text-slate-900 text-sm">Comparativa: Reportado vs Facturado</h4>
-            <p className="text-[11px] text-slate-400">Cruce diario por vendedor · diferencia = reportado − facturado</p>
+            <p className="text-[11px] text-slate-400">Cruce diario por vendedor · diferencia = facturado − reportado</p>
           </div>
         </div>
         <div className="font-mono text-sm font-bold whitespace-nowrap flex items-center gap-3">
@@ -876,7 +876,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
               </tr>
             ) : (
               filas.map((r, i) => {
-                const diff = r.reportado - r.facturado;
+                const diff = r.facturado - r.reportado;
                 return (
                   <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-slate-50 transition-colors">
                     <td className="py-3 px-3 text-sm font-mono text-slate-600 whitespace-nowrap">
