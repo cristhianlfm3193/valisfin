@@ -77,23 +77,24 @@ function parsearTextoWhatsApp(texto: string, today: string): ResultadoIAValisBiz
 
   // Patrones de visitas / clientes visitados
   const visitasMatch = texto.match(
-    /(?:clientes?\s+(?:visitados?|atendidos?|del\s+d[ií]a)|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?|recorridos?|clientes?\s+recorridos?)\s*[:\-]?\s*(\d+)/i
+    /(?:clientes?\s+(?:visitados?|atendidos?|del\s+d[ií]a)|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?|recorridos?|clientes?\s+recorridos?)\s*[:\-.]?\s*(\d+)/i
   );
 
   // Patrones de con compra / efectivos (todos los sinónimos del equipo)
   const efectivosMatch = texto.match(
-    /(?:clientes?\s+(?:efectivos?|con\s+p(?:e|e)didos?|con\s+compra?|facturados?|cerrados?)|efectivos?|con\s+p(?:e|e)didos?|con\s+compra|compraron|ventas?\s+cerradas?|p(?:e|e)didos?\s+tomados?)\s*[:\-]?\s*(\d+)/i
+    /(?:clientes?\s+(?:efectivos?|con\s+p(?:e|e)didos?|con\s+compra?|facturados?|cerrados?)|efectivos?|con\s+p(?:e|e)didos?|con\s+compra|compraron|ventas?\s+cerradas?|p(?:e|e)didos?\s+tomados?)\s*[:\-.]?\s*(\d+)/i
   );
 
   // Sin compra explícito
-  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron|sin\s+p(?:e|e)didos?|clientes?\s+sin\s+(?:compra|pedido))\s*[:\-]?\s*(\d+)/i);
+  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron|sin\s+p(?:e|e)didos?|clientes?\s+sin\s+(?:compra|pedido))\s*[:\-.]?\s*(\d+)/i);
 
   // Contado
-  const contadoMatch = texto.match(/(?:al?\s+contado|en\s+efectivo|contado)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  const contadoMatch = texto.match(/(?:al?\s+contado|en\s+efectivo|contado)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
   // Crédito
-  const creditoMatch = texto.match(/(?:a?\s*cr[eé]dito|en\s+cr[eé]dito)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  const creditoMatch = texto.match(/(?:a?\s*cr[eé]dito|en\s+cr[eé]dito)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
   // Valor recaudado / total
-  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total\s+del\s+d[ií]a|monto\s+total|total\s+recaudado|valor\s+cobrado|cobrado)\s*[:\-]?\s*(\d[\d,\.]*)/i);
+  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total\s+del\s+d[ií]a|monto\s+total|valor\s+cobrado|cobrado)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
+
 
   const tieneVentas = visitasMatch || efectivosMatch || contadoMatch || creditoMatch || recaudadoMatch;
 
