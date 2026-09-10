@@ -460,6 +460,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
   const [isPendingBorrar, startBorrar] = useTransition();
   const [sortCol, setSortCol] = useState<string>('fecha');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [verTodos, setVerTodos] = useState(false);
 
   const handleSort = (col: string) => {
     if (col === sortCol) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
@@ -488,7 +489,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / PAGE_SIZE));
   const paginaActual = Math.min(pagina, totalPaginas);
-  const filas = filtrados.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
+  const filas = verTodos ? filtrados : filtrados.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
   const totalMonto = filtrados.reduce((acc, r) => acc + r.monto, 0);
   const totalVistas = filtrados.reduce((acc, r) => acc + r.vistas, 0);
   const totalConCompra = filtrados.reduce((acc, r) => acc + r.con_compra, 0);
@@ -535,7 +536,19 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
               <p className="text-[11px] text-slate-400">Acumulado diario del vendedor · se suma al mes en la tabla comparativa</p>
             </div>
           </div>
-          <div className="font-mono text-sm font-bold text-blue-600 whitespace-nowrap">Total: B/.{fmt(totalMonto)}</div>
+          <div className="font-mono text-sm font-bold text-blue-600 whitespace-nowrap flex items-center gap-3">
+            Total: B/.{fmt(totalMonto)}
+            <button
+              onClick={() => setVerTodos(v => !v)}
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+                verTodos
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'
+              }`}
+            >
+              {verTodos ? `Paginar` : `Ver todos (${filtrados.length})`}
+            </button>
+          </div>
         </div>
 
         {/* Buscador */}
@@ -625,7 +638,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
           </table>
         </div>
 
-        <Paginacion pagina={paginaActual} totalPaginas={totalPaginas} total={filtrados.length} pageSize={PAGE_SIZE} setPagina={setPagina} color="blue" />
+        {!verTodos && <Paginacion pagina={paginaActual} totalPaginas={totalPaginas} total={filtrados.length} pageSize={PAGE_SIZE} setPagina={setPagina} color="blue" />}
       </div>
     </>
   );
