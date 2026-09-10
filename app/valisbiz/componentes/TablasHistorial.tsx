@@ -468,7 +468,6 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                     </td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-pink-100 text-pink-700">{r.vendedor_nombre.split(' ')[0]}</span>
-                      <span className="text-sm text-slate-700 ml-2">{r.vendedor_nombre}</span>
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm text-emerald-700">
                       {r.contado > 0 ? `B/.${fmt(r.contado)}` : '—'}
@@ -490,7 +489,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                         <button
                           onClick={() => setBorrando(r)}
                           title="Borrar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-red-100 hover:text-red-600 text-slate-500 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
