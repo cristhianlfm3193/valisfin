@@ -106,14 +106,13 @@ export function EditIncomeModal({ item }: { item: any }) {
                     }`}>CF</div>
                     <div>
                       <div className={`text-sm font-bold leading-tight ${person === 'cristhian' ? 'text-emerald-900' : 'text-slate-700'}`}>Cristhian</div>
-                      <div className={`text-[11px] font-medium ${person === 'cristhian' ? 'text-emerald-800' : 'text-slate-500'}`}>Salario & Gastos</div>
                     </div>
                   </label>
 
                   <label className={`relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
                     person === 'jennifer' 
-                      ? 'border-pink-600 bg-pink-50 shadow-sm' 
-                      : 'border-slate-200 hover:border-pink-300 hover:bg-slate-50'
+                      ? 'border-emerald-600 bg-emerald-50 shadow-sm' 
+                      : 'border-slate-200 hover:border-emerald-300 hover:bg-slate-50'
                   }`}>
                     <input 
                       type="radio" 
@@ -124,11 +123,10 @@ export function EditIncomeModal({ item }: { item: any }) {
                       className="sr-only" 
                     />
                     <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
-                      person === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-500'
+                      person === 'jennifer' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500'
                     }`}>JC</div>
                     <div>
-                      <div className={`text-sm font-bold leading-tight ${person === 'jennifer' ? 'text-pink-900' : 'text-slate-700'}`}>Jennifer</div>
-                      <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-pink-600' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
+                      <div className={`text-sm font-bold leading-tight ${person === 'jennifer' ? 'text-emerald-900' : 'text-slate-700'}`}>Jennifer</div>
                     </div>
                   </label>
                 </div>

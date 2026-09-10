@@ -137,7 +137,6 @@ export function AddIncomeModal({
                   </div>
                   <div className="min-w-0">
                     <div className={`text-sm leading-tight ${person === 'cristhian' ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}`}>Cristhian Fuentes</div>
-                    <div className={`text-[11px] font-medium ${person === 'cristhian' ? 'text-emerald-800' : 'text-slate-500'}`}>Salario & Repr.</div>
                   </div>
                   {person === 'cristhian' && <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-600"></span>}
                 </label>
@@ -146,7 +145,7 @@ export function AddIncomeModal({
                 <label 
                   className={`cursor-pointer relative flex items-center gap-3 p-3 rounded-2xl transition-all ${
                     person === 'jennifer' 
-                      ? 'border-2 border-indigo-600 bg-indigo-50/50 shadow-sm' 
+                      ? 'border-2 border-emerald-600 bg-emerald-50/50 shadow-sm' 
                       : 'border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60'
                   }`}
                 >
@@ -159,15 +158,14 @@ export function AddIncomeModal({
                     className="sr-only" 
                   />
                   <div className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs shrink-0 shadow-sm ${
-                    person === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-500 border border-slate-200'
+                    person === 'jennifer' ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-500 border border-slate-200'
                   }`}>
                     JC
                   </div>
                   <div className="min-w-0">
                     <div className={`text-sm leading-tight ${person === 'jennifer' ? 'font-bold text-slate-900' : 'font-semibold text-slate-700'}`}>Jennifer Camaño</div>
-                    <div className={`text-[11px] font-medium ${person === 'jennifer' ? 'text-pink-600' : 'text-slate-500'}`}>Salario, Carro & Bonos</div>
                   </div>
-                  {person === 'jennifer' && <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-pink-500"></span>}
+                  {person === 'jennifer' && <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-600"></span>}
                 </label>
               </div>
             </div>
