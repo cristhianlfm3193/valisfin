@@ -309,6 +309,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
   const [isPendingBorrar, startBorrar] = useTransition();
   const [sortCol, setSortCol] = useState<string>('fecha');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [verTodos, setVerTodos] = useState(false);
 
   const handleSort = (col: string) => {
     if (col === sortCol) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
@@ -334,7 +335,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
 
   const totalPaginas = Math.max(1, Math.ceil(filtrados.length / PAGE_SIZE));
   const paginaActual = Math.min(pagina, totalPaginas);
-  const filas = filtrados.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
+  const filas = verTodos ? filtrados : filtrados.slice((paginaActual - 1) * PAGE_SIZE, paginaActual * PAGE_SIZE);
   const totalMonto = filtrados.reduce((acc, r) => acc + r.monto, 0);
 
   const handleBorrar = () => {
@@ -376,7 +377,19 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
               <p className="text-[11px] text-slate-400">Snapshot diario · muestra el último registro por vendedor en la tabla comparativa</p>
             </div>
           </div>
-          <div className="font-mono text-sm font-bold text-pink-600 whitespace-nowrap">Total: B/.{fmt(totalMonto)}</div>
+          <div className="font-mono text-sm font-bold text-pink-600 whitespace-nowrap flex items-center gap-3">
+            Total: B/.{fmt(totalMonto)}
+            <button
+              onClick={() => setVerTodos(v => !v)}
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+                verTodos
+                  ? 'bg-pink-600 text-white border-pink-600'
+                  : 'bg-white text-pink-600 border-pink-300 hover:bg-pink-50'
+              }`}
+            >
+              {verTodos ? 'Paginar' : `Ver todos (${filtrados.length})`}
+            </button>
+          </div>
         </div>
 
         {/* Buscador */}
@@ -445,7 +458,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
           </table>
         </div>
 
-        <Paginacion pagina={paginaActual} totalPaginas={totalPaginas} total={filtrados.length} pageSize={PAGE_SIZE} setPagina={setPagina} color="pink" />
+        {!verTodos && <Paginacion pagina={paginaActual} totalPaginas={totalPaginas} total={filtrados.length} pageSize={PAGE_SIZE} setPagina={setPagina} color="pink" />}
       </div>
     </>
   );
