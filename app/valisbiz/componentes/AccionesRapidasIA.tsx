@@ -309,7 +309,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
       else {
         const any = nueva.findIndex(it => it._estado === 'pendiente');
         if (any !== -1) { setIndexActual(any); setEstado('cola'); }
-        else setEstado('exito');
+        else { setTexto(''); setArchivo(null); setEstado('exito'); }
       }
     });
   };
@@ -322,7 +322,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
     else {
       const any = nueva.findIndex(it => it._estado === 'pendiente');
       if (any !== -1) setIndexActual(any);
-      else setEstado('exito');
+      else { setTexto(''); setArchivo(null); setEstado('exito'); }
     }
   };
 
