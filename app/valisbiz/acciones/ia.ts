@@ -30,7 +30,23 @@ const VENDEDORES_CONOCIDOS = [
   { nombre: 'Enrique del Rosario', aliases: ['enrique', 'del rosario', 'rosario'] },
 ];
 
-function num(s: string | undefined): number { return s ? parseFloat(s.replace(',', '.')) : 0; }
+function num(s: string | undefined): number {
+  if (!s) return 0;
+  let v = s.trim();
+  // Caso: tiene coma Y punto → coma=miles, punto=decimal  (1,116.50 → 1116.50)
+  if (v.includes(',') && v.includes('.')) {
+    v = v.replace(/,/g, '');
+  }
+  // Caso: solo coma seguida de exactamente 3 dígitos → miles  (1,116 → 1116)
+  else if (/,\d{3}$/.test(v) || /^\d{1,3}(,\d{3})+$/.test(v)) {
+    v = v.replace(/,/g, '');
+  }
+  // Caso: coma con 1-2 dígitos al final → decimal  (135,18 → 135.18)
+  else if (/,\d{1,2}$/.test(v)) {
+    v = v.replace(',', '.');
+  }
+  return parseFloat(v) || 0;
+}
 
 function detectarFecha(texto: string, today: string): string {
   if (/\bayer\b/i.test(texto)) {
