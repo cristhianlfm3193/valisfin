@@ -57,3 +57,123 @@
     border-radius: 9999px;
   }
 }
+  /* ── Uiverse 3D Button (FColombati) ─────────────────────────────────── */
+  .btn3d {
+    all: unset;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    position: relative;
+    border-radius: 100em;
+    background-color: rgba(0,0,0,0.75);
+    box-shadow:
+      -0.15em -0.15em 0.15em -0.075em rgba(5,5,5,0.25),
+       0.0375em 0.0375em 0.0675em 0 rgba(5,5,5,0.1);
+  }
+  .btn3d::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    width: calc(100% + 0.3em);
+    height: calc(100% + 0.3em);
+    top: -0.15em;
+    left: -0.15em;
+    border-radius: inherit;
+    background: linear-gradient(-135deg, rgba(5,5,5,0.5), transparent 20%, transparent 100%);
+    filter: blur(0.0125em);
+    opacity: 0.25;
+    mix-blend-mode: multiply;
+  }
+  .btn3d-outer {
+    position: relative;
+    z-index: 1;
+    border-radius: inherit;
+    transition: box-shadow 300ms ease;
+    will-change: box-shadow;
+    box-shadow:
+      0 0.05em 0.05em -0.01em rgba(5,5,5,1),
+      0 0.01em 0.01em -0.01em rgba(5,5,5,0.5),
+      0.15em 0.3em 0.1em -0.01em rgba(5,5,5,0.25);
+  }
+  .btn3d:hover .btn3d-outer {
+    box-shadow: 0 0 0 0 rgba(5,5,5,1), 0 0 0 0 rgba(5,5,5,0.5), 0 0 0 0 rgba(5,5,5,0.25);
+  }
+  .btn3d-inner {
+    position: relative;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 0.75em 1.75em;
+    background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(180,180,180,1));
+    transition: box-shadow 300ms ease, clip-path 250ms ease, background-image 250ms ease, transform 250ms ease;
+    will-change: box-shadow, clip-path, background-image, transform;
+    overflow: clip;
+    clip-path: inset(0 0 0 0 round 100em);
+    box-shadow:
+      0 0 0 0 inset rgba(5,5,5,0.1),
+      -0.05em -0.05em 0.05em 0 inset rgba(5,5,5,0.25),
+      0 0 0 0 inset rgba(5,5,5,0.1),
+      0 0 0.05em 0.2em inset rgba(255,255,255,0.25),
+      0.025em 0.05em 0.1em 0 inset rgba(255,255,255,1),
+      0.12em 0.12em 0.12em inset rgba(255,255,255,0.25),
+      -0.075em -0.25em 0.25em 0.1em inset rgba(5,5,5,0.25);
+  }
+  /* Color variants */
+  .btn3d-emerald .btn3d-inner {
+    background-image: linear-gradient(135deg, #34d399, #059669);
+  }
+  .btn3d-rose .btn3d-inner {
+    background-image: linear-gradient(135deg, #fb7185, #e11d48);
+  }
+  .btn3d-blue .btn3d-inner {
+    background-image: linear-gradient(135deg, #60a5fa, #2563eb);
+  }
+  .btn3d-pink .btn3d-inner {
+    background-image: linear-gradient(135deg, #f472b6, #db2777);
+  }
+  .btn3d-teal .btn3d-inner {
+    background-image: linear-gradient(135deg, #2dd4bf, #0f766e);
+  }
+  .btn3d-violet .btn3d-inner {
+    background-image: linear-gradient(135deg, #a78bfa, #7c3aed);
+  }
+  .btn3d-gray .btn3d-inner {
+    background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(170,170,170,1));
+  }
+  .btn3d-gray .btn3d-label {
+    background-image: linear-gradient(135deg, rgba(30,30,30,1), rgba(80,80,80,1));
+  }
+  .btn3d:hover .btn3d-inner {
+    clip-path: inset(clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) round 100em);
+    box-shadow:
+      0.1em 0.15em 0.05em 0 inset rgba(5,5,5,0.75),
+      -0.025em -0.03em 0.05em 0.025em inset rgba(5,5,5,0.5),
+      0.25em 0.25em 0.2em 0 inset rgba(5,5,5,0.5),
+      0 0 0.05em 0.5em inset rgba(255,255,255,0.15),
+      0 0 0 0 inset rgba(255,255,255,1),
+      0.12em 0.12em 0.12em inset rgba(255,255,255,0.25),
+      -0.075em -0.12em 0.2em 0.1em inset rgba(5,5,5,0.25);
+  }
+  .btn3d:active .btn3d-inner { transform: scale(0.975); }
+  .btn3d-label {
+    position: relative;
+    z-index: 4;
+    font-family: "Inter", sans-serif;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    color: rgba(0,0,0,0);
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.7));
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: transform 250ms ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    will-change: transform;
+    -webkit-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+  /* Colores text para variante gris (sin color) */
+  .btn3d:not(.btn3d-emerald):not(.btn3d-rose):not(.btn3d-blue):not(.btn3d-pink):not(.btn3d-teal) .btn3d-label {
+    background-image: linear-gradient(135deg, rgba(25,25,25,1), rgba(75,75,75,1));
+  }
+  .btn3d:hover .btn3d-label { transform: scale(0.975); }

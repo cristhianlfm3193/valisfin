@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PlusCircle, Wallet, X, Check } from 'lucide-react';
 import { addIncome } from '@/app/actions/income';
+import { Btn3D } from '@/app/components/Btn3D';
 
 export function AddIncomeModal({
   isOpen: externalIsOpen,
@@ -273,18 +274,9 @@ export function AddIncomeModal({
               >
                 Cancelar
               </button>
-              <button 
-                type="submit" 
-                disabled={isLoading}
-                className="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md shadow-emerald-700/20 hover:shadow-emerald-700/30 flex items-center gap-2 transition-all disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                ) : (
-                  <Check className="w-4 h-4" />
-                )}
-                {isLoading ? 'Guardando...' : 'Guardar Ingreso'}
-              </button>
+              <Btn3D type="submit" color="emerald" isLoading={isLoading} loadingText="Guardando..." disabled={isLoading}>
+                <Check className="w-4 h-4" /> Guardar Ingreso
+              </Btn3D>
             </div>
           </form>
         </div>
