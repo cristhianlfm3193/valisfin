@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
+import { CheckCircle2, Sparkles, TrendingUp, Target, Award } from 'lucide-react';
 import type { MetaSupervisor, ResumenMensualVendedor } from '@/types/valisbiz';
 import { calcularBonoJennifer, TABLA_BONOS_JENNIFER } from '@/types/valisbiz';
 import TablasHistorial from './TablasHistorial';
@@ -41,9 +41,33 @@ interface MetricasVentasProps {
 }
 
 function getColors(pct: number) {
-  if (pct >= 100) return { bg: 'bg-emerald-50', text: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-700', bar: 'bg-emerald-500', icon: CheckCircle2, iconBg: 'bg-emerald-500 text-white' };
-  if (pct >= 85)  return { bg: 'bg-blue-50', text: 'text-blue-700', badge: 'bg-blue-100 text-blue-700', bar: 'bg-blue-500', icon: Clock, iconBg: 'bg-blue-500 text-white' };
-  return { bg: 'bg-red-50', text: 'text-red-700', badge: 'bg-red-100 text-red-700', bar: 'bg-red-400', icon: AlertTriangle, iconBg: 'bg-red-400 text-white' };
+  if (pct >= 100) return { 
+    bg: 'bg-emerald-50/70', 
+    border: 'border-emerald-100',
+    text: 'text-emerald-700', 
+    badge: 'bg-emerald-100/90 text-emerald-800 border border-emerald-200/60', 
+    bar: 'bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600', 
+    icon: Sparkles, 
+    iconBg: 'bg-emerald-100 text-emerald-600 border border-emerald-200/60'
+  };
+  if (pct >= 85) return { 
+    bg: 'bg-purple-50/60', 
+    border: 'border-purple-100',
+    text: 'text-purple-700', 
+    badge: 'bg-purple-100/90 text-purple-800 border border-purple-200/60', 
+    bar: 'bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600', 
+    icon: TrendingUp, 
+    iconBg: 'bg-purple-100 text-purple-600 border border-purple-200/60'
+  };
+  return { 
+    bg: 'bg-rose-50/60', 
+    border: 'border-rose-100',
+    text: 'text-rose-700', 
+    badge: 'bg-rose-100/90 text-rose-800 border border-rose-200/60', 
+    bar: 'bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500', 
+    icon: Sparkles, 
+    iconBg: 'bg-rose-100 text-pink-600 border border-rose-200/60'
+  };
 }
 
 function getInitials(nombre: string) {
@@ -154,57 +178,69 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
             const isOver = pct >= 100;
 
             return (
-              <div key={v.vendedor_id} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex flex-col gap-3 hover:shadow-md transition-shadow">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-2">
+              <div key={v.vendedor_id} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between gap-4 hover:shadow-md transition-all">
+                {/* Header: Avatar, Clean Name (NO routes), Badge % */}
+                <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className={`w-11 h-11 rounded-xl ${c.bg} ${c.text} text-sm font-bold flex items-center justify-center flex-shrink-0`}>
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-100 via-rose-50 to-purple-100 text-pink-700 text-sm font-bold flex items-center justify-center shrink-0 border border-pink-200/50 shadow-xs">
                       {getInitials(v.nombre)}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 leading-tight">{v.nombre}</h3>
-                      <span className="text-[11px] text-slate-500">{v.ruta_asignada || 'Sin ruta'}</span>
+                      <h3 className="text-base font-bold text-slate-900 leading-tight">{v.nombre}</h3>
                     </div>
                   </div>
-                  <span className={`px-2 py-1 rounded-lg font-mono text-xs font-bold ${c.badge} flex-shrink-0`}>
+                  <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-extrabold ${c.badge} shrink-0`}>
                     {pct.toFixed(1)}%
                   </span>
                 </div>
 
-                {/* Barra de progreso — basada en FACTURADO */}
-                <div>
-                  <div className="flex justify-between text-[11px] text-slate-500 mb-1">
-                    <span className="font-medium text-slate-700">Facturado (Finanzas)</span>
-                    <span className="font-mono font-semibold text-slate-800">
-                      B/.{fmt(v.total_facturado)} / {Number(v.cuota_mensual).toLocaleString()}
+                {/* MAIN FEATURE (NUEVA JERARQUÍA): Facturado (Finanzas) Prominente y Central */}
+                <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-4 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Facturado (Finanzas)</span>
+                    <Sparkles className="w-4 h-4 text-pink-500" />
+                  </div>
+                  
+                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <span className="text-2xl font-black font-mono text-slate-900 tracking-tight">
+                      B/.{fmt(v.total_facturado)}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-400 font-mono">
+                      / {Number(v.cuota_mensual).toLocaleString()}
                     </span>
                   </div>
-                  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+
+                  {/* Barra de progreso elegante con gradiente */}
+                  <div className="w-full h-3 bg-slate-200/60 rounded-full overflow-hidden mt-1 p-0.5 border border-slate-200/30">
                     <div className={`${c.bar} h-full rounded-full transition-all duration-700`} style={{ width: `${Math.min(pct, 100)}%` }} />
                   </div>
                 </div>
 
-                {/* GAP */}
-                <div className={`${c.bg} rounded-xl p-3 flex items-center justify-between`}>
-                  <div>
-                    <span className="text-[11px] font-medium text-slate-500 block">
-                      {isOver ? '🏆 Superó la meta' : 'Brecha / GAP'}
-                    </span>
-                    <span className={`font-mono text-base font-bold ${isOver ? 'text-emerald-600' : c.text}`}>
-                      {isOver ? '+' : ''}B/.{fmt(Math.abs(v.gap_facturado))}
-                    </span>
+                {/* SECUNDARIO (SEGUNDO PLANO): Brecha / GAP */}
+                <div className={`${c.bg} ${c.border} border rounded-2xl p-3 flex items-center justify-between transition-colors`}>
+                  <div className="flex items-center gap-2.5">
+                    <div className={`p-1.5 rounded-xl ${c.iconBg} shrink-0`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-semibold text-slate-500 block">
+                        {isOver ? '🏆 Superó la meta' : 'Brecha / GAP'}
+                      </span>
+                      <span className={`font-mono text-sm font-bold ${isOver ? 'text-emerald-700' : c.text}`}>
+                        {isOver ? '+' : ''}B/.{fmt(Math.abs(v.gap_facturado))}
+                      </span>
+                    </div>
                   </div>
-                  <Icon className={`w-9 h-9 p-2 rounded-xl ${c.iconBg}`} />
                 </div>
 
                 {/* Vendido Reportado — solo informativo */}
                 <div className="border-t border-slate-100 pt-2.5 flex flex-col gap-1">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400 font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300 inline-block"></span>
+                    <span className="text-slate-400 font-medium flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-pink-300 inline-block"></span>
                       Vendido Reportado (vendedor)
                     </span>
-                    <span className="font-mono text-slate-500">
+                    <span className="font-mono text-slate-600 font-semibold">
                       {v.total_vendido_reportado > 0 ? `B/.${fmt(v.total_vendido_reportado)}` : 'Sin registros'}
                     </span>
                   </div>
