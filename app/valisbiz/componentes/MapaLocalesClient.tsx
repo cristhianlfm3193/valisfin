@@ -47,7 +47,16 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const [fechaDesde, setFechaDesde] = useState<string>('');
   const [fechaHasta, setFechaHasta] = useState<string>('');
   const [search, setSearch] = useState('');
-  const [activeLocal, setActiveLocal] = useState<Local | null>(null);
+  const [selectedLocales, setSelectedLocales] = useState<Local[]>([]);
+
+  const toggleLocalSelection = (local: Local) => {
+    setSelectedLocales(prev => {
+      if (prev.find(l => l.id === local.id)) {
+        return prev.filter(l => l.id !== local.id);
+      }
+      return [...prev, local];
+    });
+  };
 
   // Modals state
   const [showVisitaModal, setShowVisitaModal] = useState(false);
@@ -75,7 +84,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
       startTransition(async () => {
         try {
           await eliminarVisita(id);
-          setActiveLocal(null);
+          setSelectedLocales(prev => prev.filter(l => l.id !== id));
         } catch (error) {
           alert('Error al eliminar la visita');
         }
@@ -97,8 +106,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const totalPages = Math.ceil(filteredLocales.length / ITEMS_PER_PAGE);
   const paginatedLocales = showAll ? filteredLocales : filteredLocales.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const center: [number, number] = activeLocal 
-    ? [Number(activeLocal.latitud), Number(activeLocal.longitud)]
+  const centerLocal = selectedLocales[selectedLocales.length - 1];
+  const center: [number, number] = centerLocal 
+    ? [Number(centerLocal.latitud), Number(centerLocal.longitud)]
     : [8.8824, -79.7853]; // La Chorrera default
 
   const handleEliminarLocal = (id: string) => {
@@ -238,7 +248,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 zoom={13} 
                 style={{ height: '100%', width: '100%', zIndex: 1 }}
               >
-                <ChangeView center={center} zoom={activeLocal ? 16 : (isFullScreen ? 11 : 12)} />
+                <ChangeView center={center} zoom={selectedLocales.length > 0 ? 16 : (isFullScreen ? 11 : 12)} />
                 <LayersControl position="topright">
                   <LayersControl.BaseLayer checked name="Mapa Estándar">
                     <TileLayer
@@ -253,7 +263,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     />
                   </LayersControl.BaseLayer>
                 </LayersControl>
-                {filteredLocales.map((local) => {
+                {(selectedLocales.length > 0 ? selectedLocales : filteredLocales).map((local) => {
                   const resumen = getResumenVisitas(local.id);
                   return (
                     <Marker 
@@ -261,7 +271,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                       position={[Number(local.latitud), Number(local.longitud)]}
                       icon={markerIconHtml(local.tipo, resumen?.mejorEstado as any)}
                       eventHandlers={{
-                        click: () => setActiveLocal(local),
+                        click: () => toggleLocalSelection(local),
                       }}
                     >
                       <Popup>
@@ -334,6 +344,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <div>
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-bold text-[#131b2e]">Directorio de Clientes</h3>
+                  {selectedLocales.length > 0 && (
+                    <button onClick={() => setSelectedLocales([])} className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded font-bold transition-colors">
+                      Limpiar Filtro ({selectedLocales.length})
+                    </button>
+                  )}
                   <div className="hidden sm:flex items-center gap-2">
                     <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
                     <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
@@ -376,11 +391,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     return (
                       <tr 
                         key={local.id} 
-                        className={`hover:bg-[#f2f3ff] transition-colors ${activeLocal?.id === local.id ? 'bg-[#eaedff]' : ''}`}
+                        className={`hover:bg-[#f2f3ff] transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''}`}
                       >
                         <td 
                           className="py-3.5 px-3 font-semibold flex items-center gap-3 cursor-pointer"
-                          onClick={() => setActiveLocal(local)}
+                          onClick={() => toggleLocalSelection(local)}
                         >
                           <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${dotColor}`}></span>
                           
@@ -397,7 +412,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             <span className="text-xs text-[#6d7a72]">{local.tipo}</span>
                           </div>
                         </td>
-                        <td className="py-3.5 px-3" onClick={() => setActiveLocal(local)}>
+                        <td className="py-3.5 px-3 cursor-pointer" onClick={() => toggleLocalSelection(local)}>
                            {resumen ? (
                             <div className="flex flex-col gap-1 items-start">
                               <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
@@ -562,7 +577,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         <ModalVisita 
           locales={locales}
           vendedores={vendedores}
-          localInicial={activeLocal}
+          localInicial={selectedLocales.length > 0 ? selectedLocales[0] : null}
           visitaAEditar={visitaAEditar}
           onClose={() => { setShowVisitaModal(false); setVisitaAEditar(null); }}
         />
