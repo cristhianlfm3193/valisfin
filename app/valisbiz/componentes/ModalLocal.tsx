@@ -18,6 +18,7 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
   const [latitud, setLatitud] = useState(localAEditar?.latitud?.toString() || '');
   const [longitud, setLongitud] = useState(localAEditar?.longitud?.toString() || '');
   const [direccion, setDireccion] = useState(localAEditar?.direccion || '');
+  const [fotoUrl, setFotoUrl] = useState(localAEditar?.foto_url || '');
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +31,8 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
         tipo: tipo,
         latitud: parseFloat(latitud),
         longitud: parseFloat(longitud),
-        direccion: direccion || null
+        direccion: direccion || null,
+        foto_url: fotoUrl || null
       };
 
       if (isEditing && localAEditar) {
@@ -118,6 +120,17 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
               value={direccion}
               onChange={e => setDireccion(e.target.value)}
               placeholder="Ej. Nuevo Arraiján"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-bold text-slate-600">URL de Fotografía (Opcional)</label>
+            <input 
+              type="url"
+              value={fotoUrl}
+              onChange={e => setFotoUrl(e.target.value)}
+              placeholder="https://ejemplo.com/foto.jpg"
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
           </div>

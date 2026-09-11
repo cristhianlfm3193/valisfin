@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
@@ -13,13 +13,18 @@ import { eliminarLocal, eliminarVisita } from '../acciones/crm';
 // Custom Map Pins icons
 const markerIconHtml = (cadena: string, estadoVisita?: 'con_compra' | 'sin_compra') => {
   let color = '#94a3b8'; // Gris (Pendiente por defecto)
+  let extraClass = '';
   
-  if (estadoVisita === 'con_compra') color = '#10b981'; // Verde
-  else if (estadoVisita === 'sin_compra') color = '#f59e0b'; // Naranja
+  if (estadoVisita === 'con_compra') {
+    color = '#10b981'; // Verde
+    extraClass = 'marker-con-compra';
+  } else if (estadoVisita === 'sin_compra') {
+    color = '#f59e0b'; // Naranja
+  }
 
   return L.divIcon({
     className: 'custom-leaflet-marker',
-    html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);"></div>`,
+    html: `<div class="${extraClass}" style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);"></div>`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
   });
@@ -103,16 +108,30 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     }
   };
 
-  const getVisitaDelMes = (localId: string) => {
+  const getResumenVisitas = (localId: string) => {
     let visitasLocal = visitas.filter(v => v.local_id === localId);
     if (filterFecha) {
       visitasLocal = visitasLocal.filter(v => v.fecha === filterFecha);
     }
     if (visitasLocal.length === 0) return null;
-    return visitasLocal.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())[0];
+    
+    visitasLocal.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+    const count = visitasLocal.length;
+    const conCompra = visitasLocal.some(v => v.estado_visita === 'con_compra');
+    const mejorEstado = conCompra ? 'con_compra' : 'sin_compra';
+    
+    return {
+      count,
+      mejorEstado,
+      ultimaVisita: visitasLocal[0]
+    };
   };
 
   const visitasMostradas = filterFecha ? visitas.filter(v => v.fecha === filterFecha) : visitas;
+
+  const countSuper = locales.filter(l => l.tipo === 'Supermercado').length;
+  const countDistribuidora = locales.filter(l => l.tipo === 'Distribuidora').length;
+  const countTienda = locales.filter(l => l.tipo === 'Tienda').length;
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -160,7 +179,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           <div className="flex items-center justify-between mb-3 px-2">
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-indigo-500" />
-              <span className="font-bold text-[#131b2e]">Puntos Georreferenciados</span>
+              <span className="font-bold text-[#131b2e]">Vista interactiva de visitas</span>
             </div>
             <span className="font-mono text-xs text-[#6d7a72]">Panamá Metro</span>
           </div>
@@ -173,8 +192,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <div className="flex items-center justify-between mb-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-indigo-500" />
-                  <span className="font-bold text-[#131b2e] hidden sm:inline">Mapa de Puntos Georreferenciados</span>
-                  <span className="font-bold text-[#131b2e] sm:hidden">Mapa CRM</span>
+                  <span className="font-bold text-[#131b2e] hidden sm:inline">Vista interactiva de visitas</span>
+                  <span className="font-bold text-[#131b2e] sm:hidden">Vista interactiva</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button 
@@ -197,35 +216,53 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 style={{ height: '100%', width: '100%', zIndex: 1 }}
               >
                 <ChangeView center={center} zoom={activeLocal ? 16 : (isFullScreen ? 11 : 12)} />
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
+                <LayersControl position="topright">
+                  <LayersControl.BaseLayer checked name="Mapa Estándar">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                  </LayersControl.BaseLayer>
+                  <LayersControl.BaseLayer name="Satélite">
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
+                      url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    />
+                  </LayersControl.BaseLayer>
+                </LayersControl>
                 {filteredLocales.map((local) => {
-                  const visita = getVisitaDelMes(local.id);
+                  const resumen = getResumenVisitas(local.id);
                   return (
                     <Marker 
                       key={local.id} 
                       position={[Number(local.latitud), Number(local.longitud)]}
-                      icon={markerIconHtml(local.tipo, visita?.estado_visita)}
+                      icon={markerIconHtml(local.tipo, resumen?.mejorEstado as any)}
                       eventHandlers={{
                         click: () => setActiveLocal(local),
                       }}
                     >
                       <Popup>
-                        <div className="font-sans min-w-[150px]">
+                        <div className="font-sans min-w-[150px] max-w-[200px]">
+                          {local.foto_url && (
+                            <div className="w-full h-24 mb-2 rounded-lg overflow-hidden bg-slate-100 relative">
+                              <img src={local.foto_url} alt={local.nombre_local} className="w-full h-full object-cover" />
+                            </div>
+                          )}
                           <h4 className="font-bold text-sm m-0 leading-tight mb-1">{local.nombre_local}</h4>
                           <p className="text-xs text-[#6d7a72] m-0 mb-2">{local.tipo}</p>
                           
                           <div className="border-t border-slate-100 pt-2 mt-2">
-                            {visita ? (
+                            {resumen ? (
                               <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase">Última Visita</span>
-                                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-                                  <span>{visita.vendedor?.nombre || 'Vendedor'}</span>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-bold text-slate-400 uppercase">Última Visita</span>
+                                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">{resumen.count} {resumen.count === 1 ? 'visita' : 'visitas'}</span>
                                 </div>
-                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${visita.estado_visita === 'con_compra' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                                  {visita.estado_visita === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
+                                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                                  <span>{resumen.ultimaVisita.vendedor?.nombre || 'Vendedor'}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                  {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                                 </span>
                               </div>
                             ) : (
@@ -259,10 +296,10 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <CalendarCheck2 className="w-5 h-5" />
               Registrar Visita
             </button>
-            <div className="flex justify-center gap-4 mt-3 text-[10px] font-bold uppercase text-slate-400">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-400"></span> Pendiente</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Con Compra</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500"></span> Sin Compra</span>
+            <div className="flex justify-center gap-6 mt-4 text-xs font-bold uppercase text-slate-500">
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</span>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-emerald-500 marker-con-compra"></span> Con Compra</span>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-amber-500"></span> Sin Compra</span>
             </div>
           </div>
         </div>
@@ -272,8 +309,20 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div>
-                <h3 className="text-lg font-bold text-[#131b2e]">Directorio de Clientes</h3>
+                <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-bold text-[#131b2e]">Directorio de Clientes</h3>
+                  <div className="hidden sm:flex items-center gap-2">
+                    <span className="bg-[#ba1a1a]/10 text-[#ba1a1a] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
+                    <span className="bg-[#4648d4]/10 text-[#4648d4] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
+                    <span className="bg-[#006948]/10 text-[#006948] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda}</span>
+                  </div>
+                </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
+                <div className="flex sm:hidden items-center gap-2 mt-2">
+                  <span className="bg-[#ba1a1a]/10 text-[#ba1a1a] text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
+                  <span className="bg-[#4648d4]/10 text-[#4648d4] text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
+                  <span className="bg-[#006948]/10 text-[#006948] text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
+                </div>
               </div>
               <button 
                 onClick={() => { setLocalAEditar(null); setShowLocalModal(true); }}
@@ -299,7 +348,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     if (local.tipo === 'Distribuidora') dotColor = 'bg-[#4648d4]';
                     if (local.tipo === 'Tienda') dotColor = 'bg-[#006948]';
 
-                    const visita = getVisitaDelMes(local.id);
+                    const resumen = getResumenVisitas(local.id);
 
                     return (
                       <tr 
@@ -307,20 +356,36 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         className={`hover:bg-[#f2f3ff] transition-colors ${activeLocal?.id === local.id ? 'bg-[#eaedff]' : ''}`}
                       >
                         <td 
-                          className="py-3.5 px-3 font-semibold flex items-center gap-2 cursor-pointer"
+                          className="py-3.5 px-3 font-semibold flex items-center gap-3 cursor-pointer"
                           onClick={() => setActiveLocal(local)}
                         >
                           <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${dotColor}`}></span>
+                          
+                          {local.foto_url ? (
+                            <img src={local.foto_url} alt={local.nombre_local} className="w-8 h-8 rounded-full object-cover shrink-0 bg-slate-100 border border-slate-200" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                              <MapPin className="w-4 h-4 text-slate-400" />
+                            </div>
+                          )}
+
                           <div>
                             <span className="block font-bold">{local.nombre_local}</span>
                             <span className="text-xs text-[#6d7a72]">{local.tipo}</span>
                           </div>
                         </td>
                         <td className="py-3.5 px-3" onClick={() => setActiveLocal(local)}>
-                           {visita ? (
-                            <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                              {visita.estado_visita === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
-                            </span>
+                           {resumen ? (
+                            <div className="flex flex-col gap-1 items-start">
+                              <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
+                              </span>
+                              {resumen.count > 1 && (
+                                <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded w-fit">
+                                  {resumen.count} visitas
+                                </span>
+                              )}
+                            </div>
                            ) : (
                             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">Pendiente</span>
                            )}

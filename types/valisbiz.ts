@@ -20,6 +20,7 @@ export interface Local {
   latitud: number;
   longitud: number;
   direccion: string | null;
+  foto_url?: string | null;
   created_at: string;
 }
 
