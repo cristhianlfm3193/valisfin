@@ -131,30 +131,30 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
         </div>
 
         {/* Main Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card: Apariencia */}
-          <div className="group relative overflow-hidden bg-slate-900 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col h-full min-h-[300px]">
+          <div className="group relative overflow-hidden bg-slate-900 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col h-full min-h-[280px]">
             {/* Background Image (Real Image from settings) */}
             <div className="absolute inset-0 z-0">
               <img src={loginImageUrl} alt="Background" className="w-full h-full object-cover object-center opacity-40 group-hover:scale-105 group-hover:opacity-30 transition-all duration-700 ease-out" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-transparent"></div>
             </div>
             
-            <div className="p-6 sm:p-8 flex-1 flex flex-col relative z-10">
+            <div className="p-6 flex-1 flex flex-col relative z-10">
               <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 border border-white/20">
                 <ImageIcon className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-xl font-bold text-white mb-2">Apariencia de la App</h2>
-              <p className="text-sm text-slate-300 mb-8 flex-1">
-                Personaliza la foto de portada, el mensaje de bienvenida y el estilo visual de la pantalla de inicio de sesión para tu familia.
+              <p className="text-sm text-slate-300 mb-6 flex-1">
+                Personaliza la foto de portada y el estilo visual de la pantalla de inicio de sesión.
               </p>
               
               <button 
                 onClick={() => setIsSettingsOpen(true)}
                 className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg"
               >
-                <span>Editar Pantalla de Inicio</span>
+                <span>Editar Inicio</span>
                 <ArrowRight className="w-4 h-4 text-emerald-100 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -163,8 +163,8 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
           {/* Card: Usuarios y Roles */}
           <div className="group relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
             <div className="absolute top-6 right-6 flex -space-x-3 transition-transform duration-500 group-hover:-translate-x-1">
-              {initialUsers.slice(0, 4).map((u, i) => (
-                <div key={u.id} className="w-10 h-10 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 hover:-translate-y-1 hover:z-20 relative z-10 transition-all bg-white" style={{ zIndex: 10 - i }}>
+              {initialUsers.slice(0, 3).map((u, i) => (
+                <div key={u.id} className="w-9 h-9 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 relative z-10 transition-all bg-white" style={{ zIndex: 10 - i }}>
                   {u.avatar_url ? (
                     <img src={u.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
@@ -174,20 +174,15 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
                   )}
                 </div>
               ))}
-              {initialUsers.length > 4 && (
-                <div className="w-10 h-10 rounded-full border-[3px] border-white bg-slate-50 flex items-center justify-center text-slate-600 font-bold text-xs shadow-sm z-0 relative">
-                  +{initialUsers.length - 4}
-                </div>
-              )}
             </div>
             
-            <div className="p-6 sm:p-8 flex-1 flex flex-col relative z-10">
+            <div className="p-6 flex-1 flex flex-col relative z-10">
               <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 border border-slate-200">
                 <Users className="w-6 h-6 text-slate-700" />
               </div>
               <h2 className="text-xl font-bold text-slate-900 mb-2">Gestión de Usuarios</h2>
-              <p className="text-sm text-slate-500 mb-8 flex-1">
-                Controla los permisos de acceso. Asigna o revoca privilegios de administrador a los miembros de la plataforma.
+              <p className="text-sm text-slate-500 mb-6 flex-1">
+                Controla permisos de acceso y administra los roles de usuarios registrados.
               </p>
               
               <button 
@@ -197,6 +192,26 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
                 <span>Administrar Roles</span>
                 <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
               </button>
+            </div>
+          </div>
+
+          {/* Card: Configuración ValisBiz */}
+          <div className="group relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-pink-950 rounded-3xl border border-pink-900/40 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+            <div className="p-6 flex-1 flex flex-col relative z-10">
+              <div className="w-12 h-12 bg-pink-500/20 rounded-2xl flex items-center justify-center mb-6 border border-pink-400/30 text-pink-400">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h2 className="text-xl font-bold text-white mb-2">Configuración ValisBiz</h2>
+              <p className="text-sm text-pink-100/80 mb-6 flex-1">
+                Gestiona perfiles de vendedores, metas mensuales y asignación de reemplazos temporales (Vacaciones).
+              </p>
+              
+              <Btn3D color="pink" onClick={() => setIsValisBizOpen(true)} fullWidth>
+                <span className="flex items-center justify-center gap-2">
+                  <span>Gestionar Vendedores y Metas</span>
+                  <ArrowRight className="w-4 h-4" />
+                </span>
+              </Btn3D>
             </div>
           </div>
 
