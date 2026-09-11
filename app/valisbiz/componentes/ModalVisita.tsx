@@ -2,20 +2,35 @@
 
 import { useState, useTransition } from 'react';
 import { X, CheckCircle2, XCircle } from 'lucide-react';
-import type { Local, Vendedor } from '@/types/valisbiz';
-import { registrarVisita } from '../acciones/crm';
+import type { Local, Vendedor, VisitaMensual } from '@/types/valisbiz';
+import { registrarVisita, editarVisita } from '../acciones/crm';
 
 interface ModalVisitaProps {
   onClose: () => void;
   locales: Local[];
   vendedores: Vendedor[];
   localInicial?: Local | null;
+  visitaAEditar?: VisitaMensual | null;
 }
 
-export default function ModalVisita({ onClose, locales, vendedores, localInicial }: ModalVisitaProps) {
-  const [localId, setLocalId] = useState(localInicial?.id || '');
-  const [vendedorId, setVendedorId] = useState('');
-  const [estadoVisita, setEstadoVisita] = useState<'con_compra' | 'sin_compra' | ''>('');
+export default function ModalVisita({ onClose, locales, vendedores, localInicial, visitaAEditar }: ModalVisitaProps) {
+  const isEditing = !!visitaAEditar;
+
+  const [tipoLocal, setTipoLocal] = useState<string>(
+    visitaAEditar?.local?.tipo || localInicial?.tipo || ''
+  );
+  const [localId, setLocalId] = useState(
+    visitaAEditar?.local_id || localInicial?.id || ''
+  );
+  const [vendedorId, setVendedorId] = useState(
+    visitaAEditar?.vendedor_id || ''
+  );
+  const [estadoVisita, setEstadoVisita] = useState<'con_compra' | 'sin_compra' | ''>(
+    (visitaAEditar?.estado_visita as 'con_compra' | 'sin_compra') || ''
+  );
+  const [fecha, setFecha] = useState(
+    visitaAEditar?.fecha || new Date().toISOString().split('T')[0]
+  );
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,12 +38,21 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
     if (!localId || !vendedorId || !estadoVisita) return;
     
     startTransition(async () => {
-      await registrarVisita({
-        local_id: localId,
-        vendedor_id: vendedorId,
-        estado_visita: estadoVisita,
-        fecha: new Date().toISOString().split('T')[0] // Hoy
-      });
+      if (isEditing && visitaAEditar) {
+        await editarVisita(visitaAEditar.id, {
+          local_id: localId,
+          vendedor_id: vendedorId,
+          estado_visita: estadoVisita,
+          fecha: fecha
+        });
+      } else {
+        await registrarVisita({
+          local_id: localId,
+          vendedor_id: vendedorId,
+          estado_visita: estadoVisita,
+          fecha: fecha
+        });
+      }
       onClose();
     });
   };
@@ -38,24 +62,54 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
         
         <div className="flex items-center justify-between p-5 border-b border-slate-100">
-          <h3 className="font-bold text-lg text-slate-800">Registrar Visita</h3>
+          <h3 className="font-bold text-lg text-slate-800">
+            {isEditing ? 'Editar Visita' : 'Registrar Visita'}
+          </h3>
           <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-4">
           
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-bold text-slate-600">Fecha de Visita</label>
+            <input 
+              type="date" 
+              required
+              value={fecha}
+              onChange={e => setFecha(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-bold text-slate-600">Tipo de Local</label>
+            <select 
+              value={tipoLocal}
+              onChange={e => {
+                setTipoLocal(e.target.value);
+                setLocalId(''); // Resetear local si cambia el tipo
+              }}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+            >
+              <option value="">Cualquier Tipo</option>
+              <option value="Supermercado">Supermercado</option>
+              <option value="Distribuidora">Distribuidora</option>
+              <option value="Tienda">Tienda</option>
+            </select>
+          </div>
+
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-slate-600">Punto de Venta (Local)</label>
             <select 
               required
               value={localId}
               onChange={e => setLocalId(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
               <option value="">Selecciona un local...</option>
-              {locales.map(l => (
+              {locales.filter(l => tipoLocal === '' || l.tipo === tipoLocal).map(l => (
                 <option key={l.id} value={l.id}>{l.nombre_local}</option>
               ))}
             </select>
@@ -67,7 +121,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               required
               value={vendedorId}
               onChange={e => setVendedorId(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
               <option value="">¿Quién realizó la visita?</option>
               {vendedores.map(v => (
@@ -104,7 +158,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               disabled={isPending || !localId || !vendedorId || !estadoVisita}
               className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-md shadow-slate-900/20"
             >
-              {isPending ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : 'Guardar Visita'}
+              {isPending ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : (isEditing ? 'Guardar Cambios' : 'Guardar Visita')}
             </button>
           </div>
         </form>

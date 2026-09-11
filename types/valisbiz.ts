@@ -1,4 +1,4 @@
-export type CadenaLocal = 'Rey' | 'Riba Smith' | 'Super 99' | 'Mr. Precio' | 'Otro';
+export type TipoLocal = 'Supermercado' | 'Distribuidora' | 'Tienda';
 export type EstadoTarea = 'por_hacer' | 'en_ruta' | 'completado';
 export type TipoTarea = 'coaching' | 'trade_marketing' | 'ruta_critica' | 'inventario';
 
@@ -16,7 +16,7 @@ export interface Vendedor {
 export interface Local {
   id: string;
   nombre_local: string;
-  cadena: CadenaLocal;
+  tipo: TipoLocal;
   latitud: number;
   longitud: number;
   direccion: string | null;

@@ -30,7 +30,7 @@ export async function getDashboardData(mes?: number, anio?: number) {
 
     supabase
       .from('tareas')
-      .select(`*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)`)
+      .select(`*, vendedor:vendedores(nombre), local:locales(nombre_local, tipo)`)
       .order('fecha_programada', { ascending: true }),
 
     supabase
@@ -49,7 +49,7 @@ export async function getDashboardData(mes?: number, anio?: number) {
 
     supabase
       .from('visitas_mensuales')
-      .select('*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)')
+      .select('*, vendedor:vendedores(nombre), local:locales(nombre_local, tipo)')
       .gte('fecha', `${targetAnio}-${String(targetMes).padStart(2, '0')}-01`)
       .lt('fecha', targetMes === 12 
           ? `${targetAnio + 1}-01-01` 

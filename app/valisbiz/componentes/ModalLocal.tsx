@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { X, MapPin } from 'lucide-react';
-import type { Local, CadenaLocal } from '@/types/valisbiz';
+import type { Local, TipoLocal } from '@/types/valisbiz';
 import { crearLocal, editarLocal } from '../acciones/crm';
 
 interface ModalLocalProps {
@@ -14,7 +14,7 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
   const isEditing = !!localAEditar;
   
   const [nombre, setNombre] = useState(localAEditar?.nombre_local || '');
-  const [cadena, setCadena] = useState<CadenaLocal>((localAEditar?.cadena as CadenaLocal) || 'Otro');
+  const [tipo, setTipo] = useState<TipoLocal>((localAEditar?.tipo as TipoLocal) || 'Supermercado');
   const [latitud, setLatitud] = useState(localAEditar?.latitud?.toString() || '');
   const [longitud, setLongitud] = useState(localAEditar?.longitud?.toString() || '');
   const [direccion, setDireccion] = useState(localAEditar?.direccion || '');
@@ -22,12 +22,12 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nombre || !cadena || !latitud || !longitud) return;
+    if (!nombre || !tipo || !latitud || !longitud) return;
     
     startTransition(async () => {
       const data = {
         nombre_local: nombre,
-        cadena: cadena as any,
+        tipo: tipo,
         latitud: parseFloat(latitud),
         longitud: parseFloat(longitud),
         direccion: direccion || null
@@ -71,18 +71,16 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Cadena</label>
+            <label className="text-sm font-bold text-slate-600">Tipo de Local</label>
             <select 
               required
-              value={cadena}
-              onChange={e => setCadena(e.target.value as CadenaLocal)}
+              value={tipo}
+              onChange={e => setTipo(e.target.value as TipoLocal)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             >
-              <option value="Rey">Rey</option>
-              <option value="Super 99">Super 99</option>
-              <option value="Riba Smith">Riba Smith</option>
-              <option value="Mr. Precio">Mr. Precio</option>
-              <option value="Otro">Otro</option>
+              <option value="Supermercado">Supermercado</option>
+              <option value="Distribuidora">Distribuidora</option>
+              <option value="Tienda">Tienda</option>
             </select>
           </div>
 
