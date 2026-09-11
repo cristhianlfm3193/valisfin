@@ -2,11 +2,11 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight, Plus, FileDown } from 'lucide-react';
+import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight, Plus, FileDown, BarChart2 } from 'lucide-react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import MetricasVentas from './MetricasVentas';
-import KanbanBoard from './KanbanBoard';
+import EstadisticasPowerBI from './EstadisticasPowerBI';
 import MapaLocales from './MapaLocales';
 import ModalRegistrar from './ModalRegistrar';
 import ModalReporte from './ModalReporte';
@@ -56,7 +56,7 @@ interface ValisBizClientProps {
 }
 
 export default function ValisBizClient({ initialData, user }: ValisBizClientProps) {
-  const [activeTab, setActiveTab] = useState<'ventas' | 'tareas' | 'mapa'>('ventas');
+  const [activeTab, setActiveTab] = useState<'ventas' | 'estadisticas' | 'mapa'>('ventas');
   const [showModal, setShowModal] = useState(false);
   const [showReporte, setShowReporte] = useState(false);
   const router = useRouter();
@@ -234,7 +234,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           <div className="flex items-center gap-1.5 w-full sm:w-auto">
             {[
               { id: 'ventas', label: 'Ventas & Métricas', Icon: TrendingUp },
-              { id: 'tareas', label: 'Tareas & Cronograma', Icon: LayoutGrid },
+              { id: 'estadisticas', label: 'Estadísticas', Icon: BarChart2 },
               { id: 'mapa', label: 'Mapa & Locales BI', Icon: MapPin },
             ].map(({ id, label, Icon: TabIcon }) => (
               <button
@@ -265,8 +265,13 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
             registrosVendido={initialData.registrosVendido}
           />
         )}
-        {activeTab === 'tareas' && (
-          <KanbanBoard initialTareas={initialData.tareas} />
+        {activeTab === 'estadisticas' && (
+          <EstadisticasPowerBI 
+            registrosFacturado={initialData.registrosFacturado}
+            registrosVendido={initialData.registrosVendido}
+            metas={initialData.metas}
+            resumenMensual={initialData.resumenMensual}
+          />
         )}
         {activeTab === 'mapa' && (
           <MapaLocales locales={initialData.locales} />
