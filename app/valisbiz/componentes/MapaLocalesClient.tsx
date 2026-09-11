@@ -44,7 +44,8 @@ interface MapaLocalesClientProps {
 
 export default function MapaLocalesClient({ locales, visitas, vendedores }: MapaLocalesClientProps) {
   const [filter, setFilter] = useState<string>('Todas');
-  const [filterFecha, setFilterFecha] = useState<string>('');
+  const [fechaDesde, setFechaDesde] = useState<string>('');
+  const [fechaHasta, setFechaHasta] = useState<string>('');
   const [search, setSearch] = useState('');
   const [activeLocal, setActiveLocal] = useState<Local | null>(null);
 
@@ -110,8 +111,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
   const getResumenVisitas = (localId: string) => {
     let visitasLocal = visitas.filter(v => v.local_id === localId);
-    if (filterFecha) {
-      visitasLocal = visitasLocal.filter(v => v.fecha === filterFecha);
+    if (fechaDesde) {
+      visitasLocal = visitasLocal.filter(v => v.fecha >= fechaDesde);
+    }
+    if (fechaHasta) {
+      visitasLocal = visitasLocal.filter(v => v.fecha <= fechaHasta);
     }
     if (visitasLocal.length === 0) return null;
     
@@ -127,7 +131,13 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     };
   };
 
-  const visitasMostradas = filterFecha ? visitas.filter(v => v.fecha === filterFecha) : visitas;
+  let visitasMostradas = visitas;
+  if (fechaDesde) {
+    visitasMostradas = visitasMostradas.filter(v => v.fecha >= fechaDesde);
+  }
+  if (fechaHasta) {
+    visitasMostradas = visitasMostradas.filter(v => v.fecha <= fechaHasta);
+  }
 
   const countSuper = locales.filter(l => l.tipo === 'Supermercado').length;
   const countDistribuidora = locales.filter(l => l.tipo === 'Distribuidora').length;
@@ -148,14 +158,27 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           />
         </div>
         
-        <div className="w-full md:w-auto">
-          <input 
-            type="date"
-            value={filterFecha}
-            onChange={(e) => setFilterFecha(e.target.value)}
-            className="w-full md:w-auto px-4 py-2.5 rounded-full bg-[#f2f3ff] text-[#131b2e] text-sm focus:outline-none focus:bg-[#eaedff] transition-all border border-slate-200"
-            title="Filtrar mapa y tablas por fecha exacta"
-          />
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="relative">
+            <span className="absolute -top-2.5 left-3 bg-white px-1 text-[10px] font-bold text-slate-500 rounded">Desde</span>
+            <input 
+              type="date"
+              value={fechaDesde}
+              onChange={(e) => setFechaDesde(e.target.value)}
+              className="w-full md:w-auto pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
+              title="Fecha inicial del periodo"
+            />
+          </div>
+          <div className="relative">
+            <span className="absolute -top-2.5 left-3 bg-white px-1 text-[10px] font-bold text-slate-500 rounded">Hasta</span>
+            <input 
+              type="date"
+              value={fechaHasta}
+              onChange={(e) => setFechaHasta(e.target.value)}
+              className="w-full md:w-auto pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
+              title="Fecha final del periodo"
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
@@ -312,16 +335,16 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-bold text-[#131b2e]">Directorio de Clientes</h3>
                   <div className="hidden sm:flex items-center gap-2">
-                    <span className="bg-[#ba1a1a]/10 text-[#ba1a1a] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
-                    <span className="bg-[#4648d4]/10 text-[#4648d4] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
-                    <span className="bg-[#006948]/10 text-[#006948] text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda}</span>
+                    <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
+                    <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
+                    <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda}</span>
                   </div>
                 </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
                 <div className="flex sm:hidden items-center gap-2 mt-2">
-                  <span className="bg-[#ba1a1a]/10 text-[#ba1a1a] text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
-                  <span className="bg-[#4648d4]/10 text-[#4648d4] text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
-                  <span className="bg-[#006948]/10 text-[#006948] text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
+                  <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
+                  <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
+                  <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
                 </div>
               </div>
               <button 
@@ -344,9 +367,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <tbody className="divide-y divide-[#eaedff] text-sm text-[#131b2e]">
                   {paginatedLocales.map(local => {
                     let dotColor = 'bg-[#6d7a72]';
-                    if (local.tipo === 'Supermercado') dotColor = 'bg-[#ba1a1a]';
-                    if (local.tipo === 'Distribuidora') dotColor = 'bg-[#4648d4]';
-                    if (local.tipo === 'Tienda') dotColor = 'bg-[#006948]';
+                    if (local.tipo === 'Supermercado') dotColor = 'bg-pink-500';
+                    if (local.tipo === 'Distribuidora') dotColor = 'bg-violet-500';
+                    if (local.tipo === 'Tienda') dotColor = 'bg-rose-500';
 
                     const resumen = getResumenVisitas(local.id);
 
@@ -488,14 +511,14 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   {visitasMostradas.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-8 text-center text-slate-400">
-                        {filterFecha ? 'No hay visitas en esta fecha.' : 'No hay visitas registradas este mes.'}
+                        {(fechaDesde || fechaHasta) ? 'No hay visitas registradas en este periodo.' : 'No hay visitas registradas este mes.'}
                       </td>
                     </tr>
                   ) : (
                     visitasMostradas.map(visita => (
                       <tr key={visita.id} className="hover:bg-[#f2f3ff] transition-colors">
                         <td className="py-3 px-3">
-                          <span className="block font-bold">{new Date(visita.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}</span>
+                          <span className="block font-bold">{new Date(visita.fecha + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}</span>
                           <span className="text-xs text-[#6d7a72]">{visita.vendedor?.nombre}</span>
                         </td>
                         <td className="py-3 px-3">

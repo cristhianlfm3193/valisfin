@@ -29,7 +29,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
     (visitaAEditar?.estado_visita as 'con_compra' | 'sin_compra') || ''
   );
   const [fecha, setFecha] = useState(
-    visitaAEditar?.fecha || new Date().toISOString().split('T')[0]
+    visitaAEditar?.fecha || new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
   );
   const [isPending, startTransition] = useTransition();
 
