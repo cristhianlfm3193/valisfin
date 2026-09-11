@@ -5,6 +5,7 @@ import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
 import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2, Utensils } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 import { EditDailyExpenseModal } from './EditDailyExpenseModal';
+import { Btn3D } from '@/app/components/Btn3D';
 
 interface GastosDiariosClientProps {
   initialExpenses: DailyExpense[];
@@ -151,13 +152,13 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             <SlidersHorizontal className="w-4 h-4" />
             <span>Filtros</span>
           </button>
-          <button 
+          <Btn3D 
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-full text-sm font-bold shadow-md shadow-emerald-600/20 transition-all transform active:scale-95"
+            color="emerald"
           >
             <PlusCircle className="w-5 h-5" />
             <span>Registrar gasto</span>
-          </button>
+          </Btn3D>
         </div>
       </div>
 

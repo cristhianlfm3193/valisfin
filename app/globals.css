@@ -68,7 +68,11 @@
     box-shadow:
       -0.15em -0.15em 0.15em -0.075em rgba(5,5,5,0.25),
        0.0375em 0.0375em 0.0675em 0 rgba(5,5,5,0.1);
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    text-decoration: none !important;
   }
   .btn3d::after {
     content: "";
@@ -94,6 +98,10 @@
       0 0.05em 0.05em -0.01em rgba(5,5,5,1),
       0 0.01em 0.01em -0.01em rgba(5,5,5,0.5),
       0.15em 0.3em 0.1em -0.01em rgba(5,5,5,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
   }
   .btn3d:hover .btn3d-outer {
     box-shadow: 0 0 0 0 rgba(5,5,5,1), 0 0 0 0 rgba(5,5,5,0.5), 0 0 0 0 rgba(5,5,5,0.25);
@@ -102,7 +110,7 @@
     position: relative;
     z-index: 1;
     border-radius: inherit;
-    padding: 0.7em 1.5em;
+    padding: 0.55em 1.35em;
     background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(180,180,180,1));
     transition: box-shadow 300ms ease, clip-path 250ms ease, background-image 250ms ease, transform 250ms ease;
     will-change: box-shadow, clip-path, background-image, transform;
@@ -111,6 +119,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     box-shadow:
       0 0 0 0 inset rgba(5,5,5,0.1),
       -0.05em -0.05em 0.05em 0 inset rgba(5,5,5,0.25),
@@ -123,20 +132,20 @@
 
   /* Size variants */
   .btn3d-xs .btn3d-inner {
-    padding: 0.35em 0.85em;
+    padding: 0.35em 0.8em;
     font-size: 0.725rem;
   }
   .btn3d-sm .btn3d-inner {
-    padding: 0.45em 1.15em;
-    font-size: 0.8rem;
+    padding: 0.45em 1.1em;
+    font-size: 0.775rem;
   }
   .btn3d-md .btn3d-inner {
-    padding: 0.65em 1.5em;
-    font-size: 0.875rem;
+    padding: 0.55em 1.35em;
+    font-size: 0.85rem;
   }
   .btn3d-lg .btn3d-inner {
-    padding: 0.85em 2em;
-    font-size: 1rem;
+    padding: 0.7em 1.6em;
+    font-size: 0.95rem;
   }
 
   /* Color variants */
@@ -170,9 +179,6 @@
   .btn3d-gray .btn3d-inner {
     background-image: linear-gradient(135deg, rgba(235,238,241,1), rgba(195,200,207,1));
   }
-  .btn3d-gray .btn3d-label {
-    background-image: linear-gradient(135deg, rgba(30,35,45,1), rgba(80,85,95,1)) !important;
-  }
   .btn3d:hover .btn3d-inner {
     clip-path: inset(clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) round 100em);
     box-shadow:
@@ -189,20 +195,30 @@
     position: relative;
     z-index: 4;
     font-family: var(--font-sans), "Inter", sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     font-weight: 700;
-    color: rgba(0,0,0,0);
-    background-image: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.85));
-    -webkit-background-clip: text;
-    background-clip: text;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     transition: transform 250ms ease;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4em;
     will-change: transform;
     -webkit-user-select: none;
     user-select: none;
     white-space: nowrap;
+    width: 100%;
+    text-align: center;
+    line-height: 1;
+    margin: 0 auto;
+  }
+  .btn3d-gray .btn3d-label {
+    color: #1e293b !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.7) !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
   }
   .btn3d:hover .btn3d-label { transform: scale(0.975); }
 

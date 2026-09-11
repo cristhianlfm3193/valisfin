@@ -124,8 +124,7 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
                 title="Deshacer confirmación"
               >
                 <Undo2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Deshacer</span>
-                <span className="sm:hidden">Deshacer</span>
+                <span>Deshacer</span>
               </Btn3D>
             ) : (
               <Btn3D
@@ -134,8 +133,7 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
                 onClick={() => toggleConfirm(item.id, isReceived)}
               >
                 <Check className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Confirmar recibido</span>
-                <span className="sm:hidden">Confirmar</span>
+                <span>Confirmar recibido</span>
               </Btn3D>
             )}
           </div>

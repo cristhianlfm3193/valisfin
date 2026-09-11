@@ -121,20 +121,32 @@ export function MobileNavigation({ user, profile }: { user?: User, profile?: any
                 <Link
                   href="/valisbiz"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full p-3.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white text-sm font-bold shadow-md hover:from-pink-600 hover:to-rose-700 transition-colors"
+                  className="btn3d btn3d-pink btn3d-md w-full block"
                 >
-                  <Heart className="w-4 h-4 text-pink-100 fill-pink-100" />
-                  ValisBiz Supervisión
+                  <div className="btn3d-outer w-full">
+                    <div className="btn3d-inner w-full">
+                      <span className="btn3d-label justify-center">
+                        <Heart className="w-4 h-4 text-pink-100 fill-pink-100" />
+                        ValisBiz Supervisión
+                      </span>
+                    </div>
+                  </div>
                 </Link>
 
                 {profile?.role === 'administrador' && (
                   <Link
                     href={pathname === '/admin' ? '/' : '/admin'}
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full p-3.5 rounded-xl bg-slate-900 text-white text-sm font-bold shadow-md hover:bg-black transition-colors"
+                    className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md w-full block`}
                   >
-                    <Shield className="w-4 h-4 text-amber-400" />
-                    {pathname === '/admin' ? 'Salir del Panel Admin' : 'Panel de Administrador'}
+                    <div className="btn3d-outer w-full">
+                      <div className="btn3d-inner w-full">
+                        <span className="btn3d-label justify-center">
+                          <Shield className="w-4 h-4 text-amber-500" />
+                          {pathname === '/admin' ? 'Salir del Panel Admin' : 'Panel de Administrador'}
+                        </span>
+                      </div>
+                    </div>
                   </Link>
                 )}
                 

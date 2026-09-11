@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { UnifiedTransaction } from '@/app/actions/consultas';
 import { Search, X, Download, Filter, Columns, Home, ShoppingBag, Zap, Wallet, Car, Target, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { Btn3D } from '@/app/components/Btn3D';
 
 interface ConsultasClientProps {
   initialTransactions: UnifiedTransaction[];
@@ -159,10 +160,10 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </p>
         </div>
         <div className="flex items-center gap-2.5 self-start md:self-auto">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-600 text-white text-sm font-bold shadow-md hover:bg-brand-700 transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <Btn3D color="emerald">
             <Download className="w-4 h-4" />
             <span>Descargar Reporte</span>
-          </button>
+          </Btn3D>
         </div>
       </section>
 

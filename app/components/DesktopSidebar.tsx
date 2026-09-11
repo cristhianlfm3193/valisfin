@@ -115,40 +115,36 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
         <Link
           href="/valisbiz"
           title={isCollapsed ? "ValisBiz" : undefined}
-          className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden ${
-            pathname.startsWith('/valisbiz') 
-              ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white border border-pink-500 hover:from-pink-600 hover:to-rose-700'
-              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-          } shadow-sm hover:shadow-md ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+          className="btn3d btn3d-pink btn3d-md mx-2 block"
         >
-          <Heart className={`shrink-0 w-4 h-4 ${pathname.startsWith('/valisbiz') ? 'text-pink-100 fill-pink-100' : 'text-pink-500 fill-pink-500'} group-hover:scale-110 transition-transform`} />
-          {!isCollapsed && (
-            <span className="truncate whitespace-nowrap">
-              ValisBiz
-            </span>
-          )}
+          <div className="btn3d-outer">
+            <div className="btn3d-inner">
+              <span className="btn3d-label justify-center">
+                <Heart className="shrink-0 w-4 h-4 text-pink-100 fill-pink-100" />
+                {!isCollapsed && <span>ValisBiz</span>}
+              </span>
+            </div>
+          </div>
         </Link>
 
         {profile?.role === 'administrador' && (
           <Link
             href={pathname === '/admin' ? '/' : '/admin'}
             title={isCollapsed ? (pathname === '/admin' ? "Volver al Inicio" : "Panel de Administrador") : undefined}
-            className={`flex items-center rounded-xl font-bold text-xs transition-all group overflow-hidden ${
-              pathname === '/admin' 
-                ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white border border-emerald-600 hover:from-emerald-700 hover:to-emerald-800'
-                : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-slate-700 hover:from-slate-900 hover:to-black'
-            } shadow-sm hover:shadow-md ${isCollapsed ? 'justify-center p-2.5 mx-2' : 'gap-3 px-3.5 py-2.5 mx-2'}`}
+            className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md mx-2 block`}
           >
-            {pathname === '/admin' ? (
-              <Home className="shrink-0 w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform" />
-            ) : (
-              <Shield className="shrink-0 w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
-            )}
-            {!isCollapsed && (
-              <span className="truncate whitespace-nowrap">
-                {pathname === '/admin' ? 'Salir del Panel' : 'Admin Panel'}
-              </span>
-            )}
+            <div className="btn3d-outer">
+              <div className="btn3d-inner">
+                <span className="btn3d-label justify-center">
+                  {pathname === '/admin' ? (
+                    <Home className="shrink-0 w-4 h-4 text-emerald-100" />
+                  ) : (
+                    <Shield className="shrink-0 w-4 h-4 text-amber-500" />
+                  )}
+                  {!isCollapsed && <span>{pathname === '/admin' ? 'Salir del Panel' : 'Admin Panel'}</span>}
+                </span>
+              </div>
+            </div>
           </Link>
         )}
 

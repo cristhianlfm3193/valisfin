@@ -25,7 +25,7 @@ export function Btn3D({
   ...props
 }: Btn3DProps) {
   const sizeClass = size === 'xs' ? 'btn3d-xs' : size === 'sm' ? 'btn3d-sm' : size === 'lg' ? 'btn3d-lg' : 'btn3d-md';
-  const widthClass = fullWidth ? 'w-full text-center flex justify-center' : '';
+  const widthClass = fullWidth ? 'w-full flex justify-center' : 'inline-flex';
 
   return (
     <button
@@ -33,9 +33,9 @@ export function Btn3D({
       disabled={disabled || isLoading}
       className={`btn3d btn3d-${color} ${sizeClass} ${widthClass} ${disabled || isLoading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''} ${className || ''}`}
     >
-      <div className="btn3d-outer w-full">
-        <div className="btn3d-inner w-full">
-          <span className="btn3d-label justify-center">
+      <div className="btn3d-outer w-full flex items-center justify-center">
+        <div className="btn3d-inner w-full flex items-center justify-center">
+          <span className="btn3d-label w-full flex items-center justify-center text-center">
             {isLoading ? (
               <>
                 <span className="w-3.5 h-3.5 rounded-full border-2 border-white/60 border-t-white animate-spin inline-block mr-1.5" />
@@ -48,4 +48,5 @@ export function Btn3D({
     </button>
   );
 }
+
 

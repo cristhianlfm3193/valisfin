@@ -12,6 +12,7 @@ import ModalRegistrar from './ModalRegistrar';
 import ModalReporte from './ModalReporte';
 import AccionesRapidasIA from './AccionesRapidasIA';
 import LoadingOverlay from './LoadingOverlay';
+import { Btn3D } from '@/app/components/Btn3D';
 import type { ResumenMensualVendedor, MetaSupervisor } from '@/types/valisbiz';
 
 const MESES = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -145,21 +146,23 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
             {/* Right: Buttons */}
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* Generar Reporte */}
-              <button
+              <Btn3D
+                color="gray"
+                size="sm"
                 onClick={() => setShowReporte(true)}
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold shadow-md transition-all whitespace-nowrap"
               >
                 <FileDown className="w-4 h-4" />
                 <span className="hidden sm:inline">Reporte</span>
-              </button>
+              </Btn3D>
               {/* Registrar */}
-              <button
+              <Btn3D
+                color="pink"
+                size="sm"
                 onClick={() => setShowModal(true)}
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-full bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold shadow-md transition-all whitespace-nowrap"
               >
                 <Plus className="w-4 h-4" />
                 <span>Registrar</span>
-              </button>
+              </Btn3D>
             </div>
 
           </div>
