@@ -72,6 +72,10 @@
     box-sizing: border-box;
     text-decoration: none !important;
   }
+  .btn3d.w-full {
+    display: flex !important;
+    width: 100% !important;
+  }
   .btn3d::after {
     display: none !important;
   }

@@ -117,17 +117,17 @@ export function MobileNavigation({ user, profile }: { user?: User, profile?: any
                 })}
               </div>
 
-              <div className="space-y-4 pt-5 border-t border-slate-100">
+              <div className="flex flex-col gap-3.5 w-full pt-5 border-t border-slate-100">
                 <Link
                   href="/valisbiz"
                   onClick={() => setIsMenuOpen(false)}
-                  className="btn3d btn3d-pink btn3d-md w-full block"
+                  className="btn3d btn3d-pink btn3d-lg w-full flex justify-center"
                 >
-                  <div className="btn3d-outer w-full">
-                    <div className="btn3d-inner w-full">
-                      <span className="btn3d-label justify-center">
+                  <div className="btn3d-outer w-full flex justify-center">
+                    <div className="btn3d-inner w-full flex justify-center py-3">
+                      <span className="btn3d-label justify-center text-sm font-bold gap-2">
                         <Heart className="w-4 h-4 text-pink-100 fill-pink-100" />
-                        ValisBiz Supervisión
+                        <span>ValisBiz Supervisión</span>
                       </span>
                     </div>
                   </div>
@@ -137,13 +137,13 @@ export function MobileNavigation({ user, profile }: { user?: User, profile?: any
                   <Link
                     href={pathname === '/admin' ? '/' : '/admin'}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md w-full block`}
+                    className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-lg w-full flex justify-center`}
                   >
-                    <div className="btn3d-outer w-full">
-                      <div className="btn3d-inner w-full">
-                        <span className="btn3d-label justify-center">
+                    <div className="btn3d-outer w-full flex justify-center">
+                      <div className="btn3d-inner w-full flex justify-center py-3">
+                        <span className="btn3d-label justify-center text-sm font-bold gap-2">
                           <Shield className="w-4 h-4 text-amber-500" />
-                          {pathname === '/admin' ? 'Salir del Panel Admin' : 'Panel de Administrador'}
+                          <span>{pathname === '/admin' ? 'Salir del Panel Admin' : 'Panel de Administrador'}</span>
                         </span>
                       </div>
                     </div>

@@ -175,7 +175,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
             }`}
           >
             <Sparkles className="w-4 h-4 text-pink-500" />
-            Septiembre 2026 (Reemplazo)
+            Vendedores Activos y Ausentes
           </button>
           <button
             onClick={() => setTab('crud')}
@@ -204,34 +204,14 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
         {/* Modal Body Scrollable */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
 
-          {/* ── TAB 1: SEPTIEMBRE 2026 (REEMPLAZO RÁPIDO) ── */}
+          {/* ── TAB 1: VENDEDORES ACTIVOS Y AUSENTES ── */}
           {tab === 'septiembre' && (
             <div className="space-y-6">
               
-              {/* Banner Informativo */}
-              <div className="p-4 bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-2xl flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-pink-600 shrink-0 mt-0.5" />
-                <div className="text-xs text-pink-900 leading-relaxed">
-                  <strong className="block text-sm font-bold text-pink-950 mb-1">Requerimiento Especial Septiembre 2026</strong>
-                  Carolina Sucre cubre las vacaciones de Joseph Domínguez y asume sus metas de venta (B/. 20,000.00 en la ruta Chorrera). Las ventas de agosto quedan guardadas a nombre de Joseph y las de septiembre a nombre de Carolina.
-                </div>
-              </div>
-
-              {/* Botón de configuración automática de Septiembre */}
-              <div className="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="font-bold text-sm text-pink-400">Asignación Rápida de Reemplazo</h4>
-                  <p className="text-xs text-slate-300 mt-0.5">Asignar automáticamente a Carolina Sucre las metas de Joseph Domínguez (B/. 20,000.00).</p>
-                </div>
-                <Btn3D color="pink" onClick={handleSetupSeptiembre} isLoading={isPending} loadingText="Aplicando...">
-                  Aplicar Reemplazo Septiembre
-                </Btn3D>
-              </div>
-
               {/* Vendedores Activos este Mes */}
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Vendedores Activos en Ruta (Septiembre 2026)
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Vendedores Activos en Ruta
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {vendedores.filter(v => v.estado === 'activo').map(v => (
@@ -308,7 +288,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                       type="text" 
                       value={rutaAsignada} 
                       onChange={e => setRutaAsignada(e.target.value)} 
-                      placeholder="Ej: CHPM1 - Chorrera" 
+                      placeholder="Ej: Panamá Oeste" 
                       className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
                     />
                   </div>
