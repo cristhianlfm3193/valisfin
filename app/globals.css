@@ -107,6 +107,9 @@
     will-change: box-shadow, clip-path, background-image, transform;
     overflow: clip;
     clip-path: inset(0 0 0 0 round 100em);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow:
       0 0 0 0 inset rgba(5,5,5,0.1),
       -0.05em -0.05em 0.05em 0 inset rgba(5,5,5,0.25),

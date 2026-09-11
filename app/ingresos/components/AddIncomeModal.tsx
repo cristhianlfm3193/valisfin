@@ -266,16 +266,11 @@ export function AddIncomeModal({
 
             {/* Modal Footer CTA */}
             <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
-              <button 
-                type="button" 
-                onClick={handleClose}
-                disabled={isLoading}
-                className="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors disabled:opacity-50"
-              >
+              <Btn3D type="button" color="gray" onClick={handleClose} disabled={isLoading}>
                 Cancelar
-              </button>
+              </Btn3D>
               <Btn3D type="submit" color="emerald" isLoading={isLoading} loadingText="Guardando..." disabled={isLoading}>
-                <Check className="w-4 h-4" /> Guardar Ingreso
+                Guardar
               </Btn3D>
             </div>
           </form>

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useActionState } from 'react';
 import { addPendingMaintenance } from '../../actions/vehicles';
+import { Btn3D } from '@/app/components/Btn3D';
 
 const SUGGESTIONS = [
   "Cambio de Llantas (Desgaste)",
@@ -168,20 +169,9 @@ export default function AddPendingModal({
             </div>
 
             <div className="pt-2">
-              <button 
-                type="submit" 
-                disabled={isPending || !service}
-                className="w-full py-3.5 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-300 text-white rounded-xl font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
-              >
-                {isPending ? (
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined text-[18px]">save</span>
-                    Guardar Tarea Pendiente
-                  </>
-                )}
-              </button>
+              <Btn3D type="submit" color="blue" isLoading={isPending} loadingText="Guardando..." disabled={isPending || !service}>
+                Guardar Tarea Pendiente
+              </Btn3D>
             </div>
             
           </form>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { addMaintenanceLog } from '@/app/actions/vehicles';
+import { Btn3D } from '@/app/components/Btn3D';
 
 export default function AddMaintenanceModal({ 
   isOpen, 
@@ -188,9 +189,9 @@ export default function AddMaintenanceModal({
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
             <button type="button" onClick={onClose} className="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">Cancelar</button>
-            <button type="submit" disabled={loading} className="px-5 py-2 rounded-full text-xs font-bold bg-[#006655] hover:bg-[#005144] text-white shadow-md shadow-emerald-900/10 transition-all disabled:opacity-50">
-              {loading ? 'Guardando...' : 'Guardar Servicio'}
-            </button>
+            <Btn3D type="submit" color="blue" isLoading={loading} loadingText="Guardando..." disabled={loading}>
+              Guardar Servicio
+            </Btn3D>
           </div>
         </form>
       </div>

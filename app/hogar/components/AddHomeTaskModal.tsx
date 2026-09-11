@@ -3,6 +3,7 @@
 import { useState, useActionState, useEffect } from 'react';
 import { PlusCircle, X, CheckCircle2 } from 'lucide-react';
 import { addHomeTask } from '@/app/actions/home';
+import { Btn3D } from '@/app/components/Btn3D';
 
 export default function AddHomeTaskModal({
   isOpen: externalIsOpen,
@@ -159,20 +160,9 @@ export default function AddHomeTaskModal({
             >
               Cancelar
             </button>
-            <button 
-              type="submit"
-              disabled={isPending}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#09574a] hover:bg-[#064238] text-white text-xs font-bold shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 min-h-[40px] disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {isPending ? (
-                'Guardando...'
-              ) : (
-                <>
-                  <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
-                  Guardar Trabajo
-                </>
-              )}
-            </button>
+            <Btn3D type="submit" color="teal" isLoading={isPending} loadingText="Guardando..." disabled={isPending}>
+              <CheckCircle2 className="w-4 h-4" /> Guardar Trabajo
+            </Btn3D>
           </div>
         </form>
       </div>

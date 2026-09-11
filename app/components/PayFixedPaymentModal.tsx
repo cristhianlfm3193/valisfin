@@ -3,6 +3,7 @@
 import { useState, useTransition, useMemo, useEffect } from 'react';
 import { X, Calendar, DollarSign, Wallet } from 'lucide-react';
 import { togglePaymentStatus, partialPayment as partialPaymentAction } from '@/app/actions/fixed_payments';
+import { Btn3D } from '@/app/components/Btn3D';
 
 interface PayFixedPaymentModalProps {
   isOpen: boolean;
@@ -236,18 +237,9 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
             >
               Cancelar
             </button>
-            <button
-              type="submit"
-              disabled={isPending || !selectedPaymentId}
-              className="px-6 py-2.5 rounded-xl bg-violet-700 hover:bg-violet-800 text-white font-bold text-sm shadow-md shadow-violet-700/20 hover:shadow-violet-700/30 flex items-center gap-2 transition-all disabled:opacity-50"
-            >
-              {isPending ? (
-                <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-              ) : (
-                <Wallet className="w-4 h-4" />
-              )}
-              {isPending ? 'Guardando...' : (paymentMode === 'total' ? 'Registrar Pago Total' : 'Registrar Abono')}
-            </button>
+            <Btn3D type="submit" color="violet" isLoading={isPending} loadingText="Guardando..." disabled={isPending || !selectedPaymentId}>
+              <Wallet className="w-4 h-4" /> {paymentMode === 'total' ? 'Registrar Pago Total' : 'Registrar Abono'}
+            </Btn3D>
           </div>
         </form>
       </div>

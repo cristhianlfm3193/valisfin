@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Receipt, Save } from 'lucide-react';
+import { Btn3D } from '@/app/components/Btn3D';
 import { addDailyExpense } from '@/app/actions/daily_expenses';
 
 interface AddDailyExpenseModalProps {
@@ -229,26 +230,12 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
 
           {/* Footer */}
           <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 shrink-0">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
-            >
+            <Btn3D type="button" color="gray" onClick={onClose} disabled={isLoading}>
               Cancelar
-            </button>
-            <button
-              type="submit"
-              form="add-daily-expense-form"
-              disabled={isLoading}
-              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-70"
-            >
-              {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Save className="w-5 h-5" />
-              )}
-              <span>Guardar</span>
-            </button>
+            </Btn3D>
+            <Btn3D type="submit" form="add-daily-expense-form" color="rose" isLoading={isLoading} loadingText="Guardando..." disabled={isLoading}>
+              Guardar
+            </Btn3D>
           </div>
         </div>
       </div>
