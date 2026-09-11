@@ -202,6 +202,45 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
     return Array.from(dataMap.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
   }, [filteredFacturado, vendedoresDisponibles, selectedVendedor, tipoVenta, timeFilter]);
 
+  // --- Datos para Gráfico de Área (Tendencia de Visitas) ---
+  const areaChartVisitasData = useMemo(() => {
+    const dataMap = new Map<string, any>();
+
+    filteredVendido.forEach(r => {
+      const v = r.vendedor_nombre.split(' ')[0];
+      if (selectedVendedor !== 'Todos' && v !== selectedVendedor) return;
+
+      let key = '';
+      let displayDate = '';
+      
+      const dateObj = new Date(`${r.fecha}T12:00:00Z`);
+
+      if (timeFilter === 'Año') {
+        key = r.fecha.substring(0, 7); // YYYY-MM
+        const monthName = new Intl.DateTimeFormat('es-ES', { month: 'short' }).format(dateObj);
+        displayDate = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+      } else if (timeFilter === 'Mes') {
+        const week = Math.ceil(dateObj.getUTCDate() / 7);
+        key = `${r.fecha.substring(0, 7)}-W${week}`;
+        displayDate = `Sem ${week}`;
+      } else {
+        key = r.fecha;
+        const dayName = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(dateObj);
+        const dayNum = String(dateObj.getUTCDate()).padStart(2, '0');
+        displayDate = `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dayNum}`;
+      }
+
+      if (!dataMap.has(key)) {
+        dataMap.set(key, { date: displayDate, sortKey: key, conCompra: 0, sinCompra: 0 });
+      }
+
+      dataMap.get(key).conCompra += r.con_compra;
+      dataMap.get(key).sinCompra += r.sin_compra;
+    });
+
+    return Array.from(dataMap.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  }, [filteredVendido, selectedVendedor, timeFilter]);
+
   // --- Datos para Donuts ---
   const donutContadoCredito = useMemo(() => {
     const totalC = filteredFacturado.reduce((sum, r) => sum + r.contado, 0);
@@ -407,6 +446,55 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               </ResponsiveContainer>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Tendencia de Visitas (Area Chart) */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+        <h3 className="text-sm font-bold text-slate-800 mb-6">Tendencia de Visitas (Trabajo de Campo)</h3>
+        <div className="w-full h-[280px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={areaChartVisitasData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorConCompra" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={PIE_COLORS_VISITAS[0]} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={PIE_COLORS_VISITAS[0]} stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorSinCompra" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={PIE_COLORS_VISITAS[1]} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={PIE_COLORS_VISITAS[1]} stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <XAxis dataKey="date" tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
+              <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+              <RechartsTooltip 
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                formatter={(value: any) => [Number(value), 'Visitas']}
+              />
+              <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+              <Area 
+                type="monotone" 
+                name="Visitas Con Compra"
+                dataKey="conCompra" 
+                stroke={PIE_COLORS_VISITAS[0]} 
+                fillOpacity={1} 
+                fill="url(#colorConCompra)" 
+                strokeWidth={3}
+                activeDot={{ r: 6, strokeWidth: 0 }}
+              />
+              <Area 
+                type="monotone" 
+                name="Visitas Sin Compra"
+                dataKey="sinCompra" 
+                stroke={PIE_COLORS_VISITAS[1]} 
+                fillOpacity={1} 
+                fill="url(#colorSinCompra)" 
+                strokeWidth={3}
+                activeDot={{ r: 6, strokeWidth: 0 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

@@ -95,8 +95,8 @@ export default function MapaLocalesClient({ locales }: MapaLocalesClientProps) {
             >
               <ChangeView center={center} zoom={activeLocal ? 15 : 12} />
               <TileLayer
-                attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
-                url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {filteredLocales.map((local) => (
                 <Marker 
