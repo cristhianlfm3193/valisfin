@@ -3,19 +3,23 @@
 import { useState } from 'react';
 import { SettingsModal } from './components/SettingsModal';
 import { UsersModal } from './components/UsersModal';
+import { ValisBizSettingsModal } from './components/ValisBizSettingsModal';
 import { AuditLogTable } from './components/AuditLogTable';
-import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server } from 'lucide-react';
+import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { Btn3D } from '@/app/components/Btn3D';
 
 interface AdminClientProps {
   initialSettings: any;
   initialUsers: any[];
   initialLogs: any[];
+  vendedores?: any[];
 }
 
-export default function AdminClient({ initialSettings, initialUsers, initialLogs }: AdminClientProps) {
+export default function AdminClient({ initialSettings, initialUsers, initialLogs, vendedores = [] }: AdminClientProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = useState(false);
+  const [isValisBizOpen, setIsValisBizOpen] = useState(false);
 
   const loginImageUrl = initialSettings?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ";
 
@@ -36,6 +40,13 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
         onSaved={() => window.location.reload()} 
       />
 
+      <ValisBizSettingsModal
+        isOpen={isValisBizOpen}
+        onClose={() => setIsValisBizOpen(false)}
+        vendedores={vendedores}
+        onSaved={() => window.location.reload()}
+      />
+
       <div className="max-w-6xl mx-auto space-y-6 lg:space-y-8">
         
         {/* Header */}
@@ -50,13 +61,22 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
             <p className="text-sm text-slate-500">Gestión centralizada y auditoría de ValisFin.</p>
           </div>
           
-          <Link 
-            href="/"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>Volver al Dashboard</span>
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <Btn3D color="pink" onClick={() => setIsValisBizOpen(true)}>
+              <span className="flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4" />
+                <span>Configuración ValisBiz</span>
+              </span>
+            </Btn3D>
+
+            <Link 
+              href="/"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Volver al Dashboard</span>
+            </Link>
+          </div>
         </header>
 
         {/* Stats Row */}

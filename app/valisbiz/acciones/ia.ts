@@ -27,6 +27,7 @@ const VENDEDORES_CONOCIDOS = [
   { nombre: 'Andrés Chávez', aliases: ['andres', 'andrés', 'chavez', 'chávez'] },
   { nombre: 'Joseph Domínguez', aliases: ['joseph', 'josep', 'dominguez', 'domínguez'] },
   { nombre: 'Enrique del Rosario', aliases: ['enrique', 'del rosario', 'rosario'] },
+  { nombre: 'Carolina Sucre', aliases: ['carolina', 'sucre', 'caro'] },
 ];
 
 function num(s: string | undefined): number {

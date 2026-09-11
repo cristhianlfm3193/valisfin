@@ -115,10 +115,10 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
         <Link
           href="/valisbiz"
           title={isCollapsed ? "ValisBiz" : undefined}
-          className="btn3d btn3d-pink btn3d-md mx-2 block"
+          className="btn3d btn3d-pink btn3d-md w-full flex justify-center"
         >
-          <div className="btn3d-outer">
-            <div className="btn3d-inner">
+          <div className="btn3d-outer w-full">
+            <div className="btn3d-inner w-full">
               <span className="btn3d-label justify-center">
                 <Heart className="shrink-0 w-4 h-4 text-pink-100 fill-pink-100" />
                 {!isCollapsed && <span>ValisBiz</span>}
@@ -131,10 +131,10 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
           <Link
             href={pathname === '/admin' ? '/' : '/admin'}
             title={isCollapsed ? (pathname === '/admin' ? "Volver al Inicio" : "Panel de Administrador") : undefined}
-            className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md mx-2 block`}
+            className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md w-full flex justify-center`}
           >
-            <div className="btn3d-outer">
-              <div className="btn3d-inner">
+            <div className="btn3d-outer w-full">
+              <div className="btn3d-inner w-full">
                 <span className="btn3d-label justify-center">
                   {pathname === '/admin' ? (
                     <Home className="shrink-0 w-4 h-4 text-emerald-100" />
