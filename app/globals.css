@@ -68,6 +68,7 @@
     box-shadow:
       -0.15em -0.15em 0.15em -0.075em rgba(5,5,5,0.25),
        0.0375em 0.0375em 0.0675em 0 rgba(5,5,5,0.1);
+    display: inline-block;
   }
   .btn3d::after {
     content: "";
@@ -101,7 +102,7 @@
     position: relative;
     z-index: 1;
     border-radius: inherit;
-    padding: 0.75em 1.75em;
+    padding: 0.7em 1.5em;
     background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(180,180,180,1));
     transition: box-shadow 300ms ease, clip-path 250ms ease, background-image 250ms ease, transform 250ms ease;
     will-change: box-shadow, clip-path, background-image, transform;
@@ -119,6 +120,25 @@
       0.12em 0.12em 0.12em inset rgba(255,255,255,0.25),
       -0.075em -0.25em 0.25em 0.1em inset rgba(5,5,5,0.25);
   }
+
+  /* Size variants */
+  .btn3d-xs .btn3d-inner {
+    padding: 0.35em 0.85em;
+    font-size: 0.725rem;
+  }
+  .btn3d-sm .btn3d-inner {
+    padding: 0.45em 1.15em;
+    font-size: 0.8rem;
+  }
+  .btn3d-md .btn3d-inner {
+    padding: 0.65em 1.5em;
+    font-size: 0.875rem;
+  }
+  .btn3d-lg .btn3d-inner {
+    padding: 0.85em 2em;
+    font-size: 1rem;
+  }
+
   /* Color variants */
   .btn3d-emerald .btn3d-inner {
     background-image: linear-gradient(135deg, #34d399, #059669);
@@ -138,11 +158,20 @@
   .btn3d-violet .btn3d-inner {
     background-image: linear-gradient(135deg, #a78bfa, #7c3aed);
   }
+  .btn3d-orange .btn3d-inner {
+    background-image: linear-gradient(135deg, #fb923c, #ea580c);
+  }
+  .btn3d-amber .btn3d-inner {
+    background-image: linear-gradient(135deg, #fcd34d, #d97706);
+  }
+  .btn3d-sky .btn3d-inner {
+    background-image: linear-gradient(135deg, #38bdf8, #0284c7);
+  }
   .btn3d-gray .btn3d-inner {
-    background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(170,170,170,1));
+    background-image: linear-gradient(135deg, rgba(235,238,241,1), rgba(195,200,207,1));
   }
   .btn3d-gray .btn3d-label {
-    background-image: linear-gradient(135deg, rgba(30,30,30,1), rgba(80,80,80,1));
+    background-image: linear-gradient(135deg, rgba(30,35,45,1), rgba(80,85,95,1)) !important;
   }
   .btn3d:hover .btn3d-inner {
     clip-path: inset(clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) round 100em);
@@ -159,11 +188,11 @@
   .btn3d-label {
     position: relative;
     z-index: 4;
-    font-family: "Inter", sans-serif;
-    letter-spacing: -0.03em;
-    font-weight: 600;
+    font-family: var(--font-sans), "Inter", sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
     color: rgba(0,0,0,0);
-    background-image: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.7));
+    background-image: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.85));
     -webkit-background-clip: text;
     background-clip: text;
     transition: transform 250ms ease;
@@ -175,8 +204,5 @@
     user-select: none;
     white-space: nowrap;
   }
-  /* Colores text para variante gris (sin color) */
-  .btn3d:not(.btn3d-emerald):not(.btn3d-rose):not(.btn3d-blue):not(.btn3d-pink):not(.btn3d-teal) .btn3d-label {
-    background-image: linear-gradient(135deg, rgba(25,25,25,1), rgba(75,75,75,1));
-  }
   .btn3d:hover .btn3d-label { transform: scale(0.975); }
+

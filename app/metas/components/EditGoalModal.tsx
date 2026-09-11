@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { updateSavingsGoal } from '@/app/actions/goals';
+import { Btn3D } from '@/app/components/Btn3D';
 
 export default function EditGoalModal({
   isOpen,
@@ -161,12 +162,12 @@ export default function EditGoalModal({
           </div>
 
           <div className="pt-6 border-t border-slate-100 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
-            <button onClick={onClose} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors text-center" type="button">
+            <Btn3D onClick={onClose} color="gray" type="button">
               Cancelar
-            </button>
-            <button disabled={loading} className="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50" type="submit">
-              {loading ? 'Guardando...' : 'Actualizar Meta'}
-            </button>
+            </Btn3D>
+            <Btn3D disabled={loading} isLoading={loading} loadingText="Guardando..." color="emerald" type="submit">
+              Actualizar Meta
+            </Btn3D>
           </div>
         </form>
       </section>

@@ -39,13 +39,10 @@ export function AddIncomeModal({
 
   if (!isOpen && externalIsOpen === undefined) {
     return (
-      <button 
-        onClick={() => setInternalIsOpen(true)}
-        className="inline-flex items-center gap-2 bg-emerald-700 text-white hover:bg-emerald-800 px-4 py-2 rounded-full text-sm font-semibold shadow-sm transition hover:shadow-md active:scale-95"
-      >
+      <Btn3D color="emerald" onClick={() => setInternalIsOpen(true)}>
         <PlusCircle className="w-4 h-4" />
         <span>Ingreso eventual</span>
-      </button>
+      </Btn3D>
     );
   }
 

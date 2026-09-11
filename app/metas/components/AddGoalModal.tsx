@@ -44,16 +44,16 @@ export default function AddGoalModal({
   return (
     <>
       {!isOpen && externalIsOpen === undefined && (
-        <button 
+        <Btn3D 
           onClick={() => setInternalIsOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition-all hover:scale-[1.01] active:scale-[0.98] shrink-0" 
+          color="emerald"
           type="button"
         >
           <svg className="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path d="M12 4.5v15m7.5-7.5h-15" strokeLinecap="round" strokeLinejoin="round"></path>
           </svg>
           <span>Nueva Meta</span>
-        </button>
+        </Btn3D>
       )}
 
       {isOpen && (

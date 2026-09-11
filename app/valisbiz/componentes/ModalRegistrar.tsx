@@ -3,6 +3,7 @@
 import { useState, useTransition, useEffect } from 'react';
 import { X, Building2, FileText, Eye, ShoppingCart, XCircle, CreditCard, Banknote, Calculator } from 'lucide-react';
 import { registrarFacturado, registrarVenta } from '../acciones/dashboard';
+import { Btn3D } from '@/app/components/Btn3D';
 
 interface Vendedor {
   id: string;
@@ -349,21 +350,24 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
             {success && <p className="text-sm text-emerald-600 bg-emerald-50 rounded-xl px-3 py-2">{success}</p>}
 
             {/* Actions */}
-            <div className="flex gap-3 pt-1 pb-1">
-              <button
+            <div className="flex gap-3 pt-2 pb-1">
+              <Btn3D
                 type="button"
+                color="gray"
                 onClick={onClose}
-                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                fullWidth
               >
                 Cancelar
-              </button>
-              <button
+              </Btn3D>
+              <Btn3D
                 type="submit"
-                disabled={isPending}
-                className={`flex-1 py-2.5 rounded-xl text-white text-sm font-bold shadow-md transition-all disabled:opacity-60 ${tab === 'facturado' ? 'bg-pink-500 hover:bg-pink-600' : 'bg-blue-500 hover:bg-blue-600'}`}
+                color={tab === 'facturado' ? 'pink' : 'blue'}
+                isLoading={isPending}
+                loadingText="Guardando..."
+                fullWidth
               >
-                {isPending ? 'Guardando...' : 'Guardar Registro'}
-              </button>
+                Guardar Registro
+              </Btn3D>
             </div>
           </form>
         </div>

@@ -5,6 +5,7 @@ import { CheckCircle2, Check, Clock, CalendarDays, CalendarCheck, ChevronDown, C
 import { toggleIncomeStatus } from '@/app/actions/income';
 
 import { EditIncomeModal } from './EditIncomeModal';
+import { Btn3D } from '@/app/components/Btn3D';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -116,29 +117,26 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
           <div className="flex items-center gap-2">
             <EditIncomeModal item={item} />
             {isReceived ? (
-              <button 
+              <Btn3D
+                color="gray"
+                size="sm"
                 onClick={() => toggleConfirm(item.id, isReceived)}
                 title="Deshacer confirmación"
-                className="group relative px-3 sm:px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200/60 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5 border border-emerald-200/60 shrink-0 overflow-hidden w-auto sm:w-[125px] justify-center"
               >
-                <div className="flex items-center gap-1.5 group-hover:hidden">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Confirmado</span>
-                </div>
-                <div className="hidden items-center gap-1.5 group-hover:flex">
-                  <Undo2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Deshacer</span>
-                </div>
-              </button>
+                <Undo2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Deshacer</span>
+                <span className="sm:hidden">Deshacer</span>
+              </Btn3D>
             ) : (
-              <button 
+              <Btn3D
+                color="emerald"
+                size="sm"
                 onClick={() => toggleConfirm(item.id, isReceived)}
-                className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 font-semibold text-xs sm:text-sm shadow-sm transition hover:scale-105 active:scale-95 flex items-center gap-1.5 shrink-0"
               >
-                <Check className="w-4 h-4" />
+                <Check className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Confirmar recibido</span>
                 <span className="sm:hidden">Confirmar</span>
-              </button>
+              </Btn3D>
             )}
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useTransition, Fragment } from 'react';
 import { Search, ChevronLeft, ChevronRight, Building2, FileText, Pencil, Trash2, X, Loader2, AlertTriangle, Eye, ShoppingCart, XCircle, Banknote, CreditCard, Calculator } from 'lucide-react';
+import { Btn3D } from '@/app/components/Btn3D';
 import { useRouter } from 'next/navigation';
 import {
   editarFacturado, borrarFacturado,
@@ -55,21 +56,25 @@ function ModalConfirmarBorrado({
           </div>
         </div>
         <div className="flex gap-3">
-          <button
+          <Btn3D
             onClick={onCancel}
             disabled={isPending}
-            className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
+            color="gray"
+            fullWidth
           >
             Cancelar
-          </button>
-          <button
+          </Btn3D>
+          <Btn3D
             onClick={onConfirm}
             disabled={isPending}
-            className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            isLoading={isPending}
+            loadingText="Borrando..."
+            color="rose"
+            fullWidth
           >
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            <Trash2 className="w-4 h-4" />
             Borrar
-          </button>
+          </Btn3D>
         </div>
       </div>
     </div>

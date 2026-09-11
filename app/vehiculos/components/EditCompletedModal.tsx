@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useActionState, useState } from 'react';
+import { Btn3D } from '@/app/components/Btn3D';
 import { updateCompletedMaintenance } from '../../actions/vehicles';
 
 export default function EditCompletedModal({ 
@@ -128,21 +129,25 @@ export default function EditCompletedModal({
               />
             </div>
 
-            <div className="pt-2">
-              <button 
-                type="submit" 
-                disabled={isPending || !service}
-                className="w-full py-3.5 px-4 bg-[#006655] hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-xl font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
+            <div className="pt-2 flex items-center justify-end gap-3">
+              <Btn3D
+                type="button"
+                color="gray"
+                onClick={onClose}
+                disabled={isPending}
               >
-                {isPending ? (
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined text-[18px]">save</span>
-                    Guardar Cambios
-                  </>
-                )}
-              </button>
+                Cancelar
+              </Btn3D>
+              <Btn3D 
+                type="submit" 
+                color="emerald"
+                isLoading={isPending}
+                loadingText="Guardando..."
+                disabled={isPending || !service}
+              >
+                <span className="material-symbols-outlined text-[18px]">save</span>
+                Guardar Cambios
+              </Btn3D>
             </div>
           </form>
         </div>

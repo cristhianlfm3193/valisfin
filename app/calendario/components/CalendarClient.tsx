@@ -6,6 +6,7 @@ import { CalendarEvent } from '@/app/actions/calendario';
 import { AddReminderModal } from './AddReminderModal';
 import { EventDetailsModal } from './EventDetailsModal';
 import { DayEventsListModal } from './DayEventsListModal';
+import { Btn3D } from '@/app/components/Btn3D';
 import { 
   ChevronLeft, ChevronRight, Plus, Download, RefreshCw, Calendar as CalendarIcon
 } from 'lucide-react';
@@ -149,13 +150,13 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
           </div>
           
           <div className="flex flex-wrap items-center gap-2.5">
-            <button 
+            <Btn3D 
+              color="emerald"
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl shadow-sm shadow-brand-600/30 transition"
             >
               <Plus className="w-4 h-4" />
               <span>Nuevo Recordatorio / Compromiso</span>
-            </button>
+            </Btn3D>
           </div>
         </div>
 

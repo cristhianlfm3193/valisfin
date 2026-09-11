@@ -45,13 +45,13 @@ export default function AddHomeTaskModal({
 
   if (!isOpen && externalIsOpen === undefined) {
     return (
-      <button 
+      <Btn3D 
         onClick={() => setInternalIsOpen(true)}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#09574a] hover:bg-[#064238] text-white shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 min-h-[44px]"
+        color="emerald"
       >
         <PlusCircle className="w-4 h-4" />
-        Registrar Trabajo
-      </button>
+        <span>Registrar Trabajo</span>
+      </Btn3D>
     );
   }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Check, Edit2, Eye } from 'lucide-react';
+import { Btn3D } from '@/app/components/Btn3D';
 
 export interface FixedPayment {
   id: string;
@@ -163,14 +164,15 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
         </div>
         <div className="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between gap-2">
           <span className="text-xs text-emerald-700 font-medium">{subtitle}</span>
-          <button
+          <Btn3D
+            color="gray"
+            size="sm"
             onClick={handleToggle}
-            className="pay-toggle-btn min-h-[44px] px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium tracking-wide transition-all shadow-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-slate-300 focus:outline-none"
             type="button"
           >
             <Check className="w-4 h-4 text-emerald-600" strokeWidth={2.5} />
-            <span className="btn-text text-emerald-800 font-semibold">Pagado (Deshacer)</span>
-          </button>
+            <span>Pagado (Deshacer)</span>
+          </Btn3D>
         </div>
       </article>
     );
@@ -211,21 +213,25 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
         <span className="text-xs text-slate-600 font-medium">{subtitle}</span>
         <div className="flex items-center gap-2">
           {onPartialPayment && amount > 0 && (
-            <button
+            <Btn3D
+              color="gray"
+              size="sm"
+              className="flex-1"
               onClick={(e) => { e.stopPropagation(); onPartialPayment(); }}
-              className="pay-toggle-btn min-h-[44px] flex-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold tracking-wide transition-all flex items-center justify-center focus:ring-2 focus:ring-slate-300 focus:outline-none"
               type="button"
             >
               <span>Abonar</span>
-            </button>
+            </Btn3D>
           )}
-          <button
+          <Btn3D
+            color="emerald"
+            size="sm"
+            className="flex-[2]"
             onClick={handleToggle}
-            className="pay-toggle-btn min-h-[44px] flex-[2] px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm flex items-center justify-center gap-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
             type="button"
           >
-            <span className="btn-text">Pagar Total</span>
-          </button>
+            <span>Pagar Total</span>
+          </Btn3D>
         </div>
       </div>
     </article>
