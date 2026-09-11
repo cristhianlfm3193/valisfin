@@ -61,6 +61,17 @@ export interface Facturado {
   created_at: string;
 }
 
+export interface VisitaMensual {
+  id: string;
+  local_id: string;
+  vendedor_id: string;
+  fecha: string;
+  estado_visita: 'con_compra' | 'sin_compra';
+  created_at: string;
+  local?: Local;
+  vendedor?: Vendedor;
+}
+
 export interface MetaSupervisor {
   cuota_global: number;
   venta_global_acumulada: number;

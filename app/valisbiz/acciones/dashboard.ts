@@ -16,6 +16,7 @@ export async function getDashboardData(mes?: number, anio?: number) {
     { data: tareas },
     { data: facturado },
     { data: registrosVentas },
+    { data: visitas },
   ] = await Promise.all([
     supabase
       .from('vendedores')
@@ -24,7 +25,8 @@ export async function getDashboardData(mes?: number, anio?: number) {
 
     supabase
       .from('locales')
-      .select('*'),
+      .select('*')
+      .order('nombre_local', { ascending: true }),
 
     supabase
       .from('tareas')
@@ -44,6 +46,14 @@ export async function getDashboardData(mes?: number, anio?: number) {
       .eq('mes_periodo', targetMes)
       .eq('anio_periodo', targetAnio)
       .order('fecha_registro', { ascending: false }),
+
+    supabase
+      .from('visitas_mensuales')
+      .select('*, vendedor:vendedores(nombre), local:locales(nombre_local, cadena)')
+      .gte('fecha', `${targetAnio}-${String(targetMes).padStart(2, '0')}-01`)
+      .lt('fecha', targetMes === 12 
+          ? `${targetAnio + 1}-01-01` 
+          : `${targetAnio}-${String(targetMes + 1).padStart(2, '0')}-01`)
   ]);
 
 
@@ -115,6 +125,7 @@ export async function getDashboardData(mes?: number, anio?: number) {
       contado: Number(r.contado ?? 0),
       credito: Number(r.credito ?? 0),
     })),
+    visitas: (visitas as any[]) || [],
   };
 }
 

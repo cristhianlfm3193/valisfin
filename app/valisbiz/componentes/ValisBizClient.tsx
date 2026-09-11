@@ -51,6 +51,7 @@ interface ValisBizClientProps {
     anioPeriodo: number;
     registrosFacturado: RegistroFila[];
     registrosVendido: RegistroVendidoFila[];
+    visitas: any[];
   };
   user: { name: string; initial: string };
 }
@@ -235,7 +236,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
             {[
               { id: 'ventas', label: 'Ventas & Métricas', Icon: TrendingUp },
               { id: 'estadisticas', label: 'Estadísticas', Icon: BarChart2 },
-              { id: 'mapa', label: 'Mapa & Locales BI', Icon: MapPin },
+              { id: 'mapa', label: 'Mapa CRM de Visitas', Icon: MapPin },
             ].map(({ id, label, Icon: TabIcon }) => (
               <button
                 key={id}
@@ -274,7 +275,11 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           />
         )}
         {activeTab === 'mapa' && (
-          <MapaLocales locales={initialData.locales} />
+          <MapaLocales 
+            locales={initialData.locales} 
+            visitas={initialData.visitas || []}
+            vendedores={initialData.vendedores || []}
+          />
         )}
       </div>
 

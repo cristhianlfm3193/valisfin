@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import type { Local } from '@/types/valisbiz';
+import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
 
 const MapaLocalesClient = dynamic(() => import('./MapaLocalesClient'), {
   ssr: false,
@@ -15,8 +15,10 @@ const MapaLocalesClient = dynamic(() => import('./MapaLocalesClient'), {
 
 interface MapaLocalesProps {
   locales: Local[];
+  visitas: VisitaMensual[];
+  vendedores: Vendedor[];
 }
 
-export default function MapaLocales({ locales }: MapaLocalesProps) {
-  return <MapaLocalesClient locales={locales} />;
+export default function MapaLocales({ locales, visitas, vendedores }: MapaLocalesProps) {
+  return <MapaLocalesClient locales={locales} visitas={visitas} vendedores={vendedores} />;
 }
