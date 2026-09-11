@@ -135,6 +135,25 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
     return Object.values(dataByVendedor);
   }, [filteredFacturado, filteredVendido, vendedoresDisponibles, selectedVendedor, tipoVenta]);
 
+  // --- Datos para Gráfico de Visitas (Comparativa) ---
+  const barChartVisitasData = useMemo(() => {
+    const dataByVendedor: Record<string, { name: string; conCompra: number; sinCompra: number }> = {};
+    vendedoresDisponibles.forEach(v => {
+      if (selectedVendedor !== 'Todos' && v !== selectedVendedor) return;
+      dataByVendedor[v] = { name: v, conCompra: 0, sinCompra: 0 };
+    });
+
+    filteredVendido.forEach(r => {
+      const v = r.vendedor_nombre.split(' ')[0];
+      if (dataByVendedor[v]) {
+        dataByVendedor[v].conCompra += r.con_compra;
+        dataByVendedor[v].sinCompra += r.sin_compra;
+      }
+    });
+
+    return Object.values(dataByVendedor);
+  }, [filteredVendido, vendedoresDisponibles, selectedVendedor]);
+
   // --- Datos para Gráfico de Área (Tendencia Diaria/Semanal/Mensual) ---
   const areaChartData = useMemo(() => {
     const dataMap = new Map<string, any>();
@@ -391,26 +410,53 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
         </div>
       </div>
 
-      {/* 4. Gráfico de Barras Agrupadas (Comparativa) */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800 mb-6">Comparativa: Facturado vs Reportado</h3>
-        <div className="w-full h-[320px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barChartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-              <XAxis dataKey="name" tick={{fontSize: 12, fill: '#64748b', fontWeight: 600}} tickLine={false} axisLine={false} />
-              <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-              <RechartsTooltip 
-                cursor={{fill: '#f8fafc'}}
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                formatter={(value: any) => `B/.${fmt(Number(value))}`}
-              />
-              <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
-              <Bar dataKey="facturado" name="Facturado (Finanzas)" fill="#ec4899" radius={[4, 4, 0, 0]} maxBarSize={40} />
-              <Bar dataKey="reportado" name="Reportado (Vendedor)" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
-            </BarChart>
-          </ResponsiveContainer>
+      {/* 4. Gráficos Comparativos por Vendedor */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        {/* Comparativa Facturado vs Reportado */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+          <h3 className="text-sm font-bold text-slate-800 mb-6">Comparativa: Facturado vs Reportado</h3>
+          <div className="w-full h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#64748b', fontWeight: 600}} tickLine={false} axisLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <RechartsTooltip 
+                  cursor={{fill: '#f8fafc'}}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: any) => `B/.${fmt(Number(value))}`}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Bar dataKey="facturado" name="Facturado (Finanzas)" fill="#ec4899" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <Bar dataKey="reportado" name="Reportado (Vendedor)" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
+
+        {/* Desempeño de Visitas */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+          <h3 className="text-sm font-bold text-slate-800 mb-6">Desempeño de Visitas (Trabajo de Campo)</h3>
+          <div className="w-full h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartVisitasData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#64748b', fontWeight: 600}} tickLine={false} axisLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
+                <RechartsTooltip 
+                  cursor={{fill: '#f8fafc'}}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: any) => Number(value)}
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Bar dataKey="conCompra" name="Visitas Con Compra" fill={PIE_COLORS_VISITAS[0]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+                <Bar dataKey="sinCompra" name="Visitas Sin Compra" fill={PIE_COLORS_VISITAS[1]} radius={[4, 4, 0, 0]} maxBarSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
       </div>
 
     </div>
