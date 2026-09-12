@@ -381,6 +381,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <thead>
                   <tr className="bg-[#f2f3ff] text-[#6d7a72] text-xs uppercase tracking-wider">
                     <th className="py-3 px-3 rounded-l-xl min-w-[200px]">Tipo / Local</th>
+                    <th className="py-3 px-3">Vendedor</th>
                     <th className="py-3 px-3">Estado</th>
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px]">Acciones</th>
                   </tr>
@@ -419,6 +420,17 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             <span className="text-xs text-[#6d7a72]">{local.tipo}</span>
                           </div>
                         </td>
+                        <td className="py-3.5 px-3">
+                           {local.vendedor_id ? (
+                             <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-1 rounded-full uppercase flex items-center w-fit gap-1.5">
+                               {vendedores.find(v => v.id === local.vendedor_id)?.nombre.split(' ')[0] || 'Vendedor'}
+                             </span>
+                           ) : (
+                             <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full uppercase flex items-center w-fit gap-1.5">
+                               Sin Asignar
+                             </span>
+                           )}
+                        </td>
                         <td className="py-3.5 px-3 cursor-pointer" onClick={() => toggleLocalSelection(local)}>
                            {resumen ? (
                             <div className="flex flex-col gap-1 items-start">
@@ -433,11 +445,6 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             </div>
                            ) : (
                             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">Pendiente</span>
-                           )}
-                           {local.vendedor_id && (
-                             <span className="text-[9px] text-slate-500 mt-1 uppercase font-semibold">
-                               Encargado: {vendedores.find(v => v.id === local.vendedor_id)?.nombre.split(' ')[0] || 'Vendedor'}
-                             </span>
                            )}
                         </td>
                         <td className="py-3.5 px-3 text-right flex items-center justify-end gap-1">
