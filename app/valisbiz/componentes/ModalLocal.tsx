@@ -28,31 +28,38 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nombre || !tipo || !latitud || !longitud) return;
+
+    const data = {
+      nombre_local: nombre,
+      tipo: tipo,
+      latitud: parseFloat(latitud),
+      longitud: parseFloat(longitud),
+      direccion: direccion || null,
+      foto_url: fotoUrl || null,
+      vendedor_id: vendedorId || null,
+      activo: activo
+    };
+
+    if (onOptimisticUpdate) {
+      onOptimisticUpdate({ 
+        ...data, 
+        id: localAEditar ? localAEditar.id : crypto.randomUUID() 
+      });
+    }
     
+    // Cierra el modal primero para que la UI se sienta instantánea
+    onClose();
+
     startTransition(async () => {
-      const data = {
-        nombre_local: nombre,
-        tipo: tipo,
-        latitud: parseFloat(latitud),
-        longitud: parseFloat(longitud),
-        direccion: direccion || null,
-        foto_url: fotoUrl || null,
-        vendedor_id: vendedorId || null,
-        activo: activo
-      };
-
-      if (onOptimisticUpdate) {
-        onOptimisticUpdate({ 
-          ...data, 
-          id: localAEditar ? localAEditar.id : crypto.randomUUID() 
-        });
-      }
-      onClose();
-
-      if (isEditing && localAEditar) {
-        await editarLocal(localAEditar.id, data);
-      } else {
-        await crearLocal(data);
+      try {
+        if (isEditing && localAEditar) {
+          await editarLocal(localAEditar.id, data);
+        } else {
+          await crearLocal(data);
+        }
+      } catch (error: any) {
+        alert("Error al guardar: " + error.message);
+        console.error(error);
       }
     });
   };
