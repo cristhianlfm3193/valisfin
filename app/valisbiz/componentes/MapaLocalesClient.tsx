@@ -332,8 +332,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Filter and Query Bar */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full lg:w-72">
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+        <div className="relative w-full lg:w-72 shrink-0">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6d7a72] w-5 h-5" />
           <input 
             value={search}
@@ -344,24 +344,24 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           />
         </div>
         
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <div className="relative">
+        <div className="flex flex-row items-center gap-3 w-full lg:w-auto">
+          <div className="relative flex-1">
             <span className="absolute -top-2.5 left-3 bg-white px-1 text-[10px] font-bold text-slate-500 rounded">Desde</span>
             <input 
               type="date"
               value={fechaDesde}
               onChange={(e) => setFechaDesde(e.target.value)}
-              className="w-full md:w-auto pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
+              className="w-full pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
               title="Fecha inicial del periodo"
             />
           </div>
-          <div className="relative">
+          <div className="relative flex-1">
             <span className="absolute -top-2.5 left-3 bg-white px-1 text-[10px] font-bold text-slate-500 rounded">Hasta</span>
             <input 
               type="date"
               value={fechaHasta}
               onChange={(e) => setFechaHasta(e.target.value)}
-              className="w-full md:w-auto pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
+              className="w-full pl-3 pr-2 py-2 rounded-xl bg-white text-[#131b2e] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-slate-200"
               title="Fecha final del periodo"
             />
           </div>
@@ -369,7 +369,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
         <button
           onClick={handleClearFilters}
-          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap"
+          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full lg:w-auto"
           title="Limpiar todos los filtros"
         >
           <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
@@ -394,12 +394,12 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         
         {/* Interactive Map Container */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col">
-          <div className="flex items-center justify-between mb-3 px-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-4 mb-3 px-2">
             <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-indigo-500" />
-              <span className="font-bold text-[#131b2e]">Vista interactiva de visitas <span className="text-indigo-600 font-black">({filteredLocales.length})</span></span>
+              <MapPin className="w-5 h-5 text-indigo-500 shrink-0" />
+              <span className="font-bold text-[#131b2e] leading-tight">Vista interactiva de visitas <span className="text-indigo-600 font-black">({filteredLocales.length})</span></span>
             </div>
-            <span className="font-mono text-xs text-[#6d7a72]">Panamá Oeste</span>
+            <span className="font-mono text-xs text-[#6d7a72] shrink-0">Panamá Oeste</span>
           </div>
 
           <div className={isFullScreen 
