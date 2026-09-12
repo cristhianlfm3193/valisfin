@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useTransition, useEffect, useOptimistic } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
-import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X } from 'lucide-react';
+import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
 import { eliminarLocal, eliminarVisita } from '../acciones/crm';
@@ -96,6 +96,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     setColFilterVendedor('');
     setColFilterEstado('');
     setSelectedLocales([]);
+    setModoRutaActivo(false);
+    setRutaData(null);
+    setRutaDistancia(null);
+    setRutaVendedor('');
+    setRutaFecha(new Date().toISOString().split('T')[0]);
   };
 
   const handleSort = (key: 'nombre' | 'vendedor' | 'estado') => {
@@ -130,6 +135,67 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   
   const [isPending, startTransition] = useTransition();
 
+  // Route Analysis State
+  const [rutaVendedor, setRutaVendedor] = useState<string>('');
+  const [rutaFecha, setRutaFecha] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [rutaData, setRutaData] = useState<any>(null);
+  const [rutaDistancia, setRutaDistancia] = useState<number | null>(null);
+  const [isCalculandoRuta, setIsCalculandoRuta] = useState(false);
+  const [rutaError, setRutaError] = useState<string | null>(null);
+  const [rutaVisitas, setRutaVisitas] = useState<any[]>([]);
+  const [modoRutaActivo, setModoRutaActivo] = useState(false);
+
+  const calcularRuta = async () => {
+    if (!rutaVendedor) {
+      setRutaError('Selecciona un vendedor primero.');
+      return;
+    }
+    
+    setIsCalculandoRuta(true);
+    setRutaError(null);
+    setRutaData(null);
+    setRutaDistancia(null);
+
+    const visitasDelDia = visitas
+      .filter(v => v.vendedor_id === rutaVendedor && v.fecha === rutaFecha)
+      .map(v => ({ ...v, fullLocal: locales.find(l => l.id === v.local_id) }))
+      .filter(v => v.fullLocal && v.fullLocal.latitud && v.fullLocal.longitud)
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+
+    if (visitasDelDia.length < 2) {
+      setRutaError('Se necesitan al menos 2 visitas registradas en este día para trazar una ruta.');
+      setIsCalculandoRuta(false);
+      setRutaVisitas(visitasDelDia);
+      return;
+    }
+
+    setRutaVisitas(visitasDelDia);
+
+    const coordinatesString = visitasDelDia.map(v => `${v.fullLocal!.longitud},${v.fullLocal!.latitud}`).join(';');
+    
+    try {
+      const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${coordinatesString}?overview=full&geometries=geojson`);
+      const data = await response.json();
+      
+      if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+        const route = data.routes[0];
+        setRutaData(route.geometry);
+        setRutaDistancia(route.distance / 1000);
+        
+        const pointsToSelect = locales.filter(l => visitasDelDia.find(v => v.local_id === l.id));
+        setSelectedLocales(pointsToSelect); 
+        setModoRutaActivo(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setRutaError('No se pudo calcular la ruta en las calles (Error de OSRM).');
+      }
+    } catch (err) {
+      setRutaError('Error de red al conectar con el servidor de rutas.');
+    } finally {
+      setIsCalculandoRuta(false);
+    }
+  };
+
   const handleToggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
     setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
@@ -150,6 +216,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   };
 
   const filteredLocales = optimisticLocales.filter(local => {
+    if (modoRutaActivo) {
+      return rutaVisitas.some(v => v.local_id === local.id);
+    }
     const matchChain = filter === 'Todas' || local.tipo === filter;
     const matchSearch = local.nombre_local.toLowerCase().includes(search.toLowerCase()) || local.tipo.toLowerCase().includes(search.toLowerCase());
     const matchVendedor = colFilterVendedor === '' || local.vendedor_id === colFilterVendedor || (colFilterVendedor === 'sin_asignar' && !local.vendedor_id);
@@ -378,6 +447,13 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     />
                   </LayersControl.BaseLayer>
                 </LayersControl>
+                {rutaData && (
+                  <GeoJSON 
+                    key={JSON.stringify(rutaData.coordinates)} 
+                    data={rutaData} 
+                    pathOptions={{ color: '#4f46e5', weight: 6, opacity: 0.8, dashArray: '10, 15', lineCap: 'round' }} 
+                  />
+                )}
                 {filteredLocales.map((local) => {
                   const resumen = getResumenVisitas(local.id);
                   return (
@@ -468,6 +544,82 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Desempeño de Ruta (Clean Theme) */}
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 flex flex-col gap-5 mt-2 mb-2">
+          <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
+            <div>
+              <h3 className="text-lg font-bold text-[#131b2e] flex items-center gap-2">
+                <Route className="w-5 h-5 text-indigo-600" />
+                Desempeño de Ruta
+              </h3>
+              <p className="text-sm text-[#3d4a42]">Visualiza el recorrido exacto por las calles y la distancia cubierta en un día.</p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <div className="flex flex-col flex-1 sm:flex-none">
+                <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Vendedor</label>
+                <select 
+                  className="bg-slate-50 border border-slate-200 text-[#131b2e] text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors w-full sm:w-48 appearance-none"
+                  value={rutaVendedor}
+                  onChange={e => setRutaVendedor(e.target.value)}
+                >
+                  <option value="">Seleccione Vendedor</option>
+                  {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
+                </select>
+              </div>
+              
+              <div className="flex flex-col flex-1 sm:flex-none">
+                <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Día Específico</label>
+                <input 
+                  type="date"
+                  value={rutaFecha}
+                  onChange={e => setRutaFecha(e.target.value)}
+                  className="bg-slate-50 border border-slate-200 text-[#131b2e] text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors w-full sm:w-40"
+                />
+              </div>
+              
+              <div className="flex flex-col justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                <button 
+                  onClick={calcularRuta}
+                  disabled={isCalculandoRuta || !rutaVendedor}
+                  className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-100 disabled:text-slate-400 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2 group"
+                >
+                  {isCalculandoRuta ? (
+                    <span className="w-4 h-4 border-2 border-slate-300 border-t-indigo-600 rounded-full animate-spin"></span>
+                  ) : (
+                    <MapPin className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  )}
+                  Trazar Ruta
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {rutaError && (
+            <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
+              <X className="w-4 h-4 shrink-0" />
+              {rutaError}
+            </div>
+          )}
+
+          {rutaDistancia !== null && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-slate-100 pt-5 mt-1">
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
+                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Distancia Recorrida</span>
+                <span className="text-2xl font-black text-[#131b2e] flex items-baseline gap-1">{rutaDistancia.toFixed(1)} <span className="text-sm text-indigo-600 font-bold">km</span></span>
+              </div>
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
+                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Visitas del Día</span>
+                <span className="text-2xl font-black text-[#131b2e]">{rutaVisitas.length}</span>
+              </div>
+              <div className="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
+                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Eficiencia Aprox.</span>
+                <span className="text-2xl font-black text-[#131b2e] flex items-baseline gap-1">{rutaVisitas.length > 0 ? (rutaDistancia / rutaVisitas.length).toFixed(1) : 0} <span className="text-sm text-emerald-600 font-bold">km/visita</span></span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Locales Admin Table */}
