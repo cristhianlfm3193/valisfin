@@ -1,4 +1,4 @@
-export type TipoLocal = 'Supermercado' | 'Distribuidora' | 'Tienda';
+export type TipoLocal = 'Supermercado' | 'Distribuidora' | 'Tienda' | 'Mini Super';
 export type EstadoTarea = 'por_hacer' | 'en_ruta' | 'completado';
 export type TipoTarea = 'coaching' | 'trade_marketing' | 'ruta_critica' | 'inventario';
 
@@ -21,6 +21,8 @@ export interface Local {
   longitud: number;
   direccion: string | null;
   foto_url?: string | null;
+  vendedor_id?: string | null;
+  vendedor?: Vendedor;
   created_at: string;
 }
 

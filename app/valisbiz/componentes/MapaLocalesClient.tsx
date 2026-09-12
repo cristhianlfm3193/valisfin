@@ -152,6 +152,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const countSuper = locales.filter(l => l.tipo === 'Supermercado').length;
   const countDistribuidora = locales.filter(l => l.tipo === 'Distribuidora').length;
   const countTienda = locales.filter(l => l.tipo === 'Tienda').length;
+  const countMiniSuper = locales.filter(l => l.tipo === 'Mini Super').length;
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -192,7 +193,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {['Todas', 'Supermercado', 'Distribuidora', 'Tienda'].map(f => (
+          {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super'].map(f => (
             <button 
               key={f}
               onClick={() => setFilter(f)}
@@ -353,6 +354,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
                     <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
                     <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda}</span>
+                    <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Mini Supers">{countMiniSuper}</span>
                   </div>
                 </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
@@ -360,6 +362,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
                   <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
                   <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
+                  <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countMiniSuper} Mini</span>
                 </div>
               </div>
               <button 
@@ -385,6 +388,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     if (local.tipo === 'Supermercado') dotColor = 'bg-pink-500';
                     if (local.tipo === 'Distribuidora') dotColor = 'bg-violet-500';
                     if (local.tipo === 'Tienda') dotColor = 'bg-rose-500';
+                    if (local.tipo === 'Mini Super') dotColor = 'bg-fuchsia-500';
 
                     const resumen = getResumenVisitas(local.id);
 
@@ -426,6 +430,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             </div>
                            ) : (
                             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-slate-100 text-slate-500 whitespace-nowrap">Pendiente</span>
+                           )}
+                           {local.vendedor_id && (
+                             <span className="text-[9px] text-slate-500 mt-1 uppercase font-semibold">
+                               Encargado: {vendedores.find(v => v.id === local.vendedor_id)?.nombre.split(' ')[0] || 'Vendedor'}
+                             </span>
                            )}
                         </td>
                         <td className="py-3.5 px-3 text-right flex items-center justify-end gap-1">
@@ -586,7 +595,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
       {showLocalModal && (
         <ModalLocal 
           localAEditar={localAEditar}
-          onClose={() => setShowLocalModal(false)}
+          vendedores={vendedores}
+          onClose={() => { setShowLocalModal(false); setLocalAEditar(null); }}
         />
       )}
     </div>

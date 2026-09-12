@@ -2,15 +2,16 @@
 
 import { useState, useTransition } from 'react';
 import { X, MapPin } from 'lucide-react';
-import type { Local, TipoLocal } from '@/types/valisbiz';
+import type { Local, TipoLocal, Vendedor } from '@/types/valisbiz';
 import { crearLocal, editarLocal } from '../acciones/crm';
 
 interface ModalLocalProps {
   onClose: () => void;
   localAEditar?: Local | null;
+  vendedores: Vendedor[];
 }
 
-export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
+export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalLocalProps) {
   const isEditing = !!localAEditar;
   
   const [nombre, setNombre] = useState(localAEditar?.nombre_local || '');
@@ -19,6 +20,7 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
   const [longitud, setLongitud] = useState(localAEditar?.longitud?.toString() || '');
   const [direccion, setDireccion] = useState(localAEditar?.direccion || '');
   const [fotoUrl, setFotoUrl] = useState(localAEditar?.foto_url || '');
+  const [vendedorId, setVendedorId] = useState(localAEditar?.vendedor_id || '');
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +34,8 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
         latitud: parseFloat(latitud),
         longitud: parseFloat(longitud),
         direccion: direccion || null,
-        foto_url: fotoUrl || null
+        foto_url: fotoUrl || null,
+        vendedor_id: vendedorId || null
       };
 
       if (isEditing && localAEditar) {
@@ -83,6 +86,7 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
               <option value="Supermercado">Supermercado</option>
               <option value="Distribuidora">Distribuidora</option>
               <option value="Tienda">Tienda</option>
+              <option value="Mini Super">Mini Super</option>
             </select>
           </div>
 
@@ -133,6 +137,20 @@ export default function ModalLocal({ onClose, localAEditar }: ModalLocalProps) {
               placeholder="https://ejemplo.com/foto.jpg"
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-bold text-slate-600">Vendedor Asignado (Opcional)</label>
+            <select 
+              value={vendedorId}
+              onChange={e => setVendedorId(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+            >
+              <option value="">-- Sin vendedor asignado --</option>
+              {vendedores.map(v => (
+                <option key={v.id} value={v.id}>{v.nombre}</option>
+              ))}
+            </select>
           </div>
 
           <div className="mt-4">
