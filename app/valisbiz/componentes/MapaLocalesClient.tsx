@@ -354,18 +354,18 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     </button>
                   )}
                   <div className="hidden sm:flex items-center gap-2">
-                    <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper}</span>
-                    <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora}</span>
-                    <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda}</span>
-                    <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Mini Supers">{countMiniSuper}</span>
+                    <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper} Super</span>
+                    <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora} Dist.</span>
+                    <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Mini Supers">{countMiniSuper} Mini</span>
+                    <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda} Tiendas</span>
                   </div>
                 </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
                 <div className="flex sm:hidden items-center gap-2 mt-2">
                   <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
                   <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
-                  <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
                   <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countMiniSuper} Mini</span>
+                  <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
                 </div>
               </div>
               <button 
