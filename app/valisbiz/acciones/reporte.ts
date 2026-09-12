@@ -73,3 +73,108 @@ export async function getDatosReporteDia(fecha: string): Promise<DatosReporteDia
     registros: Object.values(mapaVendedor),
   };
 }
+
+export interface RegistroEficienciaRuta {
+  vendedor_id: string;
+  vendedor_nombre: string;
+  sitios_asignados: number;
+  visitas: number;
+  con_compra: number;
+  sin_compra: number;
+  porcentaje_recorrido: number;
+  porcentaje_efectividad: number;
+}
+
+export interface DatosReporteEficiencia {
+  fecha_desde: string;
+  fecha_hasta: string;
+  supervisor: string;
+  agencia: string;
+  observacion: string;
+  registros: RegistroEficienciaRuta[];
+}
+
+export async function getDatosReporteEficiencia(fechaDesde: string, fechaHasta: string): Promise<DatosReporteEficiencia> {
+  const supabase = await createClient();
+
+  // 1. Obtener vendedores activos
+  const { data: vendedores } = await supabase
+    .from('vendedores')
+    .select('id, nombre, activo')
+    .order('nombre', { ascending: true });
+
+  // 2. Obtener locales para contar los asignados
+  const { data: locales } = await supabase
+    .from('locales')
+    .select('id, vendedor_id')
+    .eq('activo', true);
+
+  // 3. Obtener visitas en el rango
+  const { data: visitas } = await supabase
+    .from('visitas_mensuales')
+    .select('local_id, vendedor_id, estado_visita')
+    .gte('fecha', `${fechaDesde}`)
+    .lte('fecha', `${fechaHasta}`);
+
+  const mapaVendedor: Record<string, RegistroEficienciaRuta> = {};
+
+  for (const vendedor of (vendedores || [])) {
+    if (vendedor.activo === false) continue;
+    
+    // Contar locales asignados
+    const sitiosAsignados = (locales || []).filter(l => l.vendedor_id === vendedor.id).length;
+
+    mapaVendedor[vendedor.id] = {
+      vendedor_id: vendedor.id,
+      vendedor_nombre: vendedor.nombre,
+      sitios_asignados: sitiosAsignados,
+      visitas: 0,
+      con_compra: 0,
+      sin_compra: 0,
+      porcentaje_recorrido: 0,
+      porcentaje_efectividad: 0,
+    };
+  }
+
+  // Contabilizar visitas (usamos visitas absolutas porque las "visitas hechas", "con compra" y "sin compra" son por cada transacción).
+  // Para el % de recorrido, usaremos locales únicos visitados.
+  const localesVisitadosPorVendedor: Record<string, Set<string>> = {};
+
+  for (const visita of (visitas || [])) {
+    const vId = visita.vendedor_id;
+    if (mapaVendedor[vId]) {
+      mapaVendedor[vId].visitas++;
+      if (visita.estado_visita === 'con_compra') {
+        mapaVendedor[vId].con_compra++;
+      } else if (visita.estado_visita === 'sin_compra') {
+        mapaVendedor[vId].sin_compra++;
+      }
+      
+      if (!localesVisitadosPorVendedor[vId]) localesVisitadosPorVendedor[vId] = new Set();
+      localesVisitadosPorVendedor[vId].add(visita.local_id);
+    }
+  }
+
+  // Calcular porcentajes
+  for (const vId in mapaVendedor) {
+    const record = mapaVendedor[vId];
+    const unicosVisitados = localesVisitadosPorVendedor[vId]?.size || 0;
+    
+    if (record.sitios_asignados > 0) {
+      record.porcentaje_recorrido = (unicosVisitados / record.sitios_asignados) * 100;
+    }
+    
+    if (record.visitas > 0) {
+      record.porcentaje_efectividad = (record.con_compra / record.visitas) * 100;
+    }
+  }
+
+  return {
+    fecha_desde: fechaDesde,
+    fecha_hasta: fechaHasta,
+    supervisor: 'Jennifer Camaño',
+    agencia: 'Panamá Oeste',
+    observacion: 'Reporte de Eficiencia de Ruta',
+    registros: Object.values(mapaVendedor),
+  };
+}

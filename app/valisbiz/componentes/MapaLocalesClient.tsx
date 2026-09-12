@@ -8,6 +8,7 @@ import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
 import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
+import CardReporteEficiencia from './CardReporteEficiencia';
 import { eliminarLocal, eliminarVisita } from '../acciones/crm';
 
 // Custom Map Pins icons
@@ -621,6 +622,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             </div>
           )}
         </div>
+
+        {/* Reporte de Eficiencia de Ruta PDF */}
+        <CardReporteEficiencia />
 
         {/* Locales Admin Table */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden">
