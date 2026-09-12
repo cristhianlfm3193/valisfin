@@ -21,6 +21,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalL
   const [direccion, setDireccion] = useState(localAEditar?.direccion || '');
   const [fotoUrl, setFotoUrl] = useState(localAEditar?.foto_url || '');
   const [vendedorId, setVendedorId] = useState(localAEditar?.vendedor_id || '');
+  const [activo, setActivo] = useState(localAEditar?.activo ?? true);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +36,8 @@ export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalL
         longitud: parseFloat(longitud),
         direccion: direccion || null,
         foto_url: fotoUrl || null,
-        vendedor_id: vendedorId || null
+        vendedor_id: vendedorId || null,
+        activo: activo
       };
 
       if (isEditing && localAEditar) {
@@ -151,6 +153,19 @@ export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalL
                 <option key={v.id} value={v.id}>{v.nombre}</option>
               ))}
             </select>
+          </div>
+
+          <div className="flex items-center gap-3 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <input 
+              type="checkbox"
+              id="cliente-activo"
+              checked={activo}
+              onChange={e => setActivo(e.target.checked)}
+              className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300"
+            />
+            <label htmlFor="cliente-activo" className="text-sm font-bold text-slate-700 cursor-pointer select-none">
+              Cliente Activo
+            </label>
           </div>
 
           <div className="mt-4">

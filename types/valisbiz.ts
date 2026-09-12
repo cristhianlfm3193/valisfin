@@ -23,6 +23,7 @@ export interface Local {
   foto_url?: string | null;
   vendedor_id?: string | null;
   vendedor?: Vendedor;
+  activo: boolean;
   created_at: string;
 }
 

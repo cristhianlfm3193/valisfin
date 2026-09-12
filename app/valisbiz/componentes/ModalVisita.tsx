@@ -25,6 +25,13 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   const [vendedorId, setVendedorId] = useState(
     visitaAEditar?.vendedor_id || ''
   );
+  const [filtroVendedor, setFiltroVendedor] = useState(
+    visitaAEditar?.vendedor_id || ''
+  );
+  const [searchLocal, setSearchLocal] = useState(
+    visitaAEditar?.local?.nombre_local || localInicial?.nombre_local || ''
+  );
+  const [showDropdown, setShowDropdown] = useState(false);
   const [estadoVisita, setEstadoVisita] = useState<'con_compra' | 'sin_compra' | ''>(
     (visitaAEditar?.estado_visita as 'con_compra' | 'sin_compra') || ''
   );
@@ -84,12 +91,34 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           </div>
 
           <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-bold text-slate-600">Vendedor</label>
+            <select 
+              required
+              value={vendedorId}
+              onChange={e => {
+                setVendedorId(e.target.value);
+                setFiltroVendedor(e.target.value);
+                setLocalId('');
+                setSearchLocal('');
+              }}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+            >
+              <option value="">¿Quién realizó la visita?</option>
+              <option value="sin_vendedor">-- Filtrar locales sin dueño --</option>
+              {vendedores.map(v => (
+                <option key={v.id} value={v.id}>{v.nombre}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-slate-600">Tipo de Local</label>
             <select 
               value={tipoLocal}
               onChange={e => {
                 setTipoLocal(e.target.value);
                 setLocalId(''); // Resetear local si cambia el tipo
+                setSearchLocal('');
               }}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
@@ -97,37 +126,63 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <option value="Supermercado">Supermercado</option>
               <option value="Distribuidora">Distribuidora</option>
               <option value="Tienda">Tienda</option>
+              <option value="Mini Super">Mini Super</option>
             </select>
           </div>
 
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 relative">
             <label className="text-sm font-bold text-slate-600">Punto de Venta (Local)</label>
-            <select 
+            <input 
               required
-              value={localId}
-              onChange={e => setLocalId(e.target.value)}
+              type="text"
+              value={searchLocal}
+              onChange={e => {
+                setSearchLocal(e.target.value);
+                setShowDropdown(true);
+                setLocalId('');
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              placeholder="Buscar local..."
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
-            >
-              <option value="">Selecciona un local...</option>
-              {locales.filter(l => tipoLocal === '' || l.tipo === tipoLocal).map(l => (
-                <option key={l.id} value={l.id}>{l.nombre_local}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Vendedor</label>
-            <select 
-              required
-              value={vendedorId}
-              onChange={e => setVendedorId(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
-            >
-              <option value="">¿Quién realizó la visita?</option>
-              {vendedores.map(v => (
-                <option key={v.id} value={v.id}>{v.nombre}</option>
-              ))}
-            </select>
+            />
+            {showDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg z-50">
+                {locales.filter(l => {
+                  if (l.activo === false) return false;
+                  if (filtroVendedor === 'sin_vendedor') {
+                    if (l.vendedor_id !== null) return false;
+                  } else if (filtroVendedor && l.vendedor_id !== filtroVendedor) {
+                    return false;
+                  }
+                  if (tipoLocal && l.tipo !== tipoLocal) return false;
+                  if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
+                  return true;
+                }).map(l => (
+                  <div 
+                    key={l.id} 
+                    className="px-4 py-2 hover:bg-pink-50 cursor-pointer text-sm font-medium text-slate-700"
+                    onClick={() => {
+                      setLocalId(l.id);
+                      setSearchLocal(l.nombre_local);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {l.nombre_local} <span className="text-xs text-slate-400">({l.tipo})</span>
+                  </div>
+                ))}
+                {locales.filter(l => {
+                  if (l.activo === false) return false;
+                  if (filtroVendedor === 'sin_vendedor' && l.vendedor_id !== null) return false;
+                  if (filtroVendedor && filtroVendedor !== 'sin_vendedor' && l.vendedor_id !== filtroVendedor) return false;
+                  if (tipoLocal && l.tipo !== tipoLocal) return false;
+                  if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
+                  return true;
+                }).length === 0 && (
+                  <div className="px-4 py-3 text-sm text-slate-500 text-center">No se encontraron locales.</div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -155,7 +210,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           <div className="mt-2">
             <button 
               type="submit"
-              disabled={isPending || !localId || !vendedorId || !estadoVisita}
+              disabled={isPending || !localId || !vendedorId || vendedorId === 'sin_vendedor' || !estadoVisita}
               className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-md shadow-slate-900/20"
             >
               {isPending ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : (isEditing ? 'Guardar Cambios' : 'Guardar Visita')}

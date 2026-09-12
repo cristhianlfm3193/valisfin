@@ -96,6 +96,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     const matchChain = filter === 'Todas' || local.tipo === filter;
     const matchSearch = local.nombre_local.toLowerCase().includes(search.toLowerCase()) || local.tipo.toLowerCase().includes(search.toLowerCase());
     return matchChain && matchSearch;
+  }).sort((a, b) => {
+    if (a.activo === b.activo) return 0;
+    return a.activo ? -1 : 1;
   });
 
   // Efecto para resetear paginación si se busca o filtra
@@ -395,7 +398,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     return (
                       <tr 
                         key={local.id} 
-                        className={`hover:bg-[#f2f3ff] transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''}`}
+                        className={`hover:bg-[#f2f3ff] transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''} ${!local.activo ? 'opacity-50 grayscale' : ''}`}
                       >
                         <td 
                           className="py-3.5 px-3 font-semibold flex items-center gap-3 cursor-pointer"

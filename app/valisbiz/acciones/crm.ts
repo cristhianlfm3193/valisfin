@@ -24,14 +24,14 @@ export async function eliminarVisita(id: string) {
   revalidatePath('/valisbiz');
 }
 
-export async function crearLocal(data: { nombre_local: string; tipo: string; latitud: number; longitud: number; direccion: string | null; foto_url?: string | null; vendedor_id?: string | null }) {
+export async function crearLocal(data: { nombre_local: string; tipo: string; latitud: number; longitud: number; direccion: string | null; foto_url?: string | null; vendedor_id?: string | null; activo?: boolean }) {
   const supabase = await createClient();
   const { error } = await supabase.from('locales').insert(data);
   if (error) throw new Error(error.message);
   revalidatePath('/valisbiz');
 }
 
-export async function editarLocal(id: string, data: { nombre_local: string; tipo: string; latitud: number; longitud: number; direccion: string | null; foto_url?: string | null; vendedor_id?: string | null }) {
+export async function editarLocal(id: string, data: { nombre_local: string; tipo: string; latitud: number; longitud: number; direccion: string | null; foto_url?: string | null; vendedor_id?: string | null; activo?: boolean }) {
   const supabase = await createClient();
   const { error } = await supabase.from('locales').update(data).eq('id', id);
   if (error) throw new Error(error.message);
