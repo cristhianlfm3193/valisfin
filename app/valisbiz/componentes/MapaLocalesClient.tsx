@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'r
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
-import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize } from 'lucide-react';
+import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
 import { eliminarLocal, eliminarVisita } from '../acciones/crm';
@@ -87,6 +87,16 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const [sortConfig, setSortConfig] = useState<{ key: 'nombre' | 'vendedor' | 'estado' | null, direction: 'asc' | 'desc' }>({ key: null, direction: 'asc' });
   const [colFilterVendedor, setColFilterVendedor] = useState<string>('');
   const [colFilterEstado, setColFilterEstado] = useState<string>('');
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setFechaDesde('');
+    setFechaHasta('');
+    setFilter('Todas');
+    setColFilterVendedor('');
+    setColFilterEstado('');
+    setSelectedLocales([]);
+  };
 
   const handleSort = (key: 'nombre' | 'vendedor' | 'estado') => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -269,6 +279,15 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             />
           </div>
         </div>
+
+        <button
+          onClick={handleClearFilters}
+          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap"
+          title="Limpiar todos los filtros"
+        >
+          <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
+          <span className="text-sm font-bold">Limpiar Filtros</span>
+        </button>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
           {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
