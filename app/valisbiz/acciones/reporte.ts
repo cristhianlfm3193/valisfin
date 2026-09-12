@@ -26,7 +26,7 @@ export async function getDatosReporteDia(fecha: string): Promise<DatosReporteDia
   // Obtener todos los vendedores
   const { data: vendedores } = await supabase
     .from('vendedores')
-    .select('id, nombre')
+    .select('id, nombre, activo')
     .order('nombre', { ascending: true });
 
   // Registros de ventas para esa fecha (fecha_registro empieza con la fecha YYYY-MM-DD)
@@ -40,6 +40,9 @@ export async function getDatosReporteDia(fecha: string): Promise<DatosReporteDia
   const mapaVendedor: Record<string, RegistroReporteDia> = {};
 
   for (const vendedor of (vendedores || [])) {
+    // Si el vendedor está explícitamente inactivo (ej. vacaciones), no lo incluimos en el reporte
+    if (vendedor.activo === false) continue;
+    
     mapaVendedor[vendedor.id] = {
       vendedor_nombre: vendedor.nombre,
       vistas: 0,

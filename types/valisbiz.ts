@@ -10,6 +10,7 @@ export interface Vendedor {
   venta_real_acumulada: number;
   gap_ventas: number;
   porcentaje_alcance: number;
+  activo?: boolean; // Asegura que se filtren los inactivos (ej. vacaciones)
   created_at: string;
 }
 
