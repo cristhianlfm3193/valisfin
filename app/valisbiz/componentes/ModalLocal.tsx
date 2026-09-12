@@ -9,9 +9,10 @@ interface ModalLocalProps {
   onClose: () => void;
   localAEditar?: Local | null;
   vendedores: Vendedor[];
+  onOptimisticUpdate?: (data: Partial<Local>) => void;
 }
 
-export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalLocalProps) {
+export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimisticUpdate }: ModalLocalProps) {
   const isEditing = !!localAEditar;
   
   const [nombre, setNombre] = useState(localAEditar?.nombre_local || '');
@@ -40,12 +41,19 @@ export default function ModalLocal({ onClose, localAEditar, vendedores }: ModalL
         activo: activo
       };
 
+      if (onOptimisticUpdate) {
+        onOptimisticUpdate({ 
+          ...data, 
+          id: localAEditar ? localAEditar.id : crypto.randomUUID() 
+        });
+      }
+      onClose();
+
       if (isEditing && localAEditar) {
         await editarLocal(localAEditar.id, data);
       } else {
         await crearLocal(data);
       }
-      onClose();
     });
   };
 

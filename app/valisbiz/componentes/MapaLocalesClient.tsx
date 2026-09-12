@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition, useEffect, useOptimistic } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -43,6 +43,23 @@ interface MapaLocalesClientProps {
 }
 
 export default function MapaLocalesClient({ locales, visitas, vendedores }: MapaLocalesClientProps) {
+  // Estado optimista para locales
+  const [optimisticLocales, addOptimisticLocal] = useOptimistic(
+    locales,
+    (state: Local[], newOrUpdatedLocal: Local | { id: string, delete: boolean }) => {
+      if ('delete' in newOrUpdatedLocal) {
+        return state.filter(l => l.id !== newOrUpdatedLocal.id);
+      }
+      const index = state.findIndex(l => l.id === newOrUpdatedLocal.id);
+      if (index !== -1) {
+        const newState = [...state];
+        newState[index] = { ...newState[index], ...newOrUpdatedLocal };
+        return newState;
+      }
+      return [newOrUpdatedLocal, ...state];
+    }
+  );
+
   const [filter, setFilter] = useState<string>('Todas');
   const [fechaDesde, setFechaDesde] = useState<string>('');
   const [fechaHasta, setFechaHasta] = useState<string>('');
@@ -92,7 +109,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     }
   };
 
-  const filteredLocales = locales.filter(local => {
+  const filteredLocales = optimisticLocales.filter(local => {
     const matchChain = filter === 'Todas' || local.tipo === filter;
     const matchSearch = local.nombre_local.toLowerCase().includes(search.toLowerCase()) || local.tipo.toLowerCase().includes(search.toLowerCase());
     return matchChain && matchSearch;
@@ -607,6 +624,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           localAEditar={localAEditar}
           vendedores={vendedores}
           onClose={() => { setShowLocalModal(false); setLocalAEditar(null); }}
+          onOptimisticUpdate={(data) => addOptimisticLocal(data as Local)}
         />
       )}
     </div>
