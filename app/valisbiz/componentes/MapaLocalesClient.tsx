@@ -30,9 +30,26 @@ const markerIconHtml = (cadena: string, estadoVisita?: 'con_compra' | 'sin_compr
   });
 };
 
-function ChangeView({ center, zoom }: { center: [number, number], zoom: number }) {
+function MapFitter({ selectedLocales }: { selectedLocales: Local[] }) {
   const map = useMap();
-  map.setView(center, zoom);
+  
+  useEffect(() => {
+    if (selectedLocales.length === 1) {
+      const local = selectedLocales[0];
+      if (local.latitud && local.longitud && (Number(local.latitud) !== 0 || Number(local.longitud) !== 0)) {
+        map.setView([Number(local.latitud), Number(local.longitud)], 16, { animate: true });
+      }
+    } else if (selectedLocales.length > 1) {
+      const validLocales = selectedLocales.filter(l => l.latitud && l.longitud && (Number(l.latitud) !== 0 || Number(l.longitud) !== 0));
+      if (validLocales.length > 1) {
+        const bounds = L.latLngBounds(validLocales.map(l => [Number(l.latitud), Number(l.longitud)]));
+        map.fitBounds(bounds, { padding: [50, 50], animate: true });
+      } else if (validLocales.length === 1) {
+        map.setView([Number(validLocales[0].latitud), Number(validLocales[0].longitud)], 16, { animate: true });
+      }
+    }
+  }, [selectedLocales, map]);
+
   return null;
 }
 
@@ -65,6 +82,19 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const [fechaHasta, setFechaHasta] = useState<string>('');
   const [search, setSearch] = useState('');
   const [selectedLocales, setSelectedLocales] = useState<Local[]>([]);
+
+  // Sorting and Column Filters
+  const [sortConfig, setSortConfig] = useState<{ key: 'nombre' | 'vendedor' | 'estado' | null, direction: 'asc' | 'desc' }>({ key: null, direction: 'asc' });
+  const [colFilterVendedor, setColFilterVendedor] = useState<string>('');
+  const [colFilterEstado, setColFilterEstado] = useState<string>('');
+
+  const handleSort = (key: 'nombre' | 'vendedor' | 'estado') => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const toggleLocalSelection = (local: Local) => {
     setSelectedLocales(prev => {
@@ -112,10 +142,41 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const filteredLocales = optimisticLocales.filter(local => {
     const matchChain = filter === 'Todas' || local.tipo === filter;
     const matchSearch = local.nombre_local.toLowerCase().includes(search.toLowerCase()) || local.tipo.toLowerCase().includes(search.toLowerCase());
-    return matchChain && matchSearch;
+    const matchVendedor = colFilterVendedor === '' || local.vendedor_id === colFilterVendedor || (colFilterVendedor === 'sin_asignar' && !local.vendedor_id);
+    const resumen = getResumenVisitas(local.id);
+    let estadoLocal = 'pendiente';
+    if (resumen) {
+      estadoLocal = resumen.mejorEstado;
+    }
+
+    const matchEstado = colFilterEstado === '' || estadoLocal === colFilterEstado;
+    return matchChain && matchSearch && matchVendedor && matchEstado;
   }).sort((a, b) => {
-    if (a.activo === b.activo) return 0;
-    return a.activo ? -1 : 1;
+    if (a.activo !== b.activo) {
+      return a.activo ? -1 : 1; // Inactivos siempre al final
+    }
+
+    if (sortConfig.key) {
+      const modifier = sortConfig.direction === 'asc' ? 1 : -1;
+      
+      if (sortConfig.key === 'nombre') {
+        return a.nombre_local.localeCompare(b.nombre_local) * modifier;
+      }
+      if (sortConfig.key === 'vendedor') {
+        const vA = vendedores.find(v => v.id === a.vendedor_id)?.nombre || '';
+        const vB = vendedores.find(v => v.id === b.vendedor_id)?.nombre || '';
+        return vA.localeCompare(vB) * modifier;
+      }
+      if (sortConfig.key === 'estado') {
+        const resA = getResumenVisitas(a.id);
+        const resB = getResumenVisitas(b.id);
+        const stateA = resA ? (resA.mejorEstado === 'con_compra' ? 2 : 1) : 0;
+        const stateB = resB ? (resB.mejorEstado === 'con_compra' ? 2 : 1) : 0;
+        return (stateA - stateB) * modifier;
+      }
+    }
+    
+    return 0; // Default order
   });
 
   // Efecto para resetear paginación si se busca o filtra
@@ -126,10 +187,6 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const totalPages = Math.ceil(filteredLocales.length / ITEMS_PER_PAGE);
   const paginatedLocales = showAll ? filteredLocales : filteredLocales.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const centerLocal = selectedLocales[selectedLocales.length - 1];
-  const center: [number, number] = centerLocal 
-    ? [Number(centerLocal.latitud), Number(centerLocal.longitud)]
-    : [8.8824, -79.7853]; // La Chorrera default
 
   const handleEliminarLocal = (id: string) => {
     if (window.confirm('¿Estás seguro de eliminar este local?')) {
@@ -139,7 +196,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     }
   };
 
-  const getResumenVisitas = (localId: string) => {
+  function getResumenVisitas(localId: string) {
     let visitasLocal = visitas.filter(v => v.local_id === localId);
     if (fechaDesde) {
       visitasLocal = visitasLocal.filter(v => v.fecha >= fechaDesde);
@@ -159,7 +216,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
       mejorEstado,
       ultimaVisita: visitasLocal[0]
     };
-  };
+  }
 
   let visitasMostradas = visitas;
   if (fechaDesde) {
@@ -265,11 +322,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
             <div className={`relative ${isFullScreen ? 'flex-1 rounded-2xl overflow-hidden shadow-md border border-slate-300' : 'w-full h-full'}`}>
               <MapContainer 
-                center={center} 
+                center={[8.8824, -79.7853]} 
                 zoom={13} 
                 style={{ height: '100%', width: '100%', zIndex: 1 }}
               >
-                <ChangeView center={center} zoom={selectedLocales.length > 0 ? 16 : (isFullScreen ? 11 : 12)} />
+                <MapFitter selectedLocales={selectedLocales} />
                 <LayersControl position="topright">
                   <LayersControl.BaseLayer checked name="Mapa Estándar">
                     <TileLayer
@@ -397,10 +454,60 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f2f3ff] text-[#6d7a72] text-xs uppercase tracking-wider">
-                    <th className="py-3 px-3 rounded-l-xl min-w-[200px]">Tipo / Local</th>
-                    <th className="py-3 px-3">Vendedor</th>
-                    <th className="py-3 px-3">Estado</th>
-                    <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px]">Acciones</th>
+                    <th className="py-3 px-3 rounded-l-xl min-w-[200px] cursor-pointer hover:bg-[#eaedff] transition-colors" onClick={() => handleSort('nombre')}>
+                      <div className="flex items-center gap-1">
+                        Tipo / Local
+                        {sortConfig.key === 'nombre' && (
+                          <span className="text-indigo-500 text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
+                        )}
+                      </div>
+                    </th>
+                    <th className="py-2 px-3 align-top min-w-[140px]">
+                      <div 
+                        className="cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1 mb-1"
+                        onClick={() => handleSort('vendedor')}
+                      >
+                        Vendedor
+                        {sortConfig.key === 'vendedor' && (
+                          <span className="text-indigo-500 text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
+                        )}
+                      </div>
+                      <select 
+                        className="w-full text-[10px] py-1 px-1 rounded border border-slate-200 bg-white text-slate-600 focus:outline-none focus:border-indigo-300"
+                        value={colFilterVendedor}
+                        onChange={e => setColFilterVendedor(e.target.value)}
+                        onClick={e => e.stopPropagation()} // Prevent row click
+                      >
+                        <option value="">Todos</option>
+                        <option value="sin_asignar">Sin Asignar</option>
+                        {vendedores.map(v => (
+                          <option key={v.id} value={v.id}>{v.nombre.split(' ')[0]}</option>
+                        ))}
+                      </select>
+                    </th>
+                    <th className="py-2 px-3 align-top min-w-[140px]">
+                      <div 
+                        className="cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1 mb-1"
+                        onClick={() => handleSort('estado')}
+                      >
+                        Estado
+                        {sortConfig.key === 'estado' && (
+                          <span className="text-indigo-500 text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
+                        )}
+                      </div>
+                      <select 
+                        className="w-full text-[10px] py-1 px-1 rounded border border-slate-200 bg-white text-slate-600 focus:outline-none focus:border-indigo-300"
+                        value={colFilterEstado}
+                        onChange={e => setColFilterEstado(e.target.value)}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <option value="">Todos</option>
+                        <option value="con_compra">Con Compra</option>
+                        <option value="sin_compra">Sin Compra</option>
+                        <option value="pendiente">Pendiente</option>
+                      </select>
+                    </th>
+                    <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px] align-top">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#eaedff] text-sm text-[#131b2e]">
