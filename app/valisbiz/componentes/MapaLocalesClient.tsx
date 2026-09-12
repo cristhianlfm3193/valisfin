@@ -291,9 +291,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           <div className="flex items-center justify-between mb-3 px-2">
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-indigo-500" />
-              <span className="font-bold text-[#131b2e]">Vista interactiva de visitas</span>
+              <span className="font-bold text-[#131b2e]">Vista interactiva de visitas <span className="text-indigo-600 font-black">({filteredLocales.length})</span></span>
             </div>
-            <span className="font-mono text-xs text-[#6d7a72]">Panamá Metro</span>
+            <span className="font-mono text-xs text-[#6d7a72]">Panamá Oeste</span>
           </div>
 
           <div className={isFullScreen 
@@ -304,8 +304,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <div className="flex items-center justify-between mb-3 bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-indigo-500" />
-                  <span className="font-bold text-[#131b2e] hidden sm:inline">Vista interactiva de visitas</span>
-                  <span className="font-bold text-[#131b2e] sm:hidden">Vista interactiva</span>
+                  <span className="font-bold text-[#131b2e] hidden sm:inline">Vista interactiva de visitas <span className="text-indigo-600 font-black">({filteredLocales.length})</span></span>
+                  <span className="font-bold text-[#131b2e] sm:hidden">Vista interactiva <span className="text-indigo-600 font-black">({filteredLocales.length})</span></span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button 
@@ -408,10 +408,28 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <CalendarCheck2 className="w-5 h-5" />
               Registrar Visita
             </button>
-            <div className="flex justify-center gap-6 mt-4 text-xs font-bold uppercase text-slate-500">
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-emerald-500 marker-con-compra"></span> Con Compra</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-amber-500"></span> Sin Compra</span>
+            <div className="flex justify-center gap-3 sm:gap-6 mt-4 text-xs font-bold uppercase text-slate-500 flex-wrap">
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'pendiente' ? '' : 'pendiente')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'pendiente' ? 'bg-slate-200 text-slate-800' : 'hover:bg-slate-50'}`}><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'con_compra' ? '' : 'con_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'con_compra' ? 'bg-emerald-100 text-emerald-800' : 'hover:bg-emerald-50'}`}><span className="w-3 h-3 rounded-full bg-emerald-500 marker-con-compra"></span> Con Compra</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'sin_compra' ? '' : 'sin_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'sin_compra' ? 'bg-amber-100 text-amber-800' : 'hover:bg-amber-50'}`}><span className="w-3 h-3 rounded-full bg-amber-500"></span> Sin Compra</button>
+            </div>
+            
+            <div className="flex justify-center gap-2 mt-4 text-[10px] font-bold flex-wrap">
+              {vendedores.map(v => (
+                <button 
+                  key={v.id} 
+                  onClick={() => setColFilterVendedor(colFilterVendedor === v.id ? '' : v.id)}
+                  className={`px-3 py-1 rounded-full border transition-all ${colFilterVendedor === v.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm scale-105' : 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100'}`}
+                >
+                  {v.nombre}
+                </button>
+              ))}
+              <button 
+                onClick={() => setColFilterVendedor(colFilterVendedor === 'sin_asignar' ? '' : 'sin_asignar')}
+                className={`px-3 py-1 rounded-full border transition-all ${colFilterVendedor === 'sin_asignar' ? 'bg-slate-600 text-white border-slate-600 shadow-sm scale-105' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+              >
+                No asignado
+              </button>
             </div>
           </div>
         </div>
