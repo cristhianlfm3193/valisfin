@@ -428,18 +428,18 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     </button>
                   )}
                   <div className="hidden sm:flex items-center gap-2">
-                    <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Supermercados">{countSuper} Super</span>
-                    <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Distribuidoras">{countDistribuidora} Dist.</span>
-                    <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Mini Supers">{countMiniSuper} Mini</span>
-                    <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full" title="Tiendas">{countTienda} Tiendas</span>
+                    <button onClick={() => setFilter(filter === 'Supermercado' ? 'Todas' : 'Supermercado')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Supermercado' ? 'bg-pink-500 text-white shadow-sm scale-105' : 'bg-pink-500/10 text-pink-500 hover:bg-pink-500/20'}`} title="Supermercados">{countSuper} Super</button>
+                    <button onClick={() => setFilter(filter === 'Distribuidora' ? 'Todas' : 'Distribuidora')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Distribuidora' ? 'bg-violet-500 text-white shadow-sm scale-105' : 'bg-violet-500/10 text-violet-500 hover:bg-violet-500/20'}`} title="Distribuidoras">{countDistribuidora} Dist.</button>
+                    <button onClick={() => setFilter(filter === 'Mini Super' ? 'Todas' : 'Mini Super')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Mini Super' ? 'bg-fuchsia-500 text-white shadow-sm scale-105' : 'bg-fuchsia-500/10 text-fuchsia-500 hover:bg-fuchsia-500/20'}`} title="Mini Supers">{countMiniSuper} Mini</button>
+                    <button onClick={() => setFilter(filter === 'Tienda' ? 'Todas' : 'Tienda')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Tienda' ? 'bg-rose-500 text-white shadow-sm scale-105' : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'}`} title="Tiendas">{countTienda} Tiendas</button>
                   </div>
                 </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
                 <div className="flex sm:hidden items-center gap-2 mt-2">
-                  <span className="bg-pink-500/10 text-pink-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countSuper} Super</span>
-                  <span className="bg-violet-500/10 text-violet-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countDistribuidora} Dist.</span>
-                  <span className="bg-fuchsia-500/10 text-fuchsia-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countMiniSuper} Mini</span>
-                  <span className="bg-rose-500/10 text-rose-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{countTienda} Tiendas</span>
+                  <button onClick={() => setFilter(filter === 'Supermercado' ? 'Todas' : 'Supermercado')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Supermercado' ? 'bg-pink-500 text-white shadow-sm scale-105' : 'bg-pink-500/10 text-pink-500 hover:bg-pink-500/20'}`}>{countSuper} Super</button>
+                  <button onClick={() => setFilter(filter === 'Distribuidora' ? 'Todas' : 'Distribuidora')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Distribuidora' ? 'bg-violet-500 text-white shadow-sm scale-105' : 'bg-violet-500/10 text-violet-500 hover:bg-violet-500/20'}`}>{countDistribuidora} Dist.</button>
+                  <button onClick={() => setFilter(filter === 'Mini Super' ? 'Todas' : 'Mini Super')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Mini Super' ? 'bg-fuchsia-500 text-white shadow-sm scale-105' : 'bg-fuchsia-500/10 text-fuchsia-500 hover:bg-fuchsia-500/20'}`}>{countMiniSuper} Mini</button>
+                  <button onClick={() => setFilter(filter === 'Tienda' ? 'Todas' : 'Tienda')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Tienda' ? 'bg-rose-500 text-white shadow-sm scale-105' : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'}`}>{countTienda} Tiendas</button>
                 </div>
               </div>
               <button 
