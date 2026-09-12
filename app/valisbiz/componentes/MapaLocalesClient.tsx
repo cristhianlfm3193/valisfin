@@ -235,6 +235,23 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   if (fechaHasta) {
     visitasMostradas = visitasMostradas.filter(v => v.fecha <= fechaHasta);
   }
+  if (filter !== 'Todas') {
+    visitasMostradas = visitasMostradas.filter(v => v.local?.tipo === filter);
+  }
+  if (colFilterVendedor !== '') {
+    if (colFilterVendedor === 'sin_asignar') {
+      visitasMostradas = visitasMostradas.filter(v => !v.vendedor_id);
+    } else {
+      visitasMostradas = visitasMostradas.filter(v => v.vendedor_id === colFilterVendedor);
+    }
+  }
+  if (colFilterEstado !== '') {
+    if (colFilterEstado === 'con_compra' || colFilterEstado === 'sin_compra') {
+      visitasMostradas = visitasMostradas.filter(v => v.estado_visita === colFilterEstado);
+    } else if (colFilterEstado === 'pendiente') {
+      visitasMostradas = [];
+    }
+  }
 
   const countSuper = locales.filter(l => l.tipo === 'Supermercado').length;
   const countDistribuidora = locales.filter(l => l.tipo === 'Distribuidora').length;
@@ -361,7 +378,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     />
                   </LayersControl.BaseLayer>
                 </LayersControl>
-                {(selectedLocales.length > 0 ? selectedLocales : filteredLocales).map((local) => {
+                {filteredLocales.map((local) => {
                   const resumen = getResumenVisitas(local.id);
                   return (
                     <Marker 
@@ -372,7 +389,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         click: () => toggleLocalSelection(local),
                       }}
                     >
-                      <Popup>
+                      <Popup autoClose={false} closeOnClick={false}>
                         <div className="font-sans min-w-[150px] max-w-[200px]">
                           {local.foto_url && (
                             <div className="w-full h-24 mb-2 rounded-lg overflow-hidden bg-slate-100 relative">
