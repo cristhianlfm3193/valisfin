@@ -127,6 +127,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <option value="Distribuidora">Distribuidora</option>
               <option value="Tienda">Tienda</option>
               <option value="Mini Super">Mini Super</option>
+              <option value="Restaurante">Restaurante</option>
             </select>
           </div>
 

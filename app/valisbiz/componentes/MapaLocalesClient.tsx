@@ -230,6 +230,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const countDistribuidora = locales.filter(l => l.tipo === 'Distribuidora').length;
   const countTienda = locales.filter(l => l.tipo === 'Tienda').length;
   const countMiniSuper = locales.filter(l => l.tipo === 'Mini Super').length;
+  const countRestaurante = locales.filter(l => l.tipo === 'Restaurante').length;
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -270,7 +271,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super'].map(f => (
+          {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
             <button 
               key={f}
               onClick={() => setFilter(f)}
@@ -328,13 +329,13 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               >
                 <MapFitter selectedLocales={selectedLocales} />
                 <LayersControl position="topright">
-                  <LayersControl.BaseLayer checked name="Mapa Estándar">
+                  <LayersControl.BaseLayer name="Mapa Estándar">
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                   </LayersControl.BaseLayer>
-                  <LayersControl.BaseLayer name="Satélite">
+                  <LayersControl.BaseLayer checked name="Satélite">
                     <TileLayer
                       attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
                       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -432,6 +433,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     <button onClick={() => setFilter(filter === 'Distribuidora' ? 'Todas' : 'Distribuidora')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Distribuidora' ? 'bg-violet-500 text-white shadow-sm scale-105' : 'bg-violet-500/10 text-violet-500 hover:bg-violet-500/20'}`} title="Distribuidoras">{countDistribuidora} Dist.</button>
                     <button onClick={() => setFilter(filter === 'Mini Super' ? 'Todas' : 'Mini Super')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Mini Super' ? 'bg-fuchsia-500 text-white shadow-sm scale-105' : 'bg-fuchsia-500/10 text-fuchsia-500 hover:bg-fuchsia-500/20'}`} title="Mini Supers">{countMiniSuper} Mini</button>
                     <button onClick={() => setFilter(filter === 'Tienda' ? 'Todas' : 'Tienda')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Tienda' ? 'bg-rose-500 text-white shadow-sm scale-105' : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'}`} title="Tiendas">{countTienda} Tiendas</button>
+                    <button onClick={() => setFilter(filter === 'Restaurante' ? 'Todas' : 'Restaurante')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Restaurante' ? 'bg-orange-500 text-white shadow-sm scale-105' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`} title="Restaurantes">{countRestaurante} Rest.</button>
                   </div>
                 </div>
                 <p className="text-sm text-[#3d4a42]">Administra la ubicación de los puntos de venta</p>
@@ -440,6 +442,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <button onClick={() => setFilter(filter === 'Distribuidora' ? 'Todas' : 'Distribuidora')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Distribuidora' ? 'bg-violet-500 text-white shadow-sm scale-105' : 'bg-violet-500/10 text-violet-500 hover:bg-violet-500/20'}`}>{countDistribuidora} Dist.</button>
                   <button onClick={() => setFilter(filter === 'Mini Super' ? 'Todas' : 'Mini Super')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Mini Super' ? 'bg-fuchsia-500 text-white shadow-sm scale-105' : 'bg-fuchsia-500/10 text-fuchsia-500 hover:bg-fuchsia-500/20'}`}>{countMiniSuper} Mini</button>
                   <button onClick={() => setFilter(filter === 'Tienda' ? 'Todas' : 'Tienda')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Tienda' ? 'bg-rose-500 text-white shadow-sm scale-105' : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'}`}>{countTienda} Tiendas</button>
+                  <button onClick={() => setFilter(filter === 'Restaurante' ? 'Todas' : 'Restaurante')} className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer transition-all ${filter === 'Restaurante' ? 'bg-orange-500 text-white shadow-sm scale-105' : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500/20'}`}>{countRestaurante} Rest.</button>
                 </div>
               </div>
               <button 
@@ -517,6 +520,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     if (local.tipo === 'Distribuidora') dotColor = 'bg-violet-500';
                     if (local.tipo === 'Tienda') dotColor = 'bg-rose-500';
                     if (local.tipo === 'Mini Super') dotColor = 'bg-fuchsia-500';
+                    if (local.tipo === 'Restaurante') dotColor = 'bg-orange-500';
 
                     const resumen = getResumenVisitas(local.id);
 

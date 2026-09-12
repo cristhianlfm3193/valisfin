@@ -1,4 +1,4 @@
-export type TipoLocal = 'Supermercado' | 'Distribuidora' | 'Tienda' | 'Mini Super';
+export type TipoLocal = 'Supermercado' | 'Distribuidora' | 'Tienda' | 'Mini Super' | 'Restaurante';
 export type EstadoTarea = 'por_hacer' | 'en_ruta' | 'completado';
 export type TipoTarea = 'coaching' | 'trade_marketing' | 'ruta_critica' | 'inventario';
 
