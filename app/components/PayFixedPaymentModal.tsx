@@ -114,17 +114,17 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
       onClick={handleClose}
     >
       <div 
-        className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-100/80 max-h-[90vh] overflow-y-auto custom-scrollbar z-50 transition-all"
+        className="relative w-full max-w-xl bg-[#121c27] rounded-3xl shadow-2xl border border-white/5/80 max-h-[90vh] overflow-y-auto custom-scrollbar z-50 transition-all"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-slate-100 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-white">
+        <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/5 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-white">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-violet-50 border border-violet-100 text-violet-700 flex items-center justify-center shrink-0">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pago de Gasto Fijo</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Pago de Gasto Fijo</h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Registra el pago de una obligación pendiente</p>
             </div>
           </div>
@@ -132,7 +132,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
             type="button"
             onClick={handleClose}
             disabled={isPending}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50"
+            className="p-1.5 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
@@ -147,14 +147,14 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
               Seleccionar Obligación Pendiente <span className="text-violet-600">*</span>
             </label>
             <select
               value={selectedPaymentId}
               onChange={(e) => setSelectedPaymentId(e.target.value)}
               disabled={isPending}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all appearance-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-200 focus:bg-[#121c27] focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all appearance-none"
               required
             >
               <option value="" disabled>-- Elige una obligación --</option>
@@ -167,13 +167,13 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
           </div>
 
           {selectedPayment && (
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <div className="p-4 bg-white/5 rounded-xl border border-white/5">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-medium text-slate-500">Monto total a pagar:</span>
-                <span className="text-sm font-bold text-slate-900">B/. {selectedPayment.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                <span className="text-sm font-bold text-white">B/. {selectedPayment.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
 
-              <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                 Tipo de Pago <span className="text-violet-600">*</span>
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -184,7 +184,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
                   className={`py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
                     paymentMode === 'total' 
                       ? 'bg-violet-600 text-white shadow-sm' 
-                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      : 'bg-[#121c27] border border-white/10 text-slate-400 hover:bg-white/5'
                   }`}
                 >
                   Pago Total
@@ -196,7 +196,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
                   className={`py-2 px-3 rounded-lg text-sm font-bold transition-colors ${
                     paymentMode === 'abono' 
                       ? 'bg-violet-600 text-white shadow-sm' 
-                      : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                      : 'bg-[#121c27] border border-white/10 text-slate-400 hover:bg-white/5'
                   }`}
                 >
                   Abonar Parte
@@ -205,7 +205,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
 
               {paymentMode === 'abono' && (
                 <div className="mt-4">
-                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                     Monto a Abonar (B/.) <span className="text-violet-600">*</span>
                   </label>
                   <div className="relative">
@@ -217,7 +217,7 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
                       value={abonoAmount}
                       onChange={(e) => setAbonoAmount(e.target.value)}
                       disabled={isPending}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-2.5 text-base font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-base font-bold text-white focus:bg-[#121c27] focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all"
                       placeholder="0.00"
                       required
                     />
@@ -228,12 +228,12 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
           )}
 
           {/* Modal Footer CTA */}
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-white/5">
             <button 
               type="button" 
               onClick={handleClose}
               disabled={isPending}
-              className="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl border border-white/10 hover:bg-slate-100 text-slate-300 font-semibold text-sm transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

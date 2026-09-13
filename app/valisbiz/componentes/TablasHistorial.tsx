@@ -124,13 +124,13 @@ function ModalConfirmarBorrado({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in zoom-in-95 duration-150">
+      <div className="relative bg-[#121c27] rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in zoom-in-95 duration-150">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
             <AlertTriangle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-900">Confirmar borrado</h3>
+            <h3 className="font-bold text-white">Confirmar borrado</h3>
             <p className="text-sm text-slate-500 mt-0.5">{mensaje}</p>
           </div>
         </div>
@@ -188,30 +188,30 @@ function ModalEditarFacturado({
     });
   };
 
-  const inputBase = 'w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all';
+  const inputBase = 'w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="relative bg-[#121c27] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150">
         <div className="bg-gradient-to-r from-pink-600 to-rose-500 px-5 py-4 flex items-center justify-between">
           <div>
             <h3 className="text-white font-bold">Editar Facturado</h3>
             <p className="text-pink-100 text-xs mt-0.5">{registro.vendedor_nombre}</p>
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors">
+          <button onClick={onClose} className="w-7 h-7 rounded-full bg-[#121c27]/20 text-white flex items-center justify-center hover:bg-[#121c27]/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="px-5 py-4 flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Fecha</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Fecha</label>
             <input type="date" value={fecha} onChange={e => setFecha(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1">
                 <Banknote className="w-3.5 h-3.5 text-emerald-600" /> Contado (B/.)
               </label>
               <div className="relative">
@@ -221,7 +221,7 @@ function ModalEditarFacturado({
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1">
                 <CreditCard className="w-3.5 h-3.5 text-blue-600" /> Crédito (B/.)
               </label>
               <div className="relative">
@@ -233,19 +233,19 @@ function ModalEditarFacturado({
           </div>
           {/* Total calculado */}
           <div className="flex items-center justify-between bg-pink-50 rounded-xl px-4 py-2.5 border border-pink-200">
-            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+            <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
               <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
             </span>
             <span className="font-mono font-bold text-pink-700 text-sm">B/.{fmt(total)}</span>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Notas</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-1.5">Notas</label>
             <input type="text" value={notas} onChange={e => setNotas(e.target.value)} placeholder="Opcional"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
           </div>
           {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm font-semibold hover:bg-white/5 transition-colors">Cancelar</button>
             <button type="submit" disabled={isPending}
               className="flex-1 py-2.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-sm font-bold shadow transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -290,27 +290,27 @@ function ModalEditarVendido({
     });
   };
 
-  const inputBase = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all";
+  const inputBase = "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all";
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150 max-h-[95vh] flex flex-col">
+      <div className="relative bg-[#121c27] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150 max-h-[95vh] flex flex-col">
         <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-4 flex items-center justify-between flex-shrink-0">
           <div>
             <h3 className="text-white font-bold">Editar Reporte Vendedor</h3>
             <p className="text-blue-100 text-xs mt-0.5">{registro.vendedor_nombre}</p>
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors">
+          <button onClick={onClose} className="w-7 h-7 rounded-full bg-[#121c27]/20 text-white flex items-center justify-center hover:bg-[#121c27]/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         <div className="overflow-y-auto flex-1">
           <form onSubmit={handleSubmit} className="px-5 py-4 flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Fecha</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1.5">Fecha</label>
               <input type="date" value={fecha} onChange={e => setFecha(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
             </div>
 
             {/* Visitas */}
@@ -318,7 +318,7 @@ function ModalEditarVendido({
               <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Visitas del día</p>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-400 mb-1.5">
                     <Eye className="w-3.5 h-3.5 text-slate-400" /> Vistas
                   </label>
                   <input type="number" min="0" value={vistas} onChange={e => setVistas(e.target.value)} placeholder="0" className={inputBase} />
@@ -345,23 +345,23 @@ function ModalEditarVendido({
               <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Montos (B/.)</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-400 mb-1.5">
                     <Banknote className="w-3.5 h-3.5 text-slate-400" /> Contado
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                     <input type="number" step="0.01" min="0" value={contado} onChange={e => setContado(e.target.value)} placeholder="0.00"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                      className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
                   </div>
                 </div>
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-400 mb-1.5">
                     <CreditCard className="w-3.5 h-3.5 text-slate-400" /> Crédito
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                     <input type="number" step="0.01" min="0" value={credito} onChange={e => setCredito(e.target.value)} placeholder="0.00"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                      className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
                   </div>
                 </div>
               </div>
@@ -380,7 +380,7 @@ function ModalEditarVendido({
 
             {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
             <div className="flex gap-3 pb-1">
-              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors">Cancelar</button>
+              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-400 text-sm font-semibold hover:bg-white/5 transition-colors">Cancelar</button>
               <button type="submit" disabled={isPending}
                 className="flex-1 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold shadow transition-all disabled:opacity-60 flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -405,7 +405,7 @@ function SortTh({ label, col, sort, dir, onSort, className = '' }: {
   return (
     <th
       onClick={() => onSort(col)}
-      className={`py-2.5 px-3 select-none cursor-pointer hover:text-slate-700 transition-colors whitespace-nowrap group ${className}`}
+      className={`py-2.5 px-3 select-none cursor-pointer hover:text-slate-300 transition-colors whitespace-nowrap group ${className}`}
     >
       <span className="flex items-center gap-1">
         {label}
@@ -519,7 +519,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         />
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-pink-200 overflow-hidden">
+      <div className="bg-[#121c27] rounded-2xl shadow-sm border border-pink-200 overflow-hidden">
         {/* Header */}
         <div className="px-5 py-4 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -527,7 +527,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
               <Building2 className="w-4 h-4 text-pink-600" />
             </div>
             <div>
-              <h4 className="font-bold text-slate-900 text-sm">Facturado por Finanzas</h4>
+              <h4 className="font-bold text-white text-sm">Facturado por Finanzas</h4>
               <p className="text-[11px] text-slate-400">Snapshot diario · muestra el último registro por vendedor en la tabla comparativa</p>
             </div>
           </div>
@@ -538,7 +538,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
                 verTodos
                   ? 'bg-pink-600 text-white border-pink-600'
-                  : 'bg-white text-pink-600 border-pink-300 hover:bg-pink-50'
+                  : 'bg-[#121c27] text-pink-600 border-pink-300 hover:bg-pink-50'
               }`}
             >
               {verTodos ? 'Paginar' : `Ver todos (${filtrados.length})`}
@@ -547,24 +547,24 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         </div>
 
         {/* Control Bar de Filtros Dinámicos */}
-        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-5 py-3 border-b border-white/5 bg-white/5/50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-1 min-w-[220px]">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
                 placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-xs" />
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#121c27] border border-white/10 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-xs" />
             </div>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Selector Vendedor */}
-            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
               <Filter className="w-3.5 h-3.5 text-pink-500" />
               <select 
                 value={vendedorFiltro} 
                 onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-                className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
+                className="text-xs font-semibold text-slate-300 bg-transparent focus:outline-none cursor-pointer"
               >
                 <option value="todos">Vendedor: Todos</option>
                 {vendedoresUnicos.map(v => (
@@ -574,7 +574,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             </div>
 
             {/* Rango de Fechas */}
-            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
               <Calendar className="w-3.5 h-3.5 text-pink-500 shrink-0" />
               <div className="flex items-center gap-1 text-xs">
                 <span className="text-slate-400 font-semibold">Desde:</span>
@@ -612,7 +612,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-white/5 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
                 <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-emerald-600" />
@@ -631,8 +631,8 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                 </tr>
               ) : (
                 filas.map(r => (
-                  <tr key={r.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="py-3 px-4 text-sm font-mono text-slate-600 whitespace-nowrap">
+                  <tr key={r.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="py-3 px-4 text-sm font-mono text-slate-400 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-4">
@@ -677,7 +677,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             {filtrados.length > 0 && (
               <tfoot>
                 <tr className="bg-pink-50 border-t-2 border-pink-200 text-[11px] font-bold">
-                  <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
+                  <td className="py-2.5 px-3 text-slate-400 uppercase tracking-wider" colSpan={2}>
                     {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                   </td>
                   <td className="py-2.5 px-3 text-right font-mono text-emerald-700">B/.{fmt(totalContado)}</td>
@@ -804,7 +804,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         />
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-blue-200 overflow-hidden">
+      <div className="bg-[#121c27] rounded-2xl shadow-sm border border-blue-200 overflow-hidden">
         {/* Header */}
         <div className="px-5 py-4 border-b border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
@@ -812,7 +812,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
               <FileText className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <h4 className="font-bold text-slate-900 text-sm">Vendido Reportado por Vendedores</h4>
+              <h4 className="font-bold text-white text-sm">Vendido Reportado por Vendedores</h4>
               <p className="text-[11px] text-slate-400">Acumulado diario del vendedor · se suma al mes en la tabla comparativa</p>
             </div>
           </div>
@@ -823,7 +823,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
                 verTodos
                   ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'
+                  : 'bg-[#121c27] text-blue-600 border-blue-300 hover:bg-blue-50'
               }`}
             >
               {verTodos ? `Paginar` : `Ver todos (${filtrados.length})`}
@@ -832,24 +832,24 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         </div>
 
         {/* Control Bar de Filtros Dinámicos */}
-        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-5 py-3 border-b border-white/5 bg-white/5/50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-1 min-w-[220px]">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
                 placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-xs" />
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#121c27] border border-white/10 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-xs" />
             </div>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Selector Vendedor */}
-            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
               <Filter className="w-3.5 h-3.5 text-blue-500" />
               <select 
                 value={vendedorFiltro} 
                 onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-                className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
+                className="text-xs font-semibold text-slate-300 bg-transparent focus:outline-none cursor-pointer"
               >
                 <option value="todos">Vendedor: Todos</option>
                 {vendedoresUnicos.map(v => (
@@ -859,7 +859,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
             </div>
 
             {/* Rango de Fechas */}
-            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
               <Calendar className="w-3.5 h-3.5 text-blue-500 shrink-0" />
               <div className="flex items-center gap-1 text-xs">
                 <span className="text-slate-400 font-semibold">Desde:</span>
@@ -897,7 +897,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-white/5 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
                 <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vistas" col="vistas" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center" />
@@ -918,8 +918,8 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
                 </tr>
               ) : (
                 filas.map(r => (
-                  <tr key={r.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="py-3 px-3 text-xs font-mono text-slate-600 whitespace-nowrap">
+                  <tr key={r.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="py-3 px-3 text-xs font-mono text-slate-400 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-3">
@@ -931,11 +931,11 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
                         {r.vendedor_nombre.split(' ')[0]}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-center font-mono text-sm text-slate-600">{r.vistas}</td>
+                    <td className="py-3 px-3 text-center font-mono text-sm text-slate-400">{r.vistas}</td>
                     <td className="py-3 px-3 text-center font-mono text-sm font-semibold text-emerald-600">{r.con_compra}</td>
                     <td className="py-3 px-3 text-center font-mono text-sm font-semibold text-red-500">{r.sin_compra}</td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-600">B/.{fmt(r.contado)}</td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-600">B/.{fmt(r.credito)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-400">B/.{fmt(r.contado)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-400">B/.{fmt(r.credito)}</td>
                     <td className="py-3 px-3 text-right font-mono text-sm font-bold text-blue-600">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
@@ -962,14 +962,14 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
             {filtrados.length > 0 && (
               <tfoot>
                 <tr className="bg-blue-50 border-t-2 border-blue-200 text-[11px] font-bold">
-                  <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
+                  <td className="py-2.5 px-3 text-slate-400 uppercase tracking-wider" colSpan={2}>
                     {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                   </td>
-                  <td className="py-2.5 px-3 text-center font-mono text-slate-700">{totalVistas}</td>
+                  <td className="py-2.5 px-3 text-center font-mono text-slate-300">{totalVistas}</td>
                   <td className="py-2.5 px-3 text-center font-mono text-emerald-700">{totalConCompra}</td>
                   <td className="py-2.5 px-3 text-center font-mono text-red-600">{totalSinCompra}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-slate-700">B/.{fmt(totalContado)}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-slate-700">B/.{fmt(totalCredito)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-300">B/.{fmt(totalContado)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-300">B/.{fmt(totalCredito)}</td>
                   <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalMonto)}</td>
                   <td className="py-2.5 px-3" />
                 </tr>
@@ -991,13 +991,13 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
 }) {
   const active = color === 'pink' ? 'bg-pink-500 text-white' : 'bg-blue-500 text-white';
   return (
-    <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between gap-2">
+    <div className="px-5 py-3 border-t border-white/5 flex items-center justify-between gap-2">
       <span className="text-xs text-slate-400 font-mono">
         {total === 0 ? '0 registros' : `${(pagina - 1) * pageSize + 1}–${Math.min(pagina * pageSize, total)} de ${total}`}
       </span>
       <div className="flex items-center gap-1">
         <button onClick={() => setPagina(p => Math.max(1, p - 1))} disabled={pagina === 1}
-          className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          className="w-7 h-7 flex items-center justify-center rounded-lg border border-white/10 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
         {Array.from({ length: totalPaginas }, (_, i) => i + 1)
@@ -1007,13 +1007,13 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
               {i > 0 && arr[i - 1] !== p - 1 && <span className="text-slate-300 text-xs px-1">…</span>}
               <button
                 onClick={() => setPagina(() => p)}
-                className={`w-7 h-7 rounded-lg text-xs font-mono font-semibold transition-colors ${p === pagina ? active : 'border border-slate-200 text-slate-600 hover:bg-slate-100'}`}>
+                className={`w-7 h-7 rounded-lg text-xs font-mono font-semibold transition-colors ${p === pagina ? active : 'border border-white/10 text-slate-400 hover:bg-slate-100'}`}>
                 {p}
               </button>
             </Fragment>
           ))}
         <button onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))} disabled={pagina === totalPaginas}
-          className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          className="w-7 h-7 flex items-center justify-center rounded-lg border border-white/10 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -1122,7 +1122,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
+    <div className="bg-[#121c27] rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-amber-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -1130,7 +1130,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
             <Calculator className="w-4 h-4 text-amber-600" />
           </div>
           <div>
-            <h4 className="font-bold text-slate-900 text-sm">Comparativa: Reportado vs Facturado</h4>
+            <h4 className="font-bold text-white text-sm">Comparativa: Reportado vs Facturado</h4>
             <p className="text-[11px] text-slate-400">Cruce diario por vendedor · diferencia = facturado − reportado</p>
           </div>
         </div>
@@ -1143,7 +1143,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
             className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
               verTodos
                 ? 'bg-amber-600 text-white border-amber-600'
-                : 'bg-white text-amber-600 border-amber-300 hover:bg-amber-50'
+                : 'bg-[#121c27] text-amber-600 border-amber-300 hover:bg-amber-50'
             }`}
           >
             {verTodos ? 'Paginar' : `Ver todos (${comparativa.length})`}
@@ -1152,24 +1152,24 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       </div>
 
       {/* Control Bar de Filtros Dinámicos */}
-      <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-5 py-3 border-b border-white/5 bg-white/5/50 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-[220px]">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
               placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-200 shadow-xs" />
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#121c27] border border-white/10 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-200 shadow-xs" />
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           {/* Selector Vendedor */}
-          <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+          <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
             <Filter className="w-3.5 h-3.5 text-amber-500" />
             <select 
               value={vendedorFiltro} 
               onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-              className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
+              className="text-xs font-semibold text-slate-300 bg-transparent focus:outline-none cursor-pointer"
             >
               <option value="todos">Vendedor: Todos</option>
               {vendedoresUnicos.map(v => (
@@ -1179,7 +1179,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           </div>
 
           {/* Rango de Fechas */}
-          <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+          <div className="flex items-center gap-1.5 bg-[#121c27] px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
             <Calendar className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <div className="flex items-center gap-1 text-xs">
               <span className="text-slate-400 font-semibold">Desde:</span>
@@ -1217,7 +1217,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
+            <tr className="bg-white/5 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
               <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
               <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
               <SortTh label="Total Reportado" col="reportado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-blue-600" />
@@ -1236,8 +1236,8 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
               filas.map((r, i) => {
                 const diff = r.facturado - r.reportado;
                 return (
-                  <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-3 text-sm font-mono text-slate-600 whitespace-nowrap">
+                  <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-white/5 transition-colors">
+                    <td className="py-3 px-3 text-sm font-mono text-slate-400 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-3">
@@ -1266,7 +1266,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           {comparativa.length > 0 && (
             <tfoot>
               <tr className="bg-amber-50 border-t-2 border-amber-200 text-[11px] font-bold">
-                <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
+                <td className="py-2.5 px-3 text-slate-400 uppercase tracking-wider" colSpan={2}>
                   {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                 </td>
                 <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalReportado)}</td>
@@ -1297,7 +1297,7 @@ export default function TablasHistorial({ registrosFacturado, registrosVendido }
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-base font-bold text-slate-800 mt-2">Historial de Registros del Mes</h3>
+      <h3 className="text-base font-bold text-slate-200 mt-2">Historial de Registros del Mes</h3>
       <TablaComparativaDiaria registrosFacturado={registrosFacturado} registrosVendido={registrosVendido} />
       <TablaFacturado registros={registrosFacturado} onRefresh={handleRefresh} />
       <TablaVendido registros={registrosVendido} onRefresh={handleRefresh} />

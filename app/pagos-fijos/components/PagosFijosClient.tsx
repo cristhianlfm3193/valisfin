@@ -340,7 +340,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
     <>
       {/* Month Selector */}
       <div className="flex justify-center mb-6">
-        <div className="inline-flex items-center bg-white border border-slate-200 rounded-full shadow-sm p-1">
+        <div className="inline-flex items-center bg-[#121c27] border border-white/10 rounded-full shadow-sm p-1">
           <button 
             onClick={() => handleMonthChange(-1)}
             className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none"
@@ -348,7 +348,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
-          <span className="w-40 text-center text-sm font-bold text-slate-800">
+          <span className="w-40 text-center text-sm font-bold text-slate-200">
             {getMonthLabel()}
           </span>
           <button 
@@ -399,10 +399,10 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       {variablePayments.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center justify-between mb-3 px-1">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               Gastos Variables
             </h3>
-            <span className="text-xs text-slate-600">Límites adaptables</span>
+            <span className="text-xs text-slate-400">Límites adaptables</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -435,10 +435,10 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       <section>
         <div className="flex items-center justify-between mb-3 px-1">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               Obligaciones Predeterminadas
             </h3>
-            <span className="text-xs text-slate-600">Toque directo para registrar pago</span>
+            <span className="text-xs text-slate-400">Toque directo para registrar pago</span>
           </div>
           <button 
             onClick={() => setIsAddModalOpen(true)}
@@ -462,7 +462,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
         </div>
 
         {filteredPayments.length === 0 && (
-          <div className="py-12 text-center bg-white rounded-2xl border border-slate-200 mt-2">
+          <div className="py-12 text-center bg-[#121c27] rounded-2xl border border-white/10 mt-2">
             <svg
               className="mx-auto h-12 w-12 text-slate-300"
               fill="none"
@@ -476,8 +476,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               ></path>
             </svg>
-            <h3 className="mt-2 text-sm font-semibold text-slate-900">No se encontraron pagos</h3>
-            <p className="mt-1 text-xs text-slate-600">
+            <h3 className="mt-2 text-sm font-semibold text-white">No se encontraron pagos</h3>
+            <p className="mt-1 text-xs text-slate-400">
               Intente buscar con otro término como 'luz', 'seguro' o 'guardería'.
             </p>
           </div>

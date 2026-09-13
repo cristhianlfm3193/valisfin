@@ -372,7 +372,7 @@ export function DashboardClient({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isAnalyzing || isConverting}
-                className="absolute left-2 p-2 rounded-lg text-gray-400 hover:text-emerald-400 hover:bg-white/10 disabled:opacity-50 transition-colors z-10"
+                className="absolute left-2 p-2 rounded-lg text-gray-400 hover:text-emerald-400 hover:bg-[#121c27]/10 disabled:opacity-50 transition-colors z-10"
                 title="Adjuntar factura o recibo (Imagen/PDF)"
               >
                 {isConverting ? <Loader2 className="w-4 h-4 animate-spin text-emerald-500" /> : <Paperclip className="w-4 h-4" />}
@@ -478,11 +478,11 @@ export function DashboardClient({
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-emerald-50 text-xs font-semibold backdrop-blur-sm border border-white/5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121c27]/10 text-emerald-50 text-xs font-semibold backdrop-blur-sm border border-white/5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                   Total Pagado (Mes Actual)
                 </span>
-                <Link href="/consultas" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors backdrop-blur-sm border border-white/5">
+                <Link href="/consultas" className="w-8 h-8 rounded-full bg-[#121c27]/10 hover:bg-[#121c27]/20 flex items-center justify-center text-white transition-colors backdrop-blur-sm border border-white/5">
                   <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -502,7 +502,7 @@ export function DashboardClient({
               </div>
 
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                <div className="bg-[#121c27]/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                   <p className="text-emerald-100/80 text-xs font-medium uppercase tracking-wider mb-1">
                     Pendiente por Pagar
                   </p>
@@ -510,7 +510,7 @@ export function DashboardClient({
                     {formatCurrency(pendientePorPagar)}
                   </p>
                 </div>
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                <div className="bg-[#121c27]/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                   <p className="text-emerald-100/80 text-xs font-medium uppercase tracking-wider mb-1">
                     Cumplimiento
                   </p>
@@ -597,10 +597,10 @@ export function DashboardClient({
                             <span className="text-[10px] sm:text-xs text-gray-400 line-clamp-2 sm:truncate">{subtitle}</span>
                           </div>
                         </div>
-                        <span className="px-2.5 py-1.5 rounded-full bg-white/10 text-[10px] sm:text-xs text-gray-300 font-semibold whitespace-nowrap shrink-0">{person.abonos || 0} Abonos</span>
+                        <span className="px-2.5 py-1.5 rounded-full bg-[#121c27]/10 text-[10px] sm:text-xs text-gray-300 font-semibold whitespace-nowrap shrink-0">{person.abonos || 0} Abonos</span>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-white/5 border border-white/5 text-center">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-[#121c27]/5 border border-white/5 text-center">
                         <div className="px-0.5 sm:px-1">
                           <div className="text-[9px] sm:text-[11px] font-medium text-gray-400 truncate">Proyectado</div>
                           <div className="text-[10px] sm:text-sm font-semibold font-mono text-white mt-0.5 tracking-tight">{formatCurrency(person.projected || 0)}</div>
@@ -649,7 +649,7 @@ export function DashboardClient({
 
             <div className="space-y-3">
               {upcomingBills.length > 0 ? upcomingBills.map((bill) => (
-                <div key={bill.id} className="flex items-center p-3 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 group">
+                <div key={bill.id} className="flex items-center p-3 rounded-2xl hover:bg-[#121c27]/5 transition-colors border border-transparent hover:border-white/10 group">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 mr-3 ${bill.colorClass}`}>
                     {bill.icon}
                   </div>

@@ -19,7 +19,7 @@ export function LoadingCube({ text = "Cargando...", theme = "biz" }: LoadingCube
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white/75 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#121c27]/75 backdrop-blur-sm">
       <div className="spinner-cube" style={{ '--clr': colorHex, '--clr-alpha': `rgba(${colorRgb}, 0.12)` } as any}>
         <div></div>
         <div></div>

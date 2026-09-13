@@ -80,20 +80,20 @@ export function EditPaymentModal({
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="max-h-[90vh] overflow-y-auto custom-scrollbar bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col"
+          className="max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#121c27] rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0">
+          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Editar {title}</h3>
+              <h3 className="text-lg font-bold text-white">Editar {title}</h3>
               <p className="text-xs text-slate-500">
                 {isVariable ? 'Ajustar límite mensual y fecha' : 'Ajustar monto y fecha de cobro'}
               </p>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -114,7 +114,7 @@ export function EditPaymentModal({
                     required
                     value={editedTitle}
                     onChange={e => setEditedTitle(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-base rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block px-4 py-3 outline-none transition-all"
+                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-base rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block px-4 py-3 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -133,7 +133,7 @@ export function EditPaymentModal({
                     required
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-lg rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block pl-10 pr-4 py-3 outline-none transition-all"
+                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-lg rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block pl-10 pr-4 py-3 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -152,7 +152,7 @@ export function EditPaymentModal({
                     value={billingDay}
                     onChange={e => setBillingDay(e.target.value)}
                     placeholder="Opcional"
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-base rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block pl-12 pr-4 py-3 outline-none transition-all"
+                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-base rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 block pl-12 pr-4 py-3 outline-none transition-all"
                   />
                 </div>
                 <p className="mt-1.5 text-[10px] text-slate-500">Dejar en blanco si no aplica o es variable.</p>
@@ -164,13 +164,13 @@ export function EditPaymentModal({
                   Responsable del Pago
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
                     <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required checked={profileId === 'edc938dc-9fbc-4573-b007-0bdb95114f95'} onChange={() => setProfileId('edc938dc-9fbc-4573-b007-0bdb95114f95')} />
-                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-emerald-700">Cristhian</span>
                   </label>
-                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
                     <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required checked={profileId === '7b5c62be-58f1-48d6-b366-0f504c39bdcb'} onChange={() => setProfileId('7b5c62be-58f1-48d6-b366-0f504c39bdcb')} />
-                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-pink-600">Jennifer</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-pink-600">Jennifer</span>
                   </label>
                 </div>
               </div>
@@ -184,7 +184,7 @@ export function EditPaymentModal({
                   <select
                     value={linkedGoalId}
                     onChange={e => setLinkedGoalId(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 block px-4 py-3 outline-none transition-all appearance-none"
+                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 block px-4 py-3 outline-none transition-all appearance-none"
                   >
                     <option value="">-- Ninguna --</option>
                     {goals.map(g => (
@@ -198,7 +198,7 @@ export function EditPaymentModal({
           </div>
 
           {/* Footer */}
-          <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3 bg-slate-50 rounded-b-3xl shrink-0">
+          <div className="p-5 pt-3 border-t border-white/5 flex items-center justify-between gap-3 bg-white/5 rounded-b-3xl shrink-0">
             <div>
               {linkedGoalId && (
                 <button
@@ -229,7 +229,7 @@ export function EditPaymentModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-200 transition-colors"
               >
                 Cancelar
               </button>

@@ -34,17 +34,17 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col max-h-[85vh] overflow-hidden"
+          className="bg-[#121c27] rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col max-h-[85vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0 bg-slate-50">
+          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0 bg-white/5">
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight capitalize">{formatDate(date)}</h3>
+              <h3 className="text-base font-bold text-white leading-tight capitalize">{formatDate(date)}</h3>
               <p className="text-xs text-slate-500">{events.length} eventos programados</p>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-200/50 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

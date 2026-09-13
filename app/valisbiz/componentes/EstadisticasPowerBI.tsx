@@ -264,13 +264,13 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* 1. Panel de Filtros Globales */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap items-center gap-4">
+      <div className="bg-[#121c27] p-4 rounded-2xl border border-white/5 shadow-sm flex flex-wrap items-center gap-4">
         <div className="flex flex-col">
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Vendedor</label>
           <div className="flex gap-2">
             <button 
               onClick={() => setSelectedVendedor('Todos')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
             >
               Todos
             </button>
@@ -309,7 +309,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <button
                 key={t}
                 onClick={() => setTimeFilter(t as any)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-white text-emerald-700 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-700 shadow-none'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-[#121c27] text-emerald-700 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-300 shadow-none'}`}
               >
                 {t}
               </button>
@@ -320,36 +320,36 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
 
       {/* 2. Tarjetas KPI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden group">
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-pink-500/10 to-transparent rounded-bl-[100%]" />
           <div className="flex items-center gap-2 text-slate-500 mb-1">
             <DollarSign className="w-4 h-4 text-pink-500" />
             <span className="text-xs font-bold uppercase tracking-wider">Facturado (Finanzas)</span>
           </div>
-          <span className="text-2xl font-black text-slate-800 font-mono">B/.{fmt(totalFacturado)}</span>
+          <span className="text-2xl font-black text-slate-200 font-mono">B/.{fmt(totalFacturado)}</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-[100%]" />
           <div className="flex items-center gap-2 text-slate-500 mb-1">
             <Activity className="w-4 h-4 text-blue-500" />
             <span className="text-xs font-bold uppercase tracking-wider">Reportado (Vendedor)</span>
           </div>
-          <span className="text-2xl font-black text-slate-800 font-mono">B/.{fmt(totalReportado)}</span>
+          <span className="text-2xl font-black text-slate-200 font-mono">B/.{fmt(totalReportado)}</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden">
           <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br rounded-bl-[100%] ${brechaGlobal > 0 ? 'from-emerald-500/10' : brechaGlobal < 0 ? 'from-red-500/10' : 'from-slate-500/10'}`} />
           <div className="flex items-center gap-2 text-slate-500 mb-1">
             {brechaGlobal > 0 ? <TrendingUp className="w-4 h-4 text-emerald-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
             <span className="text-xs font-bold uppercase tracking-wider">Brecha / GAP</span>
           </div>
-          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-600' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-600'}`}>
+          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-600' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-400'}`}>
             {brechaGlobal === 0 ? '—' : `${brechaGlobal > 0 ? '+' : ''}B/.${fmt(brechaGlobal)}`}
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2 text-slate-500">
               <Target className="w-4 h-4 text-indigo-500" />
@@ -371,8 +371,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
         {/* Tendencia Diaria (Area Chart) */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm lg:col-span-2">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Tendencia de Ventas (Facturado)</h3>
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm lg:col-span-2">
+          <h3 className="text-sm font-bold text-slate-200 mb-6">Tendencia de Ventas (Facturado)</h3>
           <div className="w-full h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={areaChartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -413,8 +413,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
 
         {/* Composición (Donuts) */}
         <div className="flex flex-col gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1">
-            <h3 className="text-sm font-bold text-slate-800 mb-2 text-center">Contado vs Crédito</h3>
+          <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex-1">
+            <h3 className="text-sm font-bold text-slate-200 mb-2 text-center">Contado vs Crédito</h3>
             <div className="w-full h-[140px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -430,8 +430,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1">
-            <h3 className="text-sm font-bold text-slate-800 mb-2 text-center">Visitas (Con/Sin Compra)</h3>
+          <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex-1">
+            <h3 className="text-sm font-bold text-slate-200 mb-2 text-center">Visitas (Con/Sin Compra)</h3>
             <div className="w-full h-[140px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -450,8 +450,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       </div>
 
       {/* Tendencia de Visitas (Area Chart) */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800 mb-6">Tendencia de Visitas (Trabajo de Campo)</h3>
+      <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm">
+        <h3 className="text-sm font-bold text-slate-200 mb-6">Tendencia de Visitas (Trabajo de Campo)</h3>
         <div className="w-full h-[280px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={areaChartVisitasData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -502,8 +502,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         
         {/* Comparativa Facturado vs Reportado */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Comparativa: Facturado vs Reportado</h3>
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm">
+          <h3 className="text-sm font-bold text-slate-200 mb-6">Comparativa: Facturado vs Reportado</h3>
           <div className="w-full h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barChartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
@@ -524,8 +524,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
         </div>
 
         {/* Desempeño de Visitas */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Desempeño de Visitas (Trabajo de Campo)</h3>
+        <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm">
+          <h3 className="text-sm font-bold text-slate-200 mb-6">Desempeño de Visitas (Trabajo de Campo)</h3>
           <div className="w-full h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barChartVisitasData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>

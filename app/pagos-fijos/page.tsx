@@ -44,7 +44,7 @@ export default async function PagosFijosPage() {
           {/* Icono de Notificaciones / Campana limpia */}
           <button
             aria-label="Notificaciones"
-            className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+            className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-[#121c27]/10 transition-colors focus:outline-none"
             type="button"
           >
             <Bell className="w-5 h-5 sm:w-6 sm:h-6" />

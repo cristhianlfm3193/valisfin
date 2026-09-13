@@ -39,7 +39,7 @@ const allNavItems = [
 
 export function MobileNavigation({ user, profile }: { user?: User, profile?: any }) {
   return (
-    <Suspense fallback={<div className="fixed bottom-4 left-4 right-4 h-16 bg-white/95 backdrop-blur-md border border-slate-200 rounded-[2rem] lg:hidden z-40 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" />}>
+    <Suspense fallback={<div className="fixed bottom-4 left-4 right-4 h-16 bg-[#121c27]/95 backdrop-blur-md border border-white/10 rounded-[2rem] lg:hidden z-40 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" />}>
       <MobileNavigationInner user={user} profile={profile} />
     </Suspense>
   );
@@ -109,7 +109,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
               ? 'bg-pink-500/20 text-pink-400 scale-105' 
               : isValisAN 
                 ? 'bg-sky-950 text-cyan-400 shadow-[0_0_15px_rgba(14,165,233,0.3)] scale-105' 
-                : 'bg-white/10 text-white scale-105';
+                : 'bg-[#121c27]/10 text-white scale-105';
             
             return (
               <Link
@@ -126,7 +126,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
           
           <button
             onClick={() => setIsMenuOpen(true)}
-            className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isMenuOpen ? 'bg-white/10 text-white scale-105' : 'text-gray-400 hover:text-white'}`}
+            className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isMenuOpen ? 'bg-[#121c27]/10 text-white scale-105' : 'text-gray-400 hover:text-white'}`}
           >
             <Menu className="w-6 h-6 mb-1 transition-all" />
             <span className={`text-[10px] font-bold transition-all ${isMenuOpen ? 'text-white' : 'text-gray-400'}`}>Menú</span>
@@ -141,7 +141,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
           <div className="bg-[#090a0f]/95 border-t border-white/10 backdrop-blur-2xl w-full rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300 relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
             <div className="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
               <h2 className="text-xl font-extrabold text-white">Menú Principal</h2>
-              <button onClick={() => setIsMenuOpen(false)} className="p-2 bg-white/5 rounded-full text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
+              <button onClick={() => setIsMenuOpen(false)} className="p-2 bg-[#121c27]/5 rounded-full text-gray-400 hover:bg-[#121c27]/10 hover:text-white transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -160,7 +160,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
                     
                   const inactiveClass = isValisAN 
                     ? 'bg-slate-900/50 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white'
-                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10';
+                    : 'bg-[#121c27]/5 border-white/10 text-gray-400 hover:bg-[#121c27]/10';
                   
                   return (
                     <Link
@@ -229,7 +229,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
                   </Link>
                 )}
                 
-                <div className="flex items-center justify-between gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl">
+                <div className="flex items-center justify-between gap-3 p-4 bg-[#121c27]/5 border border-white/10 rounded-2xl">
                   <div className="flex items-center gap-3 min-w-0">
                     {user?.user_metadata?.avatar_url ? (
                       <img src={user.user_metadata.avatar_url} alt="User" className="w-10 h-10 rounded-full border border-white/20 shrink-0" />

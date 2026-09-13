@@ -191,7 +191,7 @@ export default async function IngresosPage(props: {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 bg-white/10/90 border border-white/10/80 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-300">
+          <div className="hidden sm:flex items-center gap-1.5 bg-[#121c27]/10/90 border border-white/10/80 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-300">
             <Calendar className="w-3.5 h-3.5 text-gray-400" />
             <span className="capitalize">{displayMonthString}</span>
           </div>
@@ -226,7 +226,7 @@ export default async function IngresosPage(props: {
           <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
             <div className="flex items-start justify-between text-gray-400 gap-2">
               <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Ingresos Proyectados</span>
-              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-emerald-700 shrink-0">
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#121c27]/5 border border-white/5 flex items-center justify-center text-emerald-700 shrink-0">
                 <TrendingUp className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
@@ -272,7 +272,7 @@ export default async function IngresosPage(props: {
           <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
             <div className="flex items-start justify-between text-gray-400 gap-2">
               <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Pendiente por Cobrar</span>
-              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 shrink-0">
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#121c27]/5 border border-white/5 flex items-center justify-center text-gray-400 shrink-0">
                 <Hourglass className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
@@ -290,7 +290,7 @@ export default async function IngresosPage(props: {
               <span className="text-xs xl:text-sm font-bold text-emerald-700 shrink-0">{dynamicMetrics.percent}%</span>
             </div>
             <div className="mt-3">
-              <div className="w-full bg-white/10 h-1.5 xl:h-2 rounded-full overflow-hidden flex">
+              <div className="w-full bg-[#121c27]/10 h-1.5 xl:h-2 rounded-full overflow-hidden flex">
                 <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(100, parseFloat(dynamicMetrics.percent))}%` }}></div>
               </div>
               <div className="flex flex-wrap justify-between items-center text-gray-400 text-[10px] xl:text-xs mt-2 gap-1">
@@ -316,10 +316,10 @@ export default async function IngresosPage(props: {
                       <span className="text-[10px] sm:text-xs text-gray-400 line-clamp-2 sm:truncate">{person.subtitle}</span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1.5 rounded-full bg-white/10 text-[10px] sm:text-xs text-gray-300 font-semibold whitespace-nowrap shrink-0">{person.abonos} Abonos</span>
+                  <span className="px-2.5 py-1.5 rounded-full bg-[#121c27]/10 text-[10px] sm:text-xs text-gray-300 font-semibold whitespace-nowrap shrink-0">{person.abonos} Abonos</span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-white/5 border border-white/5/50 text-center">
+                <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-[#121c27]/5 border border-white/5/50 text-center">
                   <div className="px-0.5 sm:px-1">
                     <div className="text-[9px] sm:text-[11px] font-medium text-gray-400">Proyectado</div>
                     <div className="text-[11px] sm:text-sm font-semibold font-mono text-white mt-0.5 whitespace-nowrap tracking-tighter sm:tracking-normal">B/. {formatCurrency(person.projected)}</div>

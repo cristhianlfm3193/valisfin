@@ -43,16 +43,16 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
       
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden border border-slate-200 transform transition-all flex flex-col max-h-[90vh]">
+      <div className="relative bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden border border-white/10 transform transition-all flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50">
+        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5/50">
           <div>
-            <h3 className="text-xl font-bold text-slate-900">Personalizar Pantalla de Inicio</h3>
+            <h3 className="text-xl font-bold text-white">Personalizar Pantalla de Inicio</h3>
             <p className="text-sm text-slate-500 mt-1">Configura la foto y el mensaje de bienvenida de ValisFin.</p>
           </div>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors"
+            className="text-slate-400 hover:text-slate-400 p-2 rounded-full hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -68,7 +68,7 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
 
           {/* Photo Section */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
               <ImageIcon className="w-4 h-4 text-emerald-600" />
               <span>Foto de Portada</span>
             </div>
@@ -82,12 +82,12 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
                   type="url"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50"
+                  className="block w-full pl-10 pr-3 py-2.5 border border-white/10 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-white/5"
                   placeholder="https://ejemplo.com/mifoto.jpg"
                 />
               </div>
               {imageUrl && (
-                <div className="mt-3 relative h-32 w-full rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                <div className="mt-3 relative h-32 w-full rounded-xl overflow-hidden border border-white/10 shadow-sm">
                   <img src={imageUrl} alt="Vista previa" className="w-full h-full object-cover object-center" onError={(e) => (e.currentTarget.style.display = 'none')} />
                 </div>
               )}
@@ -98,7 +98,7 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
 
           {/* Texts Section */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
               <Type className="w-4 h-4 text-emerald-600" />
               <span>Textos de Bienvenida</span>
             </div>
@@ -109,7 +109,7 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
                 type="text"
                 value={welcomeTitle}
                 onChange={(e) => setWelcomeTitle(e.target.value)}
-                className="block w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 font-medium"
+                className="block w-full px-3 py-2.5 border border-white/10 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-white/5 font-medium"
                 placeholder="Ej. Construyendo el patrimonio de nuestra familia..."
               />
             </div>
@@ -120,7 +120,7 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
                 value={welcomeSubtitle}
                 onChange={(e) => setWelcomeSubtitle(e.target.value)}
                 rows={3}
-                className="block w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50 resize-none"
+                className="block w-full px-3 py-2.5 border border-white/10 rounded-xl text-sm focus:ring-emerald-500 focus:border-emerald-500 bg-white/5 resize-none"
                 placeholder="Ej. Cada balboa cuidado es un paso firme..."
               ></textarea>
             </div>
@@ -128,11 +128,11 @@ export function SettingsModal({ isOpen, onClose, currentSettings, onSaved }: Set
         </div>
 
         {/* Footer */}
-        <div className="p-4 sm:p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3">
+        <div className="p-4 sm:p-6 border-t border-white/5 bg-white/5/50 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-slate-400 bg-[#121c27] border border-white/10 rounded-xl hover:bg-white/5 transition-colors"
           >
             Cancelar
           </button>

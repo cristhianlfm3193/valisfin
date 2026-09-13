@@ -5,8 +5,8 @@ import { ShieldAlert } from 'lucide-react'
 
 export default function UnauthorizedPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 text-slate-800 bg-slate-50 relative">
-      <div className="max-w-md w-full text-center space-y-6 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-rose-100">
+    <div className="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 text-slate-200 bg-white/5 relative">
+      <div className="max-w-md w-full text-center space-y-6 bg-[#121c27] p-8 sm:p-10 rounded-3xl shadow-sm border border-rose-100">
         <div className="flex justify-center">
           <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center shadow-inner border border-rose-100">
             <ShieldAlert className="w-8 h-8 text-rose-500" />
@@ -14,7 +14,7 @@ export default function UnauthorizedPage() {
         </div>
         
         <div className="space-y-3">
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Acceso Pendiente</h1>
+          <h1 className="text-2xl font-extrabold text-white tracking-tight">Acceso Pendiente</h1>
           <p className="text-sm text-slate-500 leading-relaxed">
             Tu cuenta ha sido registrada exitosamente, pero <strong>aún no ha sido autorizada</strong> por el administrador.
           </p>
@@ -33,7 +33,7 @@ export default function UnauthorizedPage() {
               await supabase.auth.signOut();
               window.location.href = '/login';
             }}
-            className="w-full flex items-center justify-center px-4 py-3 border border-slate-200 text-sm font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm"
+            className="w-full flex items-center justify-center px-4 py-3 border border-white/10 text-sm font-bold rounded-xl text-slate-300 bg-[#121c27] hover:bg-white/5 hover:text-white transition-colors shadow-sm"
           >
             Volver a la pantalla de inicio
           </button>

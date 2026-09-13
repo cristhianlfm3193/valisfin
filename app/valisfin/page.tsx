@@ -48,7 +48,7 @@ export default async function Home() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-300">
+          <div className="hidden sm:flex items-center gap-1.5 bg-[#121c27]/5 border border-white/10 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-300">
             <Calendar className="w-3.5 h-3.5 text-gray-400" />
             <span>{currentMonth}</span>
           </div>

@@ -47,7 +47,7 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
               <div className="p-2 bg-slate-900 rounded-xl shadow-sm">
                 <Shield className="w-5 h-5 text-amber-400" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Panel de Control</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Panel de Control</h1>
             </div>
             <p className="text-sm text-slate-500">Gestión centralizada y auditoría de ValisFin.</p>
           </div>
@@ -56,7 +56,7 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
 
             <Link 
               href="/"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#121c27] border border-white/10 rounded-xl text-sm font-semibold text-slate-300 hover:bg-white/5 transition-colors shadow-sm"
             >
               <LayoutDashboard className="w-4 h-4" />
               <span>Volver al Dashboard</span>
@@ -66,50 +66,50 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Base de Datos (Gratis)</p>
               <Database className="w-4 h-4 text-emerald-500" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Almacenamiento 500 MB</p>
+            <p className="text-sm sm:text-base font-semibold text-white">Almacenamiento 500 MB</p>
             <div className="flex items-end gap-2 mt-1">
               <span className="text-2xl font-bold text-emerald-700 leading-none">&lt; 1%</span>
               <span className="text-xs text-slate-500 font-medium mb-0.5">uso aprox.</span>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Autenticación (Auth)</p>
               <Users className="w-4 h-4 text-emerald-500" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Límite 50,000 MAU</p>
+            <p className="text-sm sm:text-base font-semibold text-white">Límite 50,000 MAU</p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-slate-900 leading-none">{initialUsers.length}</span>
+              <span className="text-2xl font-bold text-white leading-none">{initialUsers.length}</span>
               <span className="text-xs text-emerald-600 font-medium mb-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">Óptimo</span>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Seguridad y Accesos</p>
               <Users className="w-4 h-4 text-blue-500" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Cuentas Registradas</p>
+            <p className="text-sm sm:text-base font-semibold text-white">Cuentas Registradas</p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-slate-900 leading-none">{initialUsers.length}</span>
+              <span className="text-2xl font-bold text-white leading-none">{initialUsers.length}</span>
               <span className="text-xs text-slate-500 font-medium mb-0.5">miembros activos</span>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2">
+          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Actividad Reciente</p>
-              <Activity className="w-4 h-4 text-slate-700" />
+              <Activity className="w-4 h-4 text-slate-300" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-slate-900">Operaciones DB</p>
+            <p className="text-sm sm:text-base font-semibold text-white">Operaciones DB</p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-slate-900 leading-none">{initialLogs.length}+</span>
+              <span className="text-2xl font-bold text-white leading-none">{initialLogs.length}+</span>
               <span className="text-xs text-slate-500 font-medium mb-0.5">transacciones</span>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
             </div>
             
             <div className="p-6 flex-1 flex flex-col relative z-10">
-              <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 border border-white/20">
+              <div className="w-12 h-12 bg-[#121c27]/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 border border-white/20">
                 <ImageIcon className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-xl font-bold text-white mb-2">Apariencia de la App</h2>
@@ -146,14 +146,14 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
           </div>
 
           {/* Card: Usuarios y Roles */}
-          <div className="group relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+          <div className="group relative overflow-hidden bg-[#121c27] rounded-3xl border border-white/10 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
             <div className="absolute top-6 right-6 flex -space-x-3 transition-transform duration-500 group-hover:-translate-x-1">
               {initialUsers.slice(0, 3).map((u, i) => (
-                <div key={u.id} className="w-9 h-9 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 relative z-10 transition-all bg-white" style={{ zIndex: 10 - i }}>
+                <div key={u.id} className="w-9 h-9 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 relative z-10 transition-all bg-[#121c27]" style={{ zIndex: 10 - i }}>
                   {u.avatar_url ? (
                     <img src={u.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs">
+                    <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 font-bold text-xs">
                       {(u.first_name || u.email || 'U').charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -162,17 +162,17 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
             </div>
             
             <div className="p-6 flex-1 flex flex-col relative z-10">
-              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 border border-slate-200">
-                <Users className="w-6 h-6 text-slate-700" />
+              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6 border border-white/10">
+                <Users className="w-6 h-6 text-slate-300" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Gestión de Usuarios</h2>
+              <h2 className="text-xl font-bold text-white mb-2">Gestión de Usuarios</h2>
               <p className="text-sm text-slate-500 mb-6 flex-1">
                 Controla permisos de acceso y administra los roles de usuarios registrados.
               </p>
               
               <button 
                 onClick={() => setIsUsersOpen(true)}
-                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl hover:bg-slate-100 transition-colors"
+                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-white/5 text-slate-300 border border-white/10 font-semibold rounded-xl hover:bg-slate-100 transition-colors"
               >
                 <span>Administrar Roles</span>
                 <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />

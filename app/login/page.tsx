@@ -71,7 +71,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center py-4 sm:py-8 lg:py-12 px-4 sm:px-6 lg:px-8 text-white relative">
       <main className="w-full max-w-5xl mx-auto z-10 relative">
-        <div className="bg-white/5 backdrop-blur-2xl rounded-3xl shadow-[0_20px_45px_-15px_rgba(0,0,0,0.5),0_0_1px_1px_rgba(255,255,255,0.1)] border border-white/10 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
+        <div className="bg-[#121c27]/5 backdrop-blur-2xl rounded-3xl shadow-[0_20px_45px_-15px_rgba(0,0,0,0.5),0_0_1px_1px_rgba(255,255,255,0.1)] border border-white/10 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
           
           {/* Inspiration Section */}
           <section className="lg:col-span-5 relative flex flex-col justify-between overflow-hidden bg-[#090a0f] min-h-[380px] sm:min-h-[440px] lg:min-h-full p-6 sm:p-8 text-white order-1 lg:order-1">
@@ -85,7 +85,7 @@ export default function LoginPage() {
                 <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></span>
                 <span className="text-xs font-semibold tracking-wide uppercase text-teal-100">Portal Familiar Privado</span>
               </div>
-              <span className="text-xs font-medium text-white/80 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+              <span className="text-xs font-medium text-white/80 bg-[#121c27]/10 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
                 2025 • FC
               </span>
             </header>
@@ -153,7 +153,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
-                  className="w-full min-h-[50px] py-3.5 px-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 active:bg-white/5 shadow-sm text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-3 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-teal-500/20"
+                  className="w-full min-h-[50px] py-3.5 px-4 rounded-2xl bg-[#121c27]/5 border border-white/10 hover:border-white/20 hover:bg-[#121c27]/10 active:bg-[#121c27]/5 shadow-sm text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-3 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-teal-500/20"
                 >
                   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
@@ -179,7 +179,7 @@ export default function LoginPage() {
                   <summary className="cursor-pointer list-none text-center text-xs font-semibold text-gray-400 hover:text-teal-400 transition-colors">
                     ¿Acceso de administrador local (emergencias)?
                   </summary>
-                  <form onSubmit={handlePasswordLogin} className="mt-3 p-4 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 space-y-3">
+                  <form onSubmit={handlePasswordLogin} className="mt-3 p-4 bg-[#121c27]/5 backdrop-blur-md rounded-xl border border-white/10 space-y-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-300 mb-1" htmlFor="admin-email">Correo de administrador</label>
                       <input 

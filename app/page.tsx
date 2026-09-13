@@ -103,12 +103,12 @@ export default async function PortalPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-sm tracking-wide text-white">Valis<span className="text-emerald-400">Hub</span></span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-gray-300 font-medium border border-white/10">v2.5 Multiapp</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#121c27]/10 text-gray-300 font-medium border border-white/10">v2.5 Multiapp</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+        <div className="flex items-center gap-3 bg-[#121c27]/5 hover:bg-[#121c27]/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
           <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner">
             {initial}
           </div>
@@ -167,12 +167,12 @@ export default async function PortalPage() {
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>Conexión segura Supabase Auth</span>
           </div>
-          <span className="text-gray-600 hidden sm:inline">•</span>
+          <span className="text-slate-400 hidden sm:inline">•</span>
           <div className="flex items-center gap-1.5">
             <Smartphone className="w-4 h-4 text-pink-400" />
             <span>Optimizado para iPhone 15, Samsung S24 y Desktop</span>
           </div>
-          <span className="text-gray-600 hidden sm:inline">•</span>
+          <span className="text-slate-400 hidden sm:inline">•</span>
           <div className="flex items-center gap-1.5">
             <RefreshCw className="w-4 h-4 text-sky-400" />
             <span>Cambio de entorno disponible en cualquier momento</span>

@@ -177,7 +177,7 @@ export default function VehiculosClient({
             const totalInvested = vehicleCompletedTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
             
             return (
-              <div key={vehicle.id} className={`bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
+              <div key={vehicle.id} className={`bg-[#121c27] rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
                 {(isWarning || isOverdue) && <div className={`absolute top-0 left-0 right-0 h-1 ${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-400' : 'bg-amber-400')}`}></div>}
                 
                 <div>
@@ -191,10 +191,10 @@ export default function VehiculosClient({
                       <div>
                         <div className="flex items-center gap-2">
                           <h2 className="text-xl font-bold text-on-surface">{vehicle.brand} {vehicle.model}</h2>
-                          <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold">{vehicle.year}</span>
+                          <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 font-semibold">{vehicle.year}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
-                          <span className="font-semibold text-slate-800">{vehicle.owner_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' ? 'Cristhian Fuentes' : 'Jennifer Camaño'}</span>
+                          <span className="font-semibold text-slate-200">{vehicle.owner_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' ? 'Cristhian Fuentes' : 'Jennifer Camaño'}</span>
                           <span className="text-slate-300">•</span>
                           <span className="font-mono text-slate-500">Placa: {vehicle.plate}</span>
                         </div>
@@ -218,12 +218,12 @@ export default function VehiculosClient({
                     )}
                   </div>
 
-                  <div className="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
+                  <div className="bg-white/5 rounded-2xl p-4 mb-4 border border-white/5">
                     <div className="flex items-baseline justify-between mb-2">
                       <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Kilometraje actual</span>
                       <span className="text-xs text-slate-500 flex items-center gap-1">
                         <span className="material-symbols-outlined text-[15px] text-slate-400">update</span>
-                        Última lectura: <strong className="text-slate-700 font-semibold">{vehicle.km_date}</strong>
+                        Última lectura: <strong className="text-slate-300 font-semibold">{vehicle.km_date}</strong>
                       </span>
                     </div>
                     <div className="flex items-baseline gap-2">
@@ -233,9 +233,9 @@ export default function VehiculosClient({
                       <span className={`font-mono text-lg font-bold ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>km</span>
                     </div>
                     
-                    <div className="mt-4 pt-2 border-t border-slate-200/60">
+                    <div className="mt-4 pt-2 border-t border-white/10/60">
                       <div className="flex items-center justify-between text-xs mb-1.5">
-                        <span className="text-slate-600">Próximo servicio: <strong className="font-mono text-slate-900 font-semibold">{next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
+                        <span className="text-slate-400">Próximo servicio: <strong className="font-mono text-white font-semibold">{next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
                         <span className={`${isOverdue ? 'text-red-600' : (isJennifer ? 'text-pink-600' : 'text-[#006655]')} font-semibold font-mono`}>
                           {isOverdue ? `Pasado por ${overdueBy.toLocaleString()} km` : next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
                         </span>
@@ -258,12 +258,12 @@ export default function VehiculosClient({
                         </div>
                       )}
 
-                      <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50/50 border-pink-100' : 'bg-slate-50 border-slate-200'}`}>
+                      <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50/50 border-pink-100' : 'bg-white/5 border-white/10'}`}>
                         <div className="flex items-center gap-1.5">
                           <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-500' : 'text-slate-500'}`}>payments</span>
-                          <span className={`font-semibold ${isJennifer ? 'text-pink-700' : 'text-slate-700'}`}>Inversión Histórica</span>
+                          <span className={`font-semibold ${isJennifer ? 'text-pink-700' : 'text-slate-300'}`}>Inversión Histórica</span>
                         </div>
-                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-slate-600'}`}>B/. {totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-slate-400'}`}>B/. {totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                       </div>
 
                       {vehiclePendingTasks.length > 0 && (
@@ -284,8 +284,8 @@ export default function VehiculosClient({
         </section>
 
         {/* LECTURAS DE KILOMETRAJE */}
-        <section className="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+        <section className="bg-[#121c27] rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-white/5">
             <div>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#006655] flex items-center justify-center">
@@ -295,9 +295,9 @@ export default function VehiculosClient({
               </div>
             </div>
             <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
-              <button onClick={() => { setKmFilter('all'); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+              <button onClick={() => { setKmFilter('all'); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === 'all' ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>Todos</button>
               {vehicles.map(v => (
-                <button key={v.id} onClick={() => { setKmFilter(v.id); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                <button key={v.id} onClick={() => { setKmFilter(v.id); setKmPage(1); }} className={`px-3 py-1 rounded-full transition-all ${kmFilter === v.id ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>
                   {v.brand} {v.model}
                 </button>
               ))}
@@ -307,7 +307,7 @@ export default function VehiculosClient({
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+                <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/5 font-semibold">
                   <th className="py-3 px-3">Fecha</th>
                   <th className="py-3 px-3">Vehículo</th>
                   <th className="py-3 px-3 font-mono">Kilometraje</th>
@@ -315,12 +315,12 @@ export default function VehiculosClient({
                   <th className="py-3 px-3 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-white/5 text-sm">
                 {paginatedMileage.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   const isJennifer = vehicle?.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
                   return (
-                    <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={log.id} className="hover:bg-white/5/70 transition-colors">
                       <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{log.date}</td>
                       <td className="py-3.5 px-3 font-semibold text-on-surface">
                         <div className="flex items-center gap-2">
@@ -328,9 +328,9 @@ export default function VehiculosClient({
                           <span>{vehicle?.brand} {vehicle?.model}</span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-3 font-mono font-bold text-slate-900">{log.km?.toLocaleString()} km</td>
+                      <td className="py-3.5 px-3 font-mono font-bold text-white">{log.km?.toLocaleString()} km</td>
                       <td className="py-3.5 px-3 text-right">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-700 font-medium">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-300 font-medium">
                           {log.user_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' ? 'Cristhian Fuentes' : 'Jennifer Camaño'}
                         </span>
                       </td>
@@ -361,13 +361,13 @@ export default function VehiculosClient({
             </table>
           </div>
           
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+          <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-4">
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
               <select 
                 value={kmPageSize} 
                 onChange={(e) => { setKmPageSize(Number(e.target.value)); setKmPage(1); }}
-                className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+                className="text-xs border-white/10 rounded-md py-1 px-2 text-slate-400 bg-[#121c27] cursor-pointer hover:bg-white/5 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
               >
                 <option value={3}>3</option>
                 <option value={5}>5</option>
@@ -381,7 +381,7 @@ export default function VehiculosClient({
               <button 
                 onClick={() => setKmPage(p => Math.max(1, p - 1))}
                 disabled={kmPage === 1}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-[16px]">chevron_left</span>
                 Anterior
@@ -392,7 +392,7 @@ export default function VehiculosClient({
               <button 
                 onClick={() => setKmPage(p => Math.min(totalKmPages, p + 1))}
                 disabled={kmPage === totalKmPages}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
               >
                 Siguiente
                 <span className="material-symbols-outlined text-[16px]">chevron_right</span>
@@ -403,9 +403,9 @@ export default function VehiculosClient({
 
         {/* TAREAS PENDIENTES */}
         {pendingTasks.length > 0 && (
-          <section className="bg-white rounded-3xl p-6 border border-orange-200 shadow-card space-y-4 relative overflow-hidden">
+          <section className="bg-[#121c27] rounded-3xl p-6 border border-orange-200 shadow-card space-y-4 relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1 bg-orange-400"></div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-white/5">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
@@ -418,13 +418,13 @@ export default function VehiculosClient({
                 <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
                   {filteredPending.length} Tareas Críticas
                 </span>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-300">
                   Total: B/. {totalPendingFilteredCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </span>
                 <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
-                  <button onClick={() => { setPendingFilter('all'); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+                  <button onClick={() => { setPendingFilter('all'); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === 'all' ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>Todos</button>
                   {vehicles.map(v => (
-                    <button key={v.id} onClick={() => { setPendingFilter(v.id); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                    <button key={v.id} onClick={() => { setPendingFilter(v.id); setPendingPage(1); }} className={`px-3 py-1 rounded-full transition-all ${pendingFilter === v.id ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>
                       {v.brand} {v.model}
                     </button>
                   ))}
@@ -435,7 +435,7 @@ export default function VehiculosClient({
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+                  <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/5 font-semibold">
                     <th className="py-3 px-3">Fecha</th>
                     <th className="py-3 px-3">Vehículo</th>
                     <th className="py-3 px-3">Trabajo a Realizar</th>
@@ -451,11 +451,11 @@ export default function VehiculosClient({
                       <tr key={task.id} className="hover:bg-orange-50/50 transition-colors">
                         <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{task.date}</td>
                         <td className="py-3.5 px-3 font-semibold text-on-surface text-orange-700">{vehicle?.brand} {vehicle?.model}</td>
-                        <td className="py-3.5 px-3 font-medium text-slate-800">
+                        <td className="py-3.5 px-3 font-medium text-slate-200">
                           {task.service}
                           {task.notes && <p className="text-[11px] text-slate-500 mt-0.5 max-w-[200px] truncate" title={task.notes}>{task.notes}</p>}
                         </td>
-                        <td className="py-3.5 px-3 font-mono text-slate-700">
+                        <td className="py-3.5 px-3 font-mono text-slate-300">
                           {task.km?.toLocaleString() || 0} km
                           {vehicle && task.km && vehicle.current_km > task.km ? (
                             <span className="block text-[10px] text-red-500 font-bold mt-0.5" title="Kilómetros recorridos desde que se recomendó">
@@ -463,7 +463,7 @@ export default function VehiculosClient({
                             </span>
                           ) : null}
                         </td>
-                        <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">
+                        <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-300">
                           {task.cost ? `B/. ${task.cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : <span className="text-xs font-normal text-slate-400">Sin presupuesto</span>}
                         </td>
                         <td className="py-3.5 px-3 text-center">
@@ -498,13 +498,13 @@ export default function VehiculosClient({
               </table>
             </div>
             
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+            <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-4">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
                 <select 
                   value={pendingPageSize} 
                   onChange={(e) => { setPendingPageSize(Number(e.target.value)); setPendingPage(1); }}
-                  className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+                  className="text-xs border-white/10 rounded-md py-1 px-2 text-slate-400 bg-[#121c27] cursor-pointer hover:bg-white/5 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
                 >
                   <option value={3}>3</option>
                   <option value={5}>5</option>
@@ -518,7 +518,7 @@ export default function VehiculosClient({
                 <button 
                   onClick={() => setPendingPage(p => Math.max(1, p - 1))}
                   disabled={pendingPage === 1}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
                 >
                   <span className="material-symbols-outlined text-[16px]">chevron_left</span>
                   Anterior
@@ -529,7 +529,7 @@ export default function VehiculosClient({
                 <button 
                   onClick={() => setPendingPage(p => Math.min(totalPendingPages, p + 1))}
                   disabled={pendingPage === totalPendingPages}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
                 >
                   Siguiente
                   <span className="material-symbols-outlined text-[16px]">chevron_right</span>
@@ -540,8 +540,8 @@ export default function VehiculosClient({
         )}
 
         {/* HISTORIAL MANTENIMIENTO */}
-        <section className="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+        <section className="bg-[#121c27] rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-white/5">
             <div>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#006655] flex items-center justify-center">
@@ -551,13 +551,13 @@ export default function VehiculosClient({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-400">
                 {filteredMaintenance.length} Servicios
               </span>
               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
-                <button onClick={() => { setMaintFilter('all'); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>Todos</button>
+                <button onClick={() => { setMaintFilter('all'); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === 'all' ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>Todos</button>
                 {vehicles.map(v => (
-                  <button key={v.id} onClick={() => { setMaintFilter(v.id); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === v.id ? 'bg-white text-on-surface shadow-sm' : 'text-slate-600'}`}>
+                  <button key={v.id} onClick={() => { setMaintFilter(v.id); setMaintPage(1); }} className={`px-3 py-1 rounded-full transition-all ${maintFilter === v.id ? 'bg-[#121c27] text-on-surface shadow-sm' : 'text-slate-400'}`}>
                     {v.brand} {v.model}
                   </button>
                 ))}
@@ -568,7 +568,7 @@ export default function VehiculosClient({
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+                <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/5 font-semibold">
                   <th className="py-3 px-3">Fecha</th>
                   <th className="py-3 px-3">Vehículo</th>
                   <th className="py-3 px-3">Servicio</th>
@@ -578,19 +578,19 @@ export default function VehiculosClient({
                   <th className="py-3 px-3 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-white/5 text-sm">
                 {paginatedMaintenance.map(log => {
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   return (
-                    <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={log.id} className="hover:bg-white/5/70 transition-colors">
                       <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{log.date}</td>
                       <td className="py-3.5 px-3 font-semibold text-on-surface">{vehicle?.brand} {vehicle?.model}</td>
-                      <td className="py-3.5 px-3 font-medium text-slate-800">
+                      <td className="py-3.5 px-3 font-medium text-slate-200">
                         {log.service}
                       </td>
-                      <td className="py-3.5 px-3 font-mono text-slate-600">{log.km?.toLocaleString()} km</td>
-                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-700">B/. {log.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</td>
-                      <td className="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">{log.shop || 'N/A'}</td>
+                      <td className="py-3.5 px-3 font-mono text-slate-400">{log.km?.toLocaleString()} km</td>
+                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-300">B/. {log.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</td>
+                      <td className="py-3.5 px-3 text-right text-xs text-slate-400 font-medium">{log.shop || 'N/A'}</td>
                       <td className="py-3.5 px-3 text-center">
                         <div className="flex items-center justify-center gap-1">
                           <button 
@@ -616,13 +616,13 @@ export default function VehiculosClient({
             </table>
           </div>
           
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-4">
+          <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-4">
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 hidden sm:inline">Mostrar:</span>
               <select 
                 value={maintPageSize} 
                 onChange={(e) => { setMaintPageSize(Number(e.target.value)); setMaintPage(1); }}
-                className="text-xs border-slate-200 rounded-md py-1 px-2 text-slate-600 bg-white cursor-pointer hover:bg-slate-50 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
+                className="text-xs border-white/10 rounded-md py-1 px-2 text-slate-400 bg-[#121c27] cursor-pointer hover:bg-white/5 transition-colors focus:ring-1 focus:ring-[#006655] outline-none"
               >
                 <option value={3}>3</option>
                 <option value={5}>5</option>
@@ -636,7 +636,7 @@ export default function VehiculosClient({
               <button 
                 onClick={() => setMaintPage(p => Math.max(1, p - 1))}
                 disabled={maintPage === 1}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-[16px]">chevron_left</span>
                 Anterior
@@ -647,7 +647,7 @@ export default function VehiculosClient({
               <button 
                 onClick={() => setMaintPage(p => Math.min(totalMaintPages, p + 1))}
                 disabled={maintPage === totalMaintPages}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-50 text-slate-600 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-all flex items-center gap-1"
               >
                 Siguiente
                 <span className="material-symbols-outlined text-[16px]">chevron_right</span>

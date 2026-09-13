@@ -2,7 +2,7 @@
 
 export default function LoadingOverlay() {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#121c27]/70 backdrop-blur-sm">
       {/* Spinner 3D */}
       <div className="spinner-keiko">
         <div></div>

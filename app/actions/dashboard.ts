@@ -258,7 +258,7 @@ export async function getDashboardData() {
     const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     let icon = '💳';
-    let colorClass = 'bg-slate-100 text-slate-700';
+    let colorClass = 'bg-slate-100 text-slate-300';
     if (p.title.toLowerCase().includes('luz') || p.title.toLowerCase().includes('electricidad')) {
       icon = '⚡';
       colorClass = 'bg-amber-100 text-amber-700';

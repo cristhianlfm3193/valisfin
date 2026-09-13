@@ -53,7 +53,7 @@ export function MonthFilter({ currentYear, currentMonth }: MonthFilterProps) {
   const monthName = MONTHS[currentMonth];
 
   return (
-    <div className="flex items-center bg-white shadow-sm rounded-full p-1 border border-slate-200">
+    <div className="flex items-center bg-[#121c27] shadow-sm rounded-full p-1 border border-white/10">
       <button 
         onClick={handlePrevMonth}
         disabled={isPending}
@@ -63,7 +63,7 @@ export function MonthFilter({ currentYear, currentMonth }: MonthFilterProps) {
         <ChevronLeft className="w-5 h-5" />
       </button>
       
-      <div className={`px-3 flex items-center gap-1.5 text-sm font-medium min-w-[140px] justify-center transition-opacity ${isPending ? 'opacity-60 text-slate-500' : 'text-slate-700'}`}>
+      <div className={`px-3 flex items-center gap-1.5 text-sm font-medium min-w-[140px] justify-center transition-opacity ${isPending ? 'opacity-60 text-slate-500' : 'text-slate-300'}`}>
         {isPending ? (
           <Loader2 className="text-emerald-700 w-4 h-4 animate-spin" />
         ) : (

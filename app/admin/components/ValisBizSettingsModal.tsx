@@ -145,7 +145,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-slate-950/50 backdrop-blur-sm">
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden border border-slate-100 max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-150">
+      <div className="relative bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden border border-white/5 max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-150">
         
         {/* Header */}
         <header className="px-6 py-5 bg-gradient-to-r from-slate-900 via-slate-800 to-pink-950 text-white flex items-center justify-between shrink-0">
@@ -160,18 +160,18 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
           </div>
           <button 
             onClick={onClose} 
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-[#121c27]/10 hover:bg-[#121c27]/20 text-white flex items-center justify-center transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </header>
 
         {/* Tabs Navigation */}
-        <div className="flex border-b border-slate-200 bg-slate-50 shrink-0">
+        <div className="flex border-b border-white/10 bg-white/5 shrink-0">
           <button
             onClick={() => setTab('septiembre')}
             className={`flex-1 py-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center justify-center gap-2 ${
-              tab === 'septiembre' ? 'border-pink-600 text-pink-600 bg-white shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-700'
+              tab === 'septiembre' ? 'border-pink-600 text-pink-600 bg-[#121c27] shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-300'
             }`}
           >
             <Sparkles className="w-4 h-4 text-pink-500" />
@@ -180,7 +180,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
           <button
             onClick={() => setTab('crud')}
             className={`flex-1 py-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center justify-center gap-2 ${
-              tab === 'crud' ? 'border-pink-600 text-pink-600 bg-white shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-700'
+              tab === 'crud' ? 'border-pink-600 text-pink-600 bg-[#121c27] shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-300'
             }`}
           >
             <Users className="w-4 h-4 text-blue-500" />
@@ -189,7 +189,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
           <button
             onClick={() => setTab('metas')}
             className={`flex-1 py-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center justify-center gap-2 ${
-              tab === 'metas' ? 'border-pink-600 text-pink-600 bg-white shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-700'
+              tab === 'metas' ? 'border-pink-600 text-pink-600 bg-[#121c27] shadow-xs' : 'border-transparent text-slate-500 hover:text-slate-300'
             }`}
           >
             <DollarSign className="w-4 h-4 text-emerald-500" />
@@ -218,11 +218,11 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                     <div key={v.id} className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-2xl flex flex-col justify-between">
                       <div>
                         <span className="text-[10px] font-bold uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mb-1">Activo</span>
-                        <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                        <h5 className="font-bold text-white text-sm">{v.nombre}</h5>
                         <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'}</p>
                       </div>
                       <div className="mt-3 pt-2 border-t border-emerald-200/60 flex items-center justify-between">
-                        <span className="text-xs text-slate-600">Cuota:</span>
+                        <span className="text-xs text-slate-400">Cuota:</span>
                         <span className="font-mono font-bold text-emerald-800 text-sm">B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</span>
                       </div>
                     </div>
@@ -241,7 +241,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                       <div key={v.id} className="p-4 bg-amber-50/60 border border-amber-200 rounded-2xl flex flex-col justify-between">
                         <div>
                           <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full inline-block mb-1">Vacaciones</span>
-                          <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                          <h5 className="font-bold text-white text-sm">{v.nombre}</h5>
                           <p className="text-xs text-slate-500">Historial intacto</p>
                         </div>
                         <div className="mt-3 pt-2 border-t border-amber-200/60 flex items-center justify-between">
@@ -266,52 +266,52 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
             <div className="space-y-6">
 
               {/* Formulario Nuevo Vendedor */}
-              <form onSubmit={handleCreateSeller} className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+              <form onSubmit={handleCreateSeller} className="p-5 bg-white/5 rounded-2xl border border-white/10 space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
                   <UserPlus className="w-4 h-4 text-blue-600" /> Registrar Nuevo Vendedor o Reemplazo
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1">Nombre Completo *</label>
                     <input 
                       type="text" 
                       value={nombre} 
                       onChange={e => setNombre(e.target.value)} 
                       placeholder="Ej: Carolina Sucre" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                      className="w-full px-3.5 py-2 rounded-xl border border-white/10 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
                       required 
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Ruta Asignada</label>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1">Ruta Asignada</label>
                     <input 
                       type="text" 
                       value={rutaAsignada} 
                       onChange={e => setRutaAsignada(e.target.value)} 
                       placeholder="Ej: Panamá Oeste" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                      className="w-full px-3.5 py-2 rounded-xl border border-white/10 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Cuota Mensual (B/.)</label>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1">Cuota Mensual (B/.)</label>
                     <input 
                       type="number" 
                       step="0.01" 
                       value={cuotaMensual} 
                       onChange={e => setCuotaMensual(e.target.value)} 
                       placeholder="20000.00" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm font-mono focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                      className="w-full px-3.5 py-2 rounded-xl border border-white/10 text-sm font-mono focus:ring-2 focus:ring-pink-300 focus:outline-none" 
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Estado Inicial</label>
+                    <label className="block text-xs font-semibold text-slate-400 mb-1">Estado Inicial</label>
                     <select 
                       value={estadoNuevo} 
                       onChange={e => setEstadoNuevo(e.target.value as any)} 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                      className="w-full px-3.5 py-2 rounded-xl border border-white/10 text-sm bg-[#121c27] focus:ring-2 focus:ring-pink-300 focus:outline-none"
                     >
                       <option value="activo">Activo en Ruta</option>
                       <option value="vacaciones">Vacaciones / Reemplazado</option>
@@ -334,13 +334,13 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                   {vendedores.map(v => {
                     const isEditing = editingId === v.id;
                     return (
-                      <div key={v.id} className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div key={v.id} className="p-4 bg-[#121c27] rounded-2xl border border-white/10 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         {isEditing ? (
                           <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-2">
                             <input type="text" value={editNombre} onChange={e => setEditNombre(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Nombre" />
                             <input type="text" value={editRuta} onChange={e => setEditRuta(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Ruta" />
                             <input type="number" value={editCuota} onChange={e => setEditCuota(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm font-mono" placeholder="Cuota B/." />
-                            <select value={editEstado} onChange={e => setEditEstado(e.target.value as any)} className="px-3 py-1.5 border rounded-lg text-sm bg-white">
+                            <select value={editEstado} onChange={e => setEditEstado(e.target.value as any)} className="px-3 py-1.5 border rounded-lg text-sm bg-[#121c27]">
                               <option value="activo">Activo</option>
                               <option value="vacaciones">Vacaciones</option>
                               <option value="inactivo">Inactivo</option>
@@ -351,8 +351,8 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                             <div className={`w-3 h-3 rounded-full ${v.estado === 'activo' ? 'bg-emerald-500' : v.estado === 'vacaciones' ? 'bg-amber-500' : 'bg-slate-300'}`} />
                             <div>
                               <div className="flex items-center gap-2">
-                                <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
-                                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${v.estado === 'activo' ? 'bg-emerald-100 text-emerald-800' : v.estado === 'vacaciones' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
+                                <h5 className="font-bold text-white text-sm">{v.nombre}</h5>
+                                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${v.estado === 'activo' ? 'bg-emerald-100 text-emerald-800' : v.estado === 'vacaciones' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-400'}`}>
                                   {v.estado}
                                 </span>
                               </div>
@@ -365,17 +365,17 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
                           {isEditing ? (
                             <>
                               <button onClick={() => handleSaveEdit(v.id)} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700">Guardar</button>
-                              <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300">Cancelar</button>
+                              <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-slate-200 text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-300">Cancelar</button>
                             </>
                           ) : (
                             <>
-                              <button onClick={() => handleStartEdit(v)} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Editar vendedor">
+                              <button onClick={() => handleStartEdit(v)} className="p-2 text-slate-400 hover:text-slate-300 hover:bg-slate-100 rounded-lg transition-colors" title="Editar vendedor">
                                 <Edit2 className="w-4 h-4" />
                               </button>
                               <select 
                                 value={v.estado} 
                                 onChange={e => handleToggleState(v.id, e.target.value as any)}
-                                className="px-2.5 py-1 text-xs font-semibold border rounded-lg bg-slate-50 text-slate-700"
+                                className="px-2.5 py-1 text-xs font-semibold border rounded-lg bg-white/5 text-slate-300"
                               >
                                 <option value="activo">Activo</option>
                                 <option value="vacaciones">Vacaciones</option>
@@ -408,17 +408,17 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
               {/* Resumen Metas Activas */}
               <div className="space-y-3">
                 {vendedores.map(v => (
-                  <div key={v.id} className="p-4 bg-white rounded-2xl border border-slate-200 flex items-center justify-between">
+                  <div key={v.id} className="p-4 bg-[#121c27] rounded-2xl border border-white/10 flex items-center justify-between">
                     <div>
-                      <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                      <h5 className="font-bold text-white text-sm">{v.nombre}</h5>
                       <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="text-right">
                         <span className="text-[10px] font-bold uppercase text-slate-400 block">Cuota Mensual</span>
-                        <span className="font-mono font-bold text-slate-900 text-base">B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</span>
+                        <span className="font-mono font-bold text-white text-base">B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</span>
                       </div>
-                      <button onClick={() => { setTab('crud'); handleStartEdit(v); }} className="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold">
+                      <button onClick={() => { setTab('crud'); handleStartEdit(v); }} className="px-3 py-1.5 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 text-xs font-semibold">
                         Editar Cuota
                       </button>
                     </div>
@@ -443,7 +443,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
         </div>
 
         {/* Footer */}
-        <footer className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3 shrink-0">
+        <footer className="px-6 py-4 bg-white/5 border-t border-white/10 flex items-center justify-end gap-3 shrink-0">
           <Btn3D color="gray" onClick={onClose}>
             Cerrar
           </Btn3D>

@@ -121,7 +121,7 @@ function ValisANDashboard() {
             </div>
             <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
               <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                <path className="text-slate-800" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5" />
+                <path className="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5" />
                 <path className="text-cyan-400 stroke-current drop-shadow-[0_0_4px_rgba(0,240,255,0.5)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeDasharray="89.4, 100" strokeLinecap="round" strokeWidth="3.5" />
               </svg>
               <CheckCircle2 className="absolute w-4 h-4 text-cyan-300" />
@@ -571,7 +571,7 @@ function ValisANBDRH() {
   };
 
   const SortIcon = ({ columnKey }: { columnKey: string }) => {
-    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3 h-3 ml-1 inline text-slate-600" />;
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3 h-3 ml-1 inline text-slate-400" />;
     return sortConfig.direction === 'asc' 
       ? <ChevronUp className="w-3 h-3 ml-1 inline text-cyan-400" />
       : <ChevronDown className="w-3 h-3 ml-1 inline text-cyan-400" />;

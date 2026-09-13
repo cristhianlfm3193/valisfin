@@ -117,7 +117,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
       )}
 
       {/* Unified Header */}
-      <header className="w-full bg-white/95 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 shadow-sm border-b border-pink-100">
+      <header className="w-full bg-[#121c27]/95 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-8 shadow-sm border-b border-pink-100">
         <div className="max-w-7xl mx-auto py-3">
 
           {/* Row 1: Logo + Brand + Button */}
@@ -138,7 +138,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                     <span className="hidden xs:inline">Supervisión</span> Keiko
                   </span>
                 </div>
-                <h1 className="text-xs sm:text-sm lg:text-base font-bold text-slate-700 leading-tight hidden sm:block truncate max-w-[280px] lg:max-w-none">
+                <h1 className="text-xs sm:text-sm lg:text-base font-bold text-slate-300 leading-tight hidden sm:block truncate max-w-[280px] lg:max-w-none">
                   Panel de Control · Supervisión Panamá Oeste
                 </h1>
               </div>
@@ -170,16 +170,16 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
 
           {/* Row 2 (mobile only): Month Navigator + Title */}
           <div className="flex items-center justify-between gap-3 mt-2 sm:hidden">
-            <p className="text-xs font-semibold text-slate-600 truncate">
+            <p className="text-xs font-semibold text-slate-400 truncate">
               Panel · Supervisión Panamá Oeste
             </p>
             {/* Month Navigator compact */}
-            <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-lg px-1 py-0.5 flex-shrink-0">
-              <button onClick={() => navigateMes('prev')} disabled={isPending} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
-                <ChevronLeft className="w-3.5 h-3.5 text-slate-600" />
+            <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg px-1 py-0.5 flex-shrink-0">
+              <button onClick={() => navigateMes('prev')} disabled={isPending} className="p-1 rounded hover:bg-[#121c27] transition-colors disabled:opacity-50">
+                <ChevronLeft className="w-3.5 h-3.5 text-slate-400" />
               </button>
               <div className="flex flex-col items-center px-1.5">
-                <span className="text-[11px] font-bold text-slate-800 whitespace-nowrap leading-tight">
+                <span className="text-[11px] font-bold text-slate-200 whitespace-nowrap leading-tight">
                   {MESES[mesPeriodo].substring(0, 3)} {anioPeriodo}
                 </span>
                 {!isMesActual ? (
@@ -188,20 +188,20 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   <span className="text-[9px] text-green-600 font-semibold leading-none">● En curso</span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1 rounded hover:bg-white transition-colors disabled:opacity-50">
-                <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1 rounded hover:bg-[#121c27] transition-colors disabled:opacity-50">
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
             </div>
           </div>
 
           {/* Row 2 (desktop only): Month Navigator inline */}
           <div className="hidden sm:flex items-center justify-end mt-1.5">
-            <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-xl px-1 py-1">
-              <button onClick={() => navigateMes('prev')} disabled={isPending} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
-                <ChevronLeft className="w-4 h-4 text-slate-600" />
+            <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl px-1 py-1">
+              <button onClick={() => navigateMes('prev')} disabled={isPending} className="p-1.5 rounded-lg hover:bg-[#121c27] transition-colors disabled:opacity-50">
+                <ChevronLeft className="w-4 h-4 text-slate-400" />
               </button>
               <div className="flex flex-col items-center px-2">
-                <span className="text-xs font-bold text-slate-800 whitespace-nowrap">{MESES[mesPeriodo]} {anioPeriodo}</span>
+                <span className="text-xs font-bold text-slate-200 whitespace-nowrap">{MESES[mesPeriodo]} {anioPeriodo}</span>
                 {!isMesActual ? (
                   <button onClick={goToCurrentMonth} className="text-[10px] text-pink-500 font-semibold hover:underline leading-none">ir al actual</button>
                 ) : (
@@ -210,8 +210,8 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   </span>
                 )}
               </div>
-              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1.5 rounded-lg hover:bg-white transition-colors disabled:opacity-50">
-                <ChevronRight className="w-4 h-4 text-slate-600" />
+              <button onClick={() => navigateMes('next')} disabled={isPending} className="p-1.5 rounded-lg hover:bg-[#121c27] transition-colors disabled:opacity-50">
+                <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
             </div>
           </div>
@@ -241,7 +241,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
               <button
                 key={id}
                 onClick={() => setActiveTab(id as any)}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === id ? 'bg-white text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${activeTab === id ? 'bg-[#121c27] text-pink-600 shadow-sm' : 'text-[#3d4a42] hover:text-[#131b2e]'}`}
               >
                 <TabIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>{label}</span>

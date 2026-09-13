@@ -247,7 +247,7 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="relative bg-[#121c27] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="bg-gradient-to-r from-red-600 to-rose-600 px-6 py-4 flex items-center justify-between">
           <div>
@@ -257,14 +257,14 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
             </h2>
             <p className="text-red-100 text-xs mt-0.5">Informe de Ventas Diarias · Formato Keiko</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors">
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-[#121c27]/20 text-white hover:bg-[#121c27]/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="px-6 py-5 flex flex-col gap-5">
           {/* Preview del formato */}
-          <div className="border-2 border-slate-200 rounded-xl overflow-hidden">
+          <div className="border-2 border-white/10 rounded-xl overflow-hidden">
             {/* Mini preview del reporte */}
             <div className="bg-red-600 text-white text-center text-[10px] font-bold py-1.5 tracking-widest uppercase">
               INFORMES DE VENTAS DIARIAS
@@ -274,9 +274,9 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
               <span className="border-r border-black py-1">AGENCIA</span>
               <span className="py-1">FECHA</span>
             </div>
-            <div className="grid grid-cols-3 text-[8px] text-center border-b border-slate-300 bg-white">
-              <span className="border-r border-slate-200 py-1 truncate px-1">Jennifer Camaño</span>
-              <span className="border-r border-slate-200 py-1 truncate px-1">Panamá Oeste</span>
+            <div className="grid grid-cols-3 text-[8px] text-center border-b border-slate-300 bg-[#121c27]">
+              <span className="border-r border-white/10 py-1 truncate px-1">Jennifer Camaño</span>
+              <span className="border-r border-white/10 py-1 truncate px-1">Panamá Oeste</span>
               <span className="py-1 text-slate-500 px-1">
                 {fechaElegante(fecha).split(' ').slice(0, 3).join(' ')}
               </span>
@@ -289,14 +289,14 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
               <span className="border-r border-white/30">Contado</span>
               <span>Total</span>
             </div>
-            <div className="text-[7px] text-slate-400 text-center py-2 bg-slate-50 italic">
+            <div className="text-[7px] text-slate-400 text-center py-2 bg-white/5 italic">
               · · · datos del día seleccionado · · ·
             </div>
           </div>
 
           {/* Selector de fecha */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
               <Calendar className="w-4 h-4 text-red-500" />
               Fecha del reporte
             </label>
@@ -310,7 +310,7 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
                 if (pdfUrl) { URL.revokeObjectURL(pdfUrl); setPdfUrl(null); }
                 setPdfBlob(null);
               }}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition-all"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition-all"
             />
             <p className="text-[11px] text-slate-400 mt-1">
               Se incluirán todos los registros del vendedor para ese día.
@@ -367,7 +367,7 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
           {estado === 'listo' && (
             <button
               onClick={() => { setEstado('idle'); setPdfBlob(null); if (pdfUrl) URL.revokeObjectURL(pdfUrl); setPdfUrl(null); }}
-              className="text-xs text-slate-400 hover:text-slate-600 text-center transition-colors"
+              className="text-xs text-slate-400 hover:text-slate-400 text-center transition-colors"
             >
               Cambiar fecha y regenerar
             </button>

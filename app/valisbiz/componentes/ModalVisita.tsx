@@ -66,13 +66,13 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
 
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+      <div className="bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
         
-        <div className="flex items-center justify-between p-5 border-b border-slate-100">
-          <h3 className="font-bold text-lg text-slate-800">
+        <div className="flex items-center justify-between p-5 border-b border-white/5">
+          <h3 className="font-bold text-lg text-slate-200">
             {isEditing ? 'Editar Visita' : 'Registrar Visita'}
           </h3>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -80,18 +80,18 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
         <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-4">
           
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Fecha de Visita</label>
+            <label className="text-sm font-bold text-slate-400">Fecha de Visita</label>
             <input 
               type="date" 
               required
               value={fecha}
               onChange={e => setFecha(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Vendedor</label>
+            <label className="text-sm font-bold text-slate-400">Vendedor</label>
             <select 
               required
               value={vendedorId}
@@ -101,7 +101,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                 setLocalId('');
                 setSearchLocal('');
               }}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
               <option value="">¿Quién realizó la visita?</option>
               <option value="sin_vendedor">-- Filtrar locales sin vendedor --</option>
@@ -112,7 +112,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Tipo de Local</label>
+            <label className="text-sm font-bold text-slate-400">Tipo de Local</label>
             <select 
               value={tipoLocal}
               onChange={e => {
@@ -120,7 +120,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                 setLocalId(''); // Resetear local si cambia el tipo
                 setSearchLocal('');
               }}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
               <option value="">Cualquier Tipo</option>
               <option value="Supermercado">Supermercado</option>
@@ -132,7 +132,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           </div>
 
           <div className="flex flex-col gap-1.5 relative">
-            <label className="text-sm font-bold text-slate-600">Punto de Venta (Local)</label>
+            <label className="text-sm font-bold text-slate-400">Punto de Venta (Local)</label>
             <input 
               required
               type="text"
@@ -145,10 +145,10 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               onFocus={() => setShowDropdown(true)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               placeholder="Buscar local..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             />
             {showDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg z-50">
+              <div className="absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-[#121c27] border border-white/10 rounded-xl shadow-lg z-50">
                 {locales.filter(l => {
                   if (l.activo === false) return false;
                   if (filtroVendedor === 'sin_vendedor') {
@@ -162,7 +162,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                 }).map(l => (
                   <div 
                     key={l.id} 
-                    className="px-4 py-2 hover:bg-pink-50 cursor-pointer text-sm font-medium text-slate-700"
+                    className="px-4 py-2 hover:bg-pink-50 cursor-pointer text-sm font-medium text-slate-300"
                     onClick={() => {
                       setLocalId(l.id);
                       setSearchLocal(l.nombre_local);
@@ -187,12 +187,12 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-600">Resultado de la Visita</label>
+            <label className="text-sm font-bold text-slate-400">Resultado de la Visita</label>
             <div className="grid grid-cols-2 gap-3">
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('con_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-100 bg-white text-slate-500 hover:border-emerald-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200'}`}
               >
                 <CheckCircle2 className={`w-6 h-6 ${estadoVisita === 'con_compra' ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Con Compra</span>
@@ -200,7 +200,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('sin_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-100 bg-white text-slate-500 hover:border-amber-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-amber-200'}`}
               >
                 <XCircle className={`w-6 h-6 ${estadoVisita === 'sin_compra' ? 'text-amber-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Sin Compra</span>

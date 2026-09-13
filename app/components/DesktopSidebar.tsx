@@ -39,7 +39,7 @@ const navItems = [
 
 export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }) {
   return (
-    <Suspense fallback={<aside className="hidden lg:flex flex-col bg-white/5 border-r border-white/10 backdrop-blur-xl shrink-0 min-h-screen sticky top-0 w-64 p-5" />}>
+    <Suspense fallback={<aside className="hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 min-h-screen sticky top-0 w-64 p-5" />}>
       <DesktopSidebarInner user={user} profile={profile} />
     </Suspense>
   );
@@ -101,7 +101,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   return (
     <>
       <aside
-        className={`hidden lg:flex flex-col bg-white/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between min-h-screen sticky top-0 transition-all duration-300 ease-in-out ${sidebarWidth} ${pClass}`}
+        className={`hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between min-h-screen sticky top-0 transition-all duration-300 ease-in-out ${sidebarWidth} ${pClass}`}
         data-purpose="desktop-navigation"
       >
         <div className="flex flex-col h-full overflow-y-auto custom-scrollbar overflow-x-hidden">
@@ -143,7 +143,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
           )}
           <button 
             onClick={toggleSidebar}
-            className={`text-gray-400 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
+            className={`text-gray-400 hover:text-white hover:bg-[#121c27]/10 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
             aria-label="Colapsar menú lateral"
             title={isCollapsed ? "Expandir menú" : "Colapsar menú"}
           >
@@ -164,7 +164,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
             
             const inactiveClass = isValisAN 
               ? "text-slate-400 hover:bg-sky-950/40 hover:text-white border-transparent hover:border-sky-500/30"
-              : "text-gray-400 hover:bg-white/10 hover:text-white border-transparent";
+              : "text-gray-400 hover:bg-[#121c27]/10 hover:text-white border-transparent";
             
             return (
               <Link
@@ -242,7 +242,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
           </Link>
         )}
 
-        <div className={`flex items-center rounded-xl bg-white/5 border border-white/10 ${isCollapsed ? 'p-1.5 justify-center' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
+        <div className={`flex items-center rounded-xl bg-[#121c27]/5 border border-white/10 ${isCollapsed ? 'p-1.5 justify-center' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
           {avatarUrl ? (
             <img src={avatarUrl} alt={fullName} className="w-9 h-9 rounded-full border border-white/20 shrink-0" />
           ) : (

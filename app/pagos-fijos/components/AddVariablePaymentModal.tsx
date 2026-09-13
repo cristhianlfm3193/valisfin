@@ -60,23 +60,23 @@ export function AddVariablePaymentModal() {
       {/* Modal */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-lg shadow-2xl pointer-events-auto transform transition-all flex flex-col max-h-[90vh]"
+          className="bg-[#121c27] rounded-t-3xl sm:rounded-3xl w-full max-w-lg shadow-2xl pointer-events-auto transform transition-all flex flex-col max-h-[90vh]"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 pb-4 border-b border-slate-100">
+          <div className="flex items-center justify-between p-6 pb-4 border-b border-white/5">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
                 <Wallet className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Servicio Variable</h3>
+                <h3 className="text-xl font-bold text-white">Servicio Variable</h3>
                 <p className="text-sm text-slate-500">Electricidad, Gasolina, Supermercado...</p>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -97,7 +97,7 @@ export function AddVariablePaymentModal() {
                     value={serviceTitle}
                     onChange={(e) => setServiceTitle(e.target.value)}
                     required
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
+                    className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
                   >
                     <option value="Luz (Electricidad)">Electricidad (Luz)</option>
                     <option value="Gasolina">Gasolina</option>
@@ -120,7 +120,7 @@ export function AddVariablePaymentModal() {
                         min="0"
                         required
                         placeholder="0.00"
-                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block pl-10 pr-4 py-3 outline-none transition-all"
+                        className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block pl-10 pr-4 py-3 outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -134,7 +134,7 @@ export function AddVariablePaymentModal() {
                       name="period"
                       required
                       defaultValue={getNextMonths()[1].value} // Default to current month
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
+                      className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 block px-4 py-3 outline-none transition-all appearance-none"
                     >
                       {getNextMonths().map((m) => (
                         <option key={m.value} value={m.value}>{m.label}</option>
@@ -149,11 +149,11 @@ export function AddVariablePaymentModal() {
           </div>
 
           {/* Footer */}
-          <div className="p-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 rounded-b-3xl">
+          <div className="p-6 pt-4 border-t border-white/5 flex items-center justify-end gap-3 bg-white/5 rounded-b-3xl">
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-200 transition-colors"
             >
               Cancelar
             </button>

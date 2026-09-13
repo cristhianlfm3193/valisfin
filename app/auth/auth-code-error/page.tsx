@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function AuthCodeError() {
   return (
     <div className="min-h-screen bg-[#090a0f] flex flex-col items-center justify-center p-6 text-white font-sans">
-      <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl text-center relative overflow-hidden">
+      <div className="max-w-md w-full bg-[#121c27]/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl text-center relative overflow-hidden">
         {/* Glow effect */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none"></div>
         <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-teal-500/20 rounded-full blur-[60px] pointer-events-none"></div>
@@ -30,7 +30,7 @@ export default function AuthCodeError() {
           
           <Link 
             href="/login" 
-            className="inline-flex items-center justify-center gap-2 w-full bg-white/10 hover:bg-white/20 text-white text-sm font-semibold py-3 px-4 rounded-xl transition-all border border-white/10"
+            className="inline-flex items-center justify-center gap-2 w-full bg-[#121c27]/10 hover:bg-[#121c27]/20 text-white text-sm font-semibold py-3 px-4 rounded-xl transition-all border border-white/10"
           >
             Volver a intentar
           </Link>

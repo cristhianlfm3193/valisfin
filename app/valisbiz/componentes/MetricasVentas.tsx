@@ -94,13 +94,13 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
 
           {/* Identidad */}
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center font-bold text-2xl shadow-inner border border-white/30 flex-shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-[#121c27]/20 flex items-center justify-center font-bold text-2xl shadow-inner border border-white/30 flex-shrink-0">
               JC
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-lg font-bold">Jennifer Camaño</span>
-                <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-semibold uppercase tracking-wider border border-white/30">
+                <span className="px-2 py-0.5 rounded-full bg-[#121c27]/20 text-[10px] font-semibold uppercase tracking-wider border border-white/30">
                   Supervisora Regional
                 </span>
               </div>
@@ -113,13 +113,13 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
 
           {/* Métricas de bono */}
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex flex-col items-center bg-white/15 rounded-xl px-4 py-3 border border-white/20 min-w-[90px]">
+            <div className="flex flex-col items-center bg-[#121c27]/15 rounded-xl px-4 py-3 border border-white/20 min-w-[90px]">
               <span className="font-mono text-2xl font-bold">{porcentajeGlobal.toFixed(1)}%</span>
               <span className="text-pink-100 text-[11px] font-medium">Equipo {mesLabel}</span>
               <span className="text-pink-200 text-[10px]">(Facturado)</span>
             </div>
 
-            <div className={`flex flex-col items-center rounded-xl px-4 py-3 border min-w-[110px] ${bonoInfo.bono > 0 ? 'bg-yellow-300/20 border-yellow-300/40' : 'bg-white/10 border-white/20'}`}>
+            <div className={`flex flex-col items-center rounded-xl px-4 py-3 border min-w-[110px] ${bonoInfo.bono > 0 ? 'bg-yellow-300/20 border-yellow-300/40' : 'bg-[#121c27]/10 border-white/20'}`}>
               <span className={`font-mono text-2xl font-bold ${bonoInfo.bono > 0 ? 'text-yellow-200' : 'text-white/60'}`}>
                 B/.{bonoInfo.bono}
               </span>
@@ -132,8 +132,8 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
               {[...TABLA_BONOS_JENNIFER].reverse().map((tier, i) => {
                 const isActive = porcentajeGlobal >= tier.min && porcentajeGlobal <= tier.max;
                 return (
-                  <div key={i} className={`flex items-center gap-2 px-2 py-0.5 rounded ${isActive ? 'bg-white/25 font-bold' : 'opacity-60'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-yellow-300' : 'bg-white/40'}`} />
+                  <div key={i} className={`flex items-center gap-2 px-2 py-0.5 rounded ${isActive ? 'bg-[#121c27]/25 font-bold' : 'opacity-60'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-yellow-300' : 'bg-[#121c27]/40'}`} />
                     <span className="whitespace-nowrap">{tier.label}</span>
                     <span className="ml-auto font-mono">B/.{tier.bono}</span>
                   </div>
@@ -149,9 +149,9 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
             <span>Facturado Equipo · Meta B/.{cuotaGlobal.toLocaleString()}</span>
             <span className="font-mono font-bold text-white">B/.{fmt(facturadoGlobal)}</span>
           </div>
-          <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-[#121c27]/20 rounded-full overflow-hidden">
             <div
-              className="bg-white h-full rounded-full transition-all duration-1000"
+              className="bg-[#121c27] h-full rounded-full transition-all duration-1000"
               style={{ width: `${Math.min(porcentajeGlobal, 100)}%` }}
             />
           </div>
@@ -164,7 +164,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
       {/* ── TARJETAS DE VENDEDORES ── */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-base font-bold text-slate-800">Equipo de Vendedores</h2>
+          <h2 className="text-base font-bold text-slate-200">Equipo de Vendedores</h2>
           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${isMesCerrado ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
             {isMesCerrado ? `📅 ${mesLabel} · Mes cerrado` : `🟢 ${mesLabel} · En curso`}
           </span>
@@ -178,7 +178,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
             const isOver = pct >= 100;
 
             return (
-              <div key={v.vendedor_id} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between gap-4 hover:shadow-md transition-all">
+              <div key={v.vendedor_id} className="bg-[#121c27] rounded-3xl p-5 shadow-sm border border-white/5 flex flex-col justify-between gap-4 hover:shadow-md transition-all">
                 {/* Header: Avatar, Clean Name (NO routes), Badge % */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -186,7 +186,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                       {getInitials(v.nombre)}
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-slate-900 leading-tight">{v.nombre}</h3>
+                      <h3 className="text-base font-bold text-white leading-tight">{v.nombre}</h3>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-extrabold ${c.badge} shrink-0`}>
@@ -195,14 +195,14 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 </div>
 
                 {/* MAIN FEATURE (NUEVA JERARQUÍA): Facturado (Finanzas) Prominente y Central */}
-                <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-4 flex flex-col gap-2">
+                <div className="bg-white/5/70 border border-white/5 rounded-2xl p-4 flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Facturado (Finanzas)</span>
                     <Sparkles className="w-4 h-4 text-pink-500" />
                   </div>
                   
                   <div className="flex items-baseline gap-1.5 flex-wrap">
-                    <span className="text-2xl font-black font-mono text-slate-900 tracking-tight">
+                    <span className="text-2xl font-black font-mono text-white tracking-tight">
                       B/.{fmt(v.total_facturado)}
                     </span>
                     <span className="text-xs font-semibold text-slate-400 font-mono">
@@ -211,7 +211,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                   </div>
 
                   {/* Barra de progreso elegante con gradiente */}
-                  <div className="w-full h-3 bg-slate-200/60 rounded-full overflow-hidden mt-1 p-0.5 border border-slate-200/30">
+                  <div className="w-full h-3 bg-slate-200/60 rounded-full overflow-hidden mt-1 p-0.5 border border-white/10/30">
                     <div className={`${c.bar} h-full rounded-full transition-all duration-700`} style={{ width: `${Math.min(pct, 100)}%` }} />
                   </div>
                 </div>
@@ -234,13 +234,13 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 </div>
 
                 {/* Vendido Reportado — solo informativo */}
-                <div className="border-t border-slate-100 pt-2.5 flex flex-col gap-1">
+                <div className="border-t border-white/5 pt-2.5 flex flex-col gap-1">
                   <div className="flex items-center justify-between text-[11px]">
                     <span className="text-slate-400 font-medium flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-pink-300 inline-block"></span>
                       Vendido Reportado (vendedor)
                     </span>
-                    <span className="font-mono text-slate-600 font-semibold">
+                    <span className="font-mono text-slate-400 font-semibold">
                       {v.total_vendido_reportado > 0 ? `B/.${fmt(v.total_vendido_reportado)}` : 'Sin registros'}
                     </span>
                   </div>
@@ -251,7 +251,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
           })}
 
           {resumenMensual.length === 0 && (
-            <div className="col-span-3 text-center py-10 text-slate-400 bg-white rounded-2xl border border-slate-100">
+            <div className="col-span-3 text-center py-10 text-slate-400 bg-[#121c27] rounded-2xl border border-white/5">
               No hay datos para este mes.
             </div>
           )}
@@ -259,10 +259,10 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
       </div>
 
       {/* ── TABLA FACTURADO vs VENDIDO REPORTADO ── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-2">
+      <div className="bg-[#121c27] rounded-2xl shadow-sm border border-white/5 overflow-hidden">
+        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Tabla Comparativa — {mesLabel}</h3>
+            <h3 className="text-base font-bold text-white">Tabla Comparativa — {mesLabel}</h3>
             <p className="text-xs text-slate-500 mt-0.5">
               El % de cuota y el bono de Jennifer se calculan con <strong>Facturado (Finanzas)</strong>. 
               El Vendido Reportado es referencia del vendedor.
@@ -273,7 +273,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-white/5 text-slate-500 text-[11px] uppercase tracking-wider font-semibold">
                 <th className="py-3 px-4">Vendedor</th>
                 <th className="py-3 px-4 text-right">Meta Mes</th>
                 <th className="py-3 px-4 text-right">
@@ -295,19 +295,19 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 const isOver = pct >= 100;
                 const isGood = pct >= 85;
                 return (
-                  <tr key={v.vendedor_id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={v.vendedor_id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold ${isOver ? 'bg-emerald-100 text-emerald-700' : isGood ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
                           {getInitials(v.nombre)}
                         </div>
                         <div>
-                          <span className="text-sm font-semibold text-slate-800 block">{v.nombre}</span>
+                          <span className="text-sm font-semibold text-slate-200 block">{v.nombre}</span>
                           <span className="text-[11px] text-slate-400">{v.ruta_asignada || '—'}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold text-slate-700">
+                    <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold text-slate-300">
                       B/.{Number(v.cuota_mensual).toLocaleString()}
                     </td>
                     <td className="py-3.5 px-4 text-right font-mono text-sm font-bold text-pink-700">
@@ -331,9 +331,9 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
               })}
             </tbody>
             <tfoot>
-              <tr className="bg-slate-50 border-t-2 border-slate-200">
-                <td className="py-3 px-4 text-sm font-bold text-slate-700">TOTAL EQUIPO</td>
-                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-slate-800">B/.{cuotaGlobal.toLocaleString()}</td>
+              <tr className="bg-white/5 border-t-2 border-white/10">
+                <td className="py-3 px-4 text-sm font-bold text-slate-300">TOTAL EQUIPO</td>
+                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-slate-200">B/.{cuotaGlobal.toLocaleString()}</td>
                 <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-700">B/.{fmt(facturadoGlobal)}</td>
                 <td className="py-3 px-4 text-right font-mono text-sm text-slate-500">—</td>
                 <td className="py-3 px-4 text-center">

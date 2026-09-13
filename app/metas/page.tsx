@@ -22,7 +22,7 @@ export default async function MetasPage() {
   });
 
   return (
-    <div className="flex flex-col min-w-0 overflow-y-auto w-full pt-4 lg:pt-8 px-4 sm:px-6 lg:px-10 pb-32 lg:pb-12 bg-white/5/50">
+    <div className="flex flex-col min-w-0 overflow-y-auto w-full pt-4 lg:pt-8 px-4 sm:px-6 lg:px-10 pb-32 lg:pb-12 bg-[#121c27]/5/50">
       <MetasClient goals={goals} />
     </div>
   );

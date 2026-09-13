@@ -59,7 +59,11 @@ export function parseReportText(text: string): any {
 
   function extractOfficer(line: string) {
     if (!line) return null;
-    const cleanLine = line.replace(/^[\s•*-]+/, '').replace(/[*_~]/g, '').trim();
+    const cleanLine = line
+      .replace(/^[\s•*\-\d.]+(?=\s|[a-zA-ZÁÉÍÓÚáéíóúÑñ])/i, '')
+      .replace(/\s*\([^)]*\)[.\s]*$/, '')
+      .replace(/[*_~]/g, '')
+      .trim();
 
     // Patrón 1: [Rango] [Placa (4 a 6 dígitos)] [Nombre Completo]
     const p1 = new RegExp(`^(${rangosRegexStr})\\s+(\\d{4,6})\\s+([A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+)$`, 'i');
@@ -235,7 +239,7 @@ export function parseReportText(text: string): any {
   if (reporteMatch) {
     const rawAsunto = reporteMatch[1].replace('.', '').trim().toLowerCase();
     if (rawAsunto.includes('recorrido')) result.asunto = 'Recorrido Perimetral';
-    else if (rawAsunto.includes('relevo') || rawAsunto.includes('fijo') || rawAsunto.includes('puesto')) result.asunto = 'Relevo de Turno / Puesto Fijo';
+    else if (rawAsunto.includes('relevo') || rawAsunto.includes('fijo') || rawAsunto.includes('puesto') || rawAsunto.includes('turno') || rawAsunto.includes('torre') || rawAsunto.includes('portón') || rawAsunto.includes('porton')) result.asunto = 'Relevo de Turno / Puesto Fijo';
     else if (rawAsunto.includes('traslado')) result.asunto = 'Traslado de Personal';
     else result.asunto = reporteMatch[1].replace(/[*.]/g, '').trim(); 
   } else if (/Puesto|Pursto|A\.I\.P\.P/i.test(cleanText)) {
@@ -259,6 +263,35 @@ export function parseReportText(text: string): any {
           placa_institucional: officer.placa,
           nombre: officer.nombre,
           destino: puestoNombre
+        });
+      }
+    }
+  }
+
+  // 9.5 Unidades Entrantes y Salientes
+  const unidadesBloqueRegex = /\*(?:UNIDADES\s+)?(SALIENTES|ENTRANTES|SALIENTE|ENTRANTE)[:.]?\*\s*([\s\S]*?)(?=\*(?:UNIDADES|INFORMA|REPORTA|CORRER[IÍ]A|NARRATIVA|ÁREAS|AREAS|EQUIPOS|NOVEDAD|DIOS|PUESTO|PURSTO)[:.]?\*|$)/gi;
+  let unidadesMatch;
+  let blockCount = 0;
+  while ((unidadesMatch = unidadesBloqueRegex.exec(cleanText)) !== null) {
+    let tipo = unidadesMatch[1].toUpperCase();
+    blockCount++;
+    if (tipo.includes('SALIENTE') && blockCount > 1 && (cleanText.match(/\*UNIDADES\s+SALIENTES/gi)?.length || 0) > 1) {
+      // Manejo de error humano si ponen "SALIENTES" dos veces (el 2do suele ser ENTRANTES)
+      tipo = 'ENTRANTE';
+    }
+    
+    const lines = unidadesMatch[2].split('\n');
+    for (const line of lines) {
+      const cleanL = line.trim();
+      if (!cleanL || cleanL.startsWith('*') || cleanL.toUpperCase().includes('DIOS')) continue;
+      const officer = extractOfficer(cleanL);
+      if (officer && !result.unidades.some((u: any) => u.placa_institucional === officer.placa && u.placa_institucional)) {
+        result.unidades.push({
+          rol: tipo.includes('SALIENTE') ? 'Saliente' : 'Entrante',
+          rango: officer.rango,
+          placa_institucional: officer.placa,
+          nombre: officer.nombre,
+          destino: ''
         });
       }
     }

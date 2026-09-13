@@ -59,7 +59,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
                 Presupuesto Variable {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+                <h4 className="text-base font-bold text-white item-title">{title}</h4>
                 {onEdit && (
                   <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Editar límite">
                     <Edit2 className="w-4 h-4" />
@@ -82,8 +82,8 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
         </div>
         <div className="mt-3 pt-3 border-t border-indigo-100/50 flex flex-col gap-2">
           <div className="flex justify-between items-baseline">
-            <span className="text-xs text-slate-500 font-medium">Gastado: <strong className="text-slate-900">B/. {spent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
-            <span className="text-xs text-slate-500 font-medium">Límite: <strong className="text-slate-900">{formattedAmount}</strong></span>
+            <span className="text-xs text-slate-500 font-medium">Gastado: <strong className="text-white">B/. {spent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong></span>
+            <span className="text-xs text-slate-500 font-medium">Límite: <strong className="text-white">{formattedAmount}</strong></span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden flex">
             <div 
@@ -140,7 +140,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
                 {responsible} {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+                <h4 className="text-base font-bold text-white item-title">{title}</h4>
                 {onEdit && (
                   <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
                     <Edit2 className="w-4 h-4" />
@@ -158,7 +158,7 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 status-pill">
                 Pagado ✓
               </span>
-              <p className="text-lg font-extrabold text-slate-900 mt-1 item-amount">{formattedAmount}</p>
+              <p className="text-lg font-extrabold text-white mt-1 item-amount">{formattedAmount}</p>
             </div>
           </div>
         </div>
@@ -179,15 +179,15 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
   }
 
   return (
-    <article className="payment-card bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden">
+    <article className="payment-card bg-[#121c27] border border-white/10 rounded-2xl p-4 shadow-sm hover:border-slate-300 transition-all flex flex-col justify-between relative overflow-hidden">
       <div className="border-l-4 border-rose-500 -ml-4 -mt-4 pl-4 pt-4 pb-1 status-stripe">
         <div className="flex justify-between items-start">
           <div>
-            <span className="inline-block text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+            <span className="inline-block text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
               {responsible} {payment.period ? `• ${payment.period}` : ''} {payment.billing_day ? `• Día ${payment.billing_day}` : ''}
             </span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <h4 className="text-base font-bold text-slate-900 item-title">{title}</h4>
+              <h4 className="text-base font-bold text-white item-title">{title}</h4>
               {onEdit && (
                 <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Editar">
                   <Edit2 className="w-4 h-4" />
@@ -205,12 +205,12 @@ export function PaymentCard({ payment, onToggleStatus, onPartialPayment, onEdit,
             <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 status-pill">
               Pendiente
             </span>
-            <p className="text-lg font-extrabold text-slate-900 mt-1 item-amount">{formattedAmount}</p>
+            <p className="text-lg font-extrabold text-white mt-1 item-amount">{formattedAmount}</p>
           </div>
         </div>
       </div>
-      <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-3">
-        <span className="text-xs text-slate-600 font-medium">{subtitle}</span>
+      <div className="mt-4 pt-3 border-t border-white/5 flex flex-col gap-3">
+        <span className="text-xs text-slate-400 font-medium">{subtitle}</span>
         <div className="flex items-center gap-2">
           {onPartialPayment && amount > 0 && (
             <Btn3D

@@ -95,54 +95,54 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
+          className="bg-[#121c27] rounded-t-3xl sm:rounded-3xl w-full max-w-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0">
+          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
                 <CreditCard className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Historial de Tarjeta</h3>
+                <h3 className="text-lg font-bold text-white">Historial de Tarjeta</h3>
                 <p className="text-xs text-slate-500">Consumos y abonos registrados</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="p-5 overflow-y-auto flex-1 bg-slate-50/50">
+          <div className="p-5 overflow-y-auto flex-1 bg-white/5/50">
             
             <div className="grid grid-cols-3 gap-3 mb-6">
-              <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Deuda Actual</p>
-                <p className="text-lg sm:text-xl font-bold text-slate-900 font-mono">B/. {totalDebt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                <p className="text-lg sm:text-xl font-bold text-white font-mono">B/. {totalDebt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
-              <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Gastado</p>
                 <p className="text-lg sm:text-xl font-bold text-rose-500 font-mono">B/. {totalSpent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
-              <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm text-center">
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Abonado</p>
                 <p className="text-lg sm:text-xl font-bold text-emerald-500 font-mono">B/. {totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
             </div>
 
-            <h4 className="text-sm font-bold text-slate-900 mb-3 ml-1">Movimientos</h4>
+            <h4 className="text-sm font-bold text-white mb-3 ml-1">Movimientos</h4>
             
             <div className="space-y-2.5">
               {allHistory.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 bg-white rounded-2xl border border-slate-100">
+                <div className="text-center py-8 text-slate-500 bg-[#121c27] rounded-2xl border border-white/5">
                   <p className="text-sm">No hay movimientos registrados en esta tarjeta.</p>
                 </div>
               ) : (
                 allHistory.map((item, index) => (
-                  <div key={`${item.id}-${index}`} className="bg-white border border-slate-100 rounded-2xl p-3.5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                  <div key={`${item.id}-${index}`} className="bg-[#121c27] border border-white/5 rounded-2xl p-3.5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                         item.type === 'expense' ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-500'
@@ -150,7 +150,7 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
                         {item.type === 'expense' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownRight className="w-5 h-5" />}
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900 leading-tight">{item.title}</p>
+                        <p className="text-sm font-bold text-white leading-tight">{item.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
                             {item.category}
@@ -172,7 +172,7 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
                       </div>
                       
                       {/* Acciones */}
-                      <div className="flex flex-col gap-1 ml-2 border-l border-slate-100 pl-3">
+                      <div className="flex flex-col gap-1 ml-2 border-l border-white/5 pl-3">
                         <button 
                           disabled={isPending}
                           onClick={() => {
