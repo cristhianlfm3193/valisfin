@@ -88,7 +88,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
 
   const valisANNavItems = [
     { href: "/valisan?tab=dashboard", label: "Dashboard", icon: BarChart2, id: 'dashboard' },
-    { href: "/valisan?tab=aipp", label: "AIPP (Metas & Proy.)", icon: Target, id: 'aipp' },
+    { href: "/valisan?tab=aipp", label: "AIPP (Reportes)", icon: Target, id: 'aipp' },
     { href: "/valisan?tab=bdrh", label: "BD-RH (Personal)", icon: Shield, id: 'bdrh' },
   ];
 

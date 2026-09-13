@@ -17,7 +17,7 @@ export default function ValisANClient({ user, activeTab }: ValisANClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const getTabName = () => {
     if (activeTab === 'dashboard') return 'Dashboard';
-    if (activeTab === 'aipp') return 'AIPP (Metas & Proy.)';
+    if (activeTab === 'aipp') return 'AIPP (Reportes)';
     if (activeTab === 'bdrh') return 'BD-RH (Personal)';
     return 'ValisAN';
   };
@@ -304,10 +304,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 transition">
-              <Download className="w-4 h-4" />
-              Exportar Datos
-            </button>
+
             <button 
               onClick={() => setIsGlobalReporteModalOpen(true)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition"
