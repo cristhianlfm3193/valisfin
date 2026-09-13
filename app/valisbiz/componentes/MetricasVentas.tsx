@@ -42,31 +42,31 @@ interface MetricasVentasProps {
 
 function getColors(pct: number) {
   if (pct >= 100) return { 
-    bg: 'bg-emerald-500/10', 
-    border: 'border-emerald-500/20',
-    text: 'text-emerald-400', 
-    badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30', 
+    bg: 'bg-emerald-50/70', 
+    border: 'border-emerald-100',
+    text: 'text-emerald-700', 
+    badge: 'bg-emerald-100/90 text-emerald-800 border border-emerald-200/60', 
     bar: 'bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600', 
     icon: Sparkles, 
-    iconBg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+    iconBg: 'bg-emerald-100 text-emerald-600 border border-emerald-200/60'
   };
   if (pct >= 85) return { 
-    bg: 'bg-blue-500/10', 
-    border: 'border-blue-500/20',
-    text: 'text-blue-400', 
-    badge: 'bg-blue-500/20 text-blue-400 border border-blue-500/30', 
+    bg: 'bg-purple-50/60', 
+    border: 'border-purple-100',
+    text: 'text-purple-700', 
+    badge: 'bg-purple-100/90 text-purple-800 border border-purple-200/60', 
     bar: 'bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600', 
     icon: TrendingUp, 
-    iconBg: 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+    iconBg: 'bg-purple-100 text-purple-600 border border-purple-200/60'
   };
   return { 
-    bg: 'bg-rose-500/10', 
-    border: 'border-rose-500/20',
-    text: 'text-rose-400', 
-    badge: 'bg-rose-500/20 text-rose-400 border border-rose-500/30', 
+    bg: 'bg-rose-50/60', 
+    border: 'border-rose-100',
+    text: 'text-rose-700', 
+    badge: 'bg-rose-100/90 text-rose-800 border border-rose-200/60', 
     bar: 'bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500', 
     icon: Sparkles, 
-    iconBg: 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+    iconBg: 'bg-rose-100 text-pink-600 border border-rose-200/60'
   };
 }
 
@@ -164,8 +164,8 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
       {/* ── TARJETAS DE VENDEDORES ── */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-base font-bold text-white">Equipo de Vendedores</h2>
-          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${isMesCerrado ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'}`}>
+          <h2 className="text-base font-bold text-slate-800">Equipo de Vendedores</h2>
+          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${isMesCerrado ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
             {isMesCerrado ? `📅 ${mesLabel} · Mes cerrado` : `🟢 ${mesLabel} · En curso`}
           </span>
         </div>
@@ -178,15 +178,15 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
             const isOver = pct >= 100;
 
             return (
-              <div key={v.vendedor_id} className="bg-[#121c27]/85 backdrop-blur-md rounded-3xl p-5 shadow-sm border border-emerald-500/20 flex flex-col justify-between gap-4 hover:border-emerald-500/50 transition-all">
+              <div key={v.vendedor_id} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between gap-4 hover:shadow-md transition-all">
                 {/* Header: Avatar, Clean Name (NO routes), Badge % */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-500/20 via-rose-500/20 to-purple-500/20 text-pink-400 text-sm font-bold flex items-center justify-center shrink-0 border border-pink-500/30 shadow-xs">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-100 via-rose-50 to-purple-100 text-pink-700 text-sm font-bold flex items-center justify-center shrink-0 border border-pink-200/50 shadow-xs">
                       {getInitials(v.nombre)}
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-white leading-tight">{v.nombre}</h3>
+                      <h3 className="text-base font-bold text-slate-900 leading-tight">{v.nombre}</h3>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-extrabold ${c.badge} shrink-0`}>
@@ -195,23 +195,23 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 </div>
 
                 {/* MAIN FEATURE (NUEVA JERARQUÍA): Facturado (Finanzas) Prominente y Central */}
-                <div className="bg-black/30 border border-white/5 rounded-2xl p-4 flex flex-col gap-2">
+                <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-4 flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Facturado (Finanzas)</span>
-                    <Sparkles className="w-4 h-4 text-pink-400" />
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Facturado (Finanzas)</span>
+                    <Sparkles className="w-4 h-4 text-pink-500" />
                   </div>
                   
                   <div className="flex items-baseline gap-1.5 flex-wrap">
-                    <span className="text-2xl font-black font-mono text-white tracking-tight">
+                    <span className="text-2xl font-black font-mono text-slate-900 tracking-tight">
                       B/.{fmt(v.total_facturado)}
                     </span>
-                    <span className="text-xs font-semibold text-gray-500 font-mono">
+                    <span className="text-xs font-semibold text-slate-400 font-mono">
                       / {Number(v.cuota_mensual).toLocaleString()}
                     </span>
                   </div>
 
                   {/* Barra de progreso elegante con gradiente */}
-                  <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden mt-1 p-0.5 border border-white/5">
+                  <div className="w-full h-3 bg-slate-200/60 rounded-full overflow-hidden mt-1 p-0.5 border border-slate-200/30">
                     <div className={`${c.bar} h-full rounded-full transition-all duration-700`} style={{ width: `${Math.min(pct, 100)}%` }} />
                   </div>
                 </div>
@@ -223,10 +223,10 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                       <Icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <span className="text-[11px] font-semibold text-gray-400 block">
+                      <span className="text-[11px] font-semibold text-slate-500 block">
                         {isOver ? '🏆 Superó la meta' : 'Brecha / GAP'}
                       </span>
-                      <span className={`font-mono text-sm font-bold ${isOver ? 'text-emerald-400' : c.text}`}>
+                      <span className={`font-mono text-sm font-bold ${isOver ? 'text-emerald-700' : c.text}`}>
                         {isOver ? '+' : ''}B/.{fmt(Math.abs(v.gap_facturado))}
                       </span>
                     </div>
@@ -234,24 +234,24 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 </div>
 
                 {/* Vendido Reportado — solo informativo */}
-                <div className="border-t border-white/10 pt-2.5 flex flex-col gap-1">
+                <div className="border-t border-slate-100 pt-2.5 flex flex-col gap-1">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-gray-400 font-medium flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-pink-400 inline-block shadow-[0_0_8px_rgba(244,114,182,0.8)]"></span>
+                    <span className="text-slate-400 font-medium flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-pink-300 inline-block"></span>
                       Vendido Reportado (vendedor)
                     </span>
-                    <span className="font-mono text-gray-300 font-semibold">
+                    <span className="font-mono text-slate-600 font-semibold">
                       {v.total_vendido_reportado > 0 ? `B/.${fmt(v.total_vendido_reportado)}` : 'Sin registros'}
                     </span>
                   </div>
-                  <p className="text-[10px] text-gray-500 italic">Solo informativo · No aplica para bono</p>
+                  <p className="text-[10px] text-slate-400 italic">Solo informativo · No aplica para bono</p>
                 </div>
               </div>
             );
           })}
 
           {resumenMensual.length === 0 && (
-            <div className="col-span-3 text-center py-10 text-gray-400 bg-black/20 rounded-2xl border border-white/5">
+            <div className="col-span-3 text-center py-10 text-slate-400 bg-white rounded-2xl border border-slate-100">
               No hay datos para este mes.
             </div>
           )}
@@ -259,11 +259,11 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
       </div>
 
       {/* ── TABLA FACTURADO vs VENDIDO REPORTADO ── */}
-      <div className="bg-[#121c27]/85 backdrop-blur-md rounded-2xl shadow-sm border border-emerald-500/20 overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between flex-wrap gap-2">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h3 className="text-base font-bold text-white">Tabla Comparativa — {mesLabel}</h3>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <h3 className="text-base font-bold text-slate-900">Tabla Comparativa — {mesLabel}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">
               El % de cuota y el bono de Jennifer se calculan con <strong>Facturado (Finanzas)</strong>. 
               El Vendido Reportado es referencia del vendedor.
             </p>
@@ -273,57 +273,57 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-black/30 text-gray-400 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider font-semibold">
                 <th className="py-3 px-4">Vendedor</th>
                 <th className="py-3 px-4 text-right">Meta Mes</th>
                 <th className="py-3 px-4 text-right">
-                  <span className="text-pink-400">Facturado</span>
-                  <span className="block font-normal normal-case text-[10px] text-gray-500">Finanzas · base de bono</span>
+                  <span className="text-pink-600">Facturado</span>
+                  <span className="block font-normal normal-case text-[10px] text-slate-400">Finanzas · base de bono</span>
                 </th>
                 <th className="py-3 px-4 text-right">
                   Vendido Reportado
-                  <span className="block font-normal normal-case text-[10px] text-gray-500">Vendedor · solo referencia</span>
+                  <span className="block font-normal normal-case text-[10px] text-slate-400">Vendedor · solo referencia</span>
                 </th>
                 <th className="py-3 px-4 text-center">% Cuota</th>
                 <th className="py-3 px-4 text-right">GAP</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-50">
               {resumenMensual.map(v => {
                 const pct = Number(v.porcentaje_facturado || 0);
                 const gap = Number(v.gap_facturado);
                 const isOver = pct >= 100;
                 const isGood = pct >= 85;
                 return (
-                  <tr key={v.vendedor_id} className="hover:bg-white/5 transition-colors">
+                  <tr key={v.vendedor_id} className="hover:bg-slate-50 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold border ${isOver ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : isGood ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold ${isOver ? 'bg-emerald-100 text-emerald-700' : isGood ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
                           {getInitials(v.nombre)}
                         </div>
                         <div>
-                          <span className="text-sm font-semibold text-white block">{v.nombre}</span>
-                          <span className="text-[11px] text-gray-500">{v.ruta_asignada || '—'}</span>
+                          <span className="text-sm font-semibold text-slate-800 block">{v.nombre}</span>
+                          <span className="text-[11px] text-slate-400">{v.ruta_asignada || '—'}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold text-gray-300">
+                    <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold text-slate-700">
                       B/.{Number(v.cuota_mensual).toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-mono text-sm font-bold text-pink-400">
+                    <td className="py-3.5 px-4 text-right font-mono text-sm font-bold text-pink-700">
                       B/.{fmt(v.total_facturado)}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-mono text-sm text-gray-400">
+                    <td className="py-3.5 px-4 text-right font-mono text-sm text-slate-500">
                       {v.total_vendido_reportado > 0
                         ? `B/.${fmt(v.total_vendido_reportado)}`
-                        : <span className="text-gray-500 text-xs">Sin datos</span>}
+                        : <span className="text-slate-300 text-xs">Sin datos</span>}
                     </td>
                     <td className="py-3.5 px-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold border ${isOver ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : isGood ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                      <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${isOver ? 'bg-emerald-100 text-emerald-700' : isGood ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
                         {pct.toFixed(1)}%
                       </span>
                     </td>
-                    <td className={`py-3.5 px-4 text-right font-mono text-sm font-bold ${isOver ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <td className={`py-3.5 px-4 text-right font-mono text-sm font-bold ${isOver ? 'text-emerald-600' : 'text-red-500'}`}>
                       {isOver ? '+' : ''}B/.{fmt(Math.abs(gap))}
                     </td>
                   </tr>
@@ -331,17 +331,17 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
               })}
             </tbody>
             <tfoot>
-              <tr className="bg-black/40 border-t-2 border-white/10">
-                <td className="py-3 px-4 text-sm font-bold text-white">TOTAL EQUIPO</td>
-                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-white">B/.{cuotaGlobal.toLocaleString()}</td>
-                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-400">B/.{fmt(facturadoGlobal)}</td>
-                <td className="py-3 px-4 text-right font-mono text-sm text-gray-400">—</td>
+              <tr className="bg-slate-50 border-t-2 border-slate-200">
+                <td className="py-3 px-4 text-sm font-bold text-slate-700">TOTAL EQUIPO</td>
+                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-slate-800">B/.{cuotaGlobal.toLocaleString()}</td>
+                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-700">B/.{fmt(facturadoGlobal)}</td>
+                <td className="py-3 px-4 text-right font-mono text-sm text-slate-500">—</td>
                 <td className="py-3 px-4 text-center">
-                  <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold border ${porcentajeGlobal >= 85 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                  <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${porcentajeGlobal >= 85 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                     {porcentajeGlobal.toFixed(1)}%
                   </span>
                 </td>
-                <td className={`py-3 px-4 text-right font-mono text-sm font-bold ${porcentajeGlobal >= 100 ? 'text-emerald-400' : 'text-red-400'}`}>
+                <td className={`py-3 px-4 text-right font-mono text-sm font-bold ${porcentajeGlobal >= 100 ? 'text-emerald-600' : 'text-red-500'}`}>
                   B/.{fmt(Math.abs(Number(metas.gap_global)))}
                 </td>
               </tr>

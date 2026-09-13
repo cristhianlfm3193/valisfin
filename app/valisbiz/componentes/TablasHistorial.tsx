@@ -124,14 +124,14 @@ function ModalConfirmarBorrado({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onCancel} />
-      <div className="relative bg-[#181124] border border-white/10 rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in zoom-in-95 duration-150">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in zoom-in-95 duration-150">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
             <AlertTriangle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <h3 className="font-bold text-white">Confirmar borrado</h3>
-            <p className="text-sm text-gray-400 mt-0.5">{mensaje}</p>
+            <h3 className="font-bold text-slate-900">Confirmar borrado</h3>
+            <p className="text-sm text-slate-500 mt-0.5">{mensaje}</p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -188,44 +188,44 @@ function ModalEditarFacturado({
     });
   };
 
-  const inputBase = 'w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all';
+  const inputBase = 'w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-[#181124] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150">
         <div className="bg-gradient-to-r from-pink-600 to-rose-500 px-5 py-4 flex items-center justify-between">
           <div>
             <h3 className="text-white font-bold">Editar Facturado</h3>
             <p className="text-pink-100 text-xs mt-0.5">{registro.vendedor_nombre}</p>
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-[#090a0f]/50/20 text-white flex items-center justify-center hover:bg-[#090a0f]/50/30 transition-colors">
+          <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="px-5 py-4 flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">Fecha</label>
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Fecha</label>
             <input type="date" value={fecha} onChange={e => setFecha(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1.5 flex items-center gap-1">
-                <Banknote className="w-3.5 h-3.5 text-whitemerald-600" /> Contado (B/.)
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+                <Banknote className="w-3.5 h-3.5 text-emerald-600" /> Contado (B/.)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                 <input type="number" step="0.01" min="0" value={contado} onChange={e => setContado(e.target.value)}
                   placeholder="0.00" className={inputBase} />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1.5 flex items-center gap-1">
-                <CreditCard className="w-3.5 h-3.5 text-whitelue-600" /> Crédito (B/.)
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
+                <CreditCard className="w-3.5 h-3.5 text-blue-600" /> Crédito (B/.)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                 <input type="number" step="0.01" min="0" value={credito} onChange={e => setCredito(e.target.value)}
                   placeholder="0.00" className={inputBase} />
               </div>
@@ -233,19 +233,19 @@ function ModalEditarFacturado({
           </div>
           {/* Total calculado */}
           <div className="flex items-center justify-between bg-pink-50 rounded-xl px-4 py-2.5 border border-pink-200">
-            <span className="text-xs font-semibold text-gray-300 flex items-center gap-1">
+            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
               <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
             </span>
             <span className="font-mono font-bold text-pink-700 text-sm">B/.{fmt(total)}</span>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-300 mb-1.5">Notas</label>
+            <label className="block text-xs font-semibold text-slate-600 mb-1.5">Notas</label>
             <input type="text" value={notas} onChange={e => setNotas(e.target.value)} placeholder="Opcional"
-              className="w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
           </div>
           {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-gray-300 text-sm font-semibold hover:bg-[#090a0f]/50/5 transition-colors">Cancelar</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors">Cancelar</button>
             <button type="submit" disabled={isPending}
               className="flex-1 py-2.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-sm font-bold shadow transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -290,41 +290,41 @@ function ModalEditarVendido({
     });
   };
 
-  const inputBase = "w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 px-3 py-2.5 text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all";
+  const inputBase = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all";
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-[#181124] border border-white/10 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150 max-h-[95vh] flex flex-col">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-150 max-h-[95vh] flex flex-col">
         <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-4 flex items-center justify-between flex-shrink-0">
           <div>
             <h3 className="text-white font-bold">Editar Reporte Vendedor</h3>
-            <p className="text-whitelue-100 text-xs mt-0.5">{registro.vendedor_nombre}</p>
+            <p className="text-blue-100 text-xs mt-0.5">{registro.vendedor_nombre}</p>
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-[#090a0f]/50/20 text-white flex items-center justify-center hover:bg-[#090a0f]/50/30 transition-colors">
+          <button onClick={onClose} className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         <div className="overflow-y-auto flex-1">
           <form onSubmit={handleSubmit} className="px-5 py-4 flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1.5">Fecha</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Fecha</label>
               <input type="date" value={fecha} onChange={e => setFecha(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
             </div>
 
             {/* Visitas */}
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Visitas del día</p>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Visitas del día</p>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
-                    <Eye className="w-3.5 h-3.5 text-gray-400" /> Vistas
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                    <Eye className="w-3.5 h-3.5 text-slate-400" /> Vistas
                   </label>
                   <input type="number" min="0" value={vistas} onChange={e => setVistas(e.target.value)} placeholder="0" className={inputBase} />
                 </div>
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-whitemerald-700 mb-1.5">
+                  <label className="flex items-center gap-1 text-xs font-semibold text-emerald-700 mb-1.5">
                     <ShoppingCart className="w-3.5 h-3.5" /> Con Compra
                   </label>
                   <input type="number" min="0" value={conCompra} onChange={e => setConCompra(e.target.value)} placeholder="0"
@@ -342,26 +342,26 @@ function ModalEditarVendido({
 
             {/* Montos */}
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Montos (B/.)</p>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Montos (B/.)</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
-                    <Banknote className="w-3.5 h-3.5 text-gray-400" /> Contado
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                    <Banknote className="w-3.5 h-3.5 text-slate-400" /> Contado
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                     <input type="number" step="0.01" min="0" value={contado} onChange={e => setContado(e.target.value)} placeholder="0.00"
-                      className="w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
                   </div>
                 </div>
                 <div>
-                  <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
-                    <CreditCard className="w-3.5 h-3.5 text-gray-400" /> Crédito
+                  <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-slate-400" /> Crédito
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
                     <input type="number" step="0.01" min="0" value={credito} onChange={e => setCredito(e.target.value)} placeholder="0.00"
-                      className="w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all" />
                   </div>
                 </div>
               </div>
@@ -370,17 +370,17 @@ function ModalEditarVendido({
             {/* Total */}
             <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
               <div className="flex items-center gap-2">
-                <Calculator className="w-4 h-4 text-whitelue-500" />
-                <span className="text-sm font-semibold text-whitelue-700">Total</span>
+                <Calculator className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-semibold text-blue-700">Total</span>
               </div>
-              <span className="font-mono text-lg font-bold text-whitelue-700">
+              <span className="font-mono text-lg font-bold text-blue-700">
                 B/.{total.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
 
             {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
             <div className="flex gap-3 pb-1">
-              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/10 text-gray-300 text-sm font-semibold hover:bg-[#090a0f]/50/5 transition-colors">Cancelar</button>
+              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors">Cancelar</button>
               <button type="submit" disabled={isPending}
                 className="flex-1 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold shadow transition-all disabled:opacity-60 flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
@@ -405,7 +405,7 @@ function SortTh({ label, col, sort, dir, onSort, className = '' }: {
   return (
     <th
       onClick={() => onSort(col)}
-      className={`py-2.5 px-3 select-none cursor-pointer hover:text-gray-200 transition-colors whitespace-nowrap group ${className}`}
+      className={`py-2.5 px-3 select-none cursor-pointer hover:text-slate-700 transition-colors whitespace-nowrap group ${className}`}
     >
       <span className="flex items-center gap-1">
         {label}
@@ -519,16 +519,16 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         />
       )}
 
-      <div className="bg-[#241324]/80 backdrop-blur-md rounded-2xl shadow-lg border border-pink-500/20 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-pink-200 overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-pink-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="px-5 py-4 border-b border-pink-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center">
               <Building2 className="w-4 h-4 text-pink-600" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-sm">Facturado por Finanzas</h4>
-              <p className="text-[11px] text-gray-400">Snapshot diario · muestra el último registro por vendedor en la tabla comparativa</p>
+              <h4 className="font-bold text-slate-900 text-sm">Facturado por Finanzas</h4>
+              <p className="text-[11px] text-slate-400">Snapshot diario · muestra el último registro por vendedor en la tabla comparativa</p>
             </div>
           </div>
           <div className="font-mono text-sm font-bold text-pink-600 whitespace-nowrap flex items-center gap-3">
@@ -538,7 +538,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
                 verTodos
                   ? 'bg-pink-600 text-white border-pink-600'
-                  : 'bg-[#241324] text-pink-400 border-pink-500/30 hover:bg-pink-500/10'
+                  : 'bg-white text-pink-600 border-pink-300 hover:bg-pink-50'
               }`}
             >
               {verTodos ? 'Paginar' : `Ver todos (${filtrados.length})`}
@@ -547,24 +547,24 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         </div>
 
         {/* Control Bar de Filtros Dinámicos */}
-        <div className="px-5 py-3 border-b border-white/5 bg-[#090a0f]/50/5/50 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-1 min-w-[220px]">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
                 placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#090a0f]/50 border border-white/10 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-xs" />
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-xs" />
             </div>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Selector Vendedor */}
-            <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
               <Filter className="w-3.5 h-3.5 text-pink-500" />
               <select 
                 value={vendedorFiltro} 
                 onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-                className="text-xs font-semibold text-gray-200 bg-transparent focus:outline-none cursor-pointer"
+                className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
               >
                 <option value="todos">Vendedor: Todos</option>
                 {vendedoresUnicos.map(v => (
@@ -574,17 +574,17 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             </div>
 
             {/* Rango de Fechas */}
-            <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
+            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
               <Calendar className="w-3.5 h-3.5 text-pink-500 shrink-0" />
               <div className="flex items-center gap-1 text-xs">
-                <span className="text-gray-400 font-semibold">Desde:</span>
+                <span className="text-slate-400 font-semibold">Desde:</span>
                 <input 
                   type="date" 
                   value={fechaDesde} 
                   onChange={e => { setFechaDesde(e.target.value); setPagina(1); }}
                   className="text-xs font-mono bg-transparent focus:outline-none cursor-pointer" 
                 />
-                <span className="text-gray-400 font-semibold ml-1">Hasta:</span>
+                <span className="text-slate-400 font-semibold ml-1">Hasta:</span>
                 <input 
                   type="date" 
                   value={fechaHasta} 
@@ -598,7 +598,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             {hasFiltrosActivos && (
               <button 
                 onClick={handleLimpiarFiltros}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-500/20 text-pink-200 text-xs font-bold transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold transition-colors"
                 title="Limpiar filtros"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -612,11 +612,11 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-[#090a0f]/50/5 text-gray-400 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
                 <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
-                <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitemerald-600" />
-                <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitelue-600" />
+                <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-emerald-600" />
+                <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-blue-600" />
                 <SortTh label="Total" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-pink-600" />
                 <th className="py-2.5 px-3">Notas</th>
                 <th className="py-2.5 px-3 text-center">Acciones</th>
@@ -625,33 +625,33 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             <tbody className="divide-y divide-slate-50">
               {filas.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-sm text-gray-400">
+                  <td colSpan={7} className="py-8 text-center text-sm text-slate-400">
                     {hasFiltrosActivos ? 'No hay resultados con los filtros aplicados.' : 'No hay registros para este mes.'}
                   </td>
                 </tr>
               ) : (
                 filas.map(r => (
-                  <tr key={r.id} className="hover:bg-[#090a0f]/50/5 transition-colors group">
-                    <td className="py-3 px-4 text-sm font-mono text-gray-300 whitespace-nowrap">
+                  <tr key={r.id} className="hover:bg-slate-50 transition-colors group">
+                    <td className="py-3 px-4 text-sm font-mono text-slate-600 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-4">
                       <span 
                         onClick={() => { setVendedorFiltro(r.vendedor_nombre); setPagina(1); }}
-                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-pink-500/20 text-pink-200 cursor-pointer hover:bg-pink-200 transition-colors"
+                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-pink-100 text-pink-700 cursor-pointer hover:bg-pink-200 transition-colors"
                         title={`Filtrar por ${r.vendedor_nombre}`}
                       >
                         {r.vendedor_nombre.split(' ')[0]}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-whitemerald-700">
+                    <td className="py-3 px-3 text-right font-mono text-sm text-emerald-700">
                       {r.contado > 0 ? `B/.${fmt(r.contado)}` : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-whitelue-700">
+                    <td className="py-3 px-3 text-right font-mono text-sm text-blue-700">
                       {r.credito > 0 ? `B/.${fmt(r.credito)}` : '—'}
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-600">B/.{fmt(r.monto)}</td>
-                    <td className="py-3 px-3 text-xs text-gray-400 max-w-[160px] truncate">{r.notas || '—'}</td>
+                    <td className="py-3 px-3 text-xs text-slate-400 max-w-[160px] truncate">{r.notas || '—'}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
                         <button
@@ -677,11 +677,11 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
             {filtrados.length > 0 && (
               <tfoot>
                 <tr className="bg-pink-50 border-t-2 border-pink-200 text-[11px] font-bold">
-                  <td className="py-2.5 px-3 text-gray-300 uppercase tracking-wider" colSpan={2}>
+                  <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
                     {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                   </td>
-                  <td className="py-2.5 px-3 text-right font-mono text-whitemerald-700">B/.{fmt(totalContado)}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-whitelue-700">B/.{fmt(totalCredito)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-emerald-700">B/.{fmt(totalContado)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalCredito)}</td>
                   <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalMonto)}</td>
                   <td className="py-2.5 px-3" colSpan={2} />
                 </tr>
@@ -804,26 +804,26 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         />
       )}
 
-      <div className="bg-[#0e1d2c]/80 backdrop-blur-md rounded-2xl shadow-lg border border-sky-500/20 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-blue-200 overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-sky-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="px-5 py-4 border-b border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-              <FileText className="w-4 h-4 text-whitelue-600" />
+              <FileText className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-sm">Vendido Reportado por Vendedores</h4>
-              <p className="text-[11px] text-gray-400">Acumulado diario del vendedor · se suma al mes en la tabla comparativa</p>
+              <h4 className="font-bold text-slate-900 text-sm">Vendido Reportado por Vendedores</h4>
+              <p className="text-[11px] text-slate-400">Acumulado diario del vendedor · se suma al mes en la tabla comparativa</p>
             </div>
           </div>
-          <div className="font-mono text-sm font-bold text-whitelue-600 whitespace-nowrap flex items-center gap-3">
+          <div className="font-mono text-sm font-bold text-blue-600 whitespace-nowrap flex items-center gap-3">
             Total: B/.{fmt(totalMonto)}
             <button
               onClick={() => setVerTodos(v => !v)}
               className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
                 verTodos
                   ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-[#0e1d2c] text-sky-400 border-sky-500/30 hover:bg-sky-500/10'
+                  : 'bg-white text-blue-600 border-blue-300 hover:bg-blue-50'
               }`}
             >
               {verTodos ? `Paginar` : `Ver todos (${filtrados.length})`}
@@ -832,24 +832,24 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         </div>
 
         {/* Control Bar de Filtros Dinámicos */}
-        <div className="px-5 py-3 border-b border-white/5 bg-[#090a0f]/50/5/50 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-1 min-w-[220px]">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
                 placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#090a0f]/50 border border-white/10 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-xs" />
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 shadow-xs" />
             </div>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Selector Vendedor */}
-            <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
-              <Filter className="w-3.5 h-3.5 text-whitelue-500" />
+            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+              <Filter className="w-3.5 h-3.5 text-blue-500" />
               <select 
                 value={vendedorFiltro} 
                 onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-                className="text-xs font-semibold text-gray-200 bg-transparent focus:outline-none cursor-pointer"
+                className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
               >
                 <option value="todos">Vendedor: Todos</option>
                 {vendedoresUnicos.map(v => (
@@ -859,17 +859,17 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
             </div>
 
             {/* Rango de Fechas */}
-            <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
-              <Calendar className="w-3.5 h-3.5 text-whitelue-500 shrink-0" />
+            <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
+              <Calendar className="w-3.5 h-3.5 text-blue-500 shrink-0" />
               <div className="flex items-center gap-1 text-xs">
-                <span className="text-gray-400 font-semibold">Desde:</span>
+                <span className="text-slate-400 font-semibold">Desde:</span>
                 <input 
                   type="date" 
                   value={fechaDesde} 
                   onChange={e => { setFechaDesde(e.target.value); setPagina(1); }}
                   className="text-xs font-mono bg-transparent focus:outline-none cursor-pointer" 
                 />
-                <span className="text-gray-400 font-semibold ml-1">Hasta:</span>
+                <span className="text-slate-400 font-semibold ml-1">Hasta:</span>
                 <input 
                   type="date" 
                   value={fechaHasta} 
@@ -883,7 +883,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
             {hasFiltrosActivos && (
               <button 
                 onClick={handleLimpiarFiltros}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-sky-500/20 text-sky-200 text-xs font-bold transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors"
                 title="Limpiar filtros"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -897,52 +897,52 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-[#090a0f]/50/5 text-gray-400 text-[11px] uppercase tracking-wider font-semibold">
+              <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
                 <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Vistas" col="vistas" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center" />
-                <SortTh label="Con Compra" col="con_compra" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center text-whitemerald-600" />
+                <SortTh label="Con Compra" col="con_compra" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center text-emerald-600" />
                 <SortTh label="Sin Compra" col="sin_compra" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-center text-red-500" />
                 <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
                 <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
-                <SortTh label="Total" col="total" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-whitelue-600" />
+                <SortTh label="Total" col="total" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-blue-600" />
                 <th className="py-2.5 px-3 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
               {filas.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-sm text-gray-400">
+                  <td colSpan={9} className="py-8 text-center text-sm text-slate-400">
                     {hasFiltrosActivos ? 'No hay resultados con los filtros aplicados.' : 'No hay registros para este mes.'}
                   </td>
                 </tr>
               ) : (
                 filas.map(r => (
-                  <tr key={r.id} className="hover:bg-[#090a0f]/50/5 transition-colors group">
-                    <td className="py-3 px-3 text-xs font-mono text-gray-300 whitespace-nowrap">
+                  <tr key={r.id} className="hover:bg-slate-50 transition-colors group">
+                    <td className="py-3 px-3 text-xs font-mono text-slate-600 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-3">
                       <span 
                         onClick={() => { setVendedorFiltro(r.vendedor_nombre); setPagina(1); }}
-                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-sky-500/20 text-sky-200 cursor-pointer hover:bg-blue-200 transition-colors"
+                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-100 text-blue-700 cursor-pointer hover:bg-blue-200 transition-colors"
                         title={`Filtrar por ${r.vendedor_nombre}`}
                       >
                         {r.vendedor_nombre.split(' ')[0]}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-center font-mono text-sm text-gray-300">{r.vistas}</td>
-                    <td className="py-3 px-3 text-center font-mono text-sm font-semibold text-whitemerald-600">{r.con_compra}</td>
+                    <td className="py-3 px-3 text-center font-mono text-sm text-slate-600">{r.vistas}</td>
+                    <td className="py-3 px-3 text-center font-mono text-sm font-semibold text-emerald-600">{r.con_compra}</td>
                     <td className="py-3 px-3 text-center font-mono text-sm font-semibold text-red-500">{r.sin_compra}</td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-gray-300">B/.{fmt(r.contado)}</td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-gray-300">B/.{fmt(r.credito)}</td>
-                    <td className="py-3 px-3 text-right font-mono text-sm font-bold text-whitelue-600">B/.{fmt(r.monto)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-600">B/.{fmt(r.contado)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm text-slate-600">B/.{fmt(r.credito)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm font-bold text-blue-600">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
                         <button
                           onClick={() => setEditando(r)}
                           title="Editar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-whitelue-600 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -962,15 +962,15 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
             {filtrados.length > 0 && (
               <tfoot>
                 <tr className="bg-blue-50 border-t-2 border-blue-200 text-[11px] font-bold">
-                  <td className="py-2.5 px-3 text-gray-300 uppercase tracking-wider" colSpan={2}>
+                  <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
                     {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                   </td>
-                  <td className="py-2.5 px-3 text-center font-mono text-gray-200">{totalVistas}</td>
-                  <td className="py-2.5 px-3 text-center font-mono text-whitemerald-700">{totalConCompra}</td>
+                  <td className="py-2.5 px-3 text-center font-mono text-slate-700">{totalVistas}</td>
+                  <td className="py-2.5 px-3 text-center font-mono text-emerald-700">{totalConCompra}</td>
                   <td className="py-2.5 px-3 text-center font-mono text-red-600">{totalSinCompra}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-gray-200">B/.{fmt(totalContado)}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-gray-200">B/.{fmt(totalCredito)}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-whitelue-700">B/.{fmt(totalMonto)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-700">B/.{fmt(totalContado)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-slate-700">B/.{fmt(totalCredito)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalMonto)}</td>
                   <td className="py-2.5 px-3" />
                 </tr>
               </tfoot>
@@ -991,13 +991,13 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
 }) {
   const active = color === 'pink' ? 'bg-pink-500 text-white' : 'bg-blue-500 text-white';
   return (
-    <div className="px-5 py-3 border-t border-white/5 flex items-center justify-between gap-2">
-      <span className="text-xs text-gray-400 font-mono">
+    <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between gap-2">
+      <span className="text-xs text-slate-400 font-mono">
         {total === 0 ? '0 registros' : `${(pagina - 1) * pageSize + 1}–${Math.min(pagina * pageSize, total)} de ${total}`}
       </span>
       <div className="flex items-center gap-1">
         <button onClick={() => setPagina(p => Math.max(1, p - 1))} disabled={pagina === 1}
-          className="w-7 h-7 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:bg-[#090a0f]/50/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
         {Array.from({ length: totalPaginas }, (_, i) => i + 1)
@@ -1007,13 +1007,13 @@ function Paginacion({ pagina, totalPaginas, total, pageSize, setPagina, color }:
               {i > 0 && arr[i - 1] !== p - 1 && <span className="text-slate-300 text-xs px-1">…</span>}
               <button
                 onClick={() => setPagina(() => p)}
-                className={`w-7 h-7 rounded-lg text-xs font-mono font-semibold transition-colors ${p === pagina ? active : 'border border-white/10 text-gray-300 hover:bg-[#090a0f]/50/10'}`}>
+                className={`w-7 h-7 rounded-lg text-xs font-mono font-semibold transition-colors ${p === pagina ? active : 'border border-slate-200 text-slate-600 hover:bg-slate-100'}`}>
                 {p}
               </button>
             </Fragment>
           ))}
         <button onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))} disabled={pagina === totalPaginas}
-          className="w-7 h-7 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:bg-[#090a0f]/50/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -1122,20 +1122,20 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
   };
 
   return (
-    <div className="bg-[#261f14]/80 backdrop-blur-md rounded-2xl shadow-lg border border-amber-500/20 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="px-5 py-4 border-b border-amber-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
             <Calculator className="w-4 h-4 text-amber-600" />
           </div>
           <div>
-            <h4 className="font-bold text-white text-sm">Comparativa: Reportado vs Facturado</h4>
-            <p className="text-[11px] text-gray-400">Cruce diario por vendedor · diferencia = facturado − reportado</p>
+            <h4 className="font-bold text-slate-900 text-sm">Comparativa: Reportado vs Facturado</h4>
+            <p className="text-[11px] text-slate-400">Cruce diario por vendedor · diferencia = facturado − reportado</p>
           </div>
         </div>
         <div className="font-mono text-sm font-bold whitespace-nowrap flex items-center gap-3">
-          <span className={totalDiferencia >= 0 ? 'text-whitemerald-600' : 'text-red-600'}>
+          <span className={totalDiferencia >= 0 ? 'text-emerald-600' : 'text-red-600'}>
             Δ B/.{fmt(Math.abs(totalDiferencia))} {totalDiferencia >= 0 ? '↑' : '↓'}
           </span>
           <button
@@ -1143,7 +1143,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
             className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${
               verTodos
                 ? 'bg-amber-600 text-white border-amber-600'
-                : 'bg-[#261f14] text-amber-400 border-amber-500/30 hover:bg-amber-500/10'
+                : 'bg-white text-amber-600 border-amber-300 hover:bg-amber-50'
             }`}
           >
             {verTodos ? 'Paginar' : `Ver todos (${comparativa.length})`}
@@ -1152,24 +1152,24 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       </div>
 
       {/* Control Bar de Filtros Dinámicos */}
-      <div className="px-5 py-3 border-b border-white/5 bg-[#090a0f]/50/5/50 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-[220px]">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input value={busqueda} onChange={e => { setBusqueda(e.target.value); setPagina(1); }}
               placeholder="Buscar por vendedor, fecha (11 de sep, 11-9), montos..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#090a0f]/50 border border-white/10 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-200 shadow-xs" />
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-200 shadow-xs" />
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           {/* Selector Vendedor */}
-          <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
+          <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
             <Filter className="w-3.5 h-3.5 text-amber-500" />
             <select 
               value={vendedorFiltro} 
               onChange={e => { setVendedorFiltro(e.target.value); setPagina(1); }}
-              className="text-xs font-semibold text-gray-200 bg-transparent focus:outline-none cursor-pointer"
+              className="text-xs font-semibold text-slate-700 bg-transparent focus:outline-none cursor-pointer"
             >
               <option value="todos">Vendedor: Todos</option>
               {vendedoresUnicos.map(v => (
@@ -1179,17 +1179,17 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           </div>
 
           {/* Rango de Fechas */}
-          <div className="flex items-center gap-1.5 bg-[#090a0f]/50 px-2.5 py-1.5 border border-white/10 rounded-xl shadow-xs">
+          <div className="flex items-center gap-1.5 bg-white px-2.5 py-1.5 border border-slate-200 rounded-xl shadow-xs">
             <Calendar className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <div className="flex items-center gap-1 text-xs">
-              <span className="text-gray-400 font-semibold">Desde:</span>
+              <span className="text-slate-400 font-semibold">Desde:</span>
               <input 
                 type="date" 
                 value={fechaDesde} 
                 onChange={e => { setFechaDesde(e.target.value); setPagina(1); }}
                 className="text-xs font-mono bg-transparent focus:outline-none cursor-pointer" 
               />
-              <span className="text-gray-400 font-semibold ml-1">Hasta:</span>
+              <span className="text-slate-400 font-semibold ml-1">Hasta:</span>
               <input 
                 type="date" 
                 value={fechaHasta} 
@@ -1203,7 +1203,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           {hasFiltrosActivos && (
             <button 
               onClick={handleLimpiarFiltros}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-500/20 text-amber-200 text-xs font-bold transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold transition-colors"
               title="Limpiar filtros"
             >
               <RotateCcw className="w-3 h-3" />
@@ -1217,10 +1217,10 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="bg-[#090a0f]/50/5 text-gray-400 text-[11px] uppercase tracking-wider font-semibold">
+            <tr className="bg-slate-50 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
               <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
               <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
-              <SortTh label="Total Reportado" col="reportado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitelue-600" />
+              <SortTh label="Total Reportado" col="reportado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-blue-600" />
               <SortTh label="Total Facturado" col="facturado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-pink-600" />
               <SortTh label="Diferencia" col="diferencia" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
             </tr>
@@ -1228,7 +1228,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           <tbody className="divide-y divide-slate-50">
             {filas.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-sm text-gray-400">
+                <td colSpan={5} className="py-8 text-center text-sm text-slate-400">
                   {hasFiltrosActivos ? 'No hay resultados con los filtros aplicados.' : 'No hay datos para comparar este mes.'}
                 </td>
               </tr>
@@ -1236,26 +1236,26 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
               filas.map((r, i) => {
                 const diff = r.facturado - r.reportado;
                 return (
-                  <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-[#090a0f]/50/5 transition-colors">
-                    <td className="py-3 px-3 text-sm font-mono text-gray-300 whitespace-nowrap">
+                  <tr key={`${r.fecha}-${r.vendedor}-${i}`} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-3 px-3 text-sm font-mono text-slate-600 whitespace-nowrap">
                       {formatDateStandard(r.fecha)}
                     </td>
                     <td className="py-3 px-3">
                       <span 
                         onClick={() => { setVendedorFiltro(r.vendedor); setPagina(1); }}
-                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-500/20 text-amber-200 cursor-pointer hover:bg-amber-200 transition-colors"
+                        className="px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-100 text-amber-700 cursor-pointer hover:bg-amber-200 transition-colors"
                         title={`Filtrar por ${r.vendedor}`}
                       >
                         {r.vendedor.split(' ')[0]}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-whitelue-700">
+                    <td className="py-3 px-3 text-right font-mono text-sm text-blue-700">
                       {r.reportado > 0 ? `B/.${fmt(r.reportado)}` : '—'}
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm text-pink-700">
                       {r.facturado > 0 ? `B/.${fmt(r.facturado)}` : '—'}
                     </td>
-                    <td className={`py-3 px-3 text-right font-mono text-sm font-bold ${diff > 0 ? 'text-whitemerald-600' : diff < 0 ? 'text-red-600' : 'text-gray-400'}`}>
+                    <td className={`py-3 px-3 text-right font-mono text-sm font-bold ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-red-600' : 'text-slate-400'}`}>
                       {diff === 0 ? '—' : `${diff > 0 ? '+' : ''}B/.${fmt(diff)}`}
                     </td>
                   </tr>
@@ -1266,12 +1266,12 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
           {comparativa.length > 0 && (
             <tfoot>
               <tr className="bg-amber-50 border-t-2 border-amber-200 text-[11px] font-bold">
-                <td className="py-2.5 px-3 text-gray-300 uppercase tracking-wider" colSpan={2}>
+                <td className="py-2.5 px-3 text-slate-600 uppercase tracking-wider" colSpan={2}>
                   {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                 </td>
-                <td className="py-2.5 px-3 text-right font-mono text-whitelue-700">B/.{fmt(totalReportado)}</td>
+                <td className="py-2.5 px-3 text-right font-mono text-blue-700">B/.{fmt(totalReportado)}</td>
                 <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalFacturado)}</td>
-                <td className={`py-2.5 px-3 text-right font-mono font-bold ${totalDiferencia > 0 ? 'text-whitemerald-700' : totalDiferencia < 0 ? 'text-red-700' : 'text-gray-400'}`}>
+                <td className={`py-2.5 px-3 text-right font-mono font-bold ${totalDiferencia > 0 ? 'text-emerald-700' : totalDiferencia < 0 ? 'text-red-700' : 'text-slate-400'}`}>
                   {totalDiferencia === 0 ? '—' : `${totalDiferencia > 0 ? '+' : ''}B/.${fmt(totalDiferencia)}`}
                 </td>
               </tr>
@@ -1297,7 +1297,7 @@ export default function TablasHistorial({ registrosFacturado, registrosVendido }
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-whitease font-bold text-gray-100 mt-2">Historial de Registros del Mes</h3>
+      <h3 className="text-base font-bold text-slate-800 mt-2">Historial de Registros del Mes</h3>
       <TablaComparativaDiaria registrosFacturado={registrosFacturado} registrosVendido={registrosVendido} />
       <TablaFacturado registros={registrosFacturado} onRefresh={handleRefresh} />
       <TablaVendido registros={registrosVendido} onRefresh={handleRefresh} />

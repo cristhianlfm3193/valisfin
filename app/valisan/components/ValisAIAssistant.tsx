@@ -56,7 +56,7 @@ export default function ValisAIAssistant({ onDataParsed }: ValisAIAssistantProps
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 p-4 rounded-full bg-gradient-to-r from-sky-500 to-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 transition-all z-40 group flex items-center justify-center"
+        className="fixed bottom-28 right-4 sm:bottom-8 sm:right-8 p-4 rounded-full bg-gradient-to-r from-sky-500 to-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-105 transition-all z-40 group flex items-center justify-center"
         title="Asistente ValisAI"
       >
         <Sparkles className="w-6 h-6 group-hover:animate-pulse" />
@@ -65,7 +65,7 @@ export default function ValisAIAssistant({ onDataParsed }: ValisAIAssistantProps
   }
 
   return (
-    <div className="fixed bottom-8 right-8 w-80 sm:w-96 bg-[#0a1426] border border-cyan-500/30 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] flex flex-col z-50 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300">
+    <div className="fixed bottom-28 right-4 sm:bottom-8 sm:right-8 w-[calc(100vw-2rem)] sm:w-96 bg-[#0a1426] border border-cyan-500/30 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] flex flex-col z-50 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300">
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-900 to-[#0a1426] p-4 border-b border-cyan-500/20 flex items-center justify-between">
         <div className="flex items-center gap-2">

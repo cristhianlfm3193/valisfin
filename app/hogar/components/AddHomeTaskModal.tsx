@@ -59,20 +59,20 @@ export default function AddHomeTaskModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl bg-[#121c27] border-white/10 rounded-2xl shadow-2xl border border-white/5 overflow-hidden my-auto flex flex-col max-h-[92vh]">
-        <div className="px-6 py-5 border-b border-white/5 flex items-start justify-between bg-white/5/50 shrink-0">
+      <div className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden my-auto flex flex-col max-h-[92vh]">
+        <div className="px-6 py-5 border-b border-slate-100 flex items-start justify-between bg-slate-50/50 shrink-0">
           <div className="space-y-1">
             <div>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Mantenimiento del Hogar
               </span>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white leading-tight mt-1">Registrar Trabajo del Hogar</h2>
-            <p className="text-xs text-gray-400 font-normal">Planifica reparaciones, compras o servicios técnicos para el hogar.</p>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight mt-1">Registrar Trabajo del Hogar</h2>
+            <p className="text-xs text-slate-500 font-normal">Planifica reparaciones, compras o servicios técnicos para el hogar.</p>
           </div>
           <button 
             onClick={handleClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-gray-300 hover:bg-white/10 transition-colors focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none"
           >
             <X className="w-5 h-5" />
           </button>
@@ -87,8 +87,8 @@ export default function AddHomeTaskModal({
             )}
             
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Área / Ubicación del Hogar</label>
-              <select name="area" required defaultValue={initialData?.hogar_area || "Sala / Comedor"} className="w-full text-xs sm:text-sm rounded-xl border border-white/10 bg-[#121c27] border-white/10 px-3.5 py-2.5 text-white font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Área / Ubicación del Hogar</label>
+              <select name="area" required defaultValue={initialData?.hogar_area || "Sala / Comedor"} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
                 <option value="Sala / Comedor">🛋️ Sala / Comedor</option>
                 <option value="Baño de Visitas">🚿 Baño de Visitas</option>
                 <option value="Patio / Techo">🏡 Patio / Techo</option>
@@ -101,48 +101,48 @@ export default function AddHomeTaskModal({
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Tipo de Trabajo / Mantenimiento</label>
-              <input name="title" required type="text" defaultValue={initialData?.detalle || ''} placeholder="Ej. Limpieza profunda de Aire Acondicionado Inverter" className="w-full text-xs sm:text-sm rounded-xl border border-white/10 px-3.5 py-2.5 text-white font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-[0_4px_12px_rgba(0,0,0,0.5)]" />
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Tipo de Trabajo / Mantenimiento</label>
+              <input name="title" required type="text" defaultValue={initialData?.detalle || ''} placeholder="Ej. Limpieza profunda de Aire Acondicionado Inverter" className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2.5 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Detalle / Notas Técnicas</label>
-              <textarea name="description" placeholder="Detalles de repuestos, medidas o alcance..." rows={2} className="w-full text-xs sm:text-sm rounded-xl border border-white/10 px-3.5 py-2 text-white font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-[0_4px_12px_rgba(0,0,0,0.5)] resize-none"></textarea>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Detalle / Notas Técnicas</label>
+              <textarea name="description" placeholder="Detalles de repuestos, medidas o alcance..." rows={2} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm resize-none"></textarea>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Fecha Estimada</label>
-                <input name="estimated_date" type="date" required defaultValue={initialData?.fecha || ''} className="w-full text-xs sm:text-sm rounded-xl border border-white/10 px-3.5 py-2 text-white font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-[0_4px_12px_rgba(0,0,0,0.5)]" />
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Fecha Estimada</label>
+                <input name="estimated_date" type="date" required defaultValue={initialData?.fecha || ''} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" />
               </div>
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Presupuesto Estimado</label>
-                <div className="relative rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Presupuesto Estimado</label>
+                <div className="relative rounded-xl shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <span className="text-xs font-bold text-gray-400">B/.</span>
+                    <span className="text-xs font-bold text-slate-500">B/.</span>
                   </div>
-                  <input name="budget" type="number" step="0.01" min="0" placeholder="0.00" defaultValue={initialData?.costo_estimado || ''} className="w-full text-xs sm:text-sm rounded-xl border border-white/10 pl-9 pr-3.5 py-2 text-white font-bold placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20" />
+                  <input name="budget" type="number" step="0.01" min="0" placeholder="0.00" defaultValue={initialData?.costo_estimado || ''} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 pl-9 pr-3.5 py-2 text-slate-900 font-bold placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20" />
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Responsable Familiar</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Responsable Familiar</label>
                 <div className="grid grid-cols-2 gap-2">
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
                     <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" onChange={() => setSelectedProfile('edc938dc-9fbc-4573-b007-0bdb95114f95')} checked={selectedProfile === 'edc938dc-9fbc-4573-b007-0bdb95114f95'} className="peer sr-only" required />
-                    <span className="font-semibold text-sm text-gray-300 peer-checked:text-emerald-700">Cristhian</span>
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
                   </label>
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
                     <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" onChange={() => setSelectedProfile('7b5c62be-58f1-48d6-b366-0f504c39bdcb')} checked={selectedProfile === '7b5c62be-58f1-48d6-b366-0f504c39bdcb'} className="peer sr-only" required />
-                    <span className="font-semibold text-sm text-gray-300 peer-checked:text-pink-600">Jennifer</span>
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-pink-600">Jennifer</span>
                   </label>
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider">Prioridad / Estado</label>
-                <select name="priority" required defaultValue={initialData?.hogar_prioridad || "Media"} className="w-full text-xs sm:text-sm rounded-xl border border-white/10 bg-[#121c27] border-white/10 px-3.5 py-2 text-white font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Prioridad / Estado</label>
+                <select name="priority" required defaultValue={initialData?.hogar_prioridad || "Media"} className="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm">
                   <option value="Alta">🔴 Alta / Urgente</option>
                   <option value="Media">🟡 Media / En Proceso</option>
                   <option value="Planificado">⚪ Planificada / Normal</option>
@@ -152,11 +152,11 @@ export default function AddHomeTaskModal({
             </div>
           </div>
 
-          <div className="px-6 py-4 bg-white/5 border-t border-white/5 flex items-center justify-end gap-3 shrink-0">
+          <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
             <button 
               type="button"
               onClick={handleClose}
-              className="px-4 py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-gray-300 hover:bg-white/10 transition-colors min-h-[40px]"
+              className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors min-h-[40px]"
             >
               Cancelar
             </button>

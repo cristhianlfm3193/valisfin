@@ -119,9 +119,9 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       case 'Gastos Diarios': return { bg: 'bg-rose-100', text: 'text-rose-700', icon: ShoppingBag };
       case 'Pagos Fijos': return { bg: 'bg-amber-100', text: 'text-amber-700', icon: Zap };
       case 'Ingresos': return { bg: 'bg-brand-100', text: 'text-brand-700', icon: Wallet };
-      case 'Vehículos': return { bg: 'bg-slate-200', text: 'text-gray-300', icon: Car };
+      case 'Vehículos': return { bg: 'bg-slate-200', text: 'text-slate-700', icon: Car };
       case 'Metas Familiares': return { bg: 'bg-indigo-100', text: 'text-indigo-700', icon: Target };
-      default: return { bg: 'bg-white/10', text: 'text-gray-300', icon: Filter };
+      default: return { bg: 'bg-slate-100', text: 'text-slate-700', icon: Filter };
     }
   };
 
@@ -154,8 +154,8 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
             <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
             <span className="text-[11px] font-extrabold tracking-wider text-brand-700 uppercase">Búsqueda Cruzada y Auditoría Patrimonial</span>
           </div>
-          <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tight">Consultas & Reportes</h1>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1 max-w-2xl">
+          <h1 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">Consultas & Reportes</h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
             Explora y audita movimientos cruzados entre Gastos, Pagos, Hogar, Vehículos e Ingresos con filtros predictivos de alto rendimiento.
           </p>
         </div>
@@ -168,13 +168,13 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       </section>
 
       {/* SEARCH & FILTERING BARRIERS */}
-      <div className="flex flex-col gap-6 bg-[#121c27] border-white/10 p-5 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/10/80">
+      <div className="flex flex-col gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80">
         
         {/* Omni-Search Bar */}
         <div className="relative flex items-center w-full">
           <Search className="absolute left-4 text-slate-400 w-5 h-5" />
           <input 
-            className="w-full pl-12 pr-12 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-white placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:bg-[#121c27] border-white/10 focus:border-brand-500 focus:ring-2 focus:ring-brand-500 transition-all" 
+            className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500 transition-all" 
             placeholder="Buscar por concepto, categoría, responsable..." 
             type="text" 
             value={searchTerm}
@@ -183,7 +183,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           {searchTerm && (
             <button 
               onClick={() => setSearchTerm('')}
-              className="absolute right-4 p-1 rounded-md text-slate-400 hover:text-gray-300 transition-colors" 
+              className="absolute right-4 p-1 rounded-md text-slate-400 hover:text-slate-700 transition-colors" 
               title="Borrar búsqueda"
             >
               <X className="w-5 h-5" />
@@ -197,15 +197,15 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
             <button 
               key={mod}
               onClick={() => setActiveModule(mod)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-[0_4px_12px_rgba(0,0,0,0.5)] ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-sm ${
                 activeModule === mod 
                   ? 'bg-brand-600 text-white' 
-                  : 'bg-white/10 text-gray-300 hover:bg-slate-200 border border-white/10'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
               }`}
             >
               <span>{mod}</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                activeModule === mod ? 'bg-brand-700/50 text-white' : 'bg-[#121c27] border-white/10 text-gray-300 border border-white/10'
+                activeModule === mod ? 'bg-brand-700/50 text-white' : 'bg-white text-slate-600 border border-slate-200'
               }`}>
                 {moduleCounts[mod] || 0}
               </span>
@@ -217,11 +217,11 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3">
           
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Responsable</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Responsable</label>
             <select 
               value={responsibleFilter}
               onChange={(e) => setResponsibleFilter(e.target.value)}
-              className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
             >
               <option value="Todos">Todos los Cónyuges</option>
               {responsibles.map(r => <option key={r} value={r}>{r}</option>)}
@@ -229,30 +229,30 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </div>
 
           <div className="flex flex-col gap-1.5 lg:col-span-2">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Fechas (Desde - Hasta)</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Fechas (Desde - Hasta)</label>
             <div className="flex items-center gap-2">
               <input 
                 type="date"
                 value={startDateFilter}
                 onChange={(e) => setStartDateFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
               />
               <span className="text-slate-400 font-bold">-</span>
               <input 
                 type="date"
                 value={endDateFilter}
                 onChange={(e) => setEndDateFilter(e.target.value)}
-                className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Categoría</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Categoría</label>
             <select 
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
             >
               <option value="Todas">Todas las Categorías</option>
               {categories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -260,11 +260,11 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Estatus</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Estatus</label>
             <select 
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
             >
               <option value="Todos">Todos los Estatus</option>
               <option value="Completado">Completado / Pagado</option>
@@ -273,11 +273,11 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Método de Pago</label>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Método de Pago</label>
             <select 
               value={paymentMethodFilter}
               onChange={(e) => setPaymentMethodFilter(e.target.value)}
-              className="px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm font-semibold text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+              className="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
             >
               <option value="Todos">Todos los Métodos</option>
               <option value="Efectivo/Débito">Efectivo / Débito</option>
@@ -288,7 +288,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           <div className="flex items-end">
             <button 
               onClick={resetFilters}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-slate-200 text-gray-300 text-sm font-bold transition-colors border border-white/10"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold transition-colors border border-slate-200"
             >
               <span>Restablecer Filtros</span>
             </button>
@@ -301,15 +301,15 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         
         {/* Tile 1: Total Auditado */}
-        <div className="p-5 rounded-2xl bg-[#121c27] border-white/10 border border-white/10/80 shadow-xs flex flex-col justify-between gap-3 relative overflow-hidden group">
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between gap-3 relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Auditado (Monto Absoluto)</span>
-            <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-gray-400">
+            <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500">
               <Wallet className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <span className="text-2xl sm:text-3xl font-black text-white tracking-tight">B/. {formatCurrency(totalAuditado)}</span>
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">B/. {formatCurrency(totalAuditado)}</span>
             <div className="flex items-center gap-1.5 mt-1 text-xs">
               <span className="font-semibold text-brand-600">{filtered.length} movimientos</span>
               <span className="text-slate-400">• en esta vista</span>
@@ -318,7 +318,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
         </div>
 
         {/* Tile 2: Total Salidas */}
-        <div className="p-5 rounded-2xl bg-[#121c27] border-white/10 border border-white/10/80 shadow-xs flex flex-col justify-between gap-3">
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between gap-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Salidas Totales</span>
             <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
@@ -327,14 +327,14 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </div>
           <div>
             <span className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">-B/. {formatCurrency(totalSalidas)}</span>
-            <div className="flex items-center gap-1.5 mt-1 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500">
               Gastos, Pagos, Hogar, Vehículos y Metas
             </div>
           </div>
         </div>
 
         {/* Tile 3: Ingresos Totales */}
-        <div className="p-5 rounded-2xl bg-[#121c27] border-white/10 border border-white/10/80 shadow-xs flex flex-col justify-between gap-3">
+        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between gap-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ingresos Totales</span>
             <div className="w-8 h-8 rounded-xl bg-brand-50 flex items-center justify-center text-brand-700">
@@ -343,7 +343,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
           </div>
           <div>
             <span className="text-2xl sm:text-3xl font-black text-brand-600 tracking-tight">B/. {formatCurrency(totalIngresos)}</span>
-            <div className="flex items-center gap-1.5 mt-1 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500">
               Salarios y Asignaciones
             </div>
           </div>
@@ -352,13 +352,13 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
       </div>
 
       {/* RESULTS SECTION: DESKTOP TABLE & MOBILE CARDS */}
-      <div className="flex flex-col bg-[#121c27] border-white/10 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-white/10/80 overflow-hidden">
+      <div className="flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
         
         {/* Table Header Context */}
-        <div className="p-5 flex items-center justify-between flex-wrap gap-3 border-b border-white/5">
+        <div className="p-5 flex items-center justify-between flex-wrap gap-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-white">Resultados Multi-Módulo</h2>
-            <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-xs text-gray-400 font-bold border border-white/10">
+            <h2 className="text-lg font-bold text-slate-900">Resultados Multi-Módulo</h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-xs text-slate-500 font-bold border border-slate-200">
               {filtered.length} registros
             </span>
           </div>
@@ -367,7 +367,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
         {/* DESKTOP INTERACTIVE TABLE */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-white/5 text-[11px] font-bold uppercase tracking-wider text-gray-400 border-b border-white/10">
+            <thead className="bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
               <tr>
                 <th className="py-3.5 px-5">Origen / Módulo</th>
                 <th className="py-3.5 px-5">Fecha</th>
@@ -378,7 +378,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                 <th className="py-3.5 px-5 text-center">Estatus</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm text-gray-300">
+            <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
               {filtered.map(t => {
                 const modStyle = getModuleStyle(t.module);
                 const ModuleIcon = modStyle.icon;
@@ -386,20 +386,20 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                 const dateStr = !isNaN(d.getTime()) ? d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A';
                 
                 return (
-                  <tr key={t.id + t.module} className="hover:bg-white/5/50 transition-colors group">
+                  <tr key={t.id + t.module} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="py-4 px-5 whitespace-nowrap">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border border-white/50 ${modStyle.bg} ${modStyle.text}`}>
                         <ModuleIcon className="w-3.5 h-3.5" />
                         {t.module}
                       </span>
                     </td>
-                    <td className="py-4 px-5 font-mono text-xs text-gray-400 font-semibold whitespace-nowrap">{dateStr}</td>
-                    <td className="py-4 px-5 font-bold text-white">{t.concept}</td>
+                    <td className="py-4 px-5 font-mono text-xs text-slate-500 font-semibold whitespace-nowrap">{dateStr}</td>
+                    <td className="py-4 px-5 font-bold text-slate-900">{t.concept}</td>
                     <td className="py-4 px-5 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         {t.responsibleName !== 'Desconocido' ? (
                           <>
-                            <span className={`w-6 h-6 rounded-full text-[10px] flex items-center justify-center font-bold text-white shadow-[0_4px_12px_rgba(0,0,0,0.5)] ${t.responsibleName === 'Cristhian' ? 'bg-brand-600' : t.responsibleName === 'Jennifer' ? 'bg-teal-600' : 'bg-slate-400'}`}>
+                            <span className={`w-6 h-6 rounded-full text-[10px] flex items-center justify-center font-bold text-white shadow-sm ${t.responsibleName === 'Cristhian' ? 'bg-brand-600' : t.responsibleName === 'Jennifer' ? 'bg-teal-600' : 'bg-slate-400'}`}>
                               {t.responsibleName?.substring(0, 2).toUpperCase() || 'NA'}
                             </span>
                             <span className="font-semibold">{t.responsibleName}</span>
@@ -409,7 +409,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-5 text-gray-400">{t.category}</td>
+                    <td className="py-4 px-5 text-slate-500">{t.category}</td>
                     <td className={`py-4 px-5 text-right font-mono font-bold whitespace-nowrap ${t.type === 'in' ? 'text-brand-600' : 'text-rose-600'}`}>
                       {t.type === 'in' ? '+' : '-'}B/. {formatCurrency(t.amount)}
                     </td>
@@ -454,12 +454,12 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                   </span>
                 </div>
                 <div>
-                  <p className="font-bold text-white leading-snug">{t.concept}</p>
+                  <p className="font-bold text-slate-900 leading-snug">{t.concept}</p>
                   <span className="text-xs font-semibold text-slate-400">{t.category} • {dateStr}</span>
                 </div>
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-300">{t.responsibleName}</span>
+                    <span className="text-xs font-bold text-slate-600">{t.responsibleName}</span>
                   </div>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
                     t.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'

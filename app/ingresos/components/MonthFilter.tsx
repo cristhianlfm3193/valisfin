@@ -53,17 +53,17 @@ export function MonthFilter({ currentYear, currentMonth }: MonthFilterProps) {
   const monthName = MONTHS[currentMonth];
 
   return (
-    <div className="flex items-center bg-[#121c27] border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] rounded-full p-1 border border-white/10">
+    <div className="flex items-center bg-white shadow-sm rounded-full p-1 border border-slate-200">
       <button 
         onClick={handlePrevMonth}
         disabled={isPending}
         aria-label="Mes anterior" 
-        className={`w-8 h-8 flex items-center justify-center rounded-full transition ${isPending ? 'text-slate-300 cursor-not-allowed' : 'text-gray-400 hover:bg-white/10 active:bg-slate-200'}`}
+        className={`w-8 h-8 flex items-center justify-center rounded-full transition ${isPending ? 'text-slate-300 cursor-not-allowed' : 'text-slate-500 hover:bg-slate-100 active:bg-slate-200'}`}
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       
-      <div className={`px-3 flex items-center gap-1.5 text-sm font-medium min-w-[140px] justify-center transition-opacity ${isPending ? 'opacity-60 text-gray-400' : 'text-gray-300'}`}>
+      <div className={`px-3 flex items-center gap-1.5 text-sm font-medium min-w-[140px] justify-center transition-opacity ${isPending ? 'opacity-60 text-slate-500' : 'text-slate-700'}`}>
         {isPending ? (
           <Loader2 className="text-emerald-700 w-4 h-4 animate-spin" />
         ) : (
@@ -76,7 +76,7 @@ export function MonthFilter({ currentYear, currentMonth }: MonthFilterProps) {
         onClick={handleNextMonth}
         disabled={isPending}
         aria-label="Mes siguiente" 
-        className={`w-8 h-8 flex items-center justify-center rounded-full transition ${isPending ? 'text-slate-300 cursor-not-allowed' : 'text-gray-400 hover:bg-white/10 active:bg-slate-200'}`}
+        className={`w-8 h-8 flex items-center justify-center rounded-full transition ${isPending ? 'text-slate-300 cursor-not-allowed' : 'text-slate-500 hover:bg-slate-100 active:bg-slate-200'}`}
       >
         <ChevronRight className="w-5 h-5" />
       </button>

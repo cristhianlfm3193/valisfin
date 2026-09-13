@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50 antialiased" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Metas de Ahorro - ValisFin</title>
+<!-- Tailwind CSS v3 CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf9',
+              100: '#ccfbe9',
+              200: '#9cf5d5',
+              500: '#14b886',
+              600: '#0d946b',
+              700: '#0b7657',
+              800: '#0c5e46',
+              900: '#134e3b',
+              950: '#052c22',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom UI Styles -->
+<style data-purpose="base-layout">
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col lg:flex-row">
+<!-- BEGIN: DesktopSidebar -->
+<!-- Main persistent desktop sidebar following ValisFin design system -->
+<aside class="hidden lg:flex lg:flex-col w-64 bg-white border-r border-slate-200/80 min-h-screen sticky top-0 shrink-0 z-30 select-none" data-purpose="sidebar-navigation">
+<!-- Brand Logo Area -->
+<div class="px-6 py-6 flex items-center gap-3 border-b border-slate-100">
+<div class="w-10 h-10 rounded-2xl bg-brand-100 flex items-center justify-center text-brand-700 shadow-sm shadow-brand-500/10 border border-brand-200/50">
+<svg class="w-6 h-6 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-none">Valis Fin</h1>
+<p class="text-[9px] uppercase tracking-widest font-semibold text-slate-400 mt-1">FINANZAS. FAMILIA. FUTURO.</p>
+</div>
+</div>
+<!-- Navigation Menu Items -->
+<nav aria-label="Navegación principal" class="flex-1 px-4 py-5 space-y-1.5 overflow-y-auto custom-scrollbar">
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955a1.126 1.126 0 011.592 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Inicio</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Ingresos</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6.75 3v2.25M17.25 3v2.253M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Pagos Fijos</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Gastos Diarios</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l9-6 9 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Hogar</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.5A2.25 2.25 0 0012 2.25h-1.5A2.25 2.25 0 008.25 4.5v3M4.5 9.75h11.25" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Vehículos</span>
+</a>
+<!-- Active Menu Item -->
+<a aria-current="page" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-50 text-brand-800 font-semibold text-sm border border-brand-100/80 transition-all shadow-xs" href="#">
+<svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Metas de Ahorro</span>
+</a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium text-sm transition-colors group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span>Consultas &amp; Reportes</span>
+</a>
+</nav>
+<!-- Bottom User Profile Area -->
+<div class="p-4 border-t border-slate-100 bg-slate-50/50">
+<div class="bg-white p-3 rounded-2xl border border-slate-200/70 shadow-xs flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-xs text-slate-700 ring-2 ring-emerald-500/20">
+          CF
+        </div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-slate-900 truncate">Cristhian Fuentes</p>
+<p class="text-[11px] text-emerald-600 font-medium truncate flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+            Hogar Protegido
+          </p>
+</div>
+</div>
+<button class="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold">N</span>
+        Cerrar Sesión
+      </button>
+</div>
+</aside>
+<!-- END: DesktopSidebar -->
+<!-- BEGIN: MobileHeader -->
+<!-- Header visible only on mobile screens -->
+<header class="lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200/80 px-4 py-3 flex items-center justify-between" data-purpose="mobile-top-header">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-brand-100 flex items-center justify-center text-brand-700 font-bold border border-brand-200/60">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="font-extrabold text-slate-900 text-lg tracking-tight">ValisFin</span>
+</div>
+<div class="flex items-center gap-2.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+        Cristhian &amp; Jenny
+      </span>
+<div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-700">
+        CF
+      </div>
+</div>
+</header>
+<!-- END: MobileHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 min-w-0 pb-32 lg:pb-12 pt-4 lg:pt-8 px-4 sm:px-6 lg:px-10 overflow-x-hidden">
+<div class="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+<!-- BEGIN: HeaderAndActions -->
+<!-- Title, eyebrow, and call-to-action button -->
+<section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4" data-purpose="page-title-banner">
+<div>
+<div class="flex items-center gap-2 mb-1.5">
+<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+<span class="text-[11px] font-extrabold tracking-wider text-brand-700 uppercase">PRIORIDADES FAMILIARES Y FUTURO</span>
+</div>
+<h1 class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">Metas de Ahorro</h1>
+<p class="text-xs sm:text-sm text-slate-500 mt-1">Planificación y seguimiento de compras, mejoras del hogar y objetivos personales.</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition-all hover:scale-[1.01] active:scale-[0.98] shrink-0" type="button">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Nueva Meta</span>
+</button>
+</section>
+<!-- END: HeaderAndActions -->
+<!-- BEGIN: BentoStatsKPIs -->
+<!-- 3 Summary Bento KPI cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5" data-purpose="bento-kpi-summary">
+<!-- KPI 1: Meta Global Total -->
+<article class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-500 mb-3">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Meta Global Total</span>
+<div class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<p class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">B/. 5,349.84</p>
+<div class="mt-2.5 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span>10 metas planificadas en total</span>
+</div>
+</article>
+<!-- KPI 2: Total Ahorrado -->
+<article class="bg-white rounded-2xl p-5 border border-brand-200/80 shadow-xs relative overflow-hidden group bg-gradient-to-b from-white to-brand-50/20">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-bold uppercase tracking-wider text-brand-800">Total Ahorrado</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800 border border-brand-200">
+              15.4% completado
+            </span>
+</div>
+<p class="text-2xl sm:text-3xl font-black text-brand-700 tracking-tight">B/. 825.00</p>
+<!-- Mini Progress Bar -->
+<div class="mt-3">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full transition-all duration-500" style="width: 15.4%"></div>
+</div>
+</div>
+</article>
+<!-- KPI 3: Falta por Ahorrar -->
+<article class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-500 mb-3">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Falta por Ahorrar</span>
+<div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<p class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">B/. 4,524.84</p>
+<div class="mt-2.5 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+<span class="text-amber-600 font-semibold">2 metas completadas</span>
+<span>• 8 por financiar</span>
+</div>
+</article>
+</section>
+<!-- END: BentoStatsKPIs -->
+<!-- BEGIN: SearchAndFilters -->
+<!-- Search input and stylized category pills -->
+<section class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3" data-purpose="filtering-bar">
+<!-- Search Field -->
+<div class="relative flex-1 max-w-md">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="w-full pl-9 pr-4 py-2 bg-slate-50/70 border border-slate-200 text-xs sm:text-sm rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder:text-slate-400 font-medium" placeholder="Buscar meta o proyecto..." type="text"/>
+</div>
+<!-- Filter Pills Segmented Controls -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 custom-scrollbar text-xs font-semibold text-slate-600">
+<button class="px-3.5 py-1.5 rounded-xl bg-slate-900 text-white shadow-xs shrink-0 transition-colors" type="button">
+            Todos <span class="ml-1 opacity-80 text-[11px]">10</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 shrink-0 transition-colors" type="button">
+            En Progreso <span class="ml-1 text-slate-500 text-[11px]">6</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 shrink-0 transition-colors" type="button">
+            Pendientes <span class="ml-1 text-slate-500 text-[11px]">3</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 shrink-0 transition-colors" type="button">
+            Completadas <span class="ml-1 text-slate-500 text-[11px]">2</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/70 text-slate-700 shrink-0 transition-colors" type="button">
+            Prioridad Alta <span class="ml-1 text-slate-500 text-[11px]">3</span>
+</button>
+</div>
+</section>
+<!-- END: SearchAndFilters -->
+<!-- BEGIN: DesktopTableView -->
+<!-- Complete responsive data presentation matching snapshot images DATA:IMAGE:IMAGE_3 and IMAGE_2 -->
+<section class="hidden md:block bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden" data-purpose="goals-table-wrapper">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-200/80 bg-slate-50/60 text-[11px] font-extrabold uppercase tracking-wider text-slate-400 select-none">
+<th class="py-4 px-6" scope="col">Meta</th>
+<th class="py-4 px-4 text-right" scope="col">Costo</th>
+<th class="py-4 px-4 text-right" scope="col">Ahorrado</th>
+<th class="py-4 px-4 text-right" scope="col">Falta</th>
+<th class="py-4 px-6 min-w-[160px]" scope="col">Progreso</th>
+<th class="py-4 px-4 text-center" scope="col">Prioridad</th>
+<th class="py-4 px-4 text-center" scope="col">Estado</th>
+<th class="py-4 px-6 text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-xs sm:text-sm font-medium">
+<!-- Row 1: Tarjeta de crédito -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Tarjeta de crédito</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 2,099.84</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 2,099.84</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200">
+                    MUY_ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-teal-50 text-teal-700 border border-teal-200">
+                    EN_PROGRESO
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 2: Mantenimiento Carro Cristhian -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Mantenimiento Carro Cristhian</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 300.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 300.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200">
+                    MUY ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 3: Mantenimiento Carro Jenny -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Mantenimiento Carro Jenny</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 600.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 600.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-rose-50 text-rose-700 border border-rose-200">
+                    MUY ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 4: Aire Acondicionado -->
+<tr class="hover:bg-slate-50/80 transition-colors bg-brand-50/20">
+<td class="py-4 px-6 font-semibold text-slate-900 flex items-center gap-2">
+<span>Aire Acondicionado</span>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 700.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 700.00</td>
+<td class="py-4 px-4 text-right text-slate-400 font-mono">B/. 0.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 100%"></div>
+</div>
+<span class="text-[11px] font-bold text-brand-700 mt-1 block">100%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200">
+                    ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-brand-100 text-brand-800 border border-brand-200">
+                    COMPLETADA
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed" disabled="" type="button">Completado</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 5: Celular Jennifer -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Celular Jennifer</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 500.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 210.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 290.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 42%"></div>
+</div>
+<span class="text-[11px] font-semibold text-brand-700 mt-1 block">42%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                    BAJA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-teal-50 text-teal-700 border border-teal-200">
+                    EN_PROGRESO
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 6: Estufa -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Estufa</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 300.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 300.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200">
+                    ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 7: Puerta Tucson -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Puerta Tucson</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 250.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 250.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-700 border border-amber-200">
+                    ALTA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 8: Vidrio Ahumado Jenny -->
+<tr class="hover:bg-slate-50/80 transition-colors bg-brand-50/20">
+<td class="py-4 px-6 font-semibold text-slate-900 flex items-center gap-2">
+<span>Vidrio Ahumado Jenny</span>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 125.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 125.00</td>
+<td class="py-4 px-4 text-right text-slate-400 font-mono">B/. 0.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 100%"></div>
+</div>
+<span class="text-[11px] font-bold text-brand-700 mt-1 block">100%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                    BAJA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-brand-100 text-brand-800 border border-brand-200">
+                    COMPLETADA
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed" disabled="" type="button">Completado</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 9: Secadora -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Secadora</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 400.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 400.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                    BAJA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+<!-- Row 10: Muebles de cocina -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-4 px-6 font-semibold text-slate-900">Muebles de cocina</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 400.00</td>
+<td class="py-4 px-4 text-right font-mono font-bold text-brand-700">B/. 0.00</td>
+<td class="py-4 px-4 text-right text-slate-600 font-mono">B/. 400.00</td>
+<td class="py-4 px-6">
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<span class="text-[11px] font-semibold text-slate-400 mt-1 block">0%</span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                    BAJA
+                  </span>
+</td>
+<td class="py-4 px-4 text-center">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-700 border border-slate-200">
+                    PENDIENTE
+                  </span>
+</td>
+<td class="py-4 px-6 text-right space-x-1.5 whitespace-nowrap">
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors" type="button">Abonar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors" type="button">Editar</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors" type="button">Eliminar</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- END: DesktopTableView -->
+<!-- BEGIN: MobileCardsView -->
+<!-- Ergonomic touch cards displayed on mobile viewports -->
+<section class="md:hidden space-y-3.5" data-purpose="mobile-card-list">
+<!-- Mobile Card 1 -->
+<article class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<h3 class="font-bold text-slate-900 text-base">Tarjeta de crédito</h3>
+<p class="text-xs text-slate-400 mt-0.5">Meta Total: <span class="font-semibold text-slate-700">B/. 2,099.84</span></p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-rose-50 text-rose-700 border border-rose-200 shrink-0">
+              MUY ALTA
+            </span>
+</div>
+<div class="bg-slate-50 p-3 rounded-xl space-y-2 border border-slate-100">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">Ahorrado: <b class="text-brand-700 font-mono">B/. 0.00</b></span>
+<span class="text-slate-500 font-medium">Falta: <b class="text-slate-800 font-mono">B/. 2,099.84</b></span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] text-slate-400 font-medium">
+<span>0% completado</span>
+<span class="text-teal-700 font-semibold bg-teal-50 px-2 py-0.5 rounded-md">EN PROGRESO</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-1">
+<button class="h-11 flex items-center justify-center rounded-xl bg-brand-600 text-white font-bold text-xs shadow-xs hover:bg-brand-700 transition-colors" type="button">
+              + Abonar
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-colors" type="button">
+              Editar
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition-colors" type="button">
+              Eliminar
+            </button>
+</div>
+</article>
+<!-- Mobile Card 2 -->
+<article class="bg-white rounded-2xl p-4 border border-brand-200/80 shadow-xs space-y-3 bg-gradient-to-b from-white to-brand-50/20">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-bold text-slate-900 text-base">Aire Acondicionado</h3>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</div>
+<p class="text-xs text-slate-400 mt-0.5">Meta Total: <span class="font-semibold text-slate-700">B/. 700.00</span></p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-brand-100 text-brand-800 border border-brand-200 shrink-0">
+              COMPLETADA
+            </span>
+</div>
+<div class="bg-white p-3 rounded-xl space-y-2 border border-brand-200/60 shadow-2xs">
+<div class="flex justify-between items-center text-xs">
+<span class="text-brand-800 font-medium">Ahorrado: <b class="text-brand-700 font-mono">B/. 700.00</b></span>
+<span class="text-slate-400 font-medium">Falta: <b class="text-slate-500 font-mono">B/. 0.00</b></span>
+</div>
+<div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] text-brand-700 font-bold">
+<span>100% alcanzado 🎉</span>
+<span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md text-[10px]">PRIORIDAD ALTA</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs" type="button">
+              Ver Detalles
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs" type="button">
+              Editar
+            </button>
+</div>
+</article>
+<!-- Mobile Card 3 -->
+<article class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<h3 class="font-bold text-slate-900 text-base">Celular Jennifer</h3>
+<p class="text-xs text-slate-400 mt-0.5">Meta Total: <span class="font-semibold text-slate-700">B/. 500.00</span></p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+              BAJA
+            </span>
+</div>
+<div class="bg-slate-50 p-3 rounded-xl space-y-2 border border-slate-100">
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-600 font-medium">Ahorrado: <b class="text-brand-700 font-mono">B/. 210.00</b></span>
+<span class="text-slate-600 font-medium">Falta: <b class="text-slate-800 font-mono">B/. 290.00</b></span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 42%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] text-slate-500 font-semibold">
+<span class="text-brand-700">42% completado</span>
+<span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md">EN PROGRESO</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-1">
+<button class="h-11 flex items-center justify-center rounded-xl bg-brand-600 text-white font-bold text-xs shadow-xs hover:bg-brand-700 transition-colors" type="button">
+              + Abonar
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-colors" type="button">
+              Editar
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition-colors" type="button">
+              Eliminar
+            </button>
+</div>
+</article>
+<!-- Mobile Card 4 -->
+<article class="bg-white rounded-2xl p-4 border border-brand-200/80 shadow-xs space-y-3 bg-gradient-to-b from-white to-brand-50/20">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-bold text-slate-900 text-base">Vidrio Ahumado Jenny</h3>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</div>
+<p class="text-xs text-slate-400 mt-0.5">Meta Total: <span class="font-semibold text-slate-700">B/. 125.00</span></p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-brand-100 text-brand-800 border border-brand-200 shrink-0">
+              COMPLETADA
+            </span>
+</div>
+<div class="bg-white p-3 rounded-xl space-y-2 border border-brand-200/60 shadow-2xs">
+<div class="flex justify-between items-center text-xs">
+<span class="text-brand-800 font-medium">Ahorrado: <b class="text-brand-700 font-mono">B/. 125.00</b></span>
+<span class="text-slate-400 font-medium">Falta: <b class="text-slate-500 font-mono">B/. 0.00</b></span>
+</div>
+<div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+<div class="bg-brand-600 h-full rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] text-brand-700 font-bold">
+<span>100% alcanzado 🎉</span>
+<span class="text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md text-[10px]">PRIORIDAD BAJA</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs" type="button">
+              Ver Detalles
+            </button>
+<button class="h-11 flex items-center justify-center rounded-xl bg-slate-100 text-slate-700 font-bold text-xs" type="button">
+              Editar
+            </button>
+</div>
+</article>
+</section>
+<!-- END: MobileCardsView -->
+<!-- BEGIN: PaginationFooter -->
+<!-- Pagination and record counter -->
+<footer class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs sm:text-sm text-slate-500 border-t border-slate-200/80" data-purpose="table-pagination">
+<p class="font-medium text-center sm:text-left">
+          Mostrando <span class="font-bold text-slate-800">1-10</span> de <span class="font-bold text-slate-800">10</span> metas familiares
+        </p>
+<div class="flex items-center gap-1 font-semibold">
+<button class="px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed" disabled="" type="button">
+            Anterior
+          </button>
+<button class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold shadow-xs" type="button">
+            1
+          </button>
+<button class="px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-300 cursor-not-allowed" disabled="" type="button">
+            Siguiente
+          </button>
+</div>
+</footer>
+<!-- END: PaginationFooter -->
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MobileBottomNavigation -->
+<!-- Floating bottom navigation bar strictly for mobile screen convenience -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-2 shadow-lg" data-purpose="mobile-dock-nav">
+<div class="max-w-md mx-auto flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 p-1.5 rounded-xl min-w-[56px] transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955a1.126 1.126 0 011.592 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-semibold">Inicio</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 p-1.5 rounded-xl min-w-[56px] transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6.75 3v2.25M17.25 3v2.253M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-semibold">Pagos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 p-1.5 rounded-xl min-w-[56px] transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l9-6 9 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-semibold">Hogar</span>
+</a>
+<!-- Active Mobile Tab -->
+<a aria-current="page" class="flex flex-col items-center gap-1 text-brand-600 p-1.5 rounded-xl min-w-[56px]" href="#">
+<div class="relative">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-brand-500"></span>
+</div>
+<span class="text-[10px] font-extrabold tracking-tight text-brand-700">Metas</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 p-1.5 rounded-xl min-w-[56px] transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-semibold">Más</span>
+</a>
+</div>
+</nav>
+<!-- END: MobileBottomNavigation -->
+</body></html>

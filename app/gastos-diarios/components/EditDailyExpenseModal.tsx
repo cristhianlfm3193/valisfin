@@ -54,22 +54,22 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-[#121c27] border-white/10 rounded-t-3xl sm:rounded-3xl w-full max-w-md shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
+          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
+          <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
                 <Receipt className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Editar Gasto</h3>
-                <p className="text-xs text-gray-400">Modificar registro existente</p>
+                <h3 className="text-lg font-bold text-slate-900">Editar Gasto</h3>
+                <p className="text-xs text-slate-500">Modificar registro existente</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-gray-300 hover:bg-white/10 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -79,7 +79,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
             <form id="edit-daily-expense-form" onSubmit={handleSubmit} className="space-y-4">
               
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                   Fecha
                 </label>
                 <input
@@ -87,12 +87,12 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
                   name="date"
                   defaultValue={formattedDate}
                   required
-                  className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                   Categoría
                 </label>
                 <select
@@ -100,7 +100,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
                   required
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all appearance-none"
                 >
                   <option value="Supermercado">Supermercado</option>
                   <option value="Super Reposición">Super Reposición</option>
@@ -120,14 +120,14 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
               {/* Subcategoría Restaurante */}
               {selectedCategory === 'Restaurante' && (
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                     Tipo de Comida
                   </label>
                   <select
                     name="sub_category"
                     required
                     defaultValue={expense.sub_category || ''}
-                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all appearance-none"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all appearance-none"
                   >
                     <option value="">Seleccionar...</option>
                     <option value="Desayuno">Desayuno</option>
@@ -139,7 +139,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
               )}
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                   Detalle o Comercio
                 </label>
                 <input
@@ -147,32 +147,32 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
                   name="detail"
                   defaultValue={expense.detail}
                   required
-                  className="w-full bg-white/5 border border-white/10 text-white font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-sm rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block px-4 py-3 outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                   Pagador
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
                     <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required defaultChecked={expense.profile_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95'} />
-                    <span className="font-semibold text-sm text-gray-300 peer-checked:text-emerald-700">Cristhian</span>
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-emerald-700">Cristhian</span>
                   </label>
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
                     <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required defaultChecked={expense.profile_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb'} />
-                    <span className="font-semibold text-sm text-gray-300 peer-checked:text-pink-600">Jennifer</span>
+                    <span className="font-semibold text-sm text-slate-700 peer-checked:text-pink-600">Jennifer</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
                   Monto
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 font-medium">B/.</span>
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-medium">B/.</span>
                   <input
                     type="number"
                     name="amount"
@@ -180,31 +180,31 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
                     min="0.01"
                     defaultValue={expense.amount}
                     required
-                    className="w-full bg-white/5 border border-white/10 text-white font-medium text-base rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block pl-10 pr-4 py-3 outline-none transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-medium text-base rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 block pl-10 pr-4 py-3 outline-none transition-all"
                   />
                 </div>
               </div>
 
               <div className="pt-2">
-                <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors">
                   <div className="relative flex items-center">
                     <input type="checkbox" name="is_credit_card" value="true" className="peer sr-only" defaultChecked={expense.is_credit_card} />
-                    <div className="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#121c27] border-white/10 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                    <div className="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
                   </div>
                   <div>
-                    <span className="text-sm font-bold text-white">Uso tarjeta de crédito</span>
-                    <p className="text-[10px] text-gray-400 font-medium">Asociar pago a la deuda de tarjeta</p>
+                    <span className="text-sm font-bold text-slate-800">Uso tarjeta de crédito</span>
+                    <p className="text-[10px] text-slate-500 font-medium">Asociar pago a la deuda de tarjeta</p>
                   </div>
                 </label>
               </div>
             </form>
           </div>
 
-          <div className="p-5 pt-3 border-t border-white/5 flex items-center justify-end gap-3 bg-white/5 shrink-0">
+          <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:bg-slate-200 transition-colors"
+              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
             >
               Cancelar
             </button>
@@ -212,7 +212,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
               type="submit"
               form="edit-daily-expense-form"
               disabled={isLoading}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all disabled:opacity-70"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-70"
             >
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
