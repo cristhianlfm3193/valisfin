@@ -2,6 +2,10 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -44,8 +48,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Si no hay usuario y no estamos en la página de login, redirigir a login
-  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
+  // Si no hay usuario y no estamos en la página de login o api, redirigir a login
+  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth') && !request.nextUrl.pathname.startsWith('/api')) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
@@ -68,7 +72,7 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url)
       }
     } else {
-      // Si ESTÁ activo pero está atrapado en la página de unauthorized, enviarlo al inicio
+      // Si ESTÁ activo pero está atrapado en la página de unauthorized, enviarlo al portal
       if (request.nextUrl.pathname.startsWith('/unauthorized')) {
         const url = request.nextUrl.clone()
         url.pathname = '/'
@@ -85,7 +89,7 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // Si hay usuario y está en la página de login, redirigir al inicio
+  // Si hay usuario y está en la página de login, redirigir al portal
   if (user && request.nextUrl.pathname === '/login') {
     const url = request.nextUrl.clone()
     url.pathname = '/'

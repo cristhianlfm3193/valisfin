@@ -185,7 +185,7 @@ export default function CardReporteEficiencia() {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 flex flex-col gap-5 mt-2 mb-2">
+    <div className="bg-[#090a0f]/50 rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 flex flex-col gap-5 mt-2 mb-2">
       <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
         <div>
           <h3 className="text-lg font-bold text-[#131b2e] flex items-center gap-2">
@@ -202,7 +202,7 @@ export default function CardReporteEficiencia() {
               type="date"
               value={fechaDesde}
               onChange={e => { setFechaDesde(e.target.value); setEstado('idle'); }}
-              className="bg-slate-50 border border-slate-200 text-[#131b2e] text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-white transition-colors w-full sm:w-40"
+              className="bg-[#090a0f]/50 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-[#090a0f]/50 transition-colors w-full sm:w-40"
             />
           </div>
           
@@ -212,7 +212,7 @@ export default function CardReporteEficiencia() {
               type="date"
               value={fechaHasta}
               onChange={e => { setFechaHasta(e.target.value); setEstado('idle'); }}
-              className="bg-slate-50 border border-slate-200 text-[#131b2e] text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-white transition-colors w-full sm:w-40"
+              className="bg-[#090a0f]/50 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-[#090a0f]/50 transition-colors w-full sm:w-40"
             />
           </div>
           
@@ -221,7 +221,7 @@ export default function CardReporteEficiencia() {
               <button 
                 onClick={handleGenerar}
                 disabled={isPending || estado === 'generando'}
-                className="bg-rose-600 hover:bg-rose-700 disabled:bg-slate-100 disabled:text-slate-400 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2"
+                className="bg-rose-600 hover:bg-rose-700 disabled:bg-[#090a0f]/50/5 disabled:text-slate-400 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2"
               >
                 {estado === 'generando' ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

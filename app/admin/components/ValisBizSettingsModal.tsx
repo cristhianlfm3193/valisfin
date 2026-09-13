@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { X, Heart, Users, UserPlus, CheckCircle2, ShieldAlert, Sparkles, RefreshCw, Edit2, Check, ArrowRight, DollarSign } from 'lucide-react';
 import { 
   VendedorAdmin, 
+  getAllSellersAdmin,
   createSellerAction, 
   updateSellerAction, 
   toggleSellerStateAction,
@@ -14,15 +15,15 @@ import { Btn3D } from '@/app/components/Btn3D';
 interface ValisBizSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  vendedores: VendedorAdmin[];
-  onSaved: () => void;
+  onSaved?: () => void;
 }
 
 type TabType = 'septiembre' | 'crud' | 'metas';
 
-export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVendedores, onSaved }: ValisBizSettingsModalProps) {
+export function ValisBizSettingsModal({ isOpen, onClose, onSaved }: ValisBizSettingsModalProps) {
   const [tab, setTab] = useState<TabType>('septiembre');
-  const [vendedores, setVendedores] = useState<VendedorAdmin[]>(initialVendedores);
+  const [vendedores, setVendedores] = useState<VendedorAdmin[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -39,6 +40,16 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
   const [editRuta, setEditRuta] = useState('');
   const [editCuota, setEditCuota] = useState('');
   const [editEstado, setEditEstado] = useState<'activo' | 'vacaciones' | 'inactivo'>('activo');
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(true);
+      getAllSellersAdmin().then(data => {
+        setVendedores(data);
+        setIsLoading(false);
+      });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -65,7 +76,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
 
       if (res.success) {
         setSuccessMsg('✅ Carolina Sucre configurada con la meta de Joseph (B/. 20,000.00) para Septiembre 2026.');
-        onSaved();
+        onSaved?.();
       } else {
         setErrorMsg(res.error || 'Error al aplicar el reemplazo.');
       }
@@ -94,7 +105,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
         setNombre('');
         setRutaAsignada('');
         setCuotaMensual('');
-        onSaved();
+        onSaved?.();
       } else {
         setErrorMsg(res.error || 'Error al guardar el vendedor.');
       }
@@ -124,7 +135,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
       if (res.success) {
         setSuccessMsg('✅ Vendedor actualizado.');
         setEditingId(null);
-        onSaved();
+        onSaved?.();
       } else {
         setErrorMsg(res.error || 'Error al actualizar vendedor.');
       }
@@ -136,7 +147,7 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
       const res = await toggleSellerStateAction(id, newEstado);
       if (res.success) {
         setSuccessMsg('✅ Estado actualizado.');
-        onSaved();
+        onSaved?.();
       } else {
         setErrorMsg(res.error || 'Error al cambiar estado.');
       }
@@ -203,195 +214,200 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
 
         {/* Modal Body Scrollable */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 rounded-full border-2 border-pink-500 border-t-transparent animate-spin"></div>
+            </div>
+          ) : (
+            <>
+              {/* ── TAB 1: VENDEDORES ACTIVOS Y AUSENTES ── */}
+              {tab === 'septiembre' && (
+                <div className="space-y-6">
+                  
+                  {/* Vendedores Activos este Mes */}
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Vendedores Activos en Ruta
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {vendedores.filter(v => v.estado === 'activo').map(v => (
+                        <div key={v.id} className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-2xl flex flex-col justify-between">
+                          <div>
+                            <span className="text-[10px] font-bold uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mb-1">Activo</span>
+                            <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                            <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'}</p>
+                          </div>
+                          <div className="mt-3 pt-2 border-t border-emerald-200/60 flex items-center justify-between">
+                            <span className="text-xs text-slate-600">Cuota:</span>
+                            <span className="font-mono font-bold text-emerald-800 text-sm">B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* ── TAB 1: VENDEDORES ACTIVOS Y AUSENTES ── */}
-          {tab === 'septiembre' && (
-            <div className="space-y-6">
-              
-              {/* Vendedores Activos este Mes */}
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Vendedores Activos en Ruta
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {vendedores.filter(v => v.estado === 'activo').map(v => (
-                    <div key={v.id} className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-2xl flex flex-col justify-between">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block mb-1">Activo</span>
-                        <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
-                        <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'}</p>
-                      </div>
-                      <div className="mt-3 pt-2 border-t border-emerald-200/60 flex items-center justify-between">
-                        <span className="text-xs text-slate-600">Cuota:</span>
-                        <span className="font-mono font-bold text-emerald-800 text-sm">B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</span>
+                  {/* Vendedores en Vacaciones / Ausentes */}
+                  {absentSellers.length > 0 && (
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4 text-amber-500" /> Vendedores en Vacaciones / Ausentes
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {absentSellers.map(v => (
+                          <div key={v.id} className="p-4 bg-amber-50/60 border border-amber-200 rounded-2xl flex flex-col justify-between">
+                            <div>
+                              <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full inline-block mb-1">Vacaciones</span>
+                              <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                              <p className="text-xs text-slate-500">Historial intacto</p>
+                            </div>
+                            <div className="mt-3 pt-2 border-t border-amber-200/60 flex items-center justify-between">
+                              <button 
+                                onClick={() => handleToggleState(v.id, 'activo')}
+                                className="text-xs font-bold text-amber-700 hover:text-amber-900 underline"
+                              >
+                                Reincorporar a Ruta →
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  )}
 
-              {/* Vendedores en Vacaciones / Ausentes */}
-              {absentSellers.length > 0 && (
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-amber-500" /> Vendedores en Vacaciones / Ausentes
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {absentSellers.map(v => (
-                      <div key={v.id} className="p-4 bg-amber-50/60 border border-amber-200 rounded-2xl flex flex-col justify-between">
-                        <div>
-                          <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full inline-block mb-1">Vacaciones</span>
-                          <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
-                          <p className="text-xs text-slate-500">Historial intacto</p>
-                        </div>
-                        <div className="mt-3 pt-2 border-t border-amber-200/60 flex items-center justify-between">
-                          <button 
-                            onClick={() => handleToggleState(v.id, 'activo')}
-                            className="text-xs font-bold text-amber-700 hover:text-amber-900 underline"
-                          >
-                            Reincorporar a Ruta →
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
 
-            </div>
-          )}
+              {/* ── TAB 2: GESTIÓN DE PERSONAL (CRUD) ── */}
+              {tab === 'crud' && (
+                <div className="space-y-6">
 
-          {/* ── TAB 2: GESTIÓN DE PERSONAL (CRUD) ── */}
-          {tab === 'crud' && (
-            <div className="space-y-6">
+                  {/* Formulario Nuevo Vendedor */}
+                  <form onSubmit={handleCreateSeller} className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                      <UserPlus className="w-4 h-4 text-blue-600" /> Registrar Nuevo Vendedor o Reemplazo
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
+                        <input 
+                          type="text" 
+                          value={nombre} 
+                          onChange={e => setNombre(e.target.value)} 
+                          placeholder="Ej: Carolina Sucre" 
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Ruta Asignada</label>
+                        <input 
+                          type="text" 
+                          value={rutaAsignada} 
+                          onChange={e => setRutaAsignada(e.target.value)} 
+                          placeholder="Ej: Panamá Oeste" 
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                        />
+                      </div>
+                    </div>
 
-              {/* Formulario Nuevo Vendedor */}
-              <form onSubmit={handleCreateSeller} className="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                  <UserPlus className="w-4 h-4 text-blue-600" /> Registrar Nuevo Vendedor o Reemplazo
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Cuota Mensual (B/.)</label>
+                        <input 
+                          type="number" 
+                          step="0.01" 
+                          value={cuotaMensual} 
+                          onChange={e => setCuotaMensual(e.target.value)} 
+                          placeholder="20000.00" 
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm font-mono focus:ring-2 focus:ring-pink-300 focus:outline-none" 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Estado Inicial</label>
+                        <select 
+                          value={estadoNuevo} 
+                          onChange={e => setEstadoNuevo(e.target.value as any)} 
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-pink-300 focus:outline-none"
+                        >
+                          <option value="activo">Activo en Ruta</option>
+                          <option value="vacaciones">Vacaciones / Reemplazado</option>
+                          <option value="inactivo">Inactivo</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-1">
+                      <Btn3D type="submit" color="blue" size="sm" isLoading={isPending} loadingText="Guardando...">
+                        Guardar Nuevo Vendedor
+                      </Btn3D>
+                    </div>
+                  </form>
+
+                  {/* Lista Completa de Vendedores */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
-                    <input 
-                      type="text" 
-                      value={nombre} 
-                      onChange={e => setNombre(e.target.value)} 
-                      placeholder="Ej: Carolina Sucre" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
-                      required 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Ruta Asignada</label>
-                    <input 
-                      type="text" 
-                      value={rutaAsignada} 
-                      onChange={e => setRutaAsignada(e.target.value)} 
-                      placeholder="Ej: Panamá Oeste" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-pink-300 focus:outline-none" 
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Cuota Mensual (B/.)</label>
-                    <input 
-                      type="number" 
-                      step="0.01" 
-                      value={cuotaMensual} 
-                      onChange={e => setCuotaMensual(e.target.value)} 
-                      placeholder="20000.00" 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm font-mono focus:ring-2 focus:ring-pink-300 focus:outline-none" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Estado Inicial</label>
-                    <select 
-                      value={estadoNuevo} 
-                      onChange={e => setEstadoNuevo(e.target.value as any)} 
-                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-pink-300 focus:outline-none"
-                    >
-                      <option value="activo">Activo en Ruta</option>
-                      <option value="vacaciones">Vacaciones / Reemplazado</option>
-                      <option value="inactivo">Inactivo</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-1">
-                  <Btn3D type="submit" color="blue" size="sm" isLoading={isPending} loadingText="Guardando...">
-                    Guardar Nuevo Vendedor
-                  </Btn3D>
-                </div>
-              </form>
-
-              {/* Lista Completa de Vendedores */}
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Vendedores Registrados en el Sistema</h4>
-                <div className="space-y-3">
-                  {vendedores.map(v => {
-                    const isEditing = editingId === v.id;
-                    return (
-                      <div key={v.id} className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        {isEditing ? (
-                          <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-2">
-                            <input type="text" value={editNombre} onChange={e => setEditNombre(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Nombre" />
-                            <input type="text" value={editRuta} onChange={e => setEditRuta(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Ruta" />
-                            <input type="number" value={editCuota} onChange={e => setEditCuota(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm font-mono" placeholder="Cuota B/." />
-                            <select value={editEstado} onChange={e => setEditEstado(e.target.value as any)} className="px-3 py-1.5 border rounded-lg text-sm bg-white">
-                              <option value="activo">Activo</option>
-                              <option value="vacaciones">Vacaciones</option>
-                              <option value="inactivo">Inactivo</option>
-                            </select>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-3">
-                            <div className={`w-3 h-3 rounded-full ${v.estado === 'activo' ? 'bg-emerald-500' : v.estado === 'vacaciones' ? 'bg-amber-500' : 'bg-slate-300'}`} />
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
-                                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${v.estado === 'activo' ? 'bg-emerald-100 text-emerald-800' : v.estado === 'vacaciones' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
-                                  {v.estado}
-                                </span>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Vendedores Registrados en el Sistema</h4>
+                    <div className="space-y-3">
+                      {vendedores.map(v => {
+                        const isEditing = editingId === v.id;
+                        return (
+                          <div key={v.id} className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            {isEditing ? (
+                              <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-2">
+                                <input type="text" value={editNombre} onChange={e => setEditNombre(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Nombre" />
+                                <input type="text" value={editRuta} onChange={e => setEditRuta(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm" placeholder="Ruta" />
+                                <input type="number" value={editCuota} onChange={e => setEditCuota(e.target.value)} className="px-3 py-1.5 border rounded-lg text-sm font-mono" placeholder="Cuota B/." />
+                                <select value={editEstado} onChange={e => setEditEstado(e.target.value as any)} className="px-3 py-1.5 border rounded-lg text-sm bg-white">
+                                  <option value="activo">Activo</option>
+                                  <option value="vacaciones">Vacaciones</option>
+                                  <option value="inactivo">Inactivo</option>
+                                </select>
                               </div>
-                              <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'} • Cuota: B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</p>
+                            ) : (
+                              <div className="flex items-center gap-3">
+                                <div className={`w-3 h-3 rounded-full ${v.estado === 'activo' ? 'bg-emerald-500' : v.estado === 'vacaciones' ? 'bg-amber-500' : 'bg-slate-300'}`} />
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="font-bold text-slate-900 text-sm">{v.nombre}</h5>
+                                    <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${v.estado === 'activo' ? 'bg-emerald-100 text-emerald-800' : v.estado === 'vacaciones' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
+                                      {v.estado}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-slate-500">{v.ruta_asignada || 'Sin ruta'} • Cuota: B/. {v.cuota_mensual.toLocaleString('es-PA', { minimumFractionDigits: 2 })}</p>
+                                </div>
+                              </div>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                              {isEditing ? (
+                                <>
+                                  <button onClick={() => handleSaveEdit(v.id)} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700">Guardar</button>
+                                  <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300">Cancelar</button>
+                                </>
+                              ) : (
+                                <>
+                                  <button onClick={() => handleStartEdit(v)} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Editar vendedor">
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <select 
+                                    value={v.estado} 
+                                    onChange={e => handleToggleState(v.id, e.target.value as any)}
+                                    className="px-2.5 py-1 text-xs font-semibold border rounded-lg bg-slate-50 text-slate-700"
+                                  >
+                                    <option value="activo">Activo</option>
+                                    <option value="vacaciones">Vacaciones</option>
+                                    <option value="inactivo">Inactivo</option>
+                                  </select>
+                                </>
+                              )}
                             </div>
                           </div>
-                        )}
+                        );
+                      })}
+                    </div>
+                  </div>
 
-                        <div className="flex items-center gap-2">
-                          {isEditing ? (
-                            <>
-                              <button onClick={() => handleSaveEdit(v.id)} className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700">Guardar</button>
-                              <button onClick={() => setEditingId(null)} className="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300">Cancelar</button>
-                            </>
-                          ) : (
-                            <>
-                              <button onClick={() => handleStartEdit(v)} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Editar vendedor">
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <select 
-                                value={v.estado} 
-                                onChange={e => handleToggleState(v.id, e.target.value as any)}
-                                className="px-2.5 py-1 text-xs font-semibold border rounded-lg bg-slate-50 text-slate-700"
-                              >
-                                <option value="activo">Activo</option>
-                                <option value="vacaciones">Vacaciones</option>
-                                <option value="inactivo">Inactivo</option>
-                              </select>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
-              </div>
-
-            </div>
-          )}
+              )}
 
           {/* ── TAB 3: METAS Y CUOTAS MENSUALES ── */}
           {tab === 'metas' && (
@@ -439,6 +455,8 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
 
             </div>
           )}
+          </>
+        )}
 
         </div>
 

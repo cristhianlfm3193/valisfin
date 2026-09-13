@@ -55,15 +55,15 @@ function QuickActionGroup({ label, color, options, onSelect }: {
   };
 
   return (
-    <div className="flex items-center gap-3 bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3">
+    <div className="flex items-center gap-3 bg-[#121c27]/85 backdrop-blur-md rounded-2xl border border-emerald-500/20 shadow-sm px-4 py-3">
       {/* Label */}
-      <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 w-24 hidden sm:block">
+      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0 w-24 hidden sm:block">
         {label}
       </span>
       {/* Pills */}
       <div
         role="tablist"
-        className="flex items-center gap-1 flex-1 flex-wrap p-1 bg-slate-100 rounded-full border border-slate-200"
+        className="flex items-center gap-1 flex-1 flex-wrap p-1 bg-black/30 rounded-full border border-white/5"
       >
         {options.map(opt => (
           <label
@@ -71,7 +71,7 @@ function QuickActionGroup({ label, color, options, onSelect }: {
             className={`inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 select-none ${
               selected === opt.id
                 ? `${activePill[color]} shadow`
-                : 'text-slate-500 hover:text-slate-800'
+                : 'text-gray-400 hover:text-white'
             }`}
           >
             <input
@@ -351,7 +351,7 @@ export function DashboardClient({
       {/* Quick Actions Grid */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-3 px-1">
-          <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-emerald-500" />
             Acciones Rápidas
           </h2>
@@ -372,7 +372,7 @@ export function DashboardClient({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isAnalyzing || isConverting}
-                className="absolute left-2 p-2 rounded-lg text-slate-400 hover:text-emerald-500 hover:bg-slate-100 disabled:opacity-50 transition-colors z-10"
+                className="absolute left-2 p-2 rounded-lg text-gray-400 hover:text-emerald-400 hover:bg-white/10 disabled:opacity-50 transition-colors z-10"
                 title="Adjuntar factura o recibo (Imagen/PDF)"
               >
                 {isConverting ? <Loader2 className="w-4 h-4 animate-spin text-emerald-500" /> : <Paperclip className="w-4 h-4" />}
@@ -382,7 +382,7 @@ export function DashboardClient({
                 value={aiText}
                 onChange={(e) => setAiText(e.target.value)}
                 placeholder="Ej: Gasté 15 en Súper 99..."
-                className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-200 shadow-sm text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                className="w-full pl-10 pr-12 py-3 rounded-xl border border-emerald-500/30 bg-black/30 shadow-sm text-sm font-medium text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
                 disabled={isAnalyzing}
               />
               <button 
@@ -470,7 +470,7 @@ export function DashboardClient({
         <div className="lg:col-span-8 space-y-6">
           {/* Main Balance Card */}
           <section
-            className="relative bg-[#09574a] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-xl shadow-emerald-900/10 border border-emerald-800/50"
+            className="relative bg-[#0d131f]/60 backdrop-blur-xl rounded-3xl p-6 sm:p-8 overflow-hidden shadow-xl border border-emerald-500/30"
             data-purpose="main-balance"
           >
             <div className="absolute top-0 right-0 p-32 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
@@ -527,65 +527,65 @@ export function DashboardClient({
 
           {/* Metrics Overview */}
           <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
+            <Link href="/gastos-diarios" className="bg-[#121c27]/85 backdrop-blur-md p-4 rounded-2xl border border-emerald-500/20 shadow-sm hover:border-emerald-500/50 transition-all group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-rose-50 rounded-xl text-rose-600">
+                <div className="p-2 bg-rose-500/20 rounded-xl text-rose-400 border border-rose-500/30">
                   <ArrowDownRight className="w-5 h-5" />
                 </div>
-                <span className="text-slate-400 group-hover:text-rose-500 transition-colors">
+                <span className="text-gray-500 group-hover:text-rose-400 transition-colors">
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Gastos Diarios</p>
-              <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.dailyExpenses)}</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Gastos Diarios</p>
+              <p className="text-lg font-extrabold text-white mt-auto">{formatCurrency(metrics.dailyExpenses)}</p>
             </Link>
 
-            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
+            <Link href="/gastos-diarios" className="bg-[#121c27]/85 backdrop-blur-md p-4 rounded-2xl border border-emerald-500/20 shadow-sm hover:border-emerald-500/50 transition-all group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-orange-50 rounded-xl text-orange-600">
+                <div className="p-2 bg-orange-500/20 rounded-xl text-orange-400 border border-orange-500/30">
                   <Utensils className="w-5 h-5" />
                 </div>
-                <span className="text-slate-400 group-hover:text-orange-500 transition-colors">
+                <span className="text-gray-500 group-hover:text-orange-400 transition-colors">
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Restaurante</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Restaurante</p>
               <div className="flex items-baseline gap-1 mt-auto">
-                <p className="text-lg font-extrabold text-slate-900">{formatCurrency(metrics.restauranteSpent)}</p>
-                <span className="text-xs text-slate-400 font-medium ml-1">gastado</span>
+                <p className="text-lg font-extrabold text-white">{formatCurrency(metrics.restauranteSpent)}</p>
+                <span className="text-xs text-gray-500 font-medium ml-1">gastado</span>
               </div>
             </Link>
 
-            <Link href="/gastos-diarios" className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col relative overflow-hidden">
+            <Link href="/gastos-diarios" className="bg-[#121c27]/85 backdrop-blur-md p-4 rounded-2xl border border-emerald-500/20 shadow-sm hover:border-emerald-500/50 transition-all group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2 bg-violet-50 rounded-xl text-violet-600">
+                <div className="p-2 bg-violet-500/20 rounded-xl text-violet-400 border border-violet-500/30">
                   <Wallet className="w-5 h-5" />
                 </div>
-                <span className="text-slate-400 group-hover:text-violet-500 transition-colors">
+                <span className="text-gray-500 group-hover:text-violet-400 transition-colors">
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
               </div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Uso Tarjeta Crédito</p>
-              <p className="text-lg font-extrabold text-slate-900 mt-auto">{formatCurrency(metrics.creditCardTotal)}</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Uso Tarjeta Crédito</p>
+              <p className="text-lg font-extrabold text-white mt-auto">{formatCurrency(metrics.creditCardTotal)}</p>
             </Link>
           </section>
 
           {/* Couple Breakdown */}
-          <section className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <section className="bg-[#121c27]/85 backdrop-blur-md rounded-3xl p-5 sm:p-6 border border-emerald-500/20 shadow-sm">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
               Desglose por Cónyuge
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {coupleBreakdown.map((person) => {
                 const isCf = person.id === 'cristhian';
-                const hoverClass = isCf ? "hover:border-emerald-300" : "hover:border-pink-300";
-                const initialsColor = isCf ? "bg-emerald-50 border-emerald-100 text-[#006655]" : "bg-pink-50 border-pink-100 text-pink-600";
-                const effectiveBoxBorder = isCf ? "border-emerald-100" : "border-pink-100";
-                const effectiveBoxText = isCf ? "text-emerald-700" : "text-pink-700";
+                const hoverClass = isCf ? "hover:border-emerald-400/50" : "hover:border-pink-400/50";
+                const initialsColor = isCf ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400" : "bg-pink-500/20 border-pink-500/30 text-pink-400";
+                const effectiveBoxBorder = isCf ? "border-emerald-500/30 bg-emerald-500/10" : "border-pink-500/30 bg-pink-500/10";
+                const effectiveBoxText = isCf ? "text-emerald-400" : "text-pink-400";
                 const subtitle = isCf ? "Salarios & Gastos de Representación" : "Salario base, Carro & Comisión Meta";
 
                 return (
-                  <div key={person.id} className={`bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between transition-all ${hoverClass}`}>
+                  <div key={person.id} className={`bg-black/20 rounded-2xl p-5 sm:p-6 border border-white/10 shadow-sm flex flex-col justify-between transition-all ${hoverClass}`}>
                     <div>
                       <div className="flex items-start sm:items-center justify-between gap-2">
                         <div className="flex items-center gap-3 min-w-0">
@@ -593,37 +593,37 @@ export function DashboardClient({
                             {person.initials}
                           </div>
                           <div className="min-w-0">
-                            <h3 className="font-semibold text-slate-900 text-sm sm:text-base leading-tight truncate">{person.name}</h3>
-                            <span className="text-[10px] sm:text-xs text-slate-500 line-clamp-2 sm:truncate">{subtitle}</span>
+                            <h3 className="font-semibold text-white text-sm sm:text-base leading-tight truncate">{person.name}</h3>
+                            <span className="text-[10px] sm:text-xs text-gray-400 line-clamp-2 sm:truncate">{subtitle}</span>
                           </div>
                         </div>
-                        <span className="px-2.5 py-1.5 rounded-full bg-slate-100 text-[10px] sm:text-xs text-slate-700 font-semibold whitespace-nowrap shrink-0">{person.abonos || 0} Abonos</span>
+                        <span className="px-2.5 py-1.5 rounded-full bg-white/10 text-[10px] sm:text-xs text-gray-300 font-semibold whitespace-nowrap shrink-0">{person.abonos || 0} Abonos</span>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-center">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-5 p-2 sm:p-3 rounded-xl bg-white/5 border border-white/5 text-center">
                         <div className="px-0.5 sm:px-1">
-                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500 truncate">Proyectado</div>
-                          <div className="text-[10px] sm:text-sm font-semibold font-mono text-slate-900 mt-0.5 tracking-tight">{formatCurrency(person.projected || 0)}</div>
+                          <div className="text-[9px] sm:text-[11px] font-medium text-gray-400 truncate">Proyectado</div>
+                          <div className="text-[10px] sm:text-sm font-semibold font-mono text-white mt-0.5 tracking-tight">{formatCurrency(person.projected || 0)}</div>
                         </div>
-                        <div className={`bg-white rounded-lg py-1 shadow-sm border px-0.5 sm:px-1 ${effectiveBoxBorder}`}>
+                        <div className={`rounded-lg py-1 shadow-sm border px-0.5 sm:px-1 ${effectiveBoxBorder}`}>
                           <div className={`text-[9px] sm:text-[11px] font-medium truncate ${effectiveBoxText}`}>Efectivo</div>
                           <div className={`text-[10px] sm:text-sm font-bold font-mono mt-0.5 tracking-tight ${effectiveBoxText}`}>{formatCurrency(person.incomes || 0)}</div>
                         </div>
                         <div className="px-0.5 sm:px-1">
-                          <div className="text-[9px] sm:text-[11px] font-medium text-slate-500 truncate">Pendiente</div>
-                          <div className="text-[10px] sm:text-sm font-medium font-mono text-slate-500 mt-0.5 tracking-tight">{formatCurrency(person.pending || 0)}</div>
+                          <div className="text-[9px] sm:text-[11px] font-medium text-gray-400 truncate">Pendiente</div>
+                          <div className="text-[10px] sm:text-sm font-medium font-mono text-gray-300 mt-0.5 tracking-tight">{formatCurrency(person.pending || 0)}</div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="pt-4 mt-2 border-t border-slate-100 space-y-2">
+                    <div className="pt-4 mt-2 border-t border-white/10 space-y-2">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-slate-500 font-medium">Asignaciones / Gastos</span>
-                        <span className="font-bold text-rose-600">-{formatCurrency(person.expenses || 0)}</span>
+                        <span className="text-gray-400 font-medium">Asignaciones / Gastos</span>
+                        <span className="font-bold text-rose-400">-{formatCurrency(person.expenses || 0)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-slate-700 uppercase">Saldo Neto (Bolsillo)</span>
-                        <span className={`text-sm font-extrabold ${(person.balance || 0) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        <span className="text-xs font-bold text-gray-300 uppercase">Saldo Neto (Bolsillo)</span>
+                        <span className={`text-sm font-extrabold ${(person.balance || 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                           {formatCurrency(person.balance || 0)}
                         </span>
                       </div>
@@ -637,37 +637,37 @@ export function DashboardClient({
 
         {/* Sidebar / Upcoming */}
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm">
+          <div className="bg-[#121c27]/85 backdrop-blur-md rounded-3xl p-5 border border-emerald-500/20 shadow-sm">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
                 Próximos Pagos
               </h3>
-              <Link href="/pagos-fijos" className="text-xs font-bold text-emerald-600 hover:text-emerald-700">
+              <Link href="/pagos-fijos" className="text-xs font-bold text-emerald-400 hover:text-emerald-300">
                 Ver todos
               </Link>
             </div>
 
             <div className="space-y-3">
               {upcomingBills.length > 0 ? upcomingBills.map((bill) => (
-                <div key={bill.id} className="flex items-center p-3 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
+                <div key={bill.id} className="flex items-center p-3 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 group">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 mr-3 ${bill.colorClass}`}>
                     {bill.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-slate-900 truncate">{bill.title}</p>
-                    <p className={`text-xs font-medium truncate ${bill.daysRemaining <= 3 ? 'text-rose-500 font-bold' : 'text-slate-500'}`}>
+                    <p className="text-sm font-bold text-white truncate">{bill.title}</p>
+                    <p className={`text-xs font-medium truncate ${bill.daysRemaining <= 3 ? 'text-rose-400 font-bold' : 'text-gray-400'}`}>
                       {bill.subtitle}
                     </p>
                   </div>
                   <div className="text-right shrink-0 ml-2">
-                    <p className="text-sm font-extrabold text-slate-900">{formatCurrency(bill.amount)}</p>
+                    <p className="text-sm font-extrabold text-white">{formatCurrency(bill.amount)}</p>
                   </div>
                 </div>
               )) : (
-                <div className="py-8 text-center bg-slate-50 rounded-2xl border border-slate-100">
-                  <CheckCircle2 className="w-8 h-8 mx-auto text-emerald-400 mb-2" />
-                  <p className="text-sm font-semibold text-slate-700">¡Todo al día!</p>
-                  <p className="text-xs text-slate-500">No hay pagos próximos vencidos.</p>
+                <div className="py-8 text-center bg-black/20 rounded-2xl border border-white/5">
+                  <CheckCircle2 className="w-8 h-8 mx-auto text-emerald-500 mb-2" />
+                  <p className="text-sm font-semibold text-gray-300">¡Todo al día!</p>
+                  <p className="text-xs text-gray-500">No hay pagos próximos vencidos.</p>
                 </div>
               )}
             </div>

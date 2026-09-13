@@ -34,7 +34,7 @@ export function SearchAndFilters({
           </div>
           <input
             type="text"
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#121c27] border-white/10 border border-white/10 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
             placeholder="Buscar pago fijo: luz, seguro, guardería, internet..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -42,13 +42,13 @@ export function SearchAndFilters({
         </div>
 
         {/* Filtros de Estado tipo Pills */}
-        <div className="flex items-center gap-1.5 p-1 bg-white border border-slate-200 rounded-xl shrink-0 overflow-x-auto">
+        <div className="flex items-center gap-1.5 p-1 bg-[#121c27] border-white/10 border border-white/10 rounded-xl shrink-0 overflow-x-auto">
           <button
             type="button"
             className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all whitespace-nowrap ${
               currentFilter === 'all'
                 ? 'bg-emerald-600 text-white'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-gray-300 hover:bg-white/10'
             }`}
             onClick={() => setCurrentFilter('all')}
           >
@@ -59,7 +59,7 @@ export function SearchAndFilters({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
               currentFilter === 'pending'
                 ? 'bg-emerald-600 text-white font-semibold'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-gray-300 hover:bg-white/10'
             }`}
             onClick={() => setCurrentFilter('pending')}
           >
@@ -70,7 +70,7 @@ export function SearchAndFilters({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
               currentFilter === 'paid'
                 ? 'bg-emerald-600 text-white font-semibold'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-gray-300 hover:bg-white/10'
             }`}
             onClick={() => setCurrentFilter('paid')}
           >

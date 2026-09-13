@@ -34,17 +34,17 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col max-h-[85vh] overflow-hidden"
+          className="bg-[#121c27] border-white/10 rounded-t-3xl sm:rounded-3xl w-full max-w-sm shadow-2xl pointer-events-auto flex flex-col max-h-[85vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between p-5 border-b border-slate-100 shrink-0 bg-slate-50">
+          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0 bg-white/5">
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight capitalize">{formatDate(date)}</h3>
-              <p className="text-xs text-slate-500">{events.length} eventos programados</p>
+              <h3 className="text-base font-bold text-white leading-tight capitalize">{formatDate(date)}</h3>
+              <p className="text-xs text-gray-400">{events.length} eventos programados</p>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-gray-300 hover:bg-slate-200/50 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -52,7 +52,7 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
 
           <div className="p-4 overflow-y-auto space-y-2 custom-scrollbar">
             {events.length === 0 ? (
-              <div className="text-center py-6 text-slate-500 text-sm">
+              <div className="text-center py-6 text-gray-400 text-sm">
                 No hay eventos programados para este día.
               </div>
             ) : (
@@ -64,7 +64,7 @@ export function DayEventsListModal({ date, events, categoryStyles, onEventClick,
                     onClick={() => {
                       onEventClick(event);
                     }}
-                    className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-between gap-3 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
+                    className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-between gap-3 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-[0_4px_12px_rgba(0,0,0,0.5)]
                       ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50' : ''}
                     `}
                   >

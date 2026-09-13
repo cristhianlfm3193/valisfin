@@ -1,0 +1,18 @@
+<USER_REQUEST>
+quiero crear esta tabla y quiero que le pongas un primary key, esto es para usarse en la sección de ValisAN en la subsección BD-RH pero primero crea la tabal en la base de datos
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-13T04:25:25-05:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\crist\OneDrive\Desktop\ValisFin\.env.local (LANGUAGE_UNSPECIFIED)
+Cursor is on line: 3
+Other open documents:
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\auth\signout\route.ts (LANGUAGE_TYPESCRIPT)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\valisan\page.tsx (LANGUAGE_TSX)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\pagos-fijos\page.tsx (LANGUAGE_TSX)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\valisan\loading.tsx (LANGUAGE_TSX)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\layout.tsx (LANGUAGE_TSX)
+Running terminal commands:
+- npm run dev (in c:\Users\crist\OneDrive\Desktop\ValisFin, running for 48m53s)
+</ADDITIONAL_METADATA>

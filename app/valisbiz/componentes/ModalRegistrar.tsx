@@ -128,30 +128,30 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 max-h-[95vh] flex flex-col">
+      <div className="relative bg-[#181124] border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 max-h-[95vh] flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-pink-600 to-rose-500 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-white font-bold text-lg">Registrar Datos</h2>
             <p className="text-pink-100 text-xs mt-0.5">Selecciona el tipo de registro a ingresar</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors">
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-[#090a0f]/50/20 text-white hover:bg-[#090a0f]/50/30 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-slate-200 bg-slate-50 flex-shrink-0">
+        <div className="flex border-b border-white/10 bg-white/5 flex-shrink-0">
           <button
             onClick={() => handleTabChange('facturado')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'facturado' ? 'border-pink-500 text-pink-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'facturado' ? 'border-pink-500 text-pink-600 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
           >
             <Building2 className="w-4 h-4" />
             Facturado (Finanzas)
           </button>
           <button
             onClick={() => handleTabChange('vendido')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'vendido' ? 'border-blue-500 text-blue-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'vendido' ? 'border-blue-500 text-blue-600 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
           >
             <FileText className="w-4 h-4" />
             Vendido (Vendedor)
@@ -171,11 +171,11 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
             {/* Vendedor */}
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5">Vendedor *</label>
+              <label className="block text-xs font-semibold text-gray-300 mb-1.5">Vendedor *</label>
               <select
                 value={vendedorId}
                 onChange={e => setVendedorId(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
               >
                 <option value="">Seleccionar vendedor...</option>
                 {vendedores.map(v => (
@@ -186,15 +186,15 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
             {/* Fecha */}
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+              <label className="block text-xs font-semibold text-gray-300 mb-1.5">
                 Fecha del reporte *
-                {tab === 'facturado' && <span className="text-slate-400 font-normal ml-1">(fecha en que finanzas reporta)</span>}
+                {tab === 'facturado' && <span className="text-gray-500 font-normal ml-1">(fecha en que finanzas reporta)</span>}
               </label>
               <input
                 type="date"
                 value={fecha}
                 onChange={e => setFecha(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 transition-all"
               />
             </div>
 
@@ -207,10 +207,10 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                       <Banknote className="w-3.5 h-3.5" /> Contado (B/.)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">B/.</span>
                       <input type="number" step="0.01" min="0" value={facContado}
                         onChange={e => setFacContado(e.target.value)} placeholder="0.00"
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+                        className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                     </div>
                   </div>
                   <div>
@@ -218,16 +218,16 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                       <CreditCard className="w-3.5 h-3.5" /> Crédito (B/.)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">B/.</span>
                       <input type="number" step="0.01" min="0" value={facCredito}
                         onChange={e => setFacCredito(e.target.value)} placeholder="0.00"
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+                        className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                     </div>
                   </div>
                 </div>
                 {/* Total calculado */}
                 <div className="flex items-center justify-between bg-pink-50 rounded-xl px-4 py-2.5 border border-pink-200">
-                  <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                  <span className="text-xs font-semibold text-gray-300 flex items-center gap-1">
                     <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
                   </span>
                   <span className="font-mono font-bold text-pink-700 text-sm">
@@ -235,10 +235,10 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                   </span>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Notas (opcional)</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Notas (opcional)</label>
                   <input type="text" value={notas} onChange={e => setNotas(e.target.value)}
                     placeholder="Ej: Reporte finanzas 09/09/2026"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                 </div>
               </>
             )}
@@ -248,19 +248,19 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
               <>
                 {/* Sección: Visitas */}
                 <div>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Visitas del día</p>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Visitas del día</p>
                   <div className="grid grid-cols-3 gap-3">
                     {/* Vistas */}
                     <div>
-                      <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
-                        <Eye className="w-3.5 h-3.5 text-slate-400" /> Vistas
+                      <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
+                        <Eye className="w-3.5 h-3.5 text-gray-500" /> Vistas
                       </label>
                       <input
                         type="number" min="0" step="1"
                         value={vistas}
                         onChange={e => setVistas(e.target.value)}
                         placeholder="0"
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-800 font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-gray-100 font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
                       />
                     </div>
                     {/* Con Compra */}
@@ -294,37 +294,37 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
                 {/* Sección: Montos */}
                 <div>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Montos del día (B/.)</p>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Montos del día (B/.)</p>
                   <div className="grid grid-cols-2 gap-3">
                     {/* Contado */}
                     <div>
-                      <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
-                        <Banknote className="w-3.5 h-3.5 text-slate-400" /> Contado
+                      <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
+                        <Banknote className="w-3.5 h-3.5 text-gray-500" /> Contado
                       </label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">B/.</span>
                         <input
                           type="number" step="0.01" min="0"
                           value={contado}
                           onChange={e => setContado(e.target.value)}
                           placeholder="0.00"
-                          className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
+                          className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-2.5 text-sm text-gray-100 font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
                         />
                       </div>
                     </div>
                     {/* Crédito */}
                     <div>
-                      <label className="flex items-center gap-1 text-xs font-semibold text-slate-600 mb-1.5">
-                        <CreditCard className="w-3.5 h-3.5 text-slate-400" /> Crédito
+                      <label className="flex items-center gap-1 text-xs font-semibold text-gray-300 mb-1.5">
+                        <CreditCard className="w-3.5 h-3.5 text-gray-500" /> Crédito
                       </label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">B/.</span>
                         <input
                           type="number" step="0.01" min="0"
                           value={credito}
                           onChange={e => setCredito(e.target.value)}
                           placeholder="0.00"
-                          className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-sm text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
+                          className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-3 py-2.5 text-sm text-gray-100 font-mono focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
                         />
                       </div>
                     </div>

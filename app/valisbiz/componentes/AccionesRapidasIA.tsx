@@ -99,19 +99,19 @@ function ChipsProgreso({ cola, actual }: { cola: ItemCola[]; actual: number }) {
       {cola.map((item, i) => {
         const nombre = item.vendedor_nombre?.split(' ')[0] || `#${i + 1}`;
         if (item._estado === 'guardado') return (
-          <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700">
+          <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-whitemerald-700">
             <Check className="w-3 h-3" />{nombre}
           </span>
         );
         if (item._estado === 'omitido') return (
-          <span key={i} className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-400 line-through">{nombre}</span>
+          <span key={i} className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#090a0f]/50/5 text-gray-400 line-through">{nombre}</span>
         );
         if (i === actual) return (
           <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500 text-white ring-2 ring-purple-300">
             {nombre}
           </span>
         );
-        return <span key={i} className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500">{nombre}</span>;
+        return <span key={i} className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#090a0f]/50/5 text-gray-400">{nombre}</span>;
       })}
     </div>
   );
@@ -122,18 +122,18 @@ function FormularioItem({ item, vendedores, onChange }: {
   item: ItemCola; vendedores: Vendedor[]; onChange: (c: Partial<ItemCola>) => void;
 }) {
   const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
-  const inp = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all";
+  const inp = "w-full rounded-xl border border-white/10 bg-[#090a0f]/50/5 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all";
 
   return (
     <div className="flex flex-col gap-3">
       {/* Tab tipo */}
-      <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-slate-50 text-xs">
+      <div className="flex rounded-xl border border-white/10 overflow-hidden bg-[#090a0f]/50/5 text-xs">
         <button onClick={() => onChange({ _tab: 'facturado' })}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-white text-pink-600 shadow-sm' : 'text-slate-400'}`}>
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-[#090a0f]/50 text-pink-600 shadow-sm' : 'text-gray-400'}`}>
           <Building2 className="w-3.5 h-3.5" /> Facturado
         </button>
         <button onClick={() => onChange({ _tab: 'vendido' })}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'vendido' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}>
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'vendido' ? 'bg-[#090a0f]/50 text-whitelue-600 shadow-sm' : 'text-gray-400'}`}>
           <FileText className="w-3.5 h-3.5" /> Vendido
         </button>
       </div>
@@ -141,14 +141,14 @@ function FormularioItem({ item, vendedores, onChange }: {
       {/* Vendedor + Fecha */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vendedor *</label>
-          <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-700`}>
+          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Vendedor *</label>
+          <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-gray-200`}>
             <option value="">Seleccionar...</option>
             {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Fecha</label>
+          <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Fecha</label>
           <input type="date" value={item._fecha} onChange={e => onChange({ _fecha: e.target.value })} className={inp} />
         </div>
       </div>
@@ -157,27 +157,27 @@ function FormularioItem({ item, vendedores, onChange }: {
         <>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="flex items-center gap-1 text-[11px] font-bold text-emerald-700 uppercase tracking-wider mb-1">
+              <label className="flex items-center gap-1 text-[11px] font-bold text-whitemerald-700 uppercase tracking-wider mb-1">
                 <Banknote className="w-3 h-3" /> Contado (B/.)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
                 <input type="number" step="0.01" min="0" value={item._contado} onChange={e => onChange({ _contado: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
               </div>
             </div>
             <div>
-              <label className="flex items-center gap-1 text-[11px] font-bold text-blue-700 uppercase tracking-wider mb-1">
+              <label className="flex items-center gap-1 text-[11px] font-bold text-whitelue-700 uppercase tracking-wider mb-1">
                 <CreditCard className="w-3 h-3" /> Crédito (B/.)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
                 <input type="number" step="0.01" min="0" value={item._credito} onChange={e => onChange({ _credito: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
               </div>
             </div>
           </div>
           {/* Total calculado */}
           <div className="flex items-center justify-between bg-pink-50 rounded-xl px-3 py-2 border border-pink-200">
-            <span className="text-[11px] font-semibold text-slate-600 flex items-center gap-1">
+            <span className="text-[11px] font-semibold text-gray-300 flex items-center gap-1">
               <Calculator className="w-3 h-3 text-pink-500" /> Total del día
             </span>
             <span className="font-mono font-bold text-pink-700 text-sm">
@@ -185,7 +185,7 @@ function FormularioItem({ item, vendedores, onChange }: {
             </span>
           </div>
           <div>
-            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Notas</label>
+            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Notas</label>
             <input type="text" value={item._notas} onChange={e => onChange({ _notas: e.target.value })} placeholder="Opcional" className={inp} />
           </div>
         </>
@@ -200,7 +200,7 @@ function FormularioItem({ item, vendedores, onChange }: {
               { label: 'Sin Compra', key: '_sinCompra', Icon: XCircleIcon, cls: "w-full rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-red-300 transition-all" },
             ].map(({ label, key, Icon: Ic, cls }) => (
               <div key={key}>
-                <label className="flex items-center gap-0.5 text-[11px] font-semibold text-slate-600 mb-1"><Ic className="w-3 h-3" /> {label}</label>
+                <label className="flex items-center gap-0.5 text-[11px] font-semibold text-gray-300 mb-1"><Ic className="w-3 h-3" /> {label}</label>
                 <input type="number" min="0" value={(item as any)[key]} onChange={e => onChange({ [key]: e.target.value } as any)} className={`${cls} text-center`} />
               </div>
             ))}
@@ -211,9 +211,9 @@ function FormularioItem({ item, vendedores, onChange }: {
               { label: 'Crédito', key: '_credito', Icon: CreditCard },
             ].map(({ label, key, Icon: Ic }) => (
               <div key={key}>
-                <label className="flex items-center gap-1 text-[11px] font-semibold text-slate-600 mb-1"><Ic className="w-3 h-3 text-slate-400" /> {label}</label>
+                <label className="flex items-center gap-1 text-[11px] font-semibold text-gray-300 mb-1"><Ic className="w-3 h-3 text-gray-400" /> {label}</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-xs">B/.</span>
                   <input type="number" step="0.01" min="0" value={(item as any)[key]} onChange={e => onChange({ [key]: e.target.value } as any)} className={`${inp} pl-8`} />
                 </div>
               </div>
@@ -221,10 +221,10 @@ function FormularioItem({ item, vendedores, onChange }: {
           </div>
           <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl px-4 py-2">
             <div className="flex items-center gap-1.5">
-              <Calculator className="w-3.5 h-3.5 text-blue-500" />
-              <span className="text-xs font-semibold text-blue-700">Total</span>
+              <Calculator className="w-3.5 h-3.5 text-whitelue-500" />
+              <span className="text-xs font-semibold text-whitelue-700">Total</span>
             </div>
-            <span className="font-mono text-base font-bold text-blue-700">B/.{fmt2(total)}</span>
+            <span className="font-mono text-whitease font-bold text-whitelue-700">B/.{fmt2(total)}</span>
           </div>
         </>
       )}
@@ -367,12 +367,12 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
 
   // ── Panel abierto ───────────────────────────────────────────────────────────
   return (
-    <div className="fixed bottom-24 right-4 lg:bottom-6 lg:right-6 w-[calc(100vw-2rem)] sm:w-[420px] h-[640px] max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-2rem)] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+    <div className="fixed bottom-24 right-4 lg:bottom-6 lg:right-6 w-[calc(100vw-2rem)] sm:w-[420px] h-[640px] max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-2rem)] bg-[#181124] border border-white/10 rounded-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
 
       {/* ── Header ── */}
       <div className="bg-gradient-to-r from-purple-700 to-pink-600 p-4 flex items-center justify-between text-white shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+          <div className="w-10 h-10 bg-[#090a0f]/50/20 rounded-full flex items-center justify-center backdrop-blur-sm">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -385,35 +385,35 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         </div>
         <div className="flex items-center gap-1">
           {(estado !== 'idle') && (
-            <button onClick={resetTodo} className="p-2 hover:bg-white/20 rounded-xl transition-colors" title="Nueva consulta">
+            <button onClick={resetTodo} className="p-2 hover:bg-[#090a0f]/50/20 rounded-xl transition-colors" title="Nueva consulta">
               <Bot className="w-4 h-4 text-purple-100" />
             </button>
           )}
-          <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/20 rounded-xl transition-colors">
+          <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-[#090a0f]/50/20 rounded-xl transition-colors">
             <Minimize2 className="w-5 h-5 text-purple-100" />
           </button>
         </div>
       </div>
 
       {/* ── Área de contenido ── */}
-      <div className="flex-1 overflow-y-auto p-4 bg-slate-50 flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto p-4 bg-[#090a0f]/50/5 flex flex-col gap-4">
 
         {/* Pantalla inicial con sugerencias */}
         {estado === 'idle' && (
           <div className="flex-1 flex flex-col justify-center">
-            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-bold text-slate-800 mb-1 flex items-center gap-2">
+            <div className="bg-[#090a0f]/50 p-5 rounded-2xl border border-white/5 shadow-sm">
+              <h4 className="font-bold text-gray-100 mb-1 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-purple-500" />
                 ¡Hola! Soy tu asistente de ventas
               </h4>
-              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+              <p className="text-sm text-gray-400 leading-relaxed mb-4">
                 Escríbeme el reporte del día o súbeme una foto del Excel Keiko. Extraigo los datos de los 3 vendedores de una sola vez.
               </p>
               <div className="flex flex-col gap-2">
                 {quickPrompts.map((prompt, i) => (
                   <button key={i}
                     onClick={() => i === 1 ? fileRef.current?.click() : (setTexto(prompt))}
-                    className="text-left text-xs bg-slate-50 hover:bg-purple-50 text-slate-700 hover:text-purple-700 border border-slate-200 hover:border-purple-200 px-3 py-2.5 rounded-xl transition-colors w-full">
+                    className="text-left text-xs bg-[#090a0f]/50/5 hover:bg-purple-50 text-gray-200 hover:text-purple-700 border border-white/10 hover:border-purple-200 px-3 py-2.5 rounded-xl transition-colors w-full">
                     {i === 1 ? '📸 ' : '💬 '}{prompt}
                   </button>
                 ))}
@@ -425,7 +425,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         {/* Analizando */}
         {estado === 'analizando' && (
           <div className="flex justify-start">
-            <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm flex items-center gap-2 text-slate-500">
+            <div className="bg-[#090a0f]/50 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm flex items-center gap-2 text-gray-400">
               <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
               <span className="text-xs font-medium">Gemini analizando el reporte...</span>
             </div>
@@ -451,8 +451,8 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
 
             {/* Mensaje IA con resumen */}
             <div className="flex justify-start">
-              <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm max-w-[90%]">
-                <p className="text-xs font-medium text-slate-700 mb-2">{resumen}</p>
+              <div className="bg-[#090a0f]/50 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm max-w-[90%]">
+                <p className="text-xs font-medium text-gray-200 mb-2">{resumen}</p>
                 <ChipsProgreso cola={cola} actual={indexActual} />
               </div>
             </div>
@@ -464,7 +464,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 shadow-sm">
+            <div className="bg-[#090a0f]/50 border border-white/10 rounded-2xl rounded-tl-sm p-4 shadow-sm">
               <FormularioItem item={itemActual} vendedores={vendedores} onChange={updateItem} />
             </div>
 
@@ -477,7 +477,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
             {/* Botones de acción */}
             <div className="flex gap-2">
               <button onClick={handleOmitir} disabled={estado === 'guardando'}
-                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-200 text-slate-500 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-white/10 text-gray-400 text-xs font-semibold hover:bg-[#090a0f]/50/5 disabled:opacity-50 transition-colors">
                 <SkipForward className="w-3.5 h-3.5" /> Omitir
               </button>
               <button onClick={handleGuardar} disabled={estado === 'guardando' || !itemActual._vendedorId}
@@ -497,12 +497,12 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         {estado === 'exito' && (
           <div className="flex flex-col gap-3">
             <div className="flex justify-start">
-              <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-4 shadow-sm">
+              <div className="bg-[#090a0f]/50 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  <span className="font-bold text-slate-800 text-sm">¡Todo procesado!</span>
+                  <CheckCircle2 className="w-5 h-5 text-whitemerald-500" />
+                  <span className="font-bold text-gray-100 text-sm">¡Todo procesado!</span>
                 </div>
-                <p className="text-xs text-slate-500 mb-3">
+                <p className="text-xs text-gray-400 mb-3">
                   ✅ {guardados} guardados{omitidos > 0 ? ` · ⏭ ${omitidos} omitidos` : ''}
                 </p>
                 <ChipsProgreso cola={cola} actual={-1} />
@@ -521,7 +521,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
       </div>
 
       {/* ── Input Area ── */}
-      <div className="p-4 bg-white border-t border-slate-200 shrink-0">
+      <div className="p-4 bg-[#090a0f]/50 border-t border-white/10 shrink-0">
         <input ref={fileRef} type="file" accept="image/*,application/pdf" className="hidden"
           onChange={e => { setArchivo(e.target.files?.[0] || null); }} />
 
@@ -529,7 +529,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
           <div className="flex items-center gap-2 mb-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-xl">
             <ImagePlus className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
             <span className="text-xs text-purple-700 flex-1 truncate">{archivo.name}</span>
-            <button onClick={() => setArchivo(null)} className="text-slate-400 hover:text-red-500">
+            <button onClick={() => setArchivo(null)} className="text-gray-400 hover:text-red-500">
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -537,7 +537,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
 
         <div className="relative flex items-center">
           <button onClick={() => fileRef.current?.click()}
-            className="absolute left-3 text-slate-400 hover:text-purple-500 transition-colors">
+            className="absolute left-3 text-gray-400 hover:text-purple-500 transition-colors">
             <ImagePlus className="w-4 h-4" />
           </button>
           <textarea
@@ -545,7 +545,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
             onChange={e => setTexto(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAnalizar(); } }}
             placeholder="Ej: Andrés: 12 vistas, 9 con compra…"
-            className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 resize-none min-h-[44px] max-h-32"
+            className="w-full bg-[#090a0f]/50/5 border border-white/10 rounded-2xl pl-10 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 resize-none min-h-[44px] max-h-32"
             rows={1}
             disabled={estado === 'analizando' || estado === 'guardando'}
           />
@@ -555,7 +555,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
             <Send className="w-4 h-4" />
           </button>
         </div>
-        <p className="text-[10px] text-center text-slate-400 mt-2">
+        <p className="text-[10px] text-center text-gray-400 mt-2">
           La IA puede cometer errores · revisa antes de guardar
         </p>
       </div>

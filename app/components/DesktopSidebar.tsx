@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Home,
   TrendingUp,
@@ -17,10 +17,13 @@ import {
   Calendar,
   Shield,
   MapPin,
-  Heart
+  Heart,
+  Orbit,
+  Sparkles
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
+import { ValisBizSettingsModal } from "@/app/admin/components/ValisBizSettingsModal";
 
 const navItems = [
   { href: "/", label: "Inicio", icon: Home },
@@ -35,9 +38,21 @@ const navItems = [
 ];
 
 export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }) {
+  return (
+    <Suspense fallback={<aside className="hidden lg:flex flex-col bg-white/5 border-r border-white/10 backdrop-blur-xl shrink-0 min-h-screen sticky top-0 w-64 p-5" />}>
+      <DesktopSidebarInner user={user} profile={profile} />
+    </Suspense>
+  );
+}
+
+function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isValisBizOpen, setIsValisBizOpen] = useState(false);
+
+
 
   useEffect(() => {
     setMounted(true);
@@ -57,25 +72,78 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  // Para evitar hydration mismatch, forzamos un ancho inicial hasta que esté montado
   const sidebarWidth = !mounted ? "w-64" : isCollapsed ? "w-20" : "w-64";
   const pClass = !mounted ? "p-5" : isCollapsed ? "p-3" : "p-5";
 
+  const isValisBiz = pathname.startsWith('/valisbiz');
+  const isValisAN = pathname.startsWith('/valisan');
+  const currentTab = searchParams.get('tab') || 'ventas';
+  const valisANCurrentTab = searchParams.get('tab') || 'dashboard';
+
+  const valisBizNavItems = [
+    { href: "/valisbiz?tab=ventas", label: "Ventas & Métricas", icon: TrendingUp, id: 'ventas' },
+    { href: "/valisbiz?tab=estadisticas", label: "Estadísticas", icon: BarChart2, id: 'estadisticas' },
+    { href: "/valisbiz?tab=mapa", label: "Mapa CRM de Visitas", icon: MapPin, id: 'mapa' },
+  ];
+
+  const valisANNavItems = [
+    { href: "/valisan?tab=dashboard", label: "Dashboard", icon: BarChart2, id: 'dashboard' },
+    { href: "/valisan?tab=aipp", label: "AIPP (Metas & Proy.)", icon: Target, id: 'aipp' },
+    { href: "/valisan?tab=bdrh", label: "BD-RH (Personal)", icon: Shield, id: 'bdrh' },
+  ];
+
+  const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : navItems);
+
+  if (pathname === '/') {
+    return null;
+  }
+
   return (
-    <aside
-      className={`hidden lg:flex flex-col bg-white border-r border-slate-200/80 shrink-0 justify-between min-h-screen sticky top-0 transition-all duration-300 ease-in-out ${sidebarWidth} ${pClass}`}
-      data-purpose="desktop-navigation"
-    >
-      <div className="flex flex-col h-full overflow-y-auto custom-scrollbar overflow-x-hidden">
+    <>
+      <aside
+        className={`hidden lg:flex flex-col bg-white/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between min-h-screen sticky top-0 transition-all duration-300 ease-in-out ${sidebarWidth} ${pClass}`}
+        data-purpose="desktop-navigation"
+      >
+        <div className="flex flex-col h-full overflow-y-auto custom-scrollbar overflow-x-hidden">
         <div className={`flex items-center mb-6 px-2 ${isCollapsed ? 'justify-center mt-2' : 'justify-between'}`}>
           {!isCollapsed && (
-            <Link href="/" className="shrink-0">
-              <img src="/logo.svg" alt="ValisFin Logo" className="w-44 h-auto drop-shadow-sm hover:opacity-90 transition-opacity" />
+            <Link href={isValisBiz ? "/valisbiz" : (isValisAN ? "/valisan" : "/valisfin")} className="shrink-0 overflow-hidden rounded-xl">
+              {isValisBiz ? (
+                <img 
+                  src="/valisbiz-logo.png" 
+                  alt="ValisBiz Logo" 
+                  className="w-44 h-auto hover:opacity-90 transition-all object-cover drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
+                />
+              ) : isValisAN ? (
+                <div className="flex items-center gap-3 relative z-10 px-1 py-2 group">
+                  <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-600 via-cyan-500 to-blue-700 shadow-lg shadow-cyan-500/25 p-[2px] transition-transform duration-300 group-hover:scale-105">
+                    <div className="w-full h-full bg-[#090a0f] rounded-[14px] flex items-center justify-center">
+                      <BarChart2 className="w-5 h-5 text-cyan-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xl font-bold tracking-wider text-white">Valis<span className="text-cyan-400 font-extrabold text-shadow-[0_0_12px_rgba(56,189,248,0.6)]">AN</span></span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 relative z-10 px-1 py-2">
+                  <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_15px_rgba(45,212,191,0.2)] shrink-0">
+                    <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
+                      <span className="text-xl font-bold text-white">V</span>
+                    </div>
+                  </div>
+                  <span className="text-2xl font-black text-white tracking-tight drop-shadow-md">
+                    Valis<span className="text-teal-400">Hub</span>
+                  </span>
+                </div>
+              )}
             </Link>
           )}
           <button 
             onClick={toggleSidebar}
-            className={`text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
+            className={`text-gray-400 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
             aria-label="Colapsar menú lateral"
             title={isCollapsed ? "Expandir menú" : "Colapsar menú"}
           >
@@ -84,22 +152,30 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
         </div>
 
         <nav aria-label="Navegación principal" className="space-y-1.5 flex-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
+          {currentNavItems.map((item: any) => {
+            const isActive = isValisBiz ? item.id === currentTab : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
             const Icon = item.icon;
+            
+            const activeBgClass = isValisBiz 
+              ? "bg-pink-500/20 text-pink-400 border-pink-500/30" 
+              : isValisAN
+                ? "bg-gradient-to-r from-sky-950/90 to-blue-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+                : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            
+            const inactiveClass = isValisAN 
+              ? "text-slate-400 hover:bg-sky-950/40 hover:text-white border-transparent hover:border-sky-500/30"
+              : "text-gray-400 hover:bg-white/10 hover:text-white border-transparent";
             
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 title={isCollapsed ? item.label : undefined}
-                className={`flex items-center rounded-xl font-medium text-sm transition-all group overflow-hidden ${
-                  isActive 
-                    ? "bg-emerald-50 text-emerald-800 font-semibold" 
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                className={`flex items-center rounded-xl font-medium text-sm transition-all group overflow-hidden border ${
+                  isActive ? activeBgClass : inactiveClass
                 } ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3.5 py-2.5'}`}
               >
-                <Icon className={`shrink-0 w-5 h-5 ${isActive ? "text-emerald-700" : "text-slate-400 group-hover:text-slate-600"}`} />
+                <Icon className={`shrink-0 w-5 h-5 transition-colors ${isActive ? (isValisBiz ? "text-pink-400" : isValisAN ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]" : "text-emerald-400") : (isValisAN ? "text-slate-500 group-hover:text-cyan-400" : "text-gray-500 group-hover:text-gray-300")}`} />
                 {!isCollapsed && (
                   <span className="truncate whitespace-nowrap opacity-100 transition-opacity duration-300">
                     {item.label}
@@ -111,17 +187,35 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
         </nav>
       </div>
 
-      <div className={`pt-4 border-t border-slate-100 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
+      <div className={`pt-4 border-t border-white/10 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
+
+        {isValisBiz && (
+          <button
+            onClick={() => setIsValisBizOpen(true)}
+            title={isCollapsed ? "Configuración ValisBiz" : undefined}
+            className="btn3d btn3d-pink btn3d-md w-full flex justify-center bg-pink-50 hover:bg-pink-100 border-pink-200"
+          >
+            <div className="btn3d-outer w-full">
+              <div className="btn3d-inner w-full bg-pink-600 border-b-pink-800">
+                <span className="btn3d-label justify-center text-white">
+                  <Sparkles className="shrink-0 w-4 h-4 text-pink-100" />
+                  {!isCollapsed && <span>Configuración ValisBiz</span>}
+                </span>
+              </div>
+            </div>
+          </button>
+        )}
+
         <Link
-          href="/valisbiz"
-          title={isCollapsed ? "ValisBiz" : undefined}
-          className="btn3d btn3d-pink btn3d-md w-full flex justify-center"
+          href="/"
+          title={isCollapsed ? "Panel de Apps" : undefined}
+          className="btn3d btn3d-gray btn3d-md w-full flex justify-center bg-indigo-50 hover:bg-indigo-100 border-indigo-200"
         >
           <div className="btn3d-outer w-full">
-            <div className="btn3d-inner w-full">
-              <span className="btn3d-label justify-center">
-                <Heart className="shrink-0 w-4 h-4 text-pink-100 fill-pink-100" />
-                {!isCollapsed && <span>ValisBiz</span>}
+            <div className="btn3d-inner w-full bg-indigo-600 border-b-indigo-800">
+              <span className="btn3d-label justify-center text-white">
+                <Orbit className="shrink-0 w-4 h-4 text-indigo-100" />
+                {!isCollapsed && <span>Panel de Apps</span>}
               </span>
             </div>
           </div>
@@ -129,7 +223,7 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
 
         {profile?.role === 'administrador' && (
           <Link
-            href={pathname === '/admin' ? '/' : '/admin'}
+            href={pathname === '/admin' ? '/valisfin' : '/admin'}
             title={isCollapsed ? (pathname === '/admin' ? "Volver al Inicio" : "Panel de Administrador") : undefined}
             className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md w-full flex justify-center`}
           >
@@ -148,25 +242,30 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
           </Link>
         )}
 
-        <div className={`flex items-center rounded-xl bg-slate-50/80 ${isCollapsed ? 'p-1.5 justify-center' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
+        <div className={`flex items-center rounded-xl bg-white/5 border border-white/10 ${isCollapsed ? 'p-1.5 justify-center' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
           {avatarUrl ? (
-            <img src={avatarUrl} alt={fullName} className="w-9 h-9 rounded-full border border-slate-200 shrink-0" />
+            <img src={avatarUrl} alt={fullName} className="w-9 h-9 rounded-full border border-white/20 shrink-0" />
           ) : (
-            <div className="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center font-bold text-emerald-800 text-xs shrink-0">
+            <div className="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center font-bold text-emerald-300 text-xs shrink-0">
               {initial}
             </div>
           )}
           {!isCollapsed && (
             <div className="overflow-hidden flex-1 min-w-0">
-              <p className="text-xs font-semibold text-slate-900 truncate">
+              <p className="text-xs font-semibold text-white truncate">
                 {fullName}
               </p>
-              <p className="text-[11px] text-slate-500 truncate">Hogar Protegido</p>
+              <p className="text-[11px] text-gray-400 truncate">Hogar Protegido</p>
             </div>
           )}
         </div>
         <LogoutButton isCollapsed={isCollapsed} />
       </div>
     </aside>
+
+    {isValisBizOpen && (
+      <ValisBizSettingsModal isOpen={isValisBizOpen} onClose={() => setIsValisBizOpen(false)} />
+    )}
+  </>
   );
 }

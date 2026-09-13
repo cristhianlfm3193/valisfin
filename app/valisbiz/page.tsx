@@ -25,7 +25,7 @@ export default async function ValisBizPage({ searchParams }: PageProps) {
   const data = await getDashboardData(mes, anio);
 
   return (
-    <div className="bg-[#faf8ff] min-h-screen flex flex-col justify-between font-sans">
+    <div className="min-h-screen flex flex-col justify-between font-sans text-white relative">
       <main className="w-full flex-1 flex flex-col justify-start">
         <Suspense>
           <ValisBizClient

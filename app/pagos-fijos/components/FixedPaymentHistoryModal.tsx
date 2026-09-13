@@ -58,30 +58,30 @@ export function FixedPaymentHistoryModal({ isOpen, onClose, payments, title }: F
       />
       
       <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-[101] p-4">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+        <div className="bg-[#121c27] border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
           {/* Header */}
-          <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+          <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-[#121c27] border-white/10 shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900">Historial de {title}</h3>
-                <p className="text-xs text-slate-500">Pagos y abonos registrados</p>
+                <h3 className="font-bold text-white">Historial de {title}</h3>
+                <p className="text-xs text-gray-400">Pagos y abonos registrados</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors"
+              className="p-2 text-slate-400 hover:text-gray-300 hover:bg-white/5 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* List */}
-          <div className="p-6 overflow-y-auto bg-slate-50/50 flex-1">
+          <div className="p-6 overflow-y-auto bg-white/5/50 flex-1">
             <div className="space-y-4">
-              <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h4 className="text-sm font-bold text-white flex items-center gap-2">
                 Movimientos
               </h4>
 
@@ -90,21 +90,21 @@ export function FixedPaymentHistoryModal({ isOpen, onClose, payments, title }: F
                   {historyPayments.map((item, idx) => (
                     <div 
                       key={item.id || idx}
-                      className="bg-white p-4 rounded-2xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:border-emerald-200 transition-colors shadow-sm"
+                      className="bg-[#121c27] border-white/10 p-4 rounded-2xl border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:border-emerald-200 transition-colors shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
                     >
                       <div className="flex items-start sm:items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-1 sm:mt-0">
                           <FileText className="w-4 h-4" />
                         </div>
                         <div>
-                          <p className="font-semibold text-sm text-slate-800">
+                          <p className="font-semibold text-sm text-white">
                             Abono / Pago
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 uppercase tracking-wider">
                               Pago
                             </span>
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-gray-400">
                               {new Date(item.created_at || '').toLocaleDateString('es-ES', { 
                                 day: '2-digit', 
                                 month: 'short', 
@@ -125,7 +125,7 @@ export function FixedPaymentHistoryModal({ isOpen, onClose, payments, title }: F
                         </div>
                         
                         {/* Acciones */}
-                        <div className="flex flex-col gap-1 ml-2 border-l border-slate-100 pl-3">
+                        <div className="flex flex-col gap-1 ml-2 border-l border-white/5 pl-3">
                           <button 
                             disabled={isPending}
                             onClick={() => handleEditPayment(item.id, item.amount)}
@@ -148,9 +148,9 @@ export function FixedPaymentHistoryModal({ isOpen, onClose, payments, title }: F
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-10 bg-white rounded-2xl border border-slate-100 border-dashed">
+                <div className="text-center py-10 bg-[#121c27] border-white/10 rounded-2xl border border-white/5 border-dashed">
                   <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                  <p className="text-sm text-slate-500">No hay pagos registrados.</p>
+                  <p className="text-sm text-gray-400">No hay pagos registrados.</p>
                 </div>
               )}
             </div>

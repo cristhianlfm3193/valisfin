@@ -1,0 +1,10 @@
+-- Corre esto en el Editor SQL de Supabase para añadir las nuevas columnas
+ALTER TABLE valisan_bdrh 
+ADD COLUMN IF NOT EXISTS genero VARCHAR(50),
+ADD COLUMN IF NOT EXISTS cargo VARCHAR(255),
+ADD COLUMN IF NOT EXISTS codigo_cargo VARCHAR(100),
+ADD COLUMN IF NOT EXISTS salario NUMERIC(10, 2),
+ADD COLUMN IF NOT EXISTS sobresueldo NUMERIC(10, 2),
+ADD COLUMN IF NOT EXISTS fecha_inicio DATE,
+ADD COLUMN IF NOT EXISTS objeto_gasto VARCHAR(100),
+ADD COLUMN IF NOT EXISTS estado VARCHAR(100);

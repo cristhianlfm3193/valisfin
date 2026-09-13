@@ -19,13 +19,22 @@ export default async function PagosFijosPage() {
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+      <header className="bg-[#090a0f]/90 backdrop-blur border-b border-white/10/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <img src="/logo.svg" alt="ValisFin Logo" className="h-10 sm:h-12 w-auto lg:hidden drop-shadow-sm hover:opacity-90 transition-opacity" />
+              <div className="lg:hidden flex items-center gap-2 px-1">
+                <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_10px_rgba(45,212,191,0.2)] shrink-0">
+                  <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">V</span>
+                  </div>
+                </div>
+                <span className="text-lg font-black text-white tracking-tight">
+                  Valis<span className="text-teal-500">Hub</span>
+                </span>
+              </div>
             </Link>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight hidden sm:block border-l border-slate-200 pl-3 ml-1">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight hidden sm:block border-l border-white/10 pl-3 ml-1">
               Pagos Fijos
             </h2>
           </div>
@@ -35,7 +44,7 @@ export default async function PagosFijosPage() {
           {/* Icono de Notificaciones / Campana limpia */}
           <button
             aria-label="Notificaciones"
-            className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
+            className="relative p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
             type="button"
           >
             <Bell className="w-5 h-5 sm:w-6 sm:h-6" />

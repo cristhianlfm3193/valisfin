@@ -33,7 +33,7 @@ export default function Loading() {
           animation: 'pulse-biz 1.4s ease-in-out infinite',
         }}
       >
-        Cargando ValisBiz…
+        ValisBiz
       </p>
 
       <style>{`

@@ -23,7 +23,7 @@ export function LogoutButton({ isCollapsed = false }: { isCollapsed?: boolean })
     }
     
     await supabase.auth.signOut()
-    router.refresh()
+    window.location.href = '/login'
   }
 
   return (
@@ -59,7 +59,7 @@ export function LogoutButtonMobile() {
     }
     
     await supabase.auth.signOut()
-    router.refresh()
+    window.location.href = '/login'
   }
 
   return (

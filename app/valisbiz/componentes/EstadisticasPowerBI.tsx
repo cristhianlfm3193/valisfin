@@ -264,13 +264,13 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* 1. Panel de Filtros Globales */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-wrap items-center gap-4">
+      <div className="bg-[#121c27]/85 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-sm flex flex-wrap items-center gap-4">
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Vendedor</label>
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Vendedor</label>
           <div className="flex gap-2">
             <button 
               onClick={() => setSelectedVendedor('Todos')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-white text-black' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
             >
               Todos
             </button>
@@ -278,7 +278,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <button
                 key={v}
                 onClick={() => setSelectedVendedor(v)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === v ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-700 hover:bg-pink-100'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === v ? 'bg-pink-500 text-white' : 'bg-pink-500/20 text-pink-400 hover:bg-pink-500/30'}`}
               >
                 {v}
               </button>
@@ -286,16 +286,16 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
           </div>
         </div>
 
-        <div className="h-10 w-px bg-slate-200 hidden md:block mx-2" />
+        <div className="h-10 w-px bg-white/10 hidden md:block mx-2" />
 
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tipo de Venta</label>
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Tipo de Venta</label>
           <div className="flex gap-2">
             {['Todos', 'Contado', 'Credito'].map(t => (
               <button
                 key={t}
                 onClick={() => setTipoVenta(t as any)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${tipoVenta === t ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${tipoVenta === t ? 'bg-emerald-500 text-white' : 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30'}`}
               >
                 {t}
               </button>
@@ -303,13 +303,13 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
           </div>
         </div>
         <div className="flex flex-col">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Agrupación de Tiempo</label>
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Agrupación de Tiempo</label>
+          <div className="flex bg-white/5 p-1 rounded-xl">
             {['Año', 'Mes', 'Día'].map(t => (
               <button
                 key={t}
                 onClick={() => setTimeFilter(t as any)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-white text-emerald-700 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-700 shadow-none'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-white/20 text-white ring-1 ring-white/30' : 'text-gray-400 hover:text-white shadow-none'}`}
               >
                 {t}
               </button>
@@ -320,50 +320,50 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
 
       {/* 2. Tarjetas KPI */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-pink-500/10 to-transparent rounded-bl-[100%]" />
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            <DollarSign className="w-4 h-4 text-pink-500" />
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-pink-500/20 to-transparent rounded-bl-[100%]" />
+          <div className="flex items-center gap-2 text-gray-400 mb-1">
+            <DollarSign className="w-4 h-4 text-pink-400" />
             <span className="text-xs font-bold uppercase tracking-wider">Facturado (Finanzas)</span>
           </div>
-          <span className="text-2xl font-black text-slate-800 font-mono">B/.{fmt(totalFacturado)}</span>
+          <span className="text-2xl font-black text-white font-mono">B/.{fmt(totalFacturado)}</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-[100%]" />
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            <Activity className="w-4 h-4 text-blue-500" />
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-transparent rounded-bl-[100%]" />
+          <div className="flex items-center gap-2 text-gray-400 mb-1">
+            <Activity className="w-4 h-4 text-blue-400" />
             <span className="text-xs font-bold uppercase tracking-wider">Reportado (Vendedor)</span>
           </div>
-          <span className="text-2xl font-black text-slate-800 font-mono">B/.{fmt(totalReportado)}</span>
+          <span className="text-2xl font-black text-white font-mono">B/.{fmt(totalReportado)}</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
-          <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br rounded-bl-[100%] ${brechaGlobal > 0 ? 'from-emerald-500/10' : brechaGlobal < 0 ? 'from-red-500/10' : 'from-slate-500/10'}`} />
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            {brechaGlobal > 0 ? <TrendingUp className="w-4 h-4 text-emerald-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+          <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br rounded-bl-[100%] ${brechaGlobal > 0 ? 'from-emerald-500/20' : brechaGlobal < 0 ? 'from-red-500/20' : 'from-gray-500/20'}`} />
+          <div className="flex items-center gap-2 text-gray-400 mb-1">
+            {brechaGlobal > 0 ? <TrendingUp className="w-4 h-4 text-emerald-400" /> : <TrendingDown className="w-4 h-4 text-red-400" />}
             <span className="text-xs font-bold uppercase tracking-wider">Brecha / GAP</span>
           </div>
-          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-600' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-600'}`}>
+          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-400' : brechaGlobal < 0 ? 'text-red-400' : 'text-gray-400'}`}>
             {brechaGlobal === 0 ? '—' : `${brechaGlobal > 0 ? '+' : ''}B/.${fmt(brechaGlobal)}`}
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col gap-2 relative overflow-hidden">
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 relative overflow-hidden">
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2 text-slate-500">
-              <Target className="w-4 h-4 text-indigo-500" />
+            <div className="flex items-center gap-2 text-gray-400">
+              <Target className="w-4 h-4 text-indigo-400" />
               <span className="text-xs font-bold uppercase tracking-wider">Cumplimiento Meta</span>
             </div>
-            <span className="text-lg font-black text-indigo-600">{porcentajeCumplimiento.toFixed(1)}%</span>
+            <span className="text-lg font-black text-indigo-400">{porcentajeCumplimiento.toFixed(1)}%</span>
           </div>
-          <div className="w-full h-3 bg-slate-100 rounded-full mt-2 overflow-hidden">
+          <div className="w-full h-3 bg-white/10 rounded-full mt-2 overflow-hidden border border-white/5">
             <div 
               className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full transition-all duration-1000 ease-out"
               style={{ width: `${porcentajeCumplimiento}%` }}
             />
           </div>
-          <p className="text-[10px] text-slate-400 font-medium text-right mt-1">Meta: B/.{fmt(metaActual)}</p>
+          <p className="text-[10px] text-gray-500 font-medium text-right mt-1">Meta: B/.{fmt(metaActual)}</p>
         </div>
       </div>
 
@@ -371,8 +371,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
         {/* Tendencia Diaria (Area Chart) */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm lg:col-span-2">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Tendencia de Ventas (Facturado)</h3>
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm lg:col-span-2">
+          <h3 className="text-sm font-bold text-white mb-6">Tendencia de Ventas (Facturado)</h3>
           <div className="w-full h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={areaChartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -384,14 +384,14 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
                     </linearGradient>
                   ))}
                 </defs>
-                <XAxis dataKey="date" tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
-                <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="date" tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
                 <RechartsTooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  contentStyle={{ backgroundColor: '#121c27', color: 'white', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: any) => [`B/.${fmt(Number(value))}`, 'Facturado']}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px', color: '#9ca3af' }} />
                 {vendedoresDisponibles.map((v, idx) => (
                   (selectedVendedor === 'Todos' || v === selectedVendedor) && (
                     <Area 
@@ -413,8 +413,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
 
         {/* Composición (Donuts) */}
         <div className="flex flex-col gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1">
-            <h3 className="text-sm font-bold text-slate-800 mb-2 text-center">Contado vs Crédito</h3>
+          <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex-1">
+            <h3 className="text-sm font-bold text-white mb-2 text-center">Contado vs Crédito</h3>
             <div className="w-full h-[140px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -424,14 +424,14 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
                     ))}
                   </Pie>
                   <RechartsTooltip formatter={(value: any) => `B/.${fmt(Number(value))}`} />
-                  <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                  <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ fontSize: '11px', color: '#9ca3af' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex-1">
-            <h3 className="text-sm font-bold text-slate-800 mb-2 text-center">Visitas (Con/Sin Compra)</h3>
+          <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm flex-1">
+            <h3 className="text-sm font-bold text-white mb-2 text-center">Visitas (Con/Sin Compra)</h3>
             <div className="w-full h-[140px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -441,7 +441,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
                     ))}
                   </Pie>
                   <RechartsTooltip formatter={(value: any) => Number(value)} />
-                  <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                  <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ fontSize: '11px', color: '#9ca3af' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -450,8 +450,8 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       </div>
 
       {/* Tendencia de Visitas (Area Chart) */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-        <h3 className="text-sm font-bold text-slate-800 mb-6">Tendencia de Visitas (Trabajo de Campo)</h3>
+      <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
+        <h3 className="text-sm font-bold text-white mb-6">Tendencia de Visitas (Trabajo de Campo)</h3>
         <div className="w-full h-[280px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={areaChartVisitasData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -465,14 +465,14 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
                   <stop offset="95%" stopColor={PIE_COLORS_VISITAS[1]} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
-              <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+              <XAxis dataKey="date" tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} />
+              <YAxis tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
               <RechartsTooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                contentStyle={{ backgroundColor: '#121c27', color: 'white', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 formatter={(value: any) => [Number(value), 'Visitas']}
               />
-              <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+              <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px', color: '#9ca3af' }} />
               <Area 
                 type="monotone" 
                 name="Visitas Con Compra"
@@ -502,20 +502,20 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         
         {/* Comparativa Facturado vs Reportado */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Comparativa: Facturado vs Reportado</h3>
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
+          <h3 className="text-sm font-bold text-white mb-6">Comparativa: Facturado vs Reportado</h3>
           <div className="w-full h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barChartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#64748b', fontWeight: 600}} tickLine={false} axisLine={false} />
-                <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#9ca3af', fontWeight: 600}} tickLine={false} axisLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
                 <RechartsTooltip 
-                  cursor={{fill: '#f8fafc'}}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  cursor={{fill: 'rgba(255,255,255,0.05)'}}
+                  contentStyle={{ backgroundColor: '#121c27', color: 'white', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: any) => `B/.${fmt(Number(value))}`}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px', color: '#9ca3af' }} />
                 <Bar dataKey="facturado" name="Facturado (Finanzas)" fill="#ec4899" radius={[4, 4, 0, 0]} maxBarSize={40} />
                 <Bar dataKey="reportado" name="Reportado (Vendedor)" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>
@@ -524,20 +524,20 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
         </div>
 
         {/* Desempeño de Visitas */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-          <h3 className="text-sm font-bold text-slate-800 mb-6">Desempeño de Visitas (Trabajo de Campo)</h3>
+        <div className="bg-[#121c27]/85 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-sm">
+          <h3 className="text-sm font-bold text-white mb-6">Desempeño de Visitas (Trabajo de Campo)</h3>
           <div className="w-full h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barChartVisitasData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }} barGap={6}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#64748b', fontWeight: 600}} tickLine={false} axisLine={false} />
-                <YAxis tick={{fontSize: 12, fill: '#64748b'}} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#9ca3af', fontWeight: 600}} tickLine={false} axisLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#9ca3af'}} tickLine={false} axisLine={false} />
                 <RechartsTooltip 
-                  cursor={{fill: '#f8fafc'}}
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  cursor={{fill: 'rgba(255,255,255,0.05)'}}
+                  contentStyle={{ backgroundColor: '#121c27', color: 'white', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: any) => Number(value)}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px', color: '#9ca3af' }} />
                 <Bar dataKey="conCompra" name="Visitas Con Compra" fill={PIE_COLORS_VISITAS[0]} radius={[4, 4, 0, 0]} maxBarSize={40} />
                 <Bar dataKey="sinCompra" name="Visitas Sin Compra" fill={PIE_COLORS_VISITAS[1]} radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>

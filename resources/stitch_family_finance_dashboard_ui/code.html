@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selección de Portal - Valis Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #090a0f;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    /* Fondo estelar Uiverse.io adaptado con animación continua */
+    .star-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    #stars {
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 501px 811px #fff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #fff, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #fff, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #fff, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff, 1771px 1678px #fff, 977px 1764px #fff, 1879px 549px #fff, 665px 1531px #fff, 89px 701px #fff, 1084px 1183px #fff, 1597px 1576px #fff, 1354px 1774px #fff, 554px 1471px #fff, 1469px 287px #fff, 887px 106px #fff, 1962px 766px #fff, 638px 805px #fff, 1651px 741px #fff, 1517px 1826px #fff, 24px 1152px #fff, 507px 558px #fff, 1262px 652px #fff, 246px 1048px #fff, 1077px 421px #fff, 1866px 1847px #fff, 1986px 1561px #fff, 704px 632px #fff, 1991px 1875px #fff, 1227px 395px #fff, 45px 1116px #fff, 247px 786px #fff, 890px 607px #fff, 787px 1235px #fff, 557px 524px #fff, 1582px 1285px #fff, 1725px 1366px #fff, 952px 747px #fff, 251px 458px #fff, 1500px 1250px #fff, 1999px 1734px #fff, 1336px 1955px #fff, 1705px 1464px #fff, 728px 697px #fff, 594px 510px #fff, 1345px 1990px #fff, 1919px 1803px #fff, 1117px 966px #fff, 1629px 97px #fff, 1046px 1196px #fff, 810px 1092px #fff, 722px 976px #fff, 406px 18px #fff;
+      animation: animStar 60s linear infinite;
+    }
+    #stars:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 501px 811px #fff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #fff, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff;
+    }
+
+    #stars2 {
+      width: 2px;
+      height: 2px;
+      background: transparent;
+      box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #fff, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #fff, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff;
+      animation: animStar 120s linear infinite;
+    }
+    #stars2:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 2px;
+      height: 2px;
+      background: transparent;
+      box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #fff, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff;
+    }
+
+    #stars3 {
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #fff, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff;
+      animation: animStar 180s linear infinite;
+    }
+    #stars3:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #fff, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff;
+    }
+
+    @keyframes animStar {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-2000px); }
+    }
+
+    @keyframes introFadeUp {
+      0% { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-intro {
+      animation: introFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Efectos de tarjeta con brillo glassmórfico interactivo */
+    .portal-card {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.03));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .portal-card:hover {
+      transform: translateY(-6px) scale(1.015);
+    }
+    
+    /* Botón pastilla brillante ValisBiz idéntico a la referencia */
+    .valisbiz-pill-btn {
+      background: linear-gradient(180deg, #ff4099 0%, #e81d77 50%, #c90a5d 100%);
+      box-shadow: 0 4px 15px rgba(233, 30, 119, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.55), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      border-radius: 9999px;
+      transition: all 0.25s ease;
+    }
+    .valisbiz-pill-btn:hover {
+      box-shadow: 0 8px 24px rgba(233, 30, 119, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.7), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      transform: scale(1.02);
+    }
+    
+    /* Botón pastilla verde institucional ValisFin */
+    .valisfin-pill-btn {
+      background: linear-gradient(180deg, #10b981 0%, #059669 50%, #047857 100%);
+      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.55), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      border-radius: 9999px;
+      transition: all 0.25s ease;
+    }
+    .valisfin-pill-btn:hover {
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.7), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      transform: scale(1.02);
+    }
+
+    /* Botón pastilla azul eléctrico ValisAN */
+    .valisan-pill-btn {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%);
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.55), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      border-radius: 9999px;
+      transition: all 0.25s ease;
+    }
+    .valisan-pill-btn:hover {
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.7), inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-emerald-500 selection:text-white">
+
+  <!-- Fondo estelar Uiverse.io adaptado con animación continua -->
+  <div class="star-canvas">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+  </div>
+
+  <!-- Barra Superior Sutil con estado de sesión -->
+  <header class="relative z-10 w-full px-6 py-4 flex items-center justify-between border-b border-white/5 backdrop-blur-md bg-black/20">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-pink-500 flex items-center justify-center p-0.5 shadow-md shadow-emerald-500/20">
+        <div class="w-full h-full bg-[#0d131f] rounded-full flex items-center justify-center">
+          <span class="text-white font-bold text-xs">V</span>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-sm tracking-wide text-white">Valis<span class="text-emerald-400">Hub</span></span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-gray-300 font-medium border border-white/10">v2.5 Multiapp</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perfil familiar autenticado -->
+    <div class="flex items-center gap-3 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+      <div class="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner">
+        CF
+      </div>
+      <div class="hidden sm:flex flex-col text-left pr-1">
+        <span class="text-xs font-semibold text-gray-200">Cristhian & Jennifer</span>
+        <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Sesión iniciada
+        </span>
+      </div>
+      <button title="Cerrar Sesión" class="text-gray-400 hover:text-rose-400 transition-colors ml-1">
+        <span class="material-symbols-outlined text-[18px]">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal Centrado con Bento Cards de Gran Tamaño -->
+  <main class="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 py-8 md:py-12 max-w-6xl mx-auto w-full animate-intro">
+
+    <!-- Encabezado Inspirador y Selector -->
+    <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/15 backdrop-blur-md mb-4 text-xs font-medium text-gray-300 shadow-lg">
+        <span class="material-symbols-outlined text-sm text-emerald-400">orbit</span>
+        <span>Selecciona el espacio de trabajo que deseas abrir</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
+        ¿A dónde deseas <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-pink-400 bg-clip-text text-transparent">dirigirte hoy</span>?
+      </h1>
+      <p class="text-sm sm:text-base text-gray-400 leading-relaxed font-normal">
+        Accede directamente al control del patrimonio del hogar o a las herramientas operativas y de inteligencia comercial.
+      </p>
+    </div>
+
+    <!-- Rejilla de Portales (Responsive: 1 col en móvil, 3 col en pantallas medianas/grandes) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 w-full max-w-5xl">
+
+      <!-- ================= 1. PORTAL VALISFIN ================= -->
+      <div class="portal-card group flex flex-col justify-between bg-gradient-to-b from-[#121c27]/85 to-[#0b121b]/95 border border-emerald-500/20 rounded-3xl p-6 sm:p-7 backdrop-blur-xl shadow-2xl hover:border-emerald-400/50 hover:shadow-emerald-500/10">
+        <!-- Resplandor ambiental de fondo -->
+        <div class="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Cabecera de la tarjeta: Badge e Ícono -->
+          <div class="flex items-center justify-between mb-5">
+            <span class="px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Hogar & Familia
+            </span>
+            <div class="w-10 h-10 rounded-2xl bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all shadow-md">
+              <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+            </div>
+          </div>
+
+          <!-- Logo ValisFin horizontal auténtico -->
+          <div class="h-14 flex items-center mb-4">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIXRUM_pwlgKmHlYDfsyFsaOZ1ipXGpdze-mVEDPsoMXvuUFjkzHZv_kZqu7N7X4IMvf32h5n0fcHNk41_jHLa89ZFwY8C2czppqcMofeYhCdaehc8dK7YFMXw7PD4luPb0v-uMALVN_BNGX4HY7MpmCIqGtTqdwRFfxhPxkUJ9AXFVMewG_7JRxywmO8v2mp3FSmcBclkO1jwfy492W5Vfhd9JSCC7ynp6DD4w1tRjXwlL7j1zznsY7TNx7BiY0DCqQ" alt="ValisFin Logo" class="h-10 sm:h-11 w-auto object-contain brightness-110 drop-shadow-[0_2px_10px_rgba(16,185,129,0.25)]">
+          </div>
+
+          <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+            ValisFin
+            <span class="text-xs font-normal text-emerald-400/90 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-500/20">Patrimonio</span>
+          </h3>
+
+          <p class="text-gray-300/80 text-xs sm:text-sm leading-relaxed mb-6">
+            Administración financiera familiar: registro diario de gastos, ingresos de Cristhian y Jennifer, pagos fijos, autos y metas de ahorro.
+          </p>
+
+          <!-- Métricas de estado rápido -->
+          <div class="bg-black/30 rounded-2xl p-3.5 border border-white/5 mb-6 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-emerald-400">check_circle</span> Saldo Activo
+              </span>
+              <span class="font-bold text-emerald-400">+B/. 829.75</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-blue-400">family_restroom</span> Núcleo Familiar
+              </span>
+              <span class="font-medium text-gray-200">Cristhian & Jenny</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de Gran Tamaño con excelente touch target (≥50px) -->
+        <a href="#valisfin" class="valisfin-pill-btn w-full py-4 px-6 flex items-center justify-center gap-3 text-white font-bold text-base sm:text-lg tracking-wide group-hover:brightness-110 active:scale-98">
+          <span class="material-symbols-outlined text-[22px]">home</span>
+          <span>Entrar a ValisFin</span>
+          <span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- ================= 2. PORTAL VALISBIZ (Con la estética exacta de la referencia rosa) ================= -->
+      <div class="portal-card group flex flex-col justify-between bg-gradient-to-b from-[#241324]/85 to-[#120914]/95 border border-pink-500/25 rounded-3xl p-6 sm:p-7 backdrop-blur-xl shadow-2xl hover:border-pink-400/50 hover:shadow-pink-500/15 relative overflow-hidden">
+        <!-- Resplandor ambiental de fondo -->
+        <div class="absolute -top-12 -right-12 w-36 h-36 bg-pink-500/15 rounded-full blur-2xl group-hover:bg-pink-500/25 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Cabecera de la tarjeta: Badge e Ícono -->
+          <div class="flex items-center justify-between mb-5">
+            <span class="px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-pink-500/15 text-pink-300 border border-pink-500/30 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span> Negocios & Operaciones
+            </span>
+            <div class="w-10 h-10 rounded-2xl bg-pink-950/80 border border-pink-500/30 flex items-center justify-center text-pink-400 group-hover:scale-110 group-hover:bg-pink-500 group-hover:text-white transition-all shadow-md">
+              <span class="material-symbols-outlined text-[22px]">storefront</span>
+            </div>
+          </div>
+
+          <!-- Botón de Marca ValisBiz Oficial como elemento visual destacado -->
+          <div class="h-14 flex items-center mb-4">
+            <div class="relative group/pill">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp08TaeNqc4uI_a5UanwXzoJR0brXmwJ-FQNHYYQ_Ft-L4MDO1WC-o9pEUaUrXq-qSAYJLskKfWEErnjln--vD2zVf2zuJ2RSgscuSema8Fs1r4A3ps63PUlCdDHSOUqSMiIYAnoQLuHJ7niktlQUa1FLFKQQzWKGjw1-qTuGYSeY3UqbYkgEMhRgPNSeG_pEB_X9RI3FDAYu4xAxsKFMwFvYzVIpX-rSysm47U3B6o6mNHw6bxAFmuXpLvzuB2Y4EHw" alt="ValisBiz" class="h-10 sm:h-11 w-auto object-contain drop-shadow-[0_4px_12px_rgba(233,30,119,0.5)]">
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+            ValisBiz
+            <span class="text-xs font-normal text-pink-400/90 bg-pink-950/70 px-2 py-0.5 rounded border border-pink-500/20">Comercial</span>
+          </h3>
+
+          <p class="text-gray-300/80 text-xs sm:text-sm leading-relaxed mb-6">
+            Módulo empresarial y supervisión Keiko: gestión de clientes, rutas de Panamá Oeste, catálogo de locales comerciales, ventas y tareas Kanban.
+          </p>
+
+          <!-- Métricas de estado rápido -->
+          <div class="bg-black/30 rounded-2xl p-3.5 border border-white/5 mb-6 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-pink-400">location_on</span> Cobertura
+              </span>
+              <span class="font-bold text-pink-300">Panamá Oeste BI</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-purple-400">assignment</span> Supervisión
+              </span>
+              <span class="font-medium text-gray-200">18 Locales Activos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de Gran Tamaño con estilo pastilla rosa 3D de alta fidelidad -->
+        <a href="#valisbiz" class="valisbiz-pill-btn w-full py-4 px-6 flex items-center justify-center gap-3 text-white font-bold text-base sm:text-lg tracking-wide active:scale-98">
+          <span class="text-white text-base">❤️</span>
+          <span>Entrar a ValisBiz</span>
+          <span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- ================= 3. PORTAL VALISAN (Tercera opción inventada: Analítica, IA & Automatización) ================= -->
+      <div class="portal-card group flex flex-col justify-between bg-gradient-to-b from-[#0e1d2c]/85 to-[#08101a]/95 border border-sky-500/25 rounded-3xl p-6 sm:p-7 backdrop-blur-xl shadow-2xl hover:border-sky-400/50 hover:shadow-sky-500/15 relative overflow-hidden">
+        <!-- Resplandor ambiental de fondo -->
+        <div class="absolute -top-12 -right-12 w-36 h-36 bg-sky-500/15 rounded-full blur-2xl group-hover:bg-sky-500/25 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Cabecera de la tarjeta: Badge e Ícono -->
+          <div class="flex items-center justify-between mb-5">
+            <span class="px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-sky-500/15 text-sky-300 border border-sky-500/30 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Analytics & Nuevos Proyectos
+            </span>
+            <div class="w-10 h-10 rounded-2xl bg-sky-950/80 border border-sky-500/30 flex items-center justify-center text-sky-400 group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all shadow-md">
+              <span class="material-symbols-outlined text-[22px]">insights</span>
+            </div>
+          </div>
+
+          <!-- Marca gráfica representativa de ValisAN -->
+          <div class="h-14 flex items-center mb-4">
+            <div class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-sky-950/80 border border-sky-500/30 shadow-inner">
+              <div class="w-7 h-7 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300">
+                <span class="material-symbols-outlined text-[16px]">query_stats</span>
+              </div>
+              <span class="text-xl font-extrabold tracking-tight text-white">Valis<span class="text-sky-400">AN</span></span>
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+            ValisAN
+            <span class="text-xs font-normal text-sky-400/90 bg-sky-950/70 px-2 py-0.5 rounded border border-sky-500/20">Inteligencia</span>
+          </h3>
+
+          <p class="text-gray-300/80 text-xs sm:text-sm leading-relaxed mb-6">
+            Inteligencia avanzada, auditoría profunda, análisis predictivo de gastos familiares y reportes consolidados para toma de decisiones.
+          </p>
+
+          <!-- Métricas de estado rápido -->
+          <div class="bg-black/30 rounded-2xl p-3.5 border border-white/5 mb-6 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-sky-400">auto_awesome</span> Módulo IA
+              </span>
+              <span class="font-bold text-sky-300">Auditoría Predictiva</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-gray-400 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-cyan-400">sync_saved_locally</span> Supabase Sync
+              </span>
+              <span class="font-medium text-gray-200">En tiempo real</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de Gran Tamaño con estilo pastilla azul cielo con relieve 3D -->
+        <a href="#valisan" class="valisan-pill-btn w-full py-4 px-6 flex items-center justify-center gap-3 text-white font-bold text-base sm:text-lg tracking-wide active:scale-98">
+          <span class="material-symbols-outlined text-[22px]">analytics</span>
+          <span>Entrar a ValisAN</span>
+          <span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Barra inferior informativa y soporte táctil -->
+    <div class="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400">
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm text-emerald-400">shield</span>
+        <span>Conexión segura Supabase Auth</span>
+      </div>
+      <span class="text-gray-600 hidden sm:inline">•</span>
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm text-pink-400">devices</span>
+        <span>Optimizado para iPhone 15, Samsung S24 y Desktop</span>
+      </div>
+      <span class="text-gray-600 hidden sm:inline">•</span>
+      <div class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-sm text-sky-400">autorenew</span>
+        <span>Cambio de entorno disponible en cualquier momento</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer discreto -->
+  <footer class="relative z-10 w-full py-4 px-6 text-center text-gray-500 text-[11px] border-t border-white/5 backdrop-blur-md bg-black/30">
+    Valis Ecosistema Unificado • Cristhian Fuentes & Jennifer Camaño • Todos los derechos reservados © 2026
+  </footer>
+
+</body>
+</html>

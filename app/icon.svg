@@ -1,10 +1,14 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Fondo suave (Hint of Green) con bordes redondeados -->
-  <rect width="512" height="512" rx="128" fill="#D9ECC8"/>
+  <defs>
+    <linearGradient id="valisHubGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2dd4bf" />
+      <stop offset="50%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#f472b6" />
+    </linearGradient>
+  </defs>
   
-  <!-- Símbolo 'V' de crecimiento (Mosque) -->
-  <path d="M140 220 L240 360 L390 150" stroke="#006655" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect width="512" height="512" rx="256" fill="url(#valisHubGrad)" />
+  <rect x="16" y="16" width="480" height="480" rx="240" fill="#090a0f" />
   
-  <!-- Punta de flecha de la 'V' -->
-  <path d="M390 150 L390 240 M390 150 L300 150" stroke="#006655" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <text x="256" y="340" font-family="sans-serif" font-weight="900" font-size="280" fill="#ffffff" text-anchor="middle">V</text>
 </svg>

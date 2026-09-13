@@ -1,0 +1,18 @@
+<USER_REQUEST>
+ok vamos a hacer una actualización de la base de datos de la Sección ValisAN subsección BD-RH donde tendremos una tabla .csv con los datos de las unidades necesito que revises y que la placa o posición o la cedula sean tus llaves para corroborar que ya estan o que necesitas crear, quiero que añadas a la tabla todas las nuevas columnas que salen de esta que te estoy enviando y si necesitas enviar otras tablas de relación hazlo con la finalidad de que entiendas mejor y se puedan optimizar para la base de datos
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-13T11:11:25-05:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\crist\OneDrive\Desktop\ValisFin\.env.local (LANGUAGE_UNSPECIFIED)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\crist\OneDrive\Desktop\ValisFin\lib\supabase\middleware.ts (LANGUAGE_TYPESCRIPT)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\remove_bg.py (LANGUAGE_PYTHON)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\pagos-fijos\page.tsx (LANGUAGE_TSX)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\auth\callback\route.ts (LANGUAGE_TYPESCRIPT)
+- c:\Users\crist\OneDrive\Desktop\ValisFin\app\valisbiz\componentes\MetricasVentas.tsx (LANGUAGE_TSX)
+Running terminal commands:
+- npm run dev (in c:\Users\crist\OneDrive\Desktop\ValisFin, running for 35m56s)
+</ADDITIONAL_METADATA>

@@ -142,11 +142,11 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 px-6 py-4 flex-shrink-0">
+      <header className="bg-[#121c27] border-white/10 border-b border-white/5 px-6 py-4 flex-shrink-0">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight mt-1">Calendario Financiero Familiar</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Agenda unificada de fechas de cobro, vencimiento de pagos y metas patrimoniales.</p>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">Calendario Financiero Familiar</h1>
+            <p className="text-xs text-gray-400 mt-0.5">Agenda unificada de fechas de cobro, vencimiento de pagos y metas patrimoniales.</p>
           </div>
           
           <div className="flex flex-wrap items-center gap-2.5">
@@ -160,75 +160,75 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
           </div>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-3">
           
-          <div className="flex items-center gap-4 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/60 shadow-sm relative overflow-hidden w-full lg:w-auto justify-between lg:justify-start">
+          <div className="flex items-center gap-4 bg-white/10/90 p-1.5 rounded-2xl border border-white/10/60 shadow-[0_4px_12px_rgba(0,0,0,0.5)] relative overflow-hidden w-full lg:w-auto justify-between lg:justify-start">
             {isLoading && (
               <div className="absolute inset-x-0 bottom-0 h-0.5 bg-brand-500 animate-pulse"></div>
             )}
             
             <div className="flex items-center">
-              <button onClick={() => navigate(-1)} className="p-2 hover:bg-white rounded-xl text-slate-600 hover:text-slate-900 transition shadow-xs">
+              <button onClick={() => navigate(-1)} className="p-2 hover:bg-[#121c27] border-white/10 rounded-xl text-gray-300 hover:text-white transition shadow-xs">
                 <ChevronLeft className="w-5 h-5" />
               </button>
               
               <div className="w-40 text-center flex flex-col justify-center">
                 {viewType === 'Mes' && (
                   <>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">{year}</span>
-                    <span className="text-sm font-extrabold text-slate-900 leading-none capitalize">{monthNames[month - 1]}</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">{year}</span>
+                    <span className="text-sm font-extrabold text-white leading-none capitalize">{monthNames[month - 1]}</span>
                   </>
                 )}
                 {viewType === 'Año' && (
-                  <span className="text-lg font-extrabold text-slate-900">{year}</span>
+                  <span className="text-lg font-extrabold text-white">{year}</span>
                 )}
                 {viewType === 'Día' && (
                   <>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
                       {new Intl.DateTimeFormat('es-PA', { month: 'short', year: 'numeric' }).format(new Date(activeDateStr))}
                     </span>
-                    <span className="text-sm font-extrabold text-slate-900 leading-none capitalize">
+                    <span className="text-sm font-extrabold text-white leading-none capitalize">
                       {new Intl.DateTimeFormat('es-PA', { weekday: 'long', day: 'numeric' }).format(new Date(activeDateStr))}
                     </span>
                   </>
                 )}
               </div>
               
-              <button onClick={() => navigate(1)} className="p-2 hover:bg-white rounded-xl text-slate-600 hover:text-slate-900 transition shadow-xs">
+              <button onClick={() => navigate(1)} className="p-2 hover:bg-[#121c27] border-white/10 rounded-xl text-gray-300 hover:text-white transition shadow-xs">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
             
             <div className="w-px h-8 bg-slate-200/80 mx-1 hidden lg:block"></div>
             
-            <button onClick={navigateToToday} className="px-4 py-2 text-xs font-bold text-slate-700 bg-white border-2 border-slate-200 rounded-xl hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition hidden sm:block">
+            <button onClick={navigateToToday} className="px-4 py-2 text-xs font-bold text-gray-300 bg-[#121c27] border-white/10 border-2 border-white/10 rounded-xl hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition hidden sm:block">
               Hoy
             </button>
           </div>
           
-          <div className="flex items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/60 text-xs font-bold shadow-sm w-full lg:w-auto">
+          <div className="flex items-center bg-white/10/90 p-1.5 rounded-2xl border border-white/10/60 text-xs font-bold shadow-[0_4px_12px_rgba(0,0,0,0.5)] w-full lg:w-auto">
             <button 
               onClick={() => setViewType('Año')} 
-              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Año' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Año</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Año' ? 'bg-[#121c27] border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-brand-700 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-300 hover:bg-slate-200/50'}`}>Año</button>
             <button 
               onClick={() => setViewType('Mes')} 
-              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Mes' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Mes</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Mes' ? 'bg-[#121c27] border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-brand-700 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-300 hover:bg-slate-200/50'}`}>Mes</button>
             <button 
               onClick={() => setViewType('Día')} 
-              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Día' ? 'bg-white shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}>Día</button>
+              className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Día' ? 'bg-[#121c27] border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-brand-700 ring-1 ring-black/5' : 'text-gray-400 hover:text-gray-300 hover:bg-slate-200/50'}`}>Día</button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="p-6 space-y-6 flex-1 overflow-y-auto bg-slate-50/50">
+      <div className="p-6 space-y-6 flex-1 overflow-y-auto bg-white/5/50">
         
         {/* Filters */}
-        <section className="bg-white p-3.5 rounded-2xl border border-slate-200/70 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <section className="bg-[#121c27] border-white/10 p-3.5 rounded-2xl border border-white/10/70 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 text-xs">
             <button 
               onClick={() => setFilter('Todos')}
-              className={`px-3 py-1.5 rounded-full font-bold shadow-xs whitespace-nowrap transition-colors ${filter === 'Todos' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full font-bold shadow-xs whitespace-nowrap transition-colors ${filter === 'Todos' ? 'bg-slate-900 text-white' : 'bg-white/10 text-gray-300 hover:bg-slate-200'}`}
             >
               Todos ({initialEvents.length})
             </button>
@@ -238,7 +238,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                 key={cat}
                 onClick={() => setFilter(cat)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold border transition whitespace-nowrap
-                  ${filter === cat ? CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].bg + ' ' + CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].text + ' ' + CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].border : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                  ${filter === cat ? CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].bg + ' ' + CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].text + ' ' + CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].border : 'bg-[#121c27] border-white/10 text-gray-300 border-white/10 hover:bg-white/5'}`}
               >
                 <span className={`w-2 h-2 rounded-full ${CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].dot}`}></span>
                 <span>{CATEGORY_STYLES[cat as keyof typeof CATEGORY_STYLES].icon} {cat}</span>
@@ -249,29 +249,29 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
 
         {/* Grid or List depending on View */}
         {viewType === 'Mes' && (
-          <section className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col">
-            <div className="grid grid-cols-7 border-b border-slate-200 text-center py-2.5 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
-              <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div className="text-slate-700">Sáb</div><div className="text-slate-700">Dom</div>
+          <section className="bg-[#121c27] border-white/10 rounded-2xl border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col">
+            <div className="grid grid-cols-7 border-b border-white/10 text-center py-2.5 bg-white/5/70 text-xs font-bold uppercase tracking-wider text-gray-400">
+              <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div className="text-gray-300">Sáb</div><div className="text-gray-300">Dom</div>
             </div>
             
-            <div className="grid grid-cols-7 border-b border-slate-100 divide-x divide-y divide-slate-100 flex-1">
+            <div className="grid grid-cols-7 border-b border-white/5 divide-x divide-y divide-slate-100 flex-1">
               {days.map((d, i) => {
                 const isToday = d.fullDate === todayStr;
                 const dayEvents = d.fullDate ? (eventsByDate[d.fullDate] || []) : [];
 
                 return (
                   <div key={i} onClick={() => d.fullDate && setSelectedDay(d.fullDate)} className={`min-h-[100px] md:min-h-[120px] p-2 flex flex-col justify-between transition-colors cursor-pointer
-                    ${!d.isCurrentMonth ? 'bg-slate-50/40 text-slate-400' : 'hover:bg-slate-50/50 text-slate-700'}
+                    ${!d.isCurrentMonth ? 'bg-white/5/40 text-slate-400' : 'hover:bg-white/5/50 text-gray-300'}
                     ${isToday ? 'bg-emerald-50/30 ring-2 ring-inset ring-brand-500 rounded-lg relative z-10' : ''}
                   `}>
                     <div className="flex justify-between items-start">
                       {isToday ? (
                         <div className="flex items-center gap-1.5">
-                          <span className="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center text-[10px] font-extrabold shadow-sm">{d.day}</span>
+                          <span className="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center text-[10px] font-extrabold shadow-[0_4px_12px_rgba(0,0,0,0.5)]">{d.day}</span>
                           <span className="text-[9px] font-bold text-brand-700 uppercase tracking-tight hidden lg:inline">Hoy</span>
                         </div>
                       ) : (
-                        <span className={`text-xs font-bold ${d.isCurrentMonth ? 'text-slate-700' : 'text-slate-400'}`}>{d.day}</span>
+                        <span className={`text-xs font-bold ${d.isCurrentMonth ? 'text-gray-300' : 'text-slate-400'}`}>{d.day}</span>
                       )}
                     </div>
                     
@@ -282,7 +282,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                           <div 
                             key={event.id}
                             onClick={(e) => { e.stopPropagation(); setSelectedEvent(event); }}
-                            className={`px-1.5 py-0.5 md:py-1 rounded-md border text-[9px] md:text-[10px] font-semibold truncate flex items-center gap-1 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-sm
+                            className={`px-1.5 py-0.5 md:py-1 rounded-md border text-[9px] md:text-[10px] font-semibold truncate flex items-center gap-1 cursor-pointer transition-transform hover:-translate-y-[1px] shadow-[0_4px_12px_rgba(0,0,0,0.5)]
                               ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50 line-through' : ''}
                             `}
                             title={event.title}
@@ -300,7 +300,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                       {dayEvents.length > 3 && (
                         <button 
                           onClick={(e) => { e.stopPropagation(); setSelectedDay(d.fullDate); }}
-                          className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors"
+                          className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-gray-400 hover:text-gray-300 hover:bg-white/10 rounded transition-colors"
                         >
                           + {dayEvents.length - 3} más...
                         </button>
@@ -325,14 +325,14 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                   fetchEvents(year, newMonth);
                   window.history.pushState(null, '', `/calendario?month=${newMonth}&year=${year}`);
                 }}
-                className={`p-6 bg-white rounded-2xl border transition-all text-center group
-                  ${index + 1 === month ? 'border-brand-500 shadow-md ring-2 ring-brand-500/20' : 'border-slate-200 shadow-sm hover:border-brand-300 hover:shadow-md'}
+                className={`p-6 bg-[#121c27] border-white/10 rounded-2xl border transition-all text-center group
+                  ${index + 1 === month ? 'border-brand-500 shadow-[0_8px_24px_rgba(0,0,0,0.6)] ring-2 ring-brand-500/20' : 'border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:border-brand-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)]'}
                 `}
               >
-                <div className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2 group-hover:text-brand-600 transition-colors">
+                <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 group-hover:text-brand-600 transition-colors">
                   {year}
                 </div>
-                <div className="text-2xl font-extrabold text-slate-900 group-hover:text-brand-700 transition-colors">
+                <div className="text-2xl font-extrabold text-white group-hover:text-brand-700 transition-colors">
                   {monthName}
                 </div>
               </button>
@@ -341,18 +341,18 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
         )}
 
         {viewType === 'Día' && (
-          <section className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm min-h-[400px]">
-            <h2 className="text-xl font-extrabold text-slate-900 mb-6 pb-4 border-b border-slate-100 capitalize">
+          <section className="bg-[#121c27] border-white/10 p-6 rounded-2xl border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] min-h-[400px]">
+            <h2 className="text-xl font-extrabold text-white mb-6 pb-4 border-b border-white/5 capitalize">
               Eventos del {new Intl.DateTimeFormat('es-PA', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(activeDateStr))}
             </h2>
             
             {(!eventsByDate[activeDateStr] || eventsByDate[activeDateStr].length === 0) ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-100">
+                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 border border-white/5">
                   <CalendarIcon className="w-8 h-8 text-slate-300" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-700">Sin datos programados</h3>
-                <p className="text-sm text-slate-500 mt-1 max-w-sm">No hay ingresos, pagos fijos, recordatorios ni mantenimientos para este día.</p>
+                <h3 className="text-lg font-bold text-gray-300">Sin datos programados</h3>
+                <p className="text-sm text-gray-400 mt-1 max-w-sm">No hay ingresos, pagos fijos, recordatorios ni mantenimientos para este día.</p>
                 <button 
                   onClick={() => setIsModalOpen(true)}
                   className="mt-6 px-4 py-2 bg-brand-50 text-brand-700 font-bold text-sm rounded-xl hover:bg-brand-100 transition-colors"
@@ -368,7 +368,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                     <div 
                       key={event.id}
                       onClick={() => setSelectedEvent(event)}
-                      className={`p-4 rounded-xl border text-sm font-semibold flex flex-col gap-2 cursor-pointer transition-transform hover:-translate-y-[2px] shadow-sm
+                      className={`p-4 rounded-xl border text-sm font-semibold flex flex-col gap-2 cursor-pointer transition-transform hover:-translate-y-[2px] shadow-[0_4px_12px_rgba(0,0,0,0.5)]
                         ${style.bg} ${style.text} ${style.border} ${event.isCompleted ? 'opacity-50' : ''}
                       `}
                     >
@@ -378,7 +378,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                           <span className={`w-2 h-2 rounded-full ${style.dot}`}></span>
                         </div>
                         {event.amount && (
-                          <span className="text-sm font-bold bg-white/50 px-2 py-1 rounded-md">
+                          <span className="text-sm font-bold bg-[#121c27] border-white/10/50 px-2 py-1 rounded-md">
                             {event.category === 'Ingresos' || event.category === 'Metas' ? '+' : '-'}B/. {event.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                           </span>
                         )}
