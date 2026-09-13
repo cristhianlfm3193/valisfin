@@ -23,6 +23,7 @@ export default async function PortalPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const fullName = user?.user_metadata?.full_name || "Usuario";
+  const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
   return (
@@ -92,11 +93,19 @@ export default async function PortalPage() {
         }
       `}} />
 
+      {/* Background Orbs */}
+      <div className="absolute top-0 inset-x-0 h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/10 blur-[100px]"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[30%] rounded-full bg-pink-500/10 blur-[100px]"></div>
+        <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] rounded-full bg-sky-500/10 blur-[120px]"></div>
+      </div>
+
       {/* Header */}
-      <header className="relative z-10 w-full px-6 py-4 flex items-center justify-between border-b border-white/5 backdrop-blur-md bg-black/20">
+      <header className="relative z-10 p-6 flex justify-between items-center max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-pink-500 flex items-center justify-center p-0.5 shadow-md shadow-emerald-500/20">
-            <div className="w-full h-full bg-[#0d131f] rounded-full flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-md relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-50"></div>
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-inner relative z-10">
               <span className="text-white font-bold text-xs">V</span>
             </div>
           </div>
@@ -109,8 +118,12 @@ export default async function PortalPage() {
         </div>
 
         <div className="flex items-center gap-3 bg-[#121c27]/5 hover:bg-[#121c27]/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
-          <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner">
-            {initial}
+          <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner overflow-hidden">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={fullName} className="w-full h-full object-cover" />
+            ) : (
+              initial
+            )}
           </div>
           <div className="hidden sm:flex flex-col text-left pr-1">
             <span className="text-xs font-semibold text-gray-200">{fullName}</span>
