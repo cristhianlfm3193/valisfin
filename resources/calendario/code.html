@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#f8fafc]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calendario Financiero &amp; Cronograma Familiar - ValisFin</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            surface: '#f8fafc',
+          },
+          boxShadow: {
+            'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
+            'card': '0 4px 16px -2px rgba(15, 23, 42, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Scrollbars and transitions -->
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<style data-purpose="bento-animations">
+    .event-pill {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .event-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    }
+    .calendar-cell {
+      min-height: 120px;
+    }
+    @media (max-width: 1024px) {
+      .calendar-cell {
+        min-height: 90px;
+      }
+    }
+  </style>
+</head>
+<body class="h-full text-slate-800 antialiased font-sans flex overflow-hidden">
+<!-- BEGIN: MainLayout -->
+<div class="flex h-full w-full overflow-hidden">
+<!-- BEGIN: Sidebar -->
+<aside class="w-64 flex-shrink-0 bg-white border-r border-slate-100 hidden md:flex flex-col justify-between py-6 px-4 z-20" data-purpose="sidebar">
+<div class="space-y-6">
+<!-- Logo ValisFin -->
+<div class="flex items-center gap-3 px-2" data-purpose="brand-logo">
+<div class="h-10 w-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 shadow-sm">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M3 10h18M5 14h14M7 18h10M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"></path>
+<circle cx="12" cy="12" r="2"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xl font-bold tracking-tight text-slate-900 leading-none">ValisFin</span>
+<span class="inline-block w-2 h-2 rounded-full bg-brand-500"></span>
+</div>
+<p class="text-[9px] uppercase tracking-widest font-semibold text-slate-400 mt-1">Finanzas • Familia • Futuro</p>
+</div>
+</div>
+<!-- Navigation Menu -->
+<nav class="space-y-1" data-purpose="navigation-menu">
+<p class="px-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Gestión Patrimonial</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+<span>Inicio</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+<span>Ingresos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+<span>Pagos Fijos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+<span>Gastos Diarios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+<span>Hogar &amp; Reparaciones</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.9 2 11.2 2 11.5V16c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></svg>
+<span>Vehículos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+<span>Metas de Ahorro</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition" href="#">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+<span>Consultas &amp; Reportes</span>
+</a>
+<!-- Active Item: Calendario -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-brand-700 bg-brand-50 border border-brand-100 shadow-sm transition" href="#">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+<circle cx="8" cy="14" fill="currentColor" r="1"></circle>
+<circle cx="12" cy="14" fill="currentColor" r="1"></circle>
+<circle cx="16" cy="14" fill="currentColor" r="1"></circle>
+</svg>
+<span>Calendario Financiero</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+</a>
+</nav>
+</div>
+<!-- User Profile Card -->
+<div class="pt-4 border-t border-slate-100" data-purpose="user-profile">
+<div class="bg-slate-50 hover:bg-slate-100/80 p-2.5 rounded-2xl flex items-center justify-between border border-slate-200/60 transition">
+<div class="flex items-center gap-2.5">
+<div class="flex -space-x-1.5 overflow-hidden">
+<div class="w-7 h-7 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">CF</div>
+<div class="w-7 h-7 rounded-full bg-teal-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">JC</div>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-800 leading-tight">Fuentes Camaño</p>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+<span class="text-[10px] text-slate-500 font-medium">Hogar Protegido</span>
+</div>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600 p-1" title="Ajustes de Cuenta">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContentArea -->
+<main class="flex-1 flex flex-col h-full overflow-y-auto bg-[#faf8ff]/40">
+<!-- BEGIN: TopNavbar -->
+<header class="bg-white border-b border-slate-100 sticky top-0 z-30 px-6 py-4 flex-shrink-0" data-purpose="top-navbar">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+<!-- Left: Title and Breadcrumb -->
+<div>
+<div class="flex items-center gap-2 text-[10px] font-bold tracking-wider uppercase text-brand-600">
+<span class="inline-flex items-center gap-1.5 bg-brand-50 px-2 py-0.5 rounded-md border border-brand-100">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+                CRONOGRAMA PATRIMONIAL INTEGRAL • VALISFIN
+              </span>
+</div>
+<h1 class="text-2xl font-extrabold text-slate-900 tracking-tight mt-1">Calendario Financiero Familiar</h1>
+<p class="text-xs text-slate-500 mt-0.5">Agenda unificada de fechas de cobro, vencimiento de pagos, mantenimientos de autos, mejoras del hogar y metas patrimoniales.</p>
+</div>
+<!-- Right: Actions and Sync -->
+<div class="flex flex-wrap items-center gap-2.5">
+<button class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-xs transition">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+<span>Exportar .ICS</span>
+</button>
+<button class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 shadow-xs transition">
+<svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+<span>Sincronizar Google Calendar</span>
+</button>
+<button class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl shadow-sm shadow-brand-600/30 transition" onclick="document.getElementById('modal-nuevo-compromiso').classList.toggle('hidden')">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+<span>+ Nuevo Recordatorio / Compromiso</span>
+</button>
+</div>
+</div>
+<!-- Month Navigation Bar -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+<!-- Month Switcher -->
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/60">
+<button class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition shadow-xs">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<span class="px-3 text-xs font-bold text-slate-800 select-none">Septiembre 2026</span>
+<button class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition shadow-xs">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
+</div>
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition">Hoy</button>
+</div>
+<!-- View Selector Tabs -->
+<div class="flex items-center gap-2">
+<div class="bg-slate-100/80 p-1 rounded-xl flex items-center text-xs font-semibold">
+<button class="px-3 py-1 bg-white text-brand-700 rounded-lg shadow-xs font-bold">Mes</button>
+<button class="px-3 py-1 text-slate-600 hover:text-slate-900 transition">Semana</button>
+<button class="px-3 py-1 text-slate-600 hover:text-slate-900 transition">Agenda / Lista</button>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopNavbar -->
+<!-- BEGIN: ScrollablePageContent -->
+<div class="p-6 space-y-6 flex-1">
+<!-- BEGIN: QuickFilterBar -->
+<section class="bg-white p-3.5 rounded-2xl border border-slate-200/70 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4" data-purpose="quick-filters">
+<!-- Category Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 text-xs">
+<button class="px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-xs whitespace-nowrap">
+              Todos (24)
+            </button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 hover:bg-emerald-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+<span>💵 Ingresos &amp; Cobros (4)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200/80 hover:bg-indigo-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+<span>⚡ Pagos Fijos &amp; Servicios (8)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-sky-50 text-sky-800 border border-sky-200/80 hover:bg-sky-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-sky-600"></span>
+<span>🚗 Vehículos &amp; Mantenimiento (3)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-amber-50 text-amber-800 border border-amber-200/80 hover:bg-amber-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-amber-600"></span>
+<span>🏡 Hogar &amp; Mejoras (4)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-teal-50 text-teal-800 border border-teal-200/80 hover:bg-teal-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-teal-600"></span>
+<span>🎯 Metas de Ahorro (3)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold bg-pink-50 text-pink-800 border border-pink-200/80 hover:bg-pink-100 transition whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-pink-600"></span>
+<span>🔔 Recordatorios (2)</span>
+</button>
+</div>
+<!-- Responsible Filter -->
+<div class="flex items-center gap-2 border-t md:border-t-0 md:border-l border-slate-100 pt-2 md:pt-0 md:pl-4 flex-shrink-0">
+<span class="text-xs font-semibold text-slate-400">Responsable:</span>
+<div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold text-slate-600">
+<button class="px-2.5 py-1 bg-white text-slate-800 rounded-lg shadow-xs">Todos</button>
+<button class="px-2.5 py-1 hover:text-slate-900 transition">Cristhian</button>
+<button class="px-2.5 py-1 hover:text-slate-900 transition">Jennifer</button>
+<button class="px-2.5 py-1 hover:text-slate-900 transition">Familia</button>
+</div>
+</div>
+</section>
+<!-- END: QuickFilterBar -->
+<!-- BEGIN: CalendarGridSection -->
+<section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden" data-purpose="calendar-bento">
+<!-- Days of Week Header -->
+<div class="grid grid-cols-7 border-b border-slate-200 text-center py-2.5 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+<div>Lun</div>
+<div>Mar</div>
+<div>Mié</div>
+<div>Jue</div>
+<div>Vie</div>
+<div class="text-slate-700">Sáb</div>
+<div class="text-slate-700">Dom</div>
+</div>
+<!-- Calendar Days Grid (Septiembre 2026: Inicia Martes 1, Termina Miércoles 30) -->
+<div class="grid grid-cols-7 border-b border-slate-100 divide-x divide-y divide-slate-100">
+<!-- Day 31 Agosto (Previous Month) -->
+<div class="calendar-cell p-2 bg-slate-50/40 text-slate-300 flex flex-col justify-between">
+<span class="text-xs font-semibold">31</span>
+</div>
+<!-- Day 1 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">1</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 2 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">2</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 3 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">3</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 4 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">4</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 5 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">5</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 6 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">6</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- WEEK 2 -->
+<!-- Day 7 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">7</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 8 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">8</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 9 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">9</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 10 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">10</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-purple-50 text-purple-700 border border-purple-200/60 text-[10px] font-semibold truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+<span class="truncate">⚡ Internet Tigo (-B/. 45.00)</span>
+</div>
+</div>
+</div>
+<!-- Day 11 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">11</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 12 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">12</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 13 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">13</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- WEEK 3 (Includes TODAY: 15 Sept) -->
+<!-- Day 14 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">14</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 15 Sept: TODAY! -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-emerald-50/30 ring-2 ring-inset ring-brand-500 rounded-lg relative transition">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5">
+<span class="w-5 h-5 rounded-full bg-brand-600 text-white flex items-center justify-center text-[10px] font-extrabold shadow-sm">15</span>
+<span class="text-[9px] font-bold text-brand-700 uppercase tracking-tight">Hoy</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+</div>
+<div class="space-y-1 mt-1.5">
+<div class="event-pill px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-bold truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span class="truncate">💵 Quincena Cristhian (+B/. 454.41)</span>
+</div>
+<div class="event-pill px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-bold truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span class="truncate">💵 Quincena Jennifer (+B/. 428.86)</span>
+</div>
+</div>
+</div>
+<!-- Day 16 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">16</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 17 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">17</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="truncate">💵 Gasto Rep. Cristhian (+B/. 140.43)</span>
+</div>
+</div>
+</div>
+<!-- Day 18 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">18</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-indigo-50 text-indigo-800 border border-indigo-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+<span class="truncate">⚡ Guardería Valeria (-B/. 180.00)</span>
+</div>
+</div>
+</div>
+<!-- Day 19 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">19</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span class="truncate">🏡 Gotera Techo (8:00 AM)</span>
+</div>
+</div>
+</div>
+<!-- Day 20 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">20</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-sky-50 text-sky-900 border border-sky-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+<span class="truncate">🚗 Amortiguadores Yaris (-B/. 100)</span>
+</div>
+</div>
+</div>
+<!-- WEEK 4 -->
+<!-- Day 21 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">21</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-pink-50 text-pink-900 border border-pink-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
+<span class="truncate">🔔 Cotizar Seguro (10:30 AM)</span>
+</div>
+</div>
+</div>
+<!-- Day 22 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">22</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span class="truncate">🏡 Limpieza A/C Inverter</span>
+</div>
+</div>
+</div>
+<!-- Day 23 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">23</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 24 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">24</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-indigo-50 text-indigo-900 border border-indigo-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+<span class="truncate">⚡ Luz Naturgy (-B/. 78.44)</span>
+</div>
+</div>
+</div>
+<!-- Day 25 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">25</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-teal-50 text-teal-900 border border-teal-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+<span class="truncate">🎯 Meta Estufa (+B/. 50.00)</span>
+</div>
+</div>
+</div>
+<!-- Day 26 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">26</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-indigo-50 text-indigo-900 border border-indigo-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+<span class="truncate">⚡ Tarjeta Crédito (-B/. 60.00)</span>
+</div>
+</div>
+</div>
+<!-- Day 27 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between bg-slate-50/20 hover:bg-slate-50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">27</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- WEEK 5 -->
+<!-- Day 28 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">28</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-sky-50 text-sky-900 border border-sky-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+<span class="truncate">🚗 Llantas Tucson</span>
+</div>
+<div class="event-pill px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[9px] font-semibold text-center cursor-pointer hover:bg-slate-200">
+                  +1 más
+                </div>
+</div>
+</div>
+<!-- Day 29 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">29</span>
+</div>
+<div class="space-y-1 mt-1"></div>
+</div>
+<!-- Day 30 Sept -->
+<div class="calendar-cell p-2 flex flex-col justify-between hover:bg-slate-50/50 transition">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-slate-700">30</span>
+</div>
+<div class="space-y-1 mt-1">
+<div class="event-pill px-1.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-medium truncate flex items-center gap-1 cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="truncate">💵 Cierre Salarial Fin de Mes</span>
+</div>
+</div>
+</div>
+<!-- Day 1 Oct (Next Month) -->
+<div class="calendar-cell p-2 bg-slate-50/40 text-slate-300 flex flex-col justify-between">
+<span class="text-xs font-semibold">1</span>
+</div>
+<!-- Day 2 Oct -->
+<div class="calendar-cell p-2 bg-slate-50/40 text-slate-300 flex flex-col justify-between">
+<span class="text-xs font-semibold">2</span>
+</div>
+<!-- Day 3 Oct -->
+<div class="calendar-cell p-2 bg-slate-50/40 text-slate-300 flex flex-col justify-between">
+<span class="text-xs font-semibold">3</span>
+</div>
+<!-- Day 4 Oct -->
+<div class="calendar-cell p-2 bg-slate-50/40 text-slate-300 flex flex-col justify-between">
+<span class="text-xs font-semibold">4</span>
+</div>
+</div>
+</section>
+<!-- END: CalendarGridSection -->
+<!-- BEGIN: BentoWidgetsBottom -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6" data-purpose="bento-summary-grid">
+<!-- Mini Bento 1: Próximos 7 días -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+</div>
+<div>
+<h3 class="text-sm font-bold text-slate-900">Próximos 7 Días</h3>
+<p class="text-[11px] text-slate-400">Compromisos inmediatos</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-amber-100/70 text-amber-800 text-[10px] font-bold">5 activos</span>
+</div>
+<!-- List of commitments -->
+<div class="space-y-3">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 border border-slate-100 transition">
+<div class="flex items-center gap-2.5">
+<input class="rounded text-brand-600 focus:ring-brand-500 border-slate-300 h-4 w-4" type="checkbox"/>
+<div>
+<p class="text-xs font-bold text-slate-800">Guardería Valeria</p>
+<p class="text-[10px] text-slate-400">18 Sep • Jennifer • Escolar</p>
+</div>
+</div>
+<span class="text-xs font-extrabold text-rose-600">-B/. 180.00</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 border border-slate-100 transition">
+<div class="flex items-center gap-2.5">
+<input class="rounded text-brand-600 focus:ring-brand-500 border-slate-300 h-4 w-4" type="checkbox"/>
+<div>
+<p class="text-xs font-bold text-slate-800">Gotera en Patio</p>
+<p class="text-[10px] text-slate-400">19 Sep 8:00 AM • Cristhian</p>
+</div>
+</div>
+<span class="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] font-bold rounded">Hogar</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 border border-slate-100 transition">
+<div class="flex items-center gap-2.5">
+<input class="rounded text-brand-600 focus:ring-brand-500 border-slate-300 h-4 w-4" type="checkbox"/>
+<div>
+<p class="text-xs font-bold text-slate-800">Taller Yaris (Amortiguadores)</p>
+<p class="text-[10px] text-slate-400">20 Sep • Cristhian</p>
+</div>
+</div>
+<span class="text-xs font-extrabold text-rose-600">-B/. 100.00</span>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-xl transition text-center">
+              Ver todos los pendientes semanales
+            </button>
+</div>
+<!-- Mini Bento 2: Flujo Financiero del Mes -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+</div>
+<div>
+<h3 class="text-sm font-bold text-slate-900">Flujo Previsto en Calendario</h3>
+<p class="text-[11px] text-slate-400">Balance del mes actual</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-md">Septiembre</span>
+</div>
+<!-- Metrics -->
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-xs font-semibold text-slate-600">Ingresos programados</span>
+</div>
+<span class="text-sm font-extrabold text-emerald-700">+B/. 1,023.70</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-rose-50/40 border border-rose-100">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span class="text-xs font-semibold text-slate-600">Salidas &amp; pagos previstos</span>
+</div>
+<span class="text-sm font-extrabold text-rose-600">-B/. 764.24</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl bg-slate-900 text-white shadow-xs">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="text-xs font-medium text-slate-300">Balance Proyectado Fin de Mes</span>
+</div>
+<span class="text-sm font-extrabold text-emerald-400">+B/. 259.46</span>
+</div>
+</div>
+</div>
+<!-- Progress bar -->
+<div class="mt-4 pt-3 border-t border-slate-100">
+<div class="flex justify-between text-[11px] font-semibold text-slate-500 mb-1">
+<span>Presupuesto comprometido</span>
+<span class="text-slate-800 font-bold">74.6%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-brand-500 h-2 rounded-full" style="width: 74.6%"></div>
+</div>
+</div>
+</div>
+<!-- Mini Bento 3: Gestión de Notificaciones & Recordatorios -->
+<div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+</div>
+<div>
+<h3 class="text-sm font-bold text-slate-900">Alertas Familiares</h3>
+<p class="text-[11px] text-slate-400">Notificaciones automáticas</p>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</div>
+<!-- Switches -->
+<div class="space-y-3.5">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-800">WhatsApp 24h antes</p>
+<p class="text-[11px] text-slate-400">Recordatorio a ambos cónyuges</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-800">Alerta de Recargos / Mora</p>
+<p class="text-[11px] text-slate-400">Aviso 48h previo al límite</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-slate-800">Resumen Semanal por Correo</p>
+<p class="text-[11px] text-slate-400">Cada domingo a las 8:00 PM</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-600"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span>Destinatarios:</span>
+<span class="font-bold text-slate-800">cristhian@ • jennifer@</span>
+</div>
+</div>
+</section>
+<!-- END: BentoWidgetsBottom -->
+</div>
+<!-- END: ScrollablePageContent -->
+</main>
+<!-- END: MainContentArea -->
+</div>
+<!-- END: MainLayout -->
+<!-- BEGIN: ModalNuevoCompromiso -->
+<div class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4" id="modal-nuevo-compromiso">
+<div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
+<div class="flex items-center justify-between pb-4 border-b border-slate-100">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold">
+            +
+          </div>
+<div>
+<h3 class="text-base font-bold text-slate-900 leading-tight">Nuevo Compromiso o Recordatorio</h3>
+<p class="text-xs text-slate-400">Agrega un evento al cronograma familiar Fuentes Camaño</p>
+</div>
+</div>
+<button class="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition" onclick="document.getElementById('modal-nuevo-compromiso').classList.add('hidden')">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
+</button>
+</div>
+<form class="mt-4 space-y-4" onsubmit="event.preventDefault(); document.getElementById('modal-nuevo-compromiso').classList.add('hidden');">
+<!-- Tipo de compromiso -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Evento</label>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input checked="" class="sr-only" name="tipo_evento" type="radio" value="pago"/>
+<span>⚡ Pago Fijo</span>
+</label>
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input class="sr-only" name="tipo_evento" type="radio" value="ingreso"/>
+<span>💵 Ingreso</span>
+</label>
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input class="sr-only" name="tipo_evento" type="radio" value="vehiculo"/>
+<span>🚗 Vehículo</span>
+</label>
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input class="sr-only" name="tipo_evento" type="radio" value="hogar"/>
+<span>🏡 Hogar</span>
+</label>
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input class="sr-only" name="tipo_evento" type="radio" value="meta"/>
+<span>🎯 Meta</span>
+</label>
+<label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 text-xs font-semibold cursor-pointer hover:bg-slate-50 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50/50 has-[:checked]:text-brand-800">
+<input class="sr-only" name="tipo_evento" type="radio" value="recordatorio"/>
+<span>🔔 Recordatorio</span>
+</label>
+</div>
+</div>
+<!-- Título -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Título del Compromiso</label>
+<input class="w-full text-xs rounded-xl border-slate-200 focus:border-brand-500 focus:ring-brand-500" placeholder="Ej: Pago Póliza Auto Banistmo" type="text"/>
+</div>
+<!-- Fecha, Hora y Monto -->
+<div class="grid grid-cols-3 gap-3">
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Fecha</label>
+<input class="w-full text-xs rounded-xl border-slate-200 focus:border-brand-500 focus:ring-brand-500" type="date" value="2026-09-21"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Hora (Opcional)</label>
+<input class="w-full text-xs rounded-xl border-slate-200 focus:border-brand-500 focus:ring-brand-500" type="time" value="10:30"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Monto (B/.)</label>
+<input class="w-full text-xs rounded-xl border-slate-200 focus:border-brand-500 focus:ring-brand-500" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<!-- Responsable -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Responsable Principal</label>
+<select class="w-full text-xs rounded-xl border-slate-200 focus:border-brand-500 focus:ring-brand-500">
+<option>Cristhian Fuentes</option>
+<option>Jennifer Camaño</option>
+<option>Ambos Cónyuges (Familiar)</option>
+</select>
+</div>
+<!-- Botones de Acción -->
+<div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+<button class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition" onclick="document.getElementById('modal-nuevo-compromiso').classList.add('hidden')" type="button">
+            Cancelar
+          </button>
+<button class="px-5 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm transition" type="submit">
+            Guardar en Calendario
+          </button>
+</div>
+</form>
+</div>
+</div>
+<!-- END: ModalNuevoCompromiso -->
+</body></html>

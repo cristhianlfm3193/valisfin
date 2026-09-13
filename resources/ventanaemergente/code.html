@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#f8fafc]" lang="es" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ValisFin - Hogar y Mantenimiento</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              500: '#15803d',
+              600: '#0f766e',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              active: '#d9ecc8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="base-styling">
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="h-full text-slate-800 flex overflow-hidden">
+<!-- BEGIN: LeftSidebar -->
+<aside class="hidden md:flex w-64 bg-white border-r border-slate-200/80 flex-col justify-between shrink-0 select-none z-20" data-purpose="navigation-sidebar">
+<div>
+<!-- ValisFin Logo -->
+<div class="px-6 pt-7 pb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-[#10b981]/15 border border-[#10b981]/30 flex items-center justify-center text-brand-700 shadow-sm">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<span class="text-xl font-extrabold tracking-tight text-slate-900 leading-none flex items-center gap-0.5">
+            Valis<span class="text-slate-700">Fin</span>
+</span>
+<p class="text-[9px] font-semibold tracking-wider text-slate-400 uppercase leading-none mt-1">Finanzas. Familia. Futuro.</p>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav aria-label="Menú principal" class="px-3 space-y-1.5 mt-2">
+<!-- Inicio -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Inicio
+        </a>
+<!-- Ingresos -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Ingresos
+        </a>
+<!-- Pagos Fijos -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Pagos Fijos
+        </a>
+<!-- Gastos Diarios -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Gastos Diarios
+        </a>
+<!-- Hogar (ACTIVO - Nueva sección) -->
+<a aria-current="page" class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl bg-brand-active/75 text-brand-800 font-semibold text-sm transition-all border border-brand-200/50 shadow-sm" href="#">
+<svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l9-7 9 7v7a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M9 21V12h6v9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Hogar
+        </a>
+<!-- Vehículos -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zM5 11l2-5h10l2 5M5 11h14M5 11l-1.5 5A1 1 0 004.5 17H5m14-6l1.5 5a1 1 0 01-1 1h-.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Vehículos
+        </a>
+<!-- Metas de Ahorro -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Metas de Ahorro
+        </a>
+<!-- Consultas & Reportes -->
+<a class="flex items-center gap-3.5 px-4 py-2.5 rounded-xl text-slate-500 font-medium text-sm hover:bg-slate-50 hover:text-slate-900 transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+          Consultas &amp; Reportes
+        </a>
+</nav>
+</div>
+<!-- User Profile & Log Out Bottom Card -->
+<div class="p-4 border-t border-slate-100 bg-white/50 space-y-3">
+<!-- Profile Badge -->
+<div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100/80">
+<div class="w-9 h-9 rounded-full bg-slate-200 ring-2 ring-emerald-500/30 overflow-hidden flex items-center justify-center font-bold text-xs text-slate-600">
+          CF
+        </div>
+<div class="min-w-0 flex-1">
+<p class="text-xs font-semibold text-slate-800 truncate">Cristhian Fuentes</p>
+<p class="text-[11px] text-emerald-600 font-medium truncate">Hogar Protegido</p>
+</div>
+</div>
+<!-- Logout Button -->
+<button class="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50/60 rounded-lg transition-colors" type="button">
+<div class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold">
+          N
+        </div>
+        Cerrar Sesión
+      </button>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto"><div class="md:hidden sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200/80 px-4 py-3 flex items-center justify-between"><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-full bg-[#10b981]/15 border border-[#10b981]/30 flex items-center justify-center text-brand-700 shadow-sm"><svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div><span class="text-lg font-extrabold tracking-tight text-slate-900 leading-none flex items-center gap-0.5">Valis<span class="text-slate-700">Fin</span></span></div></div><div class="flex items-center gap-2"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200/80"><div class="w-6 h-6 rounded-full bg-slate-200 ring-1 ring-emerald-500/30 overflow-hidden flex items-center justify-center font-bold text-[10px] text-slate-600">CF</div><span class="text-xs font-semibold text-slate-800">Cristhian</span></div></div></div>
+<!-- BEGIN: TopBarAndHeader -->
+<header class="px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 lg:pt-8 pb-3 sm:pb-4">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+<div>
+<!-- Breadcrumb / Status Badge -->
+<div class="flex items-center gap-2 mb-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse"></span>
+<span class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase">Mantenimiento, Reparaciones y Mejoras Patrimoniales</span>
+</div>
+<!-- Main Title -->
+<h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900">
+            Hogar y Mantenimiento
+          </h1>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+<!-- Pending tasks button -->
+<button class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 py-2.5 text-xs font-semibold rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors shadow-sm min-h-[44px]" type="button">
+<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Trabajos Pendientes</span>
+<span class="ml-0.5 px-1.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-full">3</span>
+</button>
+<!-- Add Work Button -->
+<button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#09574a] hover:bg-[#064238] text-white shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 min-h-[44px]" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span class="">+ Registrar Trabajo</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: TopBarAndHeader -->
+<!-- BEGIN: BentoCardsContainer -->
+<section aria-label="Tarjetas Resumen Bento" class="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+<!-- Bento Card 1: Presupuesto Estimado Pendiente -->
+<div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm relative overflow-hidden group hover:border-emerald-200 transition-all">
+<div class="flex items-start justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Presupuesto Estimado Pendiente</span>
+<div class="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-1.5">
+<span class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">B/. 385.00</span>
+</div>
+<div class="mt-3 flex items-center gap-2 text-xs text-slate-500 font-medium">
+<span class="inline-flex items-center text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]">
+              3 cotizaciones activas
+            </span>
+<span class="">en 3 áreas</span>
+</div>
+</div>
+<!-- Bento Card 2: Inversión Ejecutada este Año -->
+<div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm relative overflow-hidden group hover:border-emerald-200 transition-all">
+<div class="flex items-start justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Inversión Ejecutada (2026)</span>
+<div class="w-8 h-8 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-1.5">
+<span class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">B/. 720.00</span>
+</div>
+<div class="mt-3 flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">5 mantenimientos finalizados al 100%</span>
+</div>
+</div>
+<!-- Bento Card 3: Próxima Revisión Prioritaria -->
+<div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm relative overflow-hidden group hover:border-emerald-200 transition-all">
+<div class="flex items-start justify-between">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Próxima Revisión Prioritaria</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-100">
+              Urgente
+            </span>
+</div>
+<div class="mt-2.5">
+<p class="text-base font-bold text-slate-800 leading-snug">
+              Mantenimiento de Aires Acondicionados
+            </p>
+<p class="text-xs text-slate-500 mt-1">Sala / Comedor • Programado para fin de mes</p>
+</div>
+<div class="mt-3 flex items-center gap-1 text-xs text-slate-600 font-medium">
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Fecha límite: <strong class="text-slate-700">30 de Septiembre</strong></span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: BentoCardsContainer -->
+<!-- BEGIN: MainTableSection -->
+<main class="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 pb-24 md:pb-6 flex-1">
+<div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col">
+<!-- Table Control Toolbar -->
+<div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h2 class="text-base font-bold text-slate-800">Trabajos y Reparaciones del Hogar</h2>
+</div>
+<!-- Filters & Search -->
+<div class="flex flex-wrap items-center gap-3">
+<!-- Search bar -->
+<div class="relative w-full sm:w-auto">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-200 text-slate-700 placeholder-slate-400 focus:ring-emerald-600 focus:border-emerald-600 w-full sm:w-64 min-h-[40px]" placeholder="Buscar por área, trabajo o responsable..." type="text"/>
+</div>
+<!-- Filter Pills -->
+<div class="hidden md:flex items-center p-1 bg-slate-100/80 rounded-xl border border-slate-200/80 gap-1">
+<button class="flex items-center gap-1.5 px-3 py-1.5 font-semibold rounded-lg bg-[#09574a] text-white text-xs shadow-sm transition-all" type="button">
+<span class="">Todos</span>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-white/20 text-white leading-none">8</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-lg text-xs transition-colors" type="button">
+<span class="">Pendientes</span>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 leading-none">3</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60 rounded-lg text-xs transition-colors" type="button">
+<span class="">Completados</span>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 leading-none">4</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 font-medium text-slate-600 hover:text-rose-700 hover:bg-rose-50/70 rounded-lg text-xs transition-colors" type="button">
+<span class="">Urgentes</span>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-100 text-rose-700 leading-none">1</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Table Responsive Wrapper -->
+<div class="block md:hidden divide-y divide-slate-100"><!-- Mobile Card 1 -->
+<div class="p-4 hover:bg-slate-50/70 transition-colors space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 font-semibold text-slate-800 text-xs">
+<span class="w-2 h-2 rounded-full bg-indigo-500 shrink-0"></span>
+<span class="">Sala / Comedor</span>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 shrink-0">Alta / Pendiente</span>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-800 leading-snug">Limpieza y mantenimiento de Aire Acondicionado Inverter</h3>
+<p class="text-[11px] font-normal text-slate-400 mt-0.5">Incluye limpieza profunda de serpentín y recarga preventiva</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="">Reg: 15/09/2026</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold">
+<svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+Est: 22/09/2026
+</span>
+</div>
+<span class="font-bold text-slate-900">B/. 45.00</span>
+</div>
+<div class="flex items-center justify-between text-xs pt-1 border-t border-slate-50">
+<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-semibold">Cristhian F.</span>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 rounded-xl border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Cumplir
+</button>
+<button class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+<button class="w-9 h-9 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+</div>
+</div>
+<!-- Mobile Card 2 -->
+<div class="p-4 hover:bg-slate-50/70 transition-colors space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 font-semibold text-slate-800 text-xs">
+<span class="w-2 h-2 rounded-full bg-cyan-500 shrink-0"></span>
+<span class="">Baño de Visitas</span>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 shrink-0">Media / En Proceso</span>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-800 leading-snug">Reparación de filtración en tubería del lavamanos</h3>
+<p class="text-[11px] font-normal text-slate-400 mt-0.5">Sustitución de empaque flexible y llave de paso</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="">Reg: 20/09/2026</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold">
+<svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+Est: 25/09/2026
+</span>
+</div>
+<span class="font-bold text-slate-900">B/. 80.00</span>
+</div>
+<div class="flex items-center justify-between text-xs pt-1 border-t border-slate-50">
+<span class="px-2 py-0.5 rounded-lg bg-pink-50 text-pink-700 text-[10px] font-semibold border border-pink-100">Jennifer C.</span>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 rounded-xl border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Cumplir
+</button>
+<button class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+<button class="w-9 h-9 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+</div>
+</div>
+<!-- Mobile Card 3 -->
+<div class="p-4 hover:bg-slate-50/70 transition-colors space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 font-semibold text-slate-800 text-xs">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+<span class="">Patio / Techo</span>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 shrink-0">Planificado</span>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-800 leading-snug">Pintura impermeable en pared exterior y canaletas</h3>
+<p class="text-[11px] font-normal text-slate-400 mt-0.5">Protección contra temporada de lluvias fuertes</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="">Reg: 05/10/2026</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-semibold">
+<svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+Est: 12/10/2026
+</span>
+</div>
+<span class="font-bold text-slate-900">B/. 150.00</span>
+</div>
+<div class="flex items-center justify-between text-xs pt-1 border-t border-slate-50">
+<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-semibold">Cristhian F.</span>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 rounded-xl border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Cumplir
+</button>
+<button class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+<button class="w-9 h-9 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+</div>
+</div>
+<!-- Mobile Card 4 (Completado) -->
+<div class="p-4 hover:bg-slate-50/70 transition-colors bg-emerald-50/20 space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 font-semibold text-slate-800 text-xs">
+<span class="w-2 h-2 rounded-full bg-brand-600 shrink-0"></span>
+<span class="">Entrada Principal</span>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100/70 text-emerald-800 border border-emerald-300 shrink-0">✓ Resuelto</span>
+</div>
+<div>
+<h3 class="text-xs font-semibold text-slate-800 leading-snug">Cambio de cerradura de seguridad puerta principal</h3>
+<p class="text-[11px] font-normal text-slate-400 mt-0.5">Instalación de chapa de alta seguridad y cerrojo adicional</p>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
+<div class="flex items-center gap-2 text-slate-500">
+<span class="">Reg: 02/09/2026</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold">
+<svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+Fin: 04/09/2026
+</span>
+</div>
+<span class="font-bold text-slate-900">B/. 110.00</span>
+</div>
+<div class="flex items-center justify-between text-xs pt-1 border-t border-slate-50">
+<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-semibold">Cristhian F.</span>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center gap-1.5 text-xs font-semibold" title="Completado" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>Completado
+</button>
+<button class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15.232 5.232l3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+<button class="w-9 h-9 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar" type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+</div>
+</div></div><div class="hidden md:block overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50/50"><th class="py-3 px-5" scope="col">Registro</th>
+<th class="py-3 px-5" scope="col">Fecha Estimada</th>
+<th class="py-3 px-5" scope="col">Área / Ubicación</th>
+<th class="py-3 px-5" scope="col">Tipo de Mantenimiento / Trabajo</th>
+<th class="py-3 px-5 text-center" scope="col">Prioridad / Estado</th>
+<th class="py-3 px-5 text-right" scope="col">Presupuesto</th>
+<th class="py-3 px-5" scope="col">Asignado</th>
+<th class="py-3 px-5 text-center" scope="col">Acciones</th></tr>
+</thead>
+<tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-5 text-slate-500 whitespace-nowrap">15/09/2026</td><td class="py-4 px-5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+<svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">22/09/2026</span>
+</div>
+</td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    Sala / Comedor
+                  </span>
+</td>
+<td class="py-4 px-5 font-semibold text-slate-800 max-w-xs">
+                  Limpieza y mantenimiento de Aire Acondicionado Inverter
+                  <span class="block text-[11px] font-normal text-slate-400 mt-0.5">Incluye limpieza profunda de serpentín y recarga preventiva</span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                    Alta / Pendiente
+                  </span>
+</td>
+<td class="py-4 px-5 text-right font-bold text-slate-900 whitespace-nowrap">
+                  B/. 45.00
+                </td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                    Cristhian Fuentes
+                  </span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<!-- Actions -->
+<div class="inline-flex items-center justify-center gap-1.5">
+<button class="w-7 h-7 rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center transition-colors" title="Marcar como cumplido" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar trabajo" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar registro" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-5 text-slate-500 whitespace-nowrap">20/09/2026</td><td class="py-4 px-5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+<svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">25/09/2026</span>
+</div>
+</td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+<span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                    Baño de Visitas
+                  </span>
+</td>
+<td class="py-4 px-5 font-semibold text-slate-800 max-w-xs">
+                  Reparación de filtración en tubería del lavamanos
+                  <span class="block text-[11px] font-normal text-slate-400 mt-0.5">Sustitución de empaque flexible y llave de paso</span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                    Media / En Proceso
+                  </span>
+</td>
+<td class="py-4 px-5 text-right font-bold text-slate-900 whitespace-nowrap">
+                  B/. 80.00
+                </td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-50 text-pink-700 text-[11px] font-semibold border border-pink-100">
+                    Jennifer Camaño
+                  </span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<div class="inline-flex items-center justify-center gap-1.5">
+<button class="w-7 h-7 rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center transition-colors" title="Marcar como cumplido" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar trabajo" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar registro" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-5 text-slate-500 whitespace-nowrap">05/10/2026</td><td class="py-4 px-5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">12/10/2026</span>
+</div>
+</td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Patio / Techo
+                  </span>
+</td>
+<td class="py-4 px-5 font-semibold text-slate-800 max-w-xs">
+                  Pintura impermeable en pared exterior y canaletas
+                  <span class="block text-[11px] font-normal text-slate-400 mt-0.5">Protección contra temporada de lluvias fuertes</span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                    Planificado
+                  </span>
+</td>
+<td class="py-4 px-5 text-right font-bold text-slate-900 whitespace-nowrap">
+                  B/. 150.00
+                </td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                    Cristhian Fuentes
+                  </span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<div class="inline-flex items-center justify-center gap-1.5">
+<button class="w-7 h-7 rounded-lg border border-emerald-200 text-emerald-600 hover:bg-emerald-50 flex items-center justify-center transition-colors" title="Marcar como cumplido" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar trabajo" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar registro" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 (Completado) -->
+<tr class="hover:bg-slate-50/70 transition-colors bg-emerald-50/20">
+<td class="py-4 px-5 text-slate-500 whitespace-nowrap">02/09/2026</td><td class="py-4 px-5 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">04/09/2026</span>
+</div>
+</td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+<span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                    Entrada Principal
+                  </span>
+</td>
+<td class="py-4 px-5 font-semibold text-slate-800 max-w-xs">
+                  Cambio de cerradura de seguridad puerta principal
+                  <span class="block text-[11px] font-normal text-slate-400 mt-0.5">Instalación de chapa de alta seguridad y cerrojo adicional</span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100/70 text-emerald-800 border border-emerald-300">
+                    ✓ Resuelto
+                  </span>
+</td>
+<td class="py-4 px-5 text-right font-bold text-slate-900 whitespace-nowrap">
+                  B/. 110.00
+                </td>
+<td class="py-4 px-5 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                    Cristhian Fuentes
+                  </span>
+</td>
+<td class="py-4 px-5 text-center whitespace-nowrap">
+<div class="inline-flex items-center justify-center gap-1.5">
+<button class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center" title="Completado" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center transition-colors" title="Editar trabajo" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="w-7 h-7 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors" title="Eliminar registro" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- BEGIN: TablePagination -->
+<div class="px-4 sm:px-6 py-3 sm:py-3.5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500">
+<button class="inline-flex items-center gap-1.5 font-medium hover:text-slate-900 transition-colors disabled:opacity-40" disabled="" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Anterior
+          </button>
+<span class="font-medium text-slate-400">Mostrando 1 - 4 de 8 trabajos</span>
+<button class="inline-flex items-center gap-1.5 font-medium hover:text-slate-900 transition-colors" type="button">
+            Siguiente
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- END: TablePagination -->
+</div>
+</main>
+<!-- END: MainTableSection -->
+<nav aria-label="Navegación móvil" class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200/80 px-2 py-1.5 flex items-center justify-around shadow-lg"><a class="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-500 hover:text-slate-900 transition-colors" href="#"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path></svg><span class="text-[10px] font-medium leading-none">Inicio</span></a><a class="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-500 hover:text-slate-900 transition-colors" href="#"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path></svg><span class="text-[10px] font-medium leading-none">Pagos</span></a><a class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl bg-brand-active/75 text-brand-800 font-semibold border border-brand-200/50 shadow-sm" href="#"><svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l9-7 9 7v7a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M9 21V12h6v9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span class="text-[10px] font-bold leading-none">Hogar</span></a><a class="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-500 hover:text-slate-900 transition-colors" href="#"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zM5 11l2-5h10l2 5M5 11h14M5 11l-1.5 5A1 1 0 004.5 17H5m14-6l1.5 5a1 1 0 01-1 1h-.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path></svg><span class="text-[10px] font-medium leading-none">Autos</span></a><a class="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-500 hover:text-slate-900 transition-colors" href="#"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path></svg><span class="text-[10px] font-medium leading-none">Reportes</span></a></nav></div>
+<!-- END: MainContentArea -->
+<div aria-labelledby="modal-title" aria-modal="true" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto" id="modal-registrar-trabajo" role="dialog"><div class="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden my-auto flex flex-col max-h-[92vh]"><div class="px-6 py-5 border-b border-slate-100 flex items-start justify-between bg-slate-50/50 shrink-0"><div class="space-y-1"><div><span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Mantenimiento del Hogar</span></div><h2 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight mt-1" id="modal-title">Registrar Trabajo del Hogar</h2><p class="text-xs text-slate-500 font-normal">Planifica reparaciones, compras o servicios técnicos para el hogar.</p></div><button aria-label="Cerrar" class="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none" onclick="document.getElementById('modal-registrar-trabajo').remove()" type="button"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button></div><div class="p-5 sm:p-6 overflow-y-auto space-y-4 flex-1"><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="area-select">Área / Ubicación del Hogar</label><select class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="area-select"><option value="sala-comedor">🛋️ Sala / Comedor</option><option value="bano-visitas">🚿 Baño de Visitas</option><option value="patio-techo">🏡 Patio / Techo</option><option value="recamara-principal">🛏️ Recámara Principal</option><option value="cocina">🍳 Cocina</option><option value="lavanderia">🧺 Área de Lavandería</option><option value="entrada-principal">🚪 Entrada Principal</option></select></div><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="trabajo-input">Tipo de Trabajo / Mantenimiento</label><input class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2.5 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="trabajo-input" placeholder="Ej. Limpieza profunda de Aire Acondicionado Inverter" type="text" value="Limpieza profunda de Aire Acondicionado Inverter"/></div><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="detalles-input">Detalle / Notas Técnicas</label><textarea class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm resize-none" id="detalles-input" placeholder="Detalles de repuestos, tipo de gas, medidas o alcance..." rows="2">Incluye limpieza de serpentín, filtros y recarga preventiva de gas R410A</textarea></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="fecha-registro">Fecha de Registro</label><input class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="fecha-registro" type="date" value="2026-09-15"/></div><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="fecha-estimada">Fecha Estimada</label><input class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="fecha-estimada" type="date" value="2026-09-22"/></div></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="presupuesto-input">Presupuesto Estimado</label><div class="relative rounded-xl shadow-sm"><div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none"><span class="text-xs font-bold text-slate-500">B/.</span></div><input class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 pl-9 pr-3.5 py-2 text-slate-900 font-bold placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20" id="presupuesto-input" placeholder="0.00" step="0.01" type="number" value="45.00"/></div></div><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="prioridad-select">Prioridad / Estado</label><select class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="prioridad-select"><option selected="" value="alta">🔴 Alta / Urgente</option><option value="media">🟡 Media / En Proceso</option><option value="planificada">⚪ Planificada / Normal</option></select></div></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="responsable-select">Responsable Familiar</label><select class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-slate-800 font-medium focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="responsable-select"><option selected="" value="cf">👤 Cristhian Fuentes</option><option value="jc">👤 Jennifer Camaño</option></select></div><div class="space-y-1.5"><label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="tecnico-input">Técnico / Proveedor <span class="text-slate-400 font-normal">(Opcional)</span></label><input class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 px-3.5 py-2 text-slate-800 font-medium placeholder-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm" id="tecnico-input" placeholder="Ej. Climas Panamá / RefriExpress" type="text" value="Técnico Martínez (RefriExpress)"/></div></div></div><div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0"><button class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors min-h-[40px]" onclick="document.getElementById('modal-registrar-trabajo').remove()" type="button">Cancelar</button><button class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#09574a] hover:bg-[#064238] text-white text-xs font-bold shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-emerald-700 min-h-[40px]" onclick="document.getElementById('modal-registrar-trabajo').remove()" type="button"><svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>Guardar Trabajo</button></div></div></div></body></html>

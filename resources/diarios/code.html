@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline": "#6d7a72",
+          "background": "#faf8ff",
+          "on-primary-fixed": "#002114",
+          "surface-tint": "#006c4a",
+          "on-secondary-container": "#306d58",
+          "on-surface-variant": "#3d4a42",
+          "inverse-on-surface": "#eef0ff",
+          "secondary-container": "#adedd3",
+          "primary": "#006948",
+          "on-primary-container": "#f5fff7",
+          "inverse-surface": "#283044",
+          "secondary-fixed-dim": "#95d3ba",
+          "on-background": "#131b2e",
+          "tertiary": "#4648d4",
+          "surface-container-lowest": "#ffffff",
+          "outline-variant": "#bccac0",
+          "on-error": "#ffffff",
+          "on-error-container": "#93000a",
+          "on-primary": "#ffffff",
+          "primary-container": "#00855d",
+          "primary-fixed-dim": "#68dba9",
+          "tertiary-fixed": "#e1e0ff",
+          "on-tertiary-fixed": "#07006c",
+          "surface-container": "#eaedff",
+          "surface-container-low": "#f2f3ff",
+          "secondary": "#2b6954",
+          "inverse-primary": "#68dba9",
+          "surface": "#faf8ff",
+          "secondary-fixed": "#b0f0d6",
+          "error-container": "#ffdad6",
+          "on-secondary": "#ffffff",
+          "on-tertiary-fixed-variant": "#2f2ebe",
+          "surface-variant": "#dae2fd",
+          "tertiary-container": "#6063ee",
+          "surface-dim": "#d2d9f4",
+          "on-surface": "#131b2e",
+          "on-tertiary": "#ffffff",
+          "surface-container-highest": "#dae2fd",
+          "surface-bright": "#faf8ff",
+          "on-tertiary-container": "#fffbff",
+          "on-primary-fixed-variant": "#005137",
+          "tertiary-fixed-dim": "#c0c1ff",
+          "surface-container-high": "#e2e7ff",
+          "on-secondary-fixed-variant": "#0b513d",
+          "primary-fixed": "#85f8c4",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#002117"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "bento-gap-mobile": "0.875rem",
+          "layout-margin-desktop": "2rem",
+          "space-md": "1rem",
+          "layout-margin-mobile": "1rem",
+          "space-xl": "2rem",
+          "space-xs": "0.5rem",
+          "space-sm": "0.75rem",
+          "space-2xs": "0.25rem",
+          "bento-gap-desktop": "1.5rem",
+          "space-2xl": "3rem",
+          "space-3xl": "4rem"
+        },
+        "fontFamily": {
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-body": [
+            "JetBrains Mono"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "display-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "financial-display": [
+            "JetBrains Mono"
+          ]
+        },
+        "fontSize": {
+          "headline-lg": [
+            "2.25rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.025em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-sm": [
+            "0.8125rem",
+            {
+              "lineHeight": "1.45",
+              "letterSpacing": "0.005em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-md": [
+            "1.5rem",
+            {
+              "lineHeight": "1.3",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "0.875rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "1.25rem",
+            {
+              "lineHeight": "1.35",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "1.125rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "financial-body": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.4",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-md": [
+            "0.9375rem",
+            {
+              "lineHeight": "1.5",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "1.75rem",
+            {
+              "lineHeight": "1.25",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "display-lg": [
+            "3.5rem",
+            {
+              "lineHeight": "1.1",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-sm": [
+            "0.75rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "financial-display": [
+            "2rem",
+            {
+              "lineHeight": "1.2",
+              "letterSpacing": "-0.03em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen flex flex-col justify-between selection:bg-secondary-container selection:text-on-secondary-container"><main class="w-full flex-1 flex flex-col justify-center"><div class="flex flex-col w-full">
+<!-- Top Navigation & Profile Bar (Institutional Desktop & Adaptive Header) -->
+<header class="w-full bg-surface-container-lowest shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+<!-- Family Brand Marker -->
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">ValisFin</span>
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 rounded-full font-medium">Familia Fuentes Camaño</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Gestión Financiera Biparental · Balboa (B/.)</span>
+</div>
+</div>
+<!-- Quick Month Cycle & Top Controls -->
+<div class="flex items-center gap-3">
+<!-- Date Selector Pills -->
+<div class="hidden sm:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full gap-2 text-on-surface-variant shadow-sm">
+<button class="p-1 rounded-full hover:bg-surface-container-high transition-colors flex items-center justify-center text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<span class="font-label-md text-label-md font-semibold text-on-surface px-1">Septiembre 2026</span>
+<button class="p-1 rounded-full hover:bg-surface-container-high transition-colors flex items-center justify-center text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+<!-- Household Members Chips -->
+<div class="hidden md:flex items-center gap-2 pl-2">
+<div class="flex items-center gap-2 bg-surface-container-low hover:bg-surface-container py-1 px-2.5 rounded-full transition-colors">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Cristhian</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low hover:bg-surface-container py-1 px-2.5 rounded-full transition-colors">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-bold flex items-center justify-center">JC</div>
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Jennifer</span>
+</div>
+</div>
+<!-- Notifications Bell -->
+<button class="p-2 rounded-full bg-surface-container-low hover:bg-surface-container text-outline hover:text-on-surface transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="w-2 h-2 rounded-full bg-primary absolute top-2 right-2 ring-2 ring-surface-container-lowest"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Layout Wrapper with Horizontal Bento Structure -->
+<div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+<!-- Page Title & Primary Call to Action -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-primary">En qué se va el dinero</span>
+<span class="text-outline-variant font-label-sm">•</span>
+<span class="font-label-sm text-label-sm text-outline">Egresos cotidianos en tiempo real</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Gastos Diarios</h1>
+</div>
+<div class="flex items-center gap-2.5">
+<button class="sm:hidden flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full bg-surface-container text-on-surface font-label-md text-label-md font-semibold" onclick="document.getElementById('quick-filter-drawer')?.scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Filtros</span>
+</button>
+<button class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-5 py-3 rounded-full font-label-md text-label-md font-bold shadow-md shadow-primary/20 transition-all transform active:scale-95 cursor-pointer" onclick="openModal()">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Registrar gasto</span>
+</button>
+</div>
+</div>
+<!-- Bento Trio: Dynamic Budget Tracking Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+<!-- Card 1: Supermercado & Alimentación -->
+<div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-secondary-container/60 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">shopping_cart</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Supermercado</h2>
+<p class="font-body-sm text-body-sm text-outline">Presupuesto mensual</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">
+            10% usado
+          </span>
+</div>
+<div class="space-y-3 mt-1">
+<div class="flex items-baseline gap-2">
+<span class="font-financial-display text-financial-display font-bold text-error tracking-tight">-B/. 19.00</span>
+<span class="font-financial-body text-financial-body text-outline">de B/. 200.00</span>
+</div>
+<!-- Segmented Soft Progress Bar -->
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden flex">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 9.5%"></div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">No utilizado:</span>
+<span class="font-financial-body text-financial-body font-semibold text-primary">B/. 181.00 disponible</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Gasolina & Combustible -->
+<div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">local_gas_station</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Gasolina</h2>
+<p class="font-body-sm text-body-sm text-outline">Presupuesto mensual</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-outline">
+            0% usado
+          </span>
+</div>
+<div class="space-y-3 mt-1">
+<div class="flex items-baseline gap-2">
+<span class="font-financial-display text-financial-display font-bold text-on-surface tracking-tight">B/. 0.00</span>
+<span class="font-financial-body text-financial-body text-outline">de B/. 200.00</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden flex">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">No utilizado:</span>
+<span class="font-financial-body text-financial-body font-semibold text-primary">B/. 200.00 disponible</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Gastos Varios & Recreación -->
+<div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between gap-3 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">celebration</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Varios &amp; Ocio</h2>
+<p class="font-body-sm text-body-sm text-outline">Presupuesto mensual</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed/60 text-on-tertiary-fixed-variant">
+            20.6% usado
+          </span>
+</div>
+<div class="space-y-3 mt-1">
+<div class="flex items-baseline gap-2">
+<span class="font-financial-display text-financial-display font-bold text-error tracking-tight">-B/. 30.95</span>
+<span class="font-financial-body text-financial-body text-outline">de B/. 150.00</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden flex">
+<div class="bg-tertiary-container h-full rounded-full transition-all duration-500" style="width: 20.6%"></div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline">No utilizado:</span>
+<span class="font-financial-body text-financial-body font-semibold text-on-surface">B/. 119.05 disponible</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filter Cockpit: Personas, Categorías & Búsqueda -->
+<div class="bg-surface-container-lowest rounded-3xl p-4 sm:p-5 shadow-sm space-y-4" id="quick-filter-drawer">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<!-- Spouse / Household Member Filter -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold mr-1">Pagador:</span>
+<button class="filter-member-btn px-3 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-on-surface text-surface-container-lowest transition-all" onclick="setMemberFilter('all', this)">
+            Todos (7)
+          </button>
+<button class="filter-member-btn px-3 py-1.5 rounded-full font-label-md text-label-md font-medium bg-surface-container-low text-on-surface hover:bg-surface-container flex items-center gap-2 transition-all" onclick="setMemberFilter('cristhian', this)">
+<span class="w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</span>
+<span>Cristhian Fuentes</span>
+</button>
+<button class="filter-member-btn px-3 py-1.5 rounded-full font-label-md text-label-md font-medium bg-surface-container-low text-on-surface hover:bg-surface-container flex items-center gap-2 transition-all" onclick="setMemberFilter('jennifer', this)">
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-bold flex items-center justify-center">JC</span>
+<span>Jennifer Camaño</span>
+</button>
+</div>
+<!-- Realtime Search Input -->
+<div class="relative w-full lg:w-80">
+<span class="material-symbols-outlined text-[20px] text-outline absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low rounded-full font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all" id="searchInput" oninput="filterTable()" placeholder="Buscar por detalle o comercio..." type="text"/>
+</div>
+</div>
+<!-- Categories Quick Filter Chips -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 text-nowrap scrollbar-none">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold mr-1">Categoría:</span>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-container transition-colors" onclick="setCategoryFilter('all', this)">Todas</button>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors" onclick="setCategoryFilter('Alimentación', this)">Alimentación</button>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors" onclick="setCategoryFilter('Restaurante', this)">Restaurante</button>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors" onclick="setCategoryFilter('Ocio', this)">Ocio</button>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors" onclick="setCategoryFilter('Tecnología', this)">Tecnología</button>
+<button class="filter-cat-btn px-3 py-1 rounded-full font-label-sm text-label-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors" onclick="setCategoryFilter('Gasolina', this)">Gasolina</button>
+</div>
+</div>
+<!-- Data Section: Gastos Recientes Table & Responsive Stack -->
+<div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-7 shadow-sm space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Gastos recientes</h2>
+<p class="font-body-sm text-body-sm text-outline">Los egresos se muestran con signo negativo y reflejo contable inmediato.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-outline">Total filtrado:</span>
+<span class="font-financial-body text-financial-body font-bold text-error" id="sumDisplay">-B/. 57.45</span>
+</div>
+</div>
+<!-- Desktop Modern High-Density Table (Hidden on Mobile) -->
+<div class="hidden md:block overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-outline uppercase font-label-sm text-label-sm tracking-wider">
+<th class="py-3 px-3 font-semibold">Fecha</th>
+<th class="py-3 px-3 font-semibold">Categoría</th>
+<th class="py-3 px-3 font-semibold">Detalle / Comercio</th>
+<th class="py-3 px-3 font-semibold">Persona</th>
+<th class="py-3 px-3 font-semibold text-right">Monto</th>
+<th class="py-3 px-3 font-semibold text-center">Acciones</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md" id="expenseTableBody">
+<!-- Row 1 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Alimentación" data-person="cristhian" data-search="super la estrella carnes pollos alimentacion">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">03/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-container">
+                  Alimentación
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Súper La estrella de compro carnes y pollos</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 19.00</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Restaurante" data-person="cristhian" data-search="desayuno valeria jenny restaurante">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">03/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">
+                  Restaurante
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Desayuno de Valeria y Jenny</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 5.00</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Restaurante" data-person="cristhian" data-search="cafe restaurante entre panes pacifico">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">03/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">
+                  Restaurante
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Cafe en el restaurante Entre Panes del Pacífico</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 3.95</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Ocio" data-person="cristhian" data-search="me compre una galleta ocio">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">03/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                  Ocio
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Me compre una galleta</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 2.00</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Restaurante" data-person="cristhian" data-search="mc mcdonalds comida rapida">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">03/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">
+                  Restaurante
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Mc</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 5.00</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Tecnología" data-person="cristhian" data-search="licencia office jenny microsoft tecnologia">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">02/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-on-surface">
+                  Tecnología
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Licencia de Office - Jenny</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-on-surface text-sm font-medium">Cristhian Fuentes</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 15.00</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+<!-- Row 7 (Jennifer) -->
+<tr class="expense-row hover:bg-surface-container-low/60 transition-colors" data-cat="Alimentación" data-person="jennifer" data-search="frutas meriendas valeria nina supermercado alimentacion">
+<td class="py-4 px-3 font-financial-body text-financial-body text-outline">02/09/2026</td>
+<td class="py-4 px-3">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-container">
+                  Alimentación
+                </span>
+</td>
+<td class="py-4 px-3 font-medium text-on-surface max-w-xs truncate">Frutas y meriendas de Valeria</td>
+<td class="py-4 px-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-bold flex items-center justify-center">JC</div>
+<span class="text-on-surface text-sm font-medium">Jennifer Camaño</span>
+</div>
+</td>
+<td class="py-4 px-3 text-right font-financial-body text-financial-body font-bold text-error">-B/. 12.50</td>
+<td class="py-4 px-3 text-center">
+<div class="flex items-center justify-center gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" onclick="editItem(this)">Editar</button>
+<button class="px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/70 hover:bg-error-container text-on-error-container transition-colors" onclick="voidItem(this)">Anular</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Mobile Touch-First Card Stack (iPhone 15 / Galaxy S24 Optimized) -->
+<div class="md:hidden space-y-3" id="mobileCardsContainer">
+<!-- Card 1 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Alimentación" data-person="cristhian" data-search="super la estrella carnes pollos alimentacion">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-container">Alimentación</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Súper La estrella de compro carnes y pollos</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">03/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 19.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 2 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Restaurante" data-person="cristhian" data-search="desayuno valeria jenny restaurante">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">Restaurante</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Desayuno de Valeria y Jenny</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">03/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 5.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 3 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Restaurante" data-person="cristhian" data-search="cafe restaurante entre panes pacifico">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">Restaurante</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Cafe Entre Panes del Pacífico</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">03/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 3.95</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 4 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Ocio" data-person="cristhian" data-search="me compre una galleta ocio">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed text-on-tertiary-fixed-variant">Ocio</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Me compré una galleta</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">03/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 2.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 5 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Restaurante" data-person="cristhian" data-search="mc mcdonalds comida rapida">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface-variant">Restaurante</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Mc</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">03/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 5.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 6 Mobile -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Tecnología" data-person="cristhian" data-search="licencia office jenny microsoft tecnologia">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-on-surface">Tecnología</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Licencia de Office - Jenny</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">02/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 15.00</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">CF</div>
+<span class="text-xs font-medium text-on-surface">Cristhian Fuentes</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+<!-- Card 7 Mobile (Jennifer) -->
+<div class="mobile-card bg-surface-container-low rounded-2xl p-4 space-y-3" data-cat="Alimentación" data-person="jennifer" data-search="frutas meriendas valeria nina supermercado alimentacion">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-container text-on-secondary-container">Alimentación</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Frutas y meriendas de Valeria</h3>
+<p class="font-financial-body text-financial-body text-outline text-xs">02/09/2026</p>
+</div>
+<div class="text-right">
+<span class="font-financial-display text-financial-display text-lg font-bold text-error">-B/. 12.50</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-bold flex items-center justify-center">JC</div>
+<span class="text-xs font-medium text-on-surface">Jennifer Camaño</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-highest text-on-surface" onclick="editItem(this)">Editar</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-error-container text-on-error-container" onclick="voidItem(this)">Anular</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Floating Mobile Safe-Area Bar (Quick Thumb Navigation for iPhone / Galaxy) -->
+<div class="sm:hidden fixed bottom-4 left-4 right-4 z-40 bg-surface-container-lowest/90 backdrop-blur-xl p-2 rounded-full shadow-2xl flex items-center justify-around">
+<button class="flex flex-col items-center justify-center p-2 text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-[10px] font-medium">Inicio</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+<span class="text-[10px] font-medium">Fijos</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg -mt-4 transform active:scale-95 transition-transform" onclick="openModal()">
+<span class="material-symbols-outlined text-[26px]">add</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 text-primary font-semibold">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="text-[10px]">Diarios</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+<span class="text-[10px] font-medium">Metas</span>
+</button>
+</div>
+<!-- Modal: Registrar Gasto Rápido (Accessible Soft UI Backdrop) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-inverse-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200" id="expenseModal">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl transform scale-95 transition-all duration-200" id="modalCard">
+<!-- Modal Header -->
+<div class="flex items-center justify-between pb-4">
+<div>
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Nuevo Egreso</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-extrabold">Registrar Gasto Rápido</h2>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-outline hover:text-on-surface transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Quick Entry Form -->
+<form class="space-y-4 pt-2" id="newExpenseForm" onsubmit="handleFormSubmit(event)">
+<!-- Payer Selection (Cristhian vs Jennifer) -->
+<div>
+<label class="block font-label-sm text-label-sm text-outline mb-2 font-semibold">¿Quién realizó el pago?</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="modal-payer-btn py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2.5 bg-primary text-on-primary font-label-md text-label-md font-bold shadow-sm transition-all" onclick="selectModalPayer('cristhian', this)" type="button">
+<div class="w-6 h-6 rounded-full bg-on-primary text-primary text-[10px] font-black flex items-center justify-center">CF</div>
+<span>Cristhian</span>
+</button>
+<button class="modal-payer-btn py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2.5 bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-medium transition-all" onclick="selectModalPayer('jennifer', this)" type="button">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-black flex items-center justify-center">JC</div>
+<span>Jennifer</span>
+</button>
+</div>
+</div>
+<!-- Big Financial Amount Input -->
+<div>
+<label class="block font-label-sm text-label-sm text-outline mb-1 font-semibold">Monto del gasto (B/.)</label>
+<div class="relative flex items-center">
+<span class="absolute left-4 font-financial-display text-financial-display text-2xl font-bold text-outline">B/.</span>
+<input class="w-full pl-16 pr-4 py-3.5 bg-surface-container-low rounded-2xl font-financial-display text-financial-display text-2xl font-bold text-on-surface placeholder:text-outline/40 focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all" min="0.01" placeholder="0.00" required="" step="0.01" type="number"/>
+</div>
+</div>
+<!-- Category & Date Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-outline mb-1 font-semibold">Categoría</label>
+<select class="w-full py-3 px-3.5 bg-surface-container-low rounded-2xl font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all">
+<option value="Alimentación">Alimentación / Súper</option>
+<option value="Restaurante">Restaurante / Comida</option>
+<option value="Gasolina">Gasolina / Transporte</option>
+<option value="Ocio">Ocio &amp; Antojos</option>
+<option value="Tecnología">Tecnología &amp; Licencias</option>
+<option value="Salud">Salud &amp; Farmacia</option>
+<option value="Hogar">Hogar &amp; Mantenimiento</option>
+</select>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-outline mb-1 font-semibold">Fecha</label>
+<input class="w-full py-3 px-3.5 bg-surface-container-low rounded-2xl font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all" type="date" value="2026-09-03"/>
+</div>
+</div>
+<!-- Detail / Place Field -->
+<div>
+<label class="block font-label-sm text-label-sm text-outline mb-1 font-semibold">Detalle o Comercio</label>
+<input class="w-full py-3 px-4 bg-surface-container-low rounded-2xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all" placeholder="Ej. Riba Smith, Cafe Deli, Farmacia Arrocha..." required="" type="text"/>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-3 pt-4">
+<button class="px-5 py-3 rounded-full font-label-md text-label-md font-semibold text-on-surface-variant hover:bg-surface-container transition-colors" onclick="closeModal()" type="button">
+            Cancelar
+          </button>
+<button class="px-7 py-3 rounded-full font-label-md text-label-md font-bold bg-primary hover:bg-primary-container text-on-primary shadow-lg shadow-primary/20 transform active:scale-95 transition-all" type="submit">
+            Guardar gasto
+          </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script>
+  let activeMember = 'all';
+  let activeCategory = 'all';
+  let modalPayer = 'cristhian';
+
+  function openModal() {
+    const modal = document.getElementById('expenseModal');
+    const card = document.getElementById('modalCard');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100');
+    card.classList.remove('scale-95');
+    card.classList.add('scale-100');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('expenseModal');
+    const card = document.getElementById('modalCard');
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    modal.classList.remove('opacity-100');
+    card.classList.add('scale-95');
+    card.classList.remove('scale-100');
+  }
+
+  function selectModalPayer(payer, btn) {
+    modalPayer = payer;
+    const buttons = document.querySelectorAll('.modal-payer-btn');
+    buttons.forEach(b => {
+      b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+      b.classList.add('bg-surface-container-low', 'text-on-surface');
+      const innerBadge = b.querySelector('div');
+      if (innerBadge) {
+        if (b.innerText.includes('Cristhian')) {
+          innerBadge.className = 'w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-black flex items-center justify-center';
+        } else {
+          innerBadge.className = 'w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container text-[10px] font-black flex items-center justify-center';
+        }
+      }
+    });
+
+    btn.classList.remove('bg-surface-container-low', 'text-on-surface');
+    btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+    const activeBadge = btn.querySelector('div');
+    if (activeBadge) {
+      activeBadge.className = 'w-6 h-6 rounded-full bg-on-primary text-primary text-[10px] font-black flex items-center justify-center';
+    }
+  }
+
+  function setMemberFilter(member, element) {
+    activeMember = member;
+    document.querySelectorAll('.filter-member-btn').forEach(btn => {
+      btn.classList.remove('bg-on-surface', 'text-surface-container-lowest');
+      btn.classList.add('bg-surface-container-low', 'text-on-surface');
+    });
+    element.classList.remove('bg-surface-container-low', 'text-on-surface');
+    element.classList.add('bg-on-surface', 'text-surface-container-lowest');
+    filterTable();
+  }
+
+  function setCategoryFilter(category, element) {
+    activeCategory = category;
+    document.querySelectorAll('.filter-cat-btn').forEach(btn => {
+      btn.classList.remove('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+      btn.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'font-medium');
+    });
+    element.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'font-medium');
+    element.classList.add('bg-secondary-container', 'text-on-secondary-container', 'font-semibold');
+    filterTable();
+  }
+
+  function filterTable() {
+    const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+    const rows = document.querySelectorAll('.expense-row');
+    const cards = document.querySelectorAll('.mobile-card');
+    
+    let sum = 0;
+
+    // Desktop Rows
+    rows.forEach(row => {
+      const rowPerson = row.getAttribute('data-person');
+      const rowCat = row.getAttribute('data-cat');
+      const rowSearch = row.getAttribute('data-search').toLowerCase();
+
+      const matchMember = (activeMember === 'all' || rowPerson === activeMember);
+      const matchCat = (activeCategory === 'all' || rowCat === activeCategory);
+      const matchSearch = (!searchVal || rowSearch.includes(searchVal));
+
+      if (matchMember && matchCat && matchSearch) {
+        row.style.display = '';
+        const amountText = row.querySelector('td:nth-child(5)').innerText.replace('-B/.', '').trim();
+        sum += parseFloat(amountText) || 0;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    // Mobile Cards
+    cards.forEach(card => {
+      const cardPerson = card.getAttribute('data-person');
+      const cardCat = card.getAttribute('data-cat');
+      const cardSearch = card.getAttribute('data-search').toLowerCase();
+
+      const matchMember = (activeMember === 'all' || cardPerson === activeMember);
+      const matchCat = (activeCategory === 'all' || cardCat === activeCategory);
+      const matchSearch = (!searchVal || cardSearch.includes(searchVal));
+
+      if (matchMember && matchCat && matchSearch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Update total counter
+    document.getElementById('sumDisplay').innerText = '-B/. ' + sum.toFixed(2);
+  }
+
+  function voidItem(btn) {
+    if (confirm('¿Deseas anular este gasto registrado?')) {
+      const row = btn.closest('tr') || btn.closest('.mobile-card');
+      if (row) {
+        row.style.opacity = '0.3';
+        row.style.pointerEvents = 'none';
+        setTimeout(() => {
+          row.remove();
+          filterTable();
+        }, 300);
+      }
+    }
+  }
+
+  function editItem(btn) {
+    openModal();
+  }
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    closeModal();
+    alert('Gasto registrado con éxito y sincronizado con el presupuesto de la Familia Fuentes Camaño.');
+  }
+</script></main></body></html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html><html lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Vehículos y Mantenimiento - ValisFin</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#006655",
+            "primary-dark": "#005144",
+            "primary-container": "#059669",
+            "surface-tint": "#006655",
+            background: "#F8FAFC",
+            surface: "#FFFFFF",
+            "surface-low": "#F1F5F9",
+            "surface-card": "#FFFFFF",
+            "on-surface": "#0F172A",
+            "on-surface-variant": "#475569",
+            outline: "#94A3B8",
+            "outline-subtle": "#E2E8F0",
+            "emerald-soft": "#E8F5E9",
+            "emerald-accent": "#006655",
+            "amber-soft": "#FFF7ED",
+            "amber-border": "#FFEDD5",
+            "amber-text": "#C2410C"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          boxShadow: {
+            soft: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03)",
+            card: "0 4px 20px -2px rgba(15, 23, 42, 0.05)"
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+  </style>
+</head>
+<body class="text-on-surface antialiased bg-background min-h-screen flex">
+<!-- ========================================================================= -->
+<!-- 1. SIDEBAR OFICIAL DE VALISFIN                                           -->
+<!-- ========================================================================= -->
+<aside class="w-64 bg-white border-r border-outline-subtle hidden lg:flex flex-col justify-between h-screen sticky top-0 shrink-0 z-30">
+<div class="p-6">
+<!-- ValisFin Logo -->
+<div class="flex items-center mb-8">
+<img alt="ValisFin" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida/AEtjO1UD70NrqFsZZP2Mq7jewDi95ChhapJyfMPRYn098jn82g2kdG5hOuyRwZR3nnQojUVzB_LzZCPBNvxfp7I1lMWu5v42Al3-8tvJOjvO6M6aLijYkMn1gFlHJ_YrCT-S-kPK6-cyIWLfwdL80dCNcsF88fjfC9DW9m8b0k6puXI5nw8hR_gyujyhVi0Us4dCIbD25pQjmQ3XSwTR9Xl4hVuZNQRz2X_2unZ1AQeRg0d6QDOHqmfjo0R2l-4">
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1">
+<!-- Inicio -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Inicio</span>
+</a>
+<!-- Ingresos -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Ingresos</span>
+</a>
+<!-- Pagos Fijos -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Pagos Fijos</span>
+</a>
+<!-- Gastos Diarios -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Gastos Diarios</span>
+</a>
+<!-- Vehículos (ACTIVO) -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-emerald-50 text-[#006655] font-semibold text-sm transition-all border border-emerald-100" href="#">
+<svg class="w-5 h-5 text-[#006655]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4zM3 9l2-4h14l2 4M3 9h18v7a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Vehículos</span>
+</a>
+<!-- Metas de Ahorro -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Metas de Ahorro</span>
+</a>
+<!-- Consultas & Reportes -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:bg-slate-50 hover:text-on-surface text-sm font-medium transition-colors" href="#">
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Consultas &amp; Reportes</span>
+</a>
+</nav>
+</div>
+<!-- User Profile & Log Out Footer -->
+<div class="p-4 border-t border-outline-subtle space-y-3">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
+<div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#006655] to-emerald-400 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+          JC
+        </div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="text-xs font-bold text-on-surface truncate">Jennifer Camaño</span>
+<span class="text-[11px] text-slate-500 truncate">Hogar Protegido</span>
+</div>
+</div>
+<button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" type="button">
+<div class="w-6 h-6 rounded-full bg-rose-100 flex items-center justify-center">
+<svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<span class="">Cerrar Sesión</span>
+</button>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN CONTENT AREA                                                         -->
+<!-- ========================================================================= -->
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+<!-- Top Mini-Bar (Mobile Brand / Household chips) -->
+
+<!-- Main Container Body -->
+<main class="max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-6">
+<!-- ===================================================================== -->
+<!-- 2. CABECERA SUPERIOR                                                  -->
+<!-- ===================================================================== -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1.5">
+<span class="inline-block w-2 h-2 rounded-full bg-[#006655]"></span>
+<span class="text-xs font-bold uppercase tracking-wider text-[#006655]">
+              Egresos y control automotriz en tiempo real
+            </span>
+</div>
+<h1 class="text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">
+            Vehículos y Mantenimiento
+          </h1>
+
+</div>
+<!-- Right Side: Month Selector & Quick Action Buttons -->
+<div class="flex flex-wrap items-center gap-3"><button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#006655] hover:bg-[#005144] text-white font-semibold text-sm shadow-sm transition-all cursor-pointer" onclick="openKmModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+<span class="">+ Registrar Kilometraje</span>
+</button>
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#006655] hover:bg-[#005144] text-white font-semibold text-sm shadow-sm transition-all cursor-pointer" onclick="openMaintenanceModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">build</span>
+<span class="">Registrar Mantenimiento</span>
+</button></div>
+</header>
+<!-- ===================================================================== -->
+<!-- 4. FICHAS BENTO PRINCIPALES DE LOS VEHÍCULOS                         -->
+<!-- ===================================================================== -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Tarjeta 1: Toyota Yaris (Cristhian Fuentes) -->
+<div class="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between hover:border-slate-300 transition-all">
+<div>
+<!-- Top Header & Badges -->
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="flex items-center gap-3.5">
+<div class="w-12 h-12 rounded-2xl bg-emerald-50 text-[#006655] flex items-center justify-center border border-emerald-100">
+<span class="material-symbols-outlined text-[26px]">directions_car</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-xl font-bold text-on-surface">Toyota Yaris</h2>
+<span class="font-mono text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold">2018</span>
+</div>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+<span class="font-semibold text-slate-800">Cristhian Fuentes</span>
+<span class="text-slate-300">•</span>
+<span class="font-mono text-slate-500">Placa: 829341-PA</span>
+</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/80 text-[#006655]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                Al día · En regla
+              </span>
+</div>
+<!-- Display de Odómetro -->
+<div class="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
+<div class="flex items-baseline justify-between mb-2">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kilometraje actual</span>
+<span class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-slate-400">update</span>
+                  Última lectura: <strong class="text-slate-700 font-semibold">03 sep 2026</strong>
+</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-mono text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">205,187</span>
+<span class="font-mono text-lg font-bold text-[#006655]">km</span>
+</div>
+<!-- Barra de Progreso a próximo servicio -->
+<div class="mt-4 pt-2 border-t border-slate-200/60">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<span class="text-slate-600">Próximo servicio: <strong class="font-mono text-slate-900 font-semibold">210,000 km</strong></span>
+<span class="text-[#006655] font-semibold font-mono">Faltan 4,813 km · Al día</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+<div class="bg-[#006655] h-full rounded-full transition-all duration-500" style="width: 78%"></div>
+</div>
+</div>
+</div>
+<!-- Fila de estadísticas secundarias rápidas -->
+<div class="grid grid-cols-3 gap-2 text-center mb-5">
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Consumo</span>
+<span class="font-mono text-xs font-bold text-slate-800">1,230 km/mes</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Costo / km</span>
+<span class="font-mono text-xs font-bold text-emerald-700">B/. 0.089</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Póliza Sura</span>
+<span class="font-mono text-xs font-bold text-slate-800">B/. 45.00/m</span>
+</div>
+</div>
+</div>
+<!-- Botones de Acción Directa -->
+
+</div>
+<!-- Tarjeta 2: Hyundai Tucson (Jennifer Camaño) -->
+<div class="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between hover:border-slate-300 transition-all relative overflow-hidden">
+<!-- Borde suave decorativo superior ámbar de atención -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-amber-400"></div>
+<div>
+<!-- Top Header & Badges -->
+<div class="flex items-start justify-between gap-3 mb-5">
+<div class="flex items-center gap-3.5">
+<div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
+<span class="material-symbols-outlined text-[26px]">airport_shuttle</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-xl font-bold text-on-surface">Hyundai Tucson</h2>
+<span class="font-mono text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold">2021</span>
+</div>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+<span class="font-semibold text-slate-800">Jennifer Camaño</span>
+<span class="text-slate-300">•</span>
+<span class="font-mono text-slate-500">Placa: AF2049-PA</span>
+</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+<span class="material-symbols-outlined text-[15px] text-amber-600">warning</span>
+                Atención requerida
+              </span>
+</div>
+<!-- Display de Odómetro -->
+<div class="bg-slate-50 rounded-2xl p-4 mb-4 border border-slate-100">
+<div class="flex items-baseline justify-between mb-2">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kilometraje actual</span>
+<span class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-slate-400">history</span>
+                  Última lectura: <strong class="text-slate-700 font-semibold">10 jun 2026</strong>
+</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-mono text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">180,869</span>
+<span class="font-mono text-lg font-bold text-amber-600">km</span>
+</div>
+<!-- Barra de Progreso y Alerta Ámbar -->
+<div class="mt-4 pt-2 border-t border-slate-200/60">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<span class="text-slate-600">Próximo servicio: <strong class="font-mono text-slate-900 font-semibold">181,369 km</strong></span>
+<span class="text-amber-700 font-bold font-mono">500 km restantes</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+<div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 93%"></div>
+</div>
+<div class="mt-2.5 px-2.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200/70 flex items-center gap-1.5 text-xs text-amber-800">
+<span class="material-symbols-outlined text-[16px] text-amber-600">error</span>
+<span class=""><strong>¡Atención!</strong> Faltan 500 km para cambio de aceite y filtro.</span>
+</div>
+</div>
+</div>
+<!-- Fila de estadísticas secundarias rápidas -->
+<div class="grid grid-cols-3 gap-2 text-center mb-5">
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Letra Banco</span>
+<span class="font-mono text-xs font-bold text-slate-800">B/. 325.00</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Seguro Mes</span>
+<span class="font-mono text-xs font-bold text-slate-800">B/. 60.00</span>
+</div>
+<div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+<span class="block text-[10px] uppercase font-bold text-slate-400">Frecuencia</span>
+<span class="font-mono text-xs font-bold text-amber-700">Cada 5,000 km</span>
+</div>
+</div>
+</div>
+<!-- Botones de Acción Directa -->
+
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- 5. SECCIONES CENTRALES DE INFORMACIÓN                                 -->
+<!-- ===================================================================== -->
+<!-- MÓDULO 1: Lecturas de Kilometraje -->
+<section class="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+<div>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 text-[#006655] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+</div>
+<h2 class="text-lg font-bold text-on-surface">Lecturas de Kilometraje</h2>
+</div>
+<p class="text-xs text-slate-500 mt-0.5">Historial de registros y auditoría de recorridos mensuales</p>
+</div>
+<!-- Barra de filtros rápida: [Todos] [Toyota Yaris] [Hyundai Tucson] -->
+<div class="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-3 pointer-events-none">search</span>
+<input class="pl-9 pr-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all w-52 sm:w-60" placeholder="Buscar por fecha, auto, persona..." type="text">
+</div>
+<div class="flex items-center gap-1 bg-slate-100 p-1 rounded-full text-xs font-semibold">
+<button class="km-filter-btn px-3 py-1 rounded-full bg-white text-on-surface shadow-sm transition-all" onclick="filterKmTable('all', this)">Todos</button>
+<button class="km-filter-btn px-3 py-1 rounded-full text-slate-600 hover:text-on-surface transition-all" onclick="filterKmTable('yaris', this)">Toyota Yaris</button>
+<button class="km-filter-btn px-3 py-1 rounded-full text-slate-600 hover:text-on-surface transition-all" onclick="filterKmTable('tucson', this)">Hyundai Tucson</button>
+</div>
+</div>
+</div>
+<!-- Tabla Limpia de Odómetro -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+<th class="py-3 px-3">Fecha</th>
+<th class="py-3 px-3">Vehículo</th>
+<th class="py-3 px-3 font-mono">Kilometraje Registrado</th>
+<th class="py-3 px-3 font-mono text-right">Variación</th>
+<th class="py-3 px-3 text-right">Registrado Por</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-sm">
+<!-- Registro 1 -->
+<tr class="km-row hover:bg-slate-50/70 transition-colors" data-car="yaris">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">03/09/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#006655]"></span>
+<span class="">Toyota Yaris</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono font-bold text-slate-900">205,187 km</td>
+<td class="py-3.5 px-3 font-mono text-right text-[#006655] font-semibold text-xs bg-emerald-50/50 rounded-lg">+1,190 km</td>
+<td class="py-3.5 px-3 text-right">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-700 font-medium">
+<span class="w-4 h-4 rounded-full bg-[#006655] text-white text-[9px] font-bold flex items-center justify-center">CF</span>
+                    Cristhian Fuentes
+                  </span>
+</td>
+</tr>
+<!-- Registro 2 -->
+<tr class="km-row hover:bg-slate-50/70 transition-colors" data-car="yaris">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">03/08/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#006655]"></span>
+<span class="">Toyota Yaris</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono font-bold text-slate-900">203,997 km</td>
+<td class="py-3.5 px-3 font-mono text-right text-[#006655] font-semibold text-xs bg-emerald-50/50 rounded-lg">+1,240 km</td>
+<td class="py-3.5 px-3 text-right">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-700 font-medium">
+<span class="w-4 h-4 rounded-full bg-[#006655] text-white text-[9px] font-bold flex items-center justify-center">CF</span>
+                    Cristhian Fuentes
+                  </span>
+</td>
+</tr>
+<!-- Registro 3 (Tucson) -->
+<tr class="km-row hover:bg-slate-50/70 transition-colors" data-car="tucson">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">10/06/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="">Hyundai Tucson</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono font-bold text-slate-900">180,869 km</td>
+<td class="py-3.5 px-3 font-mono text-right text-slate-600 font-semibold text-xs bg-slate-100 rounded-lg">+850 km</td>
+<td class="py-3.5 px-3 text-right">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-xs text-slate-700 font-medium">
+<span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[9px] font-bold flex items-center justify-center">JC</span>
+                    Jennifer Camaño
+                  </span>
+</td>
+</tr>
+<!-- Registro 4 (Yaris) -->
+
+</tbody>
+</table>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
+<span class="">Mostrando <strong class="font-mono text-slate-700 font-semibold">1-3</strong> de <strong class="font-mono text-slate-700 font-semibold">12</strong> registros</span>
+<div class="inline-flex items-center gap-1">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-400 bg-slate-50 cursor-not-allowed text-xs font-medium" disabled="" type="button">Anterior</button>
+<button class="w-7 h-7 rounded-lg bg-[#006655] text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm" type="button">1</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-mono font-semibold text-xs flex items-center justify-center transition-colors" type="button">2</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-mono font-semibold text-xs flex items-center justify-center transition-colors" type="button">3</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-mono font-semibold text-xs flex items-center justify-center transition-colors" type="button">4</button>
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition-colors" type="button">Siguiente</button>
+</div>
+</div></section>
+<!-- MÓDULO 2: Historial de Mantenimientos Realizados -->
+<section class="bg-white rounded-3xl p-6 border border-outline-subtle shadow-card space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+<div>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-emerald-50 text-[#006655] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">build_circle</span>
+</div>
+<h2 class="text-lg font-bold text-on-surface">Historial de Mantenimientos Realizados</h2>
+</div>
+<p class="text-xs text-slate-500 mt-0.5">Control de facturas, talleres asignados y proyección al siguiente kilometraje</p>
+</div>
+<div class="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined text-[18px] text-slate-400 absolute left-3 pointer-events-none">search</span>
+<input class="pl-9 pr-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-xs text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all w-52 sm:w-64" placeholder="Buscar por servicio, taller o vehículo..." type="text">
+</div>
+<span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+3 Servicios Registrados
+</span>
+</div>
+</div>
+<!-- Tabla Limpia de Mantenimientos -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-semibold">
+<th class="py-3 px-3">Fecha</th>
+<th class="py-3 px-3">Vehículo</th>
+<th class="py-3 px-3">Tipo de Servicio</th>
+<th class="py-3 px-3 font-mono">Kilometraje</th>
+<th class="py-3 px-3 font-mono text-right">Costo (B/.)</th>
+<th class="py-3 px-3 font-mono text-center">Próximo KM</th>
+<th class="py-3 px-3 text-right">Taller</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-sm">
+<!-- Item 1 -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">15/08/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">Toyota Yaris</td>
+<td class="py-3.5 px-3 font-medium text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+<span class="">Papel polarizado de seguridad</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono text-slate-600">204,500 km</td>
+<td class="py-3.5 px-3 font-mono font-bold text-right text-rose-600">-B/. 125.00</td>
+<td class="py-3.5 px-3 font-mono text-center text-xs text-slate-400">—</td>
+<td class="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">Solar Control Panamá</td>
+</tr>
+<!-- Item 2 -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">28/05/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">Toyota Yaris</td>
+<td class="py-3.5 px-3 font-medium text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">build</span>
+<span class="">Rotación de llantas y alineación 3D</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono text-slate-600">200,100 km</td>
+<td class="py-3.5 px-3 font-mono font-bold text-right text-rose-600">-B/. 40.00</td>
+<td class="py-3.5 px-3 font-mono text-center text-xs text-[#006655] font-semibold">210,000 km</td>
+<td class="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">Taller Hermanos Chen</td>
+</tr>
+<!-- Item 3 (Tucson) -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-3 font-mono text-slate-500 text-xs">15/02/2026</td>
+<td class="py-3.5 px-3 font-semibold text-on-surface">Hyundai Tucson</td>
+<td class="py-3.5 px-3 font-medium text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-amber-600">oil_barrel</span>
+<span class="">Cambio de aceite 10W-30 sintético + filtro OEM</span>
+</div>
+</td>
+<td class="py-3.5 px-3 font-mono text-slate-600">176,369 km</td>
+<td class="py-3.5 px-3 font-mono font-bold text-right text-rose-600">-B/. 65.00</td>
+<td class="py-3.5 px-3 font-mono text-center text-xs text-amber-700 font-bold">181,369 km</td>
+<td class="py-3.5 px-3 text-right text-xs text-slate-600 font-medium">Felipe Rodríguez / David</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
+<span class="">Mostrando <strong class="font-mono text-slate-700 font-semibold">1-3</strong> de <strong class="font-mono text-slate-700 font-semibold">8</strong> registros</span>
+<div class="inline-flex items-center gap-1">
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-400 bg-slate-50 cursor-not-allowed text-xs font-medium" disabled="" type="button">Anterior</button>
+<button class="w-7 h-7 rounded-lg bg-[#006655] text-white font-mono font-bold text-xs flex items-center justify-center shadow-sm" type="button">1</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-mono font-semibold text-xs flex items-center justify-center transition-colors" type="button">2</button>
+<button class="w-7 h-7 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-mono font-semibold text-xs flex items-center justify-center transition-colors" type="button">3</button>
+<button class="px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition-colors" type="button">Siguiente</button>
+</div>
+</div></section>
+</main>
+</div>
+<!-- ========================================================================= -->
+<!-- 6. MODALES FLOTANTES DE REGISTRO RÁPIDO                                   -->
+<!-- ========================================================================= -->
+<!-- MODAL 1: REGISTRAR MANTENIMIENTO -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200" id="modalMaintenance">
+<div class="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-7 shadow-2xl border border-outline-subtle transform scale-95 transition-all duration-200" id="modalMaintenanceCard">
+<div class="flex items-center justify-between pb-4 border-b border-slate-100">
+<div>
+<span class="text-xs font-bold uppercase tracking-wider text-[#006655]">ValisFin Fleet</span>
+<h3 class="text-xl font-extrabold text-on-surface">Registrar Mantenimiento</h3>
+</div>
+<button class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors" onclick="closeMaintenanceModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<form class="space-y-4 pt-4" onsubmit="handleMaintenanceSubmit(event)">
+<!-- Selector de Vehículo -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">Vehículo</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="maint-car-btn py-2 px-3 rounded-xl border border-emerald-600 bg-emerald-50 text-[#006655] font-semibold text-xs flex items-center justify-center gap-2" onclick="selectMaintenanceVehicle('Toyota Yaris', this)" type="button">
+<span class="w-2 h-2 rounded-full bg-[#006655]"></span>
+              Toyota Yaris (2018)
+            </button>
+<button class="maint-car-btn py-2 px-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-xs flex items-center justify-center gap-2" onclick="selectMaintenanceVehicle('Hyundai Tucson', this)" type="button">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              Hyundai Tucson (2021)
+            </button>
+</div>
+</div>
+<!-- Chips de selección rápida de 1 clic -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">Servicios frecuentes sugeridos</label>
+<div class="flex flex-wrap gap-1.5">
+<button class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-slate-200 transition-colors" onclick="quickFillService('Aceite y Filtro OEM')" type="button">
+              Aceite y Filtro
+            </button>
+<button class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-slate-200 transition-colors" onclick="quickFillService('Alineación y Balanceo 3D')" type="button">
+              Alineación y Balanceo
+            </button>
+<button class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-slate-200 transition-colors" onclick="quickFillService('Cambio de Pastillas de Freno')" type="button">
+              Frenos / Pastillas
+            </button>
+<button class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-slate-200 transition-colors" onclick="quickFillService('Batería Nueva LTH')" type="button">
+              Batería
+            </button>
+<button class="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-slate-200 transition-colors" onclick="quickFillService('Revisado vehicular &amp; Placa')" type="button">
+              Revisado &amp; Placa
+            </button>
+</div>
+</div>
+<!-- Detalle del servicio -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Descripción del trabajo realizado</label>
+<input class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" id="serviceDetailInput" placeholder="Ej: Cambio de aceite 10W-30 sintético..." required="" type="text">
+</div>
+<!-- Odómetro y Próximo KM -->
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Kilometraje actual</label>
+<input class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" id="maintKmInput" required="" type="number" value="205187">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Próximo KM (alerta)</label>
+<input class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" id="maintNextKmInput" type="number" value="210187">
+</div>
+</div>
+<!-- Monto (B/.), Fecha y Taller -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Costo (B/.)</label>
+<input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono font-bold text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" placeholder="0.00" required="" step="0.01" type="number">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Fecha</label>
+<input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" type="date" value="2026-09-03">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Taller / Local</label>
+<input class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" placeholder="Ej: Excel, Chen..." type="text">
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+<button class="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors" onclick="closeMaintenanceModal()" type="button">Cancelar</button>
+<button class="px-5 py-2 rounded-full text-xs font-bold bg-[#006655] hover:bg-[#005144] text-white shadow-md shadow-emerald-900/10 transition-all" type="submit">Guardar Servicio</button>
+</div>
+</form>
+</div>
+</div>
+<!-- MODAL 2: ACTUALIZAR KILOMETRAJE RÁPIDO -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200" id="modalKm">
+<div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-outline-subtle transform scale-95 transition-all duration-200" id="modalKmCard">
+<div class="flex items-center justify-between pb-4 border-b border-slate-100">
+<div>
+<span class="text-xs font-bold uppercase tracking-wider text-[#006655]">Lectura de Odómetro</span>
+<h3 class="text-xl font-extrabold text-on-surface">Registrar Kilometraje</h3>
+</div>
+<button class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors" onclick="closeKmModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<form class="space-y-4 pt-4" onsubmit="handleKmSubmit(event)">
+<!-- Selección de Vehículo -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">Vehículo a actualizar</label>
+<select class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-on-surface focus:outline-none focus:bg-white focus:border-[#006655] transition-all" id="kmVehicleSelect" onchange="onVehicleKmChange(this.value)">
+<option data-km="205187" value="yaris">Toyota Yaris (Lectura ant: 205,187 km)</option>
+<option data-km="180869" value="tucson">Hyundai Tucson (Lectura ant: 180,869 km)</option>
+</select>
+</div>
+<!-- Odómetro Input -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1">Nueva lectura de odómetro</label>
+<div class="relative">
+<input class="w-full pl-4 pr-14 py-3 bg-slate-50 border border-slate-200 rounded-xl font-mono text-2xl font-bold text-slate-900 focus:outline-none focus:bg-white focus:border-[#006655] transition-all" id="newKmInput" required="" type="number" value="205487">
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-sm font-bold text-slate-400">KM</span>
+</div>
+</div>
+<!-- Botones de incremento rápido (+300 km, +500 km, +1000 km) -->
+<div>
+<label class="block text-xs font-bold text-slate-500 mb-1.5">Incremento rápido sugerido</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors" onclick="incrementKm(300)" type="button">
+              +300 km
+            </button>
+<button class="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors" onclick="incrementKm(500)" type="button">
+              +500 km
+            </button>
+<button class="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors" onclick="incrementKm(1000)" type="button">
+              +1,000 km
+            </button>
+</div>
+</div>
+<!-- Registrado por -->
+<div>
+<label class="block text-xs font-bold text-slate-700 mb-1.5">Conductor / Registrado por</label>
+<div class="grid grid-cols-2 gap-2">
+<label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+<input checked="" class="text-[#006655] focus:ring-[#006655]" name="kmRecorder" type="radio" value="CF">
+<span class="text-xs font-semibold text-slate-800">Cristhian Fuentes</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+<input class="text-[#006655] focus:ring-[#006655]" name="kmRecorder" type="radio" value="JC">
+<span class="text-xs font-semibold text-slate-800">Jennifer Camaño</span>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+<button class="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors" onclick="closeKmModal()" type="button">Cancelar</button>
+<button class="px-5 py-2 rounded-full text-xs font-bold bg-[#006655] hover:bg-[#005144] text-white shadow-md shadow-emerald-900/10 transition-all" type="submit">Guardar Lectura</button>
+</div>
+</form>
+</div>
+</div>
+<!-- INTERACTIVITY JAVASCRIPT -->
+<script>
+    // Modal Helpers
+    function openMaintenanceModal() {
+      const modal = document.getElementById('modalMaintenance');
+      const card = document.getElementById('modalMaintenanceCard');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeMaintenanceModal() {
+      const modal = document.getElementById('modalMaintenance');
+      const card = document.getElementById('modalMaintenanceCard');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100');
+      card.classList.add('scale-95');
+      card.classList.remove('scale-100');
+    }
+
+    function openKmModal() {
+      const modal = document.getElementById('modalKm');
+      const card = document.getElementById('modalKmCard');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeKmModal() {
+      const modal = document.getElementById('modalKm');
+      const card = document.getElementById('modalKmCard');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100');
+      card.classList.add('scale-95');
+      card.classList.remove('scale-100');
+    }
+
+    function quickFillService(name) {
+      document.getElementById('serviceDetailInput').value = name;
+    }
+
+    function selectMaintenanceVehicle(vehicle, btn) {
+      document.querySelectorAll('.maint-car-btn').forEach(b => {
+        b.className = 'maint-car-btn py-2 px-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-semibold text-xs flex items-center justify-center gap-2';
+        b.querySelector('span').className = 'w-2 h-2 rounded-full bg-slate-400';
+      });
+      btn.className = 'maint-car-btn py-2 px-3 rounded-xl border border-emerald-600 bg-emerald-50 text-[#006655] font-semibold text-xs flex items-center justify-center gap-2';
+      btn.querySelector('span').className = 'w-2 h-2 rounded-full bg-[#006655]';
+
+      if (vehicle === 'Toyota Yaris') {
+        document.getElementById('maintKmInput').value = 205187;
+        document.getElementById('maintNextKmInput').value = 210187;
+      } else {
+        document.getElementById('maintKmInput').value = 180869;
+        document.getElementById('maintNextKmInput').value = 185869;
+      }
+    }
+
+    function prefillServiceModal(vehicle, km) {
+      openMaintenanceModal();
+      const btns = document.querySelectorAll('.maint-car-btn');
+      if (vehicle === 'Toyota Yaris') {
+        selectMaintenanceVehicle('Toyota Yaris', btns[0]);
+      } else {
+        selectMaintenanceVehicle('Hyundai Tucson', btns[1]);
+      }
+    }
+
+    function prefillKmModal(vehicle, km) {
+      openKmModal();
+      const select = document.getElementById('kmVehicleSelect');
+      if (vehicle === 'Toyota Yaris') {
+        select.value = 'yaris';
+      } else {
+        select.value = 'tucson';
+      }
+      document.getElementById('newKmInput').value = km + 300;
+    }
+
+    function onVehicleKmChange(val) {
+      const input = document.getElementById('newKmInput');
+      if (val === 'yaris') {
+        input.value = 205187 + 300;
+      } else {
+        input.value = 180869 + 300;
+      }
+    }
+
+    function incrementKm(amount) {
+      const input = document.getElementById('newKmInput');
+      const current = parseInt(input.value) || 0;
+      input.value = current + amount;
+    }
+
+    function filterKmTable(car, btn) {
+      document.querySelectorAll('.km-filter-btn').forEach(b => {
+        b.className = 'km-filter-btn px-3 py-1 rounded-full text-slate-600 hover:text-on-surface transition-all';
+      });
+      btn.className = 'km-filter-btn px-3 py-1 rounded-full bg-white text-on-surface shadow-sm transition-all';
+
+      const rows = document.querySelectorAll('.km-row');
+      rows.forEach(row => {
+        if (car === 'all' || row.getAttribute('data-car') === car) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function handleMaintenanceSubmit(e) {
+      e.preventDefault();
+      closeMaintenanceModal();
+      alert('¡Mantenimiento registrado con éxito! Se actualizó la proyección de kilometraje preventivo.');
+    }
+
+    function handleKmSubmit(e) {
+      e.preventDefault();
+      closeKmModal();
+      alert('¡Nueva lectura de odómetro guardada en la base de datos de la Familia Fuentes Camaño!');
+    }
+  </script>
+
+
+</body></html>

@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  
+  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
+
+  /* Brand Colors for Metas */
+  --color-brand-50: #f0fdf9;
+  --color-brand-100: #ccfbe9;
+  --color-brand-200: #9cf5d5;
+  --color-brand-500: #14b886;
+  --color-brand-600: #0d946b;
+  --color-brand-700: #0b7657;
+  --color-brand-800: #0c5e46;
+  --color-brand-900: #134e3b;
+  --color-brand-950: #052c22;
+
+  /* Custom shadows from reference */
+  --shadow-bento: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-bento-hover: 0 8px 24px -4px rgba(6, 95, 70, 0.08);
+}
+
+@layer base {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    /* Safe area padding for mobile navigation */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Make sure all buttons show the hand pointer */
+  button, [role="button"] {
+    cursor: pointer;
+  }
+
+  .login-bg {
+    background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 45%),
+                #f8faf9;
+  }
+
+  .hero-photo-gradient {
+    background: linear-gradient(180deg, rgba(6, 78, 59, 0.02) 0%, rgba(6, 78, 59, 0.75) 75%, rgba(6, 78, 59, 0.94) 100%);
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 9999px;
+  }
+}
+  /* ── Uiverse 3D Button (FColombati) ─────────────────────────────────── */
+  .btn3d {
+    all: unset;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    position: relative;
+    border-radius: 100em;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    text-decoration: none !important;
+  }
+  .btn3d.w-full {
+    display: flex !important;
+    width: 100% !important;
+  }
+  .btn3d::after {
+    display: none !important;
+  }
+  .btn3d-outer {
+    position: relative;
+    z-index: 1;
+    border-radius: inherit;
+    transition: box-shadow 300ms ease, transform 200ms ease;
+    will-change: box-shadow, transform;
+    box-shadow:
+      0 4px 10px -2px rgba(0,0,0,0.18),
+      0 2px 4px -1px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .btn3d:hover .btn3d-outer {
+    box-shadow:
+      0 6px 14px -2px rgba(0,0,0,0.22),
+      0 3px 6px -1px rgba(0,0,0,0.14);
+  }
+  .btn3d-inner {
+    position: relative;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 0.55em 1.35em;
+    background-image: linear-gradient(135deg, rgba(230,230,230,1), rgba(180,180,180,1));
+    transition: box-shadow 300ms ease, clip-path 250ms ease, background-image 250ms ease, transform 250ms ease;
+    will-change: box-shadow, clip-path, background-image, transform;
+    overflow: clip;
+    clip-path: inset(0 0 0 0 round 100em);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    box-shadow:
+      0 0 0 0 inset rgba(5,5,5,0.1),
+      -0.05em -0.05em 0.05em 0 inset rgba(5,5,5,0.25),
+      0 0 0 0 inset rgba(5,5,5,0.1),
+      0 0 0.05em 0.2em inset rgba(255,255,255,0.25),
+      0.025em 0.05em 0.1em 0 inset rgba(255,255,255,1),
+      0.12em 0.12em 0.12em inset rgba(255,255,255,0.25),
+      -0.075em -0.25em 0.25em 0.1em inset rgba(5,5,5,0.25);
+  }
+
+  /* Size variants */
+  .btn3d-xs .btn3d-inner {
+    padding: 0.35em 0.8em;
+    font-size: 0.725rem;
+  }
+  .btn3d-sm .btn3d-inner {
+    padding: 0.45em 1.1em;
+    font-size: 0.775rem;
+  }
+  .btn3d-md .btn3d-inner {
+    padding: 0.55em 1.35em;
+    font-size: 0.85rem;
+  }
+  .btn3d-lg .btn3d-inner {
+    padding: 0.7em 1.6em;
+    font-size: 0.95rem;
+  }
+
+  /* Color variants */
+  .btn3d-emerald .btn3d-inner {
+    background-image: linear-gradient(135deg, #34d399, #059669);
+  }
+  .btn3d-rose .btn3d-inner {
+    background-image: linear-gradient(135deg, #fb7185, #e11d48);
+  }
+  .btn3d-blue .btn3d-inner {
+    background-image: linear-gradient(135deg, #60a5fa, #2563eb);
+  }
+  .btn3d-pink .btn3d-inner {
+    background-image: linear-gradient(135deg, #f472b6, #db2777);
+  }
+  .btn3d-teal .btn3d-inner {
+    background-image: linear-gradient(135deg, #2dd4bf, #0f766e);
+  }
+  .btn3d-violet .btn3d-inner {
+    background-image: linear-gradient(135deg, #a78bfa, #7c3aed);
+  }
+  .btn3d-orange .btn3d-inner {
+    background-image: linear-gradient(135deg, #fb923c, #ea580c);
+  }
+  .btn3d-amber .btn3d-inner {
+    background-image: linear-gradient(135deg, #fcd34d, #d97706);
+  }
+  .btn3d-sky .btn3d-inner {
+    background-image: linear-gradient(135deg, #38bdf8, #0284c7);
+  }
+  .btn3d-gray .btn3d-inner {
+    background-image: linear-gradient(135deg, rgba(235,238,241,1), rgba(195,200,207,1));
+  }
+  .btn3d:hover .btn3d-inner {
+    clip-path: inset(clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) clamp(1px,0.0625em,2px) round 100em);
+    box-shadow:
+      0.1em 0.15em 0.05em 0 inset rgba(5,5,5,0.75),
+      -0.025em -0.03em 0.05em 0.025em inset rgba(5,5,5,0.5),
+      0.25em 0.25em 0.2em 0 inset rgba(5,5,5,0.5),
+      0 0 0.05em 0.5em inset rgba(255,255,255,0.15),
+      0 0 0 0 inset rgba(255,255,255,1),
+      0.12em 0.12em 0.12em inset rgba(255,255,255,0.25),
+      -0.075em -0.12em 0.2em 0.1em inset rgba(5,5,5,0.25);
+  }
+  .btn3d:active .btn3d-inner { transform: scale(0.975); }
+  .btn3d-label {
+    position: relative;
+    z-index: 4;
+    font-family: var(--font-sans), "Inter", sans-serif;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    transition: transform 250ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    will-change: transform;
+    -webkit-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+    line-height: 1;
+    margin: 0 auto;
+  }
+  .btn3d-gray .btn3d-label {
+    color: #1e293b !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.7) !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+  }
+  .btn3d:hover .btn3d-label { transform: scale(0.975); }
+
+  /* Map Marker Pulse Animation */
+  @keyframes pulse-green {
+    0% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+
+  .marker-con-compra {
+    animation: pulse-green 2s infinite ease-in-out;
+  }

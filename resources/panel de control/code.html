@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Finanzas Familiares | Familia Fuentes Camaño</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          },
+          boxShadow: {
+            'bento': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+            'bento-hover': '0 8px 24px -4px rgba(6, 95, 70, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Scroll & Typography adjustments -->
+<style data-purpose="base-styling">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row pb-20 lg:pb-0">
+<!-- BEGIN: DesktopSidebar -->
+<!-- Barra lateral persistente para Desktop -->
+<aside class="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200/80 p-5 shrink-0 justify-between min-h-screen sticky top-0" data-purpose="desktop-navigation">
+<div>
+<!-- Brand & Family Header -->
+<div class="flex items-center gap-3 px-2 py-3 mb-6">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-800 to-emerald-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-emerald-700/20">
+          FC
+        </div>
+<div class="leading-tight">
+<h1 class="text-sm font-bold text-slate-900 tracking-tight">Familia Fuentes Camaño</h1>
+<span class="text-xs text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5">Finanzas del Hogar</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Navegación principal" class="space-y-1.5">
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-semibold text-sm transition group" href="#inicio">
+<svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Inicio
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#ingresos">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M7 11l5-5m0 0l5 5m-5-5v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Ingresos
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#pagos">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Pagos Fijos
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#gastos">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Gastos Diarios
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#vehiculos">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7h8m-8 4h8m-9 8h10a2 2 0 002-2V9a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Vehículos
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#metas">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Metas de Ahorro
+        </a>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium text-sm transition group" href="#consultas">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Consultas &amp; Reportes
+        </a>
+</nav>
+</div>
+<!-- User Profile in Desktop -->
+<div class="pt-4 border-t border-slate-100">
+<div class="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-50/80">
+<div class="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center font-bold text-emerald-800 text-xs">
+          FC
+        </div>
+<div class="overflow-hidden">
+<p class="text-xs font-semibold text-slate-900 truncate">Cristhian &amp; Jennifer</p>
+<p class="text-[11px] text-slate-500 truncate">Hogar Protegido</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- END: DesktopSidebar -->
+<!-- BEGIN: MainContent -->
+<div class="flex-1 flex flex-col min-w-0">
+<!-- Top Mobile / Universal Header -->
+<header class="bg-white/80 backdrop-blur border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between" data-purpose="top-header">
+<!-- Title & Context -->
+<div class="flex items-center gap-3">
+<div class="lg:hidden w-8 h-8 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold text-xs">
+          FC
+        </div>
+<div>
+<span class="text-[11px] uppercase tracking-wider font-bold text-emerald-700 block">Finanzas Familiares</span>
+<h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Panel de Control</h2>
+</div>
+</div>
+<!-- Month Selector & Protected Status -->
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 bg-slate-100/90 border border-slate-200/80 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-700">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Septiembre 2026</span>
+</div>
+<div class="hidden sm:flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-1.5 rounded-full text-xs font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Sincronizado</span>
+</div>
+</div>
+</header>
+<!-- Main Workspace Container -->
+<main class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6" data-purpose="dashboard-content">
+<!-- BEGIN: InspirationBanner -->
+<!-- Banner Emocional y Propósito de la Familia -->
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white shadow-xl shadow-emerald-950/10 p-5 sm:p-7" data-purpose="inspirational-hero-banner">
+<!-- Glow pattern effects -->
+<div class="absolute -right-16 -top-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-12 -bottom-24 w-72 h-72 bg-teal-400/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+<!-- Baby Photo Highlight -->
+<div class="relative shrink-0 group">
+<div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-emerald-300/40 shadow-lg shadow-black/20 bg-emerald-950 flex items-center justify-center">
+<img alt="Nuestra pequeña bebé - Orgullo de la Familia Fuentes Camaño" class="w-full h-full object-cover object-top transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBngW9FDhZHeCm5ywRMhxvXP02HnMoCWtZV843eIhM09rWNPbLjHYpGz3ec0mVOD4L9Z5DQujnx_LRJO2_YVfz3ynQ2VLjhkon2iHWB8cMcWVey1YHxPTTVdQ3jd1A4K93FCyqw2nbMzj1yyZwSg3VD8EZafF2X5cZ7qJhaWViOfx0hqlAZBtG7zojkmhRnpFKuILCuMt107gxTciRbJSLWCd_12NPV8K6hIhw_xTfjF3cz3BTSmv8fdLn9nH40atLUjg"/>
+</div>
+<div class="absolute -bottom-2 -right-1 bg-rose-500 text-white rounded-full p-1.5 shadow-md">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" fill-rule="evenodd"></path></svg>
+</div>
+</div>
+<!-- Emotional Motivation Content -->
+<div class="text-center sm:text-left space-y-1.5 flex-1">
+<div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-700/60 border border-emerald-500/30 text-[11px] font-medium text-emerald-200">
+<span>🌟 Nuestro Gran Motivo</span>
+</div>
+<h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white">¡Hola, Cristhian y Jennifer!</h2>
+<p class="text-sm text-emerald-100/90 leading-relaxed max-w-2xl font-normal">
+              "Cada balboa administrado con sabiduría es un paso seguro hacia el futuro, la educación y la sonrisa de nuestra pequeña."
+            </p>
+</div>
+<!-- Quick Action Shortcuts inside Hero -->
+<div class="flex sm:flex-col gap-2 w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
+<div class="bg-white/10 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-white/10 text-center flex-1 sm:flex-initial">
+<p class="text-[11px] text-emerald-200 uppercase font-semibold">Meta Familiar</p>
+<p class="text-base font-bold text-white">Fondo Guardería</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: InspirationBanner -->
+<!-- BEGIN: QuickActions -->
+<!-- Botones de Acción Inmediata Táctiles -->
+<section class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" data-purpose="quick-action-buttons">
+<!-- Registrar Pago -->
+<button class="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-emerald-500 hover:shadow-bento-hover transition-all text-left group" type="button">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<p class="font-bold text-slate-900 text-sm sm:text-base">Registrar pago</p>
+<p class="text-xs text-slate-500">Luz, internet, cuotas, tarjetas, seguros...</p>
+</div>
+</div>
+<span class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-0.5 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</button>
+<!-- Registrar Gasto -->
+<button class="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:border-rose-400 hover:shadow-bento-hover transition-all text-left group" type="button">
+<div class="flex items-center gap-3.5">
+<div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<p class="font-bold text-slate-900 text-sm sm:text-base">Registrar gasto</p>
+<p class="text-xs text-slate-500">Supermercado, gasolina, salidas, compras...</p>
+</div>
+</div>
+<span class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 group-hover:text-rose-600 group-hover:translate-x-0.5 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</button>
+</section>
+<!-- END: QuickActions -->
+<!-- BEGIN: HeroFinancialBalance -->
+<!-- Tarjeta Principal de Saldo Real -->
+<section class="rounded-3xl bg-emerald-700 text-white p-6 sm:p-8 shadow-lg shadow-emerald-800/15 relative overflow-hidden" data-purpose="hero-balance-card">
+<div class="absolute right-0 top-0 w-96 h-96 bg-emerald-600/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+<!-- Columna Izquierda: Saldo Real Principal -->
+<div class="lg:col-span-7 space-y-2">
+<div class="flex items-center gap-2">
+<span class="text-xs uppercase tracking-widest font-bold text-emerald-200">Saldo Actual Real</span>
+<span class="bg-emerald-800/80 border border-emerald-500/30 text-[10px] text-emerald-100 px-2 py-0.5 rounded-md">En Mano / Cuentas</span>
+</div>
+<div class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+              +B/.829.75
+            </div>
+<p class="text-xs sm:text-sm text-emerald-100/80 max-w-lg leading-relaxed pt-1">
+              Solo considera dinero recibido efectivamente, deduciendo pagos y gastos ya ejecutados. Los presupuestos futuros no se descuentan hasta cancelarse.
+            </p>
+</div>
+<!-- Columna Derecha: Sub-indicadores Bento Clave -->
+<div class="lg:col-span-5 grid grid-cols-1 gap-3">
+<!-- Ingresos Recibidos -->
+<div class="bg-emerald-800/50 backdrop-blur border border-emerald-600/50 rounded-2xl p-3.5 flex items-center justify-between">
+<div>
+<span class="text-xs font-medium text-emerald-200 block">Ingresos recibidos</span>
+<span class="text-xl font-bold text-white">+B/.1,023.70</span>
+</div>
+<div class="w-9 h-9 rounded-xl bg-emerald-600/40 flex items-center justify-center text-emerald-200">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<!-- Disponible Libre -->
+<div class="bg-emerald-800/50 backdrop-blur border border-emerald-600/50 rounded-2xl p-3.5 flex items-center justify-between">
+<div>
+<span class="text-xs font-medium text-emerald-200 block">Disponible libre estimado</span>
+<span class="text-xl font-bold text-amber-300">-B/.6.25</span>
+</div>
+<div class="w-9 h-9 rounded-xl bg-emerald-600/40 flex items-center justify-center text-amber-300">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroFinancialBalance -->
+<!-- BEGIN: MonthlyMetricsGrid -->
+<!-- Resumen Bento de Métricas del Mes -->
+<section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" data-purpose="monthly-indicators-grid">
+<!-- Pagos Realizados -->
+<div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-bento">
+<span class="text-xs font-medium text-slate-500 block mb-1">Pagos realizados</span>
+<span class="text-lg sm:text-2xl font-bold text-rose-600 tracking-tight">-B/.144.00</span>
+<span class="text-[11px] text-slate-400 block mt-1">Obligaciones cubiertas</span>
+</div>
+<!-- Gastos Cotidianos -->
+<div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-bento">
+<span class="text-xs font-medium text-slate-500 block mb-1">Gastos cotidianos</span>
+<span class="text-lg sm:text-2xl font-bold text-rose-600 tracking-tight">-B/.49.95</span>
+<span class="text-[11px] text-slate-400 block mt-1">Supermercado &amp; día a día</span>
+</div>
+<!-- Pendiente por pagar -->
+<div class="bg-white rounded-2xl p-4 sm:p-5 border border-amber-200/80 bg-amber-50/20 shadow-bento">
+<span class="text-xs font-medium text-amber-800 block mb-1">Pendiente por pagar</span>
+<span class="text-lg sm:text-2xl font-bold text-amber-700 tracking-tight">-B/.836.00</span>
+<span class="text-[11px] text-amber-600 block mt-1">Próximos compromisos</span>
+</div>
+<!-- Metas cumplidas -->
+<div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-bento">
+<span class="text-xs font-medium text-slate-500 block mb-1">Metas cumplidas</span>
+<div class="flex items-baseline gap-2">
+<span class="text-lg sm:text-2xl font-bold text-emerald-700 tracking-tight">2/14</span>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">14%</span>
+</div>
+<!-- Progress bar -->
+<div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-emerald-600 h-1.5 rounded-full" style="width: 14%"></div>
+</div>
+</div>
+</section>
+<!-- END: MonthlyMetricsGrid -->
+<!-- BEGIN: CoupleBreakdown -->
+<!-- Desglose Transparente Individual por Cónyuge -->
+<section class="space-y-3" data-purpose="couple-finances-breakdown">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900 tracking-tight">Resumen por Cónyuge</h3>
+<span class="text-xs text-slate-500 font-medium">Equilibrio y Colaboración</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Cristhian Fuentes Card -->
+<article class="bg-white rounded-2xl p-5 border border-slate-200 shadow-bento space-y-4">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-50 text-blue-700 font-bold flex items-center justify-center text-sm border border-blue-100">
+                  CF
+                </div>
+<div>
+<h4 class="font-bold text-slate-900 text-sm sm:text-base">Cristhian Fuentes</h4>
+<p class="text-xs text-slate-400">Resumen real del mes</p>
+</div>
+</div>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">Co-administrador</span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-slate-50/80 p-2.5 rounded-xl">
+<span class="text-[11px] font-medium text-slate-500 uppercase block">Ingresos</span>
+<span class="text-xs sm:text-sm font-bold text-emerald-700">+B/.594.84</span>
+</div>
+<div class="bg-slate-50/80 p-2.5 rounded-xl">
+<span class="text-[11px] font-medium text-slate-500 uppercase block">Salidas</span>
+<span class="text-xs sm:text-sm font-bold text-rose-600">-B/.118.95</span>
+</div>
+<div class="bg-slate-50/80 p-2.5 rounded-xl border border-emerald-100">
+<span class="text-[11px] font-medium text-emerald-800 uppercase block">Saldo</span>
+<span class="text-xs sm:text-sm font-bold text-emerald-800">+B/.475.89</span>
+</div>
+</div>
+</article>
+<!-- Jennifer Camaño Card -->
+<article class="bg-white rounded-2xl p-5 border border-slate-200 shadow-bento space-y-4">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-purple-50 text-purple-700 font-bold flex items-center justify-center text-sm border border-purple-100">
+                  JC
+                </div>
+<div>
+<h4 class="font-bold text-slate-900 text-sm sm:text-base">Jennifer Camaño</h4>
+<p class="text-xs text-slate-400">Resumen real del mes</p>
+</div>
+</div>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">Co-administradora</span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-slate-50/80 p-2.5 rounded-xl">
+<span class="text-[11px] font-medium text-slate-500 uppercase block">Ingresos</span>
+<span class="text-xs sm:text-sm font-bold text-emerald-700">+B/.428.86</span>
+</div>
+<div class="bg-slate-50/80 p-2.5 rounded-xl">
+<span class="text-[11px] font-medium text-slate-500 uppercase block">Salidas</span>
+<span class="text-xs sm:text-sm font-bold text-rose-600">-B/.75.00</span>
+</div>
+<div class="bg-slate-50/80 p-2.5 rounded-xl border border-emerald-100">
+<span class="text-[11px] font-medium text-emerald-800 uppercase block">Saldo</span>
+<span class="text-xs sm:text-sm font-bold text-emerald-800">+B/.353.86</span>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- END: CoupleBreakdown -->
+<!-- BEGIN: UpcomingBillsAndVehicles -->
+<!-- Sección de Próximos Vencimientos Inmediatos y Estado de Vehículos -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-4" data-purpose="upcoming-obligations">
+<!-- Próximos Pagos a vencer -->
+<div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200 shadow-bento space-y-3.5">
+<div class="flex items-center justify-between">
+<h4 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Próximos Pagos a Vencer
+            </h4>
+<a class="text-xs font-semibold text-emerald-700 hover:text-emerald-800" href="#pagos">Ver todos (6)</a>
+</div>
+<!-- Items list -->
+<div class="divide-y divide-slate-100">
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-700 flex items-center justify-center font-bold text-xs">
+                  🍼
+                </div>
+<div>
+<p class="text-xs sm:text-sm font-semibold text-slate-800">Cuidado &amp; Estimulación Bebé</p>
+<p class="text-[11px] text-slate-400">Vence en 4 días • Mensualidad</p>
+</div>
+</div>
+<span class="font-bold text-xs sm:text-sm text-slate-900">-B/.180.00</span>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">
+                  ⚡
+                </div>
+<div>
+<p class="text-xs sm:text-sm font-semibold text-slate-800">Electricidad Naturgy</p>
+<p class="text-[11px] text-slate-400">Vence en 6 días • Servicio hogar</p>
+</div>
+</div>
+<span class="font-bold text-xs sm:text-sm text-slate-900">-B/.74.50</span>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs">
+                  🌐
+                </div>
+<div>
+<p class="text-xs sm:text-sm font-semibold text-slate-800">Internet Residencial</p>
+<p class="text-[11px] text-slate-400">Vence en 10 días • Conectividad</p>
+</div>
+</div>
+<span class="font-bold text-xs sm:text-sm text-slate-900">-B/.48.15</span>
+</div>
+</div>
+</div>
+<!-- Mantenimiento & Vehículos Familiar -->
+<div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-bento flex flex-col justify-between space-y-4">
+<div>
+<div class="flex items-center justify-between mb-3">
+<h4 class="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-2">
+<span>🚗</span>
+                Vehículo Familiar
+              </h4>
+<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Al día</span>
+</div>
+<p class="text-xs text-slate-500 leading-relaxed">
+              Próximo cambio de aceite y filtro programado para los 45,000 km. Combustible promedio semanal: <strong class="text-slate-700">B/.35.00</strong>.
+            </p>
+</div>
+<div class="bg-slate-50 rounded-xl p-3 border border-slate-100 space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span class="text-slate-600">Presupuesto Gasolina Mes</span>
+<span class="text-slate-800">B/.140.00</span>
+</div>
+<div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-teal-600 h-2 rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-[11px] text-slate-400 block text-right">B/.84.00 consumidos</span>
+</div>
+<button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition" type="button">
+            Ver Ficha de Mantenimiento
+          </button>
+</div>
+</section>
+<!-- END: UpcomingBillsAndVehicles -->
+</main>
+</div>
+<!-- END: MainContent -->
+<!-- BEGIN: MobileBottomNavigation -->
+<!-- Barra de Navegación Móvil Fija Táctil (Optimizado para iPhone 15 & S24) -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-3 py-2 flex justify-around items-center safe-area-bottom shadow-lg" data-purpose="mobile-bottom-bar">
+<a class="flex flex-col items-center gap-1 text-emerald-800 font-bold text-[10px] py-1 min-w-[56px]" href="#inicio">
+<svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path></svg>
+<span>Inicio</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 font-medium text-[10px] py-1 min-w-[56px] hover:text-emerald-700" href="#ingresos">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M7 11l5-5m0 0l5 5m-5-5v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+<span>Ingresos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 font-medium text-[10px] py-1 min-w-[56px] hover:text-emerald-700" href="#pagos">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+<span>Pagos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 font-medium text-[10px] py-1 min-w-[56px] hover:text-emerald-700" href="#gastos">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+<span>Gastos</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500 font-medium text-[10px] py-1 min-w-[56px] hover:text-emerald-700" href="#metas">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+<span>Metas</span>
+</a>
+</nav>
+<!-- END: MobileBottomNavigation -->
+</body></html>
