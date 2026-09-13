@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personalizar Bienvenida Familiar - ValisFin</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    /* Barra de desplazamiento suave para contenido modal largo */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f8fafc;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen relative overflow-x-hidden">
+<!-- BEGIN: BlurredBackgroundMockup -->
+<!-- Contexto de fondo simulando el panel de control ValisFin desenfocado -->
+<div class="fixed inset-0 pointer-events-none filter blur-sm opacity-60 z-0 flex flex-col p-6 space-y-6">
+<div class="h-16 w-full bg-white rounded-2xl shadow-sm border border-slate-200 flex items-center px-6 justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">V</div>
+<div class="h-4 w-32 bg-slate-200 rounded"></div>
+</div>
+<div class="flex space-x-3">
+<div class="h-8 w-24 bg-emerald-100 rounded-full"></div>
+<div class="h-8 w-8 bg-slate-200 rounded-full"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="h-40 bg-white rounded-2xl shadow-sm border border-slate-200"></div>
+<div class="h-40 bg-white rounded-2xl shadow-sm border border-slate-200"></div>
+<div class="h-40 bg-white rounded-2xl shadow-sm border border-slate-200"></div>
+</div>
+<div class="h-96 bg-white rounded-2xl shadow-sm border border-slate-200"></div>
+</div>
+<!-- END: BlurredBackgroundMockup -->
+<!-- BEGIN: ModalBackdrop -->
+<div class="fixed inset-0 bg-slate-950/50 backdrop-blur-md z-40 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+<!-- BEGIN: ModalCard -->
+<div class="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col my-auto transition-all transform animate-in fade-in zoom-in-95 duration-200" data-purpose="modal-container">
+<!-- BEGIN: ModalHeader -->
+<header class="px-6 py-5 sm:px-8 sm:py-6 border-b border-slate-100 bg-white flex items-center justify-between sticky top-0 z-20">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 shadow-sm flex-shrink-0">
+<!-- Icono de cámara con corazón -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h2 class="text-xl font-bold text-slate-900 tracking-tight">Personalizar Bienvenida Familiar</h2>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                Portal Privado
+              </span>
+</div>
+<p class="text-sm text-slate-500 mt-0.5">Actualiza la fotografía central y la dedicatoria que se muestra al iniciar sesión en el portal.</p>
+</div>
+</div>
+<!-- Botón Cerrar -->
+<button aria-label="Cerrar modal" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500" type="button">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</header>
+<!-- END: ModalHeader -->
+<!-- BEGIN: ModalBody -->
+<div class="p-6 sm:p-8 max-h-[75vh] overflow-y-auto custom-scroll">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Columna izquierda: Formulario de edición (7 cols) -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Sección 1: Selección y subida de imagen -->
+<section class="bg-slate-50/70 p-5 rounded-2xl border border-slate-200/80" data-purpose="photo-upload-section">
+<div class="flex items-center justify-between mb-4">
+<label class="block text-sm font-bold text-slate-800">Fotografía Principal de Bienvenida</label>
+<span class="text-xs font-medium text-emerald-600 flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+                  Resolución recomendada: Vertical 3:4
+                </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+<!-- Miniatura de foto actual -->
+<div class="sm:col-span-4 relative rounded-xl overflow-hidden shadow-md group border border-slate-200 aspect-[3/4] bg-slate-900">
+<img alt="Fotografía actual de Valeria Fuentes" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4VzeWXZwXFla9boI-WfmEOYPcbfe9Q4Whe5hzAiIQ_nyHv2Ur60twTD6aPzVdW72JI-3Rkx1tRGUYX31ul8nrcmeGA-_Pz5jEEpKUnabp9wvmhmANm92qC8Qt9saXD7R-hwbmO51YE8IKdW1ttziZBh7_5TCdf3d6T0eXwgn3UsCmwcJaefuyswAgbPlPIxbfM1bk_IDtv1i1YBs8DnNkv4-KA6H-M-9XCACniSwIjd3cHpueE3Fc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/90 text-slate-800 backdrop-blur-xs shadow-xs">
+                    Foto Actual
+                  </span>
+<div class="absolute bottom-2 left-2 right-2 text-white text-[11px] font-medium leading-tight truncate">
+                    Valeria en Panamá FC
+                  </div>
+</div>
+<!-- Dropzone interactivo -->
+<div class="sm:col-span-8 flex flex-col justify-center items-center px-5 py-6 border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white rounded-xl text-center cursor-pointer transition-colors group">
+<div class="w-12 h-12 mb-3 rounded-full bg-brand-50 group-hover:bg-brand-100 text-brand-600 flex items-center justify-center transition-colors">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<p class="text-sm font-semibold text-slate-700">Arrastra una nueva foto aquí o</p>
+<label class="mt-1.5 inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 cursor-pointer transition-colors shadow-xs">
+<span>Explorar archivos</span>
+<input accept="image/png, image/jpeg, image/webp" class="sr-only" type="file"/>
+</label>
+<p class="text-[11px] text-slate-400 mt-2.5">JPG, PNG o WEBP (Máx. 10MB). Enfoque facial automático.</p>
+</div>
+</div>
+</section>
+<!-- Sección 2: Mensaje y dedicatoria familiar -->
+<section class="space-y-4" data-purpose="dedication-form-fields">
+<!-- Destinatario / Etiqueta badge -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5" for="badge-text">
+                  Etiqueta Destacada (Píldora superior)
+                </label>
+<div class="relative flex items-center">
+<span class="absolute left-3 text-emerald-600">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" fill-rule="evenodd"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all" id="badge-text" type="text" value="Por el futuro de nuestra bebé"/>
+</div>
+</div>
+<!-- Título principal -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5" for="headline-text">
+                  Título Motivacional
+                </label>
+<input class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all" id="headline-text" type="text" value="Construyendo el patrimonio y bienestar de nuestra familia día a día."/>
+</div>
+<!-- Mensaje inspirador / Frase de amor y ahorro -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500" for="quote-text">
+                    Mensaje Inspirador / Frase Clave
+                  </label>
+<span class="text-[11px] font-semibold text-slate-400">89 / 160 caracteres</span>
+</div>
+<textarea class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all resize-none leading-relaxed" id="quote-text" rows="3">Cada balboa cuidado es un paso firme y lleno de amor hacia su tranquilidad y mañana.</textarea>
+</div>
+<!-- Sugerencias rápidas -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="text-xs text-slate-400 font-medium">Sugerencias:</span>
+<button class="text-xs font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 px-2.5 py-1 rounded-lg transition-colors border border-brand-200" type="button">
+                  "Todo esfuerzo de hoy es su libertad de mañana"
+                </button>
+<button class="text-xs font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 px-2.5 py-1 rounded-lg transition-colors border border-brand-200" type="button">
+                  "El mayor legado es un hogar con metas firmes"
+                </button>
+</div>
+</section>
+</div>
+<!-- Columna derecha: Live Preview Card (5 cols) -->
+<div class="lg:col-span-5 flex flex-col space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Vista previa en pantalla de bienvenida
+              </span>
+<span class="text-[11px] text-slate-400">Mockup en escala</span>
+</div>
+<!-- Preview Frame simulando la columna izquierda del login -->
+<div class="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 aspect-[9/13] bg-slate-900 select-none" data-purpose="live-preview-card">
+<!-- Foto de fondo completa -->
+<img alt="Previsualización de bienvenida" class="absolute inset-0 w-full h-full object-cover object-top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAirSv5UUKAbxnzBLwQ3ABJx4R6UQ4Ltk27p94d2g_c3a9vYKZw2X_9DYBzvGTqdqLB8nUGnvijh62QLYZnjjyTTXyqb-6nJQdQiodLIsriw42SUPWfsjZ7iziS1SRNgU9r7DBVCGmBc2RBCWY3fTvpdghuOtjjrayvdUg83oceGEGhUC4sJfEhCcbUdDk8HnZLA1yvqpS2-HaTC6ROuxLn0qOT5Gq51ukDcZshnZEawsiDb_x5-mwl"/>
+<!-- Gradiente protector de contraste -->
+<div class="absolute inset-0 bg-gradient-to-t from-emerald-950/95 via-emerald-950/40 to-black/30"></div>
+<!-- Header superior del portal en miniatura -->
+<div class="absolute top-4 inset-x-4 flex items-center justify-between text-white">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-black/40 backdrop-blur-md border border-white/10">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  PORTAL FAMILIAR PRIVADO
+                </span>
+<span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-black/30 backdrop-blur-md border border-white/10 text-white/80">
+                  2025 • FC
+                </span>
+</div>
+<!-- Textos inferiores renderizados dinámicamente -->
+<div class="absolute bottom-4 inset-x-4 space-y-3 text-white">
+<!-- Badge motivacional -->
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-600/80 backdrop-blur-sm shadow-sm text-emerald-50">
+<svg class="w-3 h-3 fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" fill-rule="evenodd"></path>
+</svg>
+<span>Por el futuro de nuestra bebé</span>
+</div>
+<!-- Título -->
+<h3 class="text-base sm:text-lg font-bold leading-tight drop-shadow-sm text-slate-50">
+                  Construyendo el patrimonio y bienestar de nuestra familia día a día.
+                </h3>
+<!-- Frase inspiradora -->
+<p class="text-xs text-emerald-100/90 italic leading-relaxed border-l-2 border-emerald-400/60 pl-2">
+                  “Cada balboa cuidado es un paso firme y lleno de amor hacia su tranquilidad y mañana.”
+                </p>
+<!-- Footer del banner -->
+<div class="pt-2 border-t border-white/15 flex items-center justify-between text-[10px] text-white/75">
+<span>Núcleo: Cristhian &amp; Jennifer</span>
+<span class="flex items-center gap-1">
+<svg class="w-3 h-3 text-emerald-400" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path></svg>
+                    Espacio blindado
+                  </span>
+</div>
+</div>
+</div>
+<p class="text-[11px] text-center text-slate-400">Esta tarjeta reemplazará el panel izquierdo en el login de ValisFin.</p>
+</div>
+</div>
+</div>
+<!-- END: ModalBody -->
+<!-- BEGIN: ModalFooter -->
+<footer class="px-6 py-4 sm:px-8 sm:py-5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center space-x-2 text-xs text-slate-500">
+<svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Sincronización automática con las sesiones activas de Jennifer y Cristhian.</span>
+</div>
+<div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+<button class="w-1/2 sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition-colors shadow-xs" type="button">
+            Restaurar Por Defecto
+          </button>
+<button class="w-1/2 sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-colors shadow-md shadow-emerald-700/20 flex items-center justify-center space-x-2" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Guardar y Publicar</span>
+</button>
+</div>
+</footer>
+<!-- END: ModalFooter -->
+</div>
+<!-- END: ModalCard -->
+</div>
+<!-- END: ModalBackdrop -->
+</body></html>
