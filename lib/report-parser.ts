@@ -231,7 +231,7 @@ export function parseReportText(text: string): any {
   }
 
   // 8. Asunto
-  const reporteMatch = cleanText.match(/\*REPORTE:\*\s*([^\n]+)/i);
+  const reporteMatch = cleanText.match(/\*(?:REPORTE|ASUNTO)[:.]?\*\s*([^\n]+)/i);
   if (reporteMatch) {
     const rawAsunto = reporteMatch[1].replace('.', '').trim().toLowerCase();
     if (rawAsunto.includes('recorrido')) result.asunto = 'Recorrido Perimetral';
@@ -283,13 +283,16 @@ export function parseReportText(text: string): any {
   }
 
   // 10. Vehículos en líneas sueltas
-  const vehiculoRegex = /(?:•|-)?\s*(?:en\s+el\s+)?(?:m[oó]vil|veh[ií]culo|patrulla)\s*(?:#|nº|no\.?)?\s*(\d+)?(?:\s+(?:de\s+)?(BATORG?|AVSEC|DINOA|[A-Z]{2,4}\s*[-]?\s*\d{3,5}))?/gi;
+  const vehiculoRegex = /(?:•|-)?\s*(?:en\s+el\s+)?(?:m[oó]vil|veh[ií]culo|patrulla)\s*(?:#|nº|no\.?)?\s*(\d+)?(?:\s+(?:de\s+)?(BATORG?|AVSEC|DINOA|[A-Z]{2,4}\s*[-]?\s*\d{3,5}))?(?:\s*con\s+matr[ií]cula:\s*\*?([A-Z0-9-]{4,10})\*?)?/gi;
   while ((match = vehiculoRegex.exec(cleanText)) !== null) {
     const numMovil = match[1] ? `Móvil ${match[1]}` : 'Móvil';
     const extraToken = match[2] ? match[2].trim() : '';
+    const matriculaExtra = match[3] ? match[3].trim() : '';
 
     let placaReal = '';
-    if (extraToken && /^[A-Z]{1,3}\s*[-]?\s*\d{3,5}$/i.test(extraToken)) {
+    if (matriculaExtra) {
+      placaReal = matriculaExtra.toUpperCase().replace(/[*_]/g, '');
+    } else if (extraToken && /^[A-Z]{1,3}\s*[-]?\s*\d{3,5}$/i.test(extraToken)) {
       placaReal = extraToken.toUpperCase().replace(/\s+/g, '');
     }
 
@@ -349,7 +352,7 @@ export function parseReportText(text: string): any {
   }
 
   // 12. Áreas
-  const areasMatch = cleanText.match(/\*(?:ÁREAS|AREAS):\*\s*([\s\S]*?)(?=\*(?:EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|DIOS):\*|•En el movil|Movil|Unidad|$)/i);
+  const areasMatch = cleanText.match(/\*(?:ÁREAS|AREAS):\*\s*([\s\S]*?)(?=\*(?:EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS)[:.]?\*|•En el movil|Movil|Unidad|$)/i);
   if (areasMatch) {
     const rawAreas = areasMatch[1].trim();
     const cleanAreas = rawAreas.split('\n')
@@ -357,6 +360,23 @@ export function parseReportText(text: string): any {
       .map(a => a.replace(/^-?\s*/, '').trim())
       .join(', ');
     result.areas_recorrido = cleanAreas || rawAreas;
+  }
+
+  // Consolidar vehículos duplicados (genérico vs específico)
+  if (result.vehiculos.length > 1) {
+    const generic = result.vehiculos.find((v: any) => v.numero_movil === 'Móvil AVSEC' || v.numero_movil === 'Móvil BATORG' || v.numero_movil === 'Móvil');
+    const specific = result.vehiculos.find((v: any) => v !== generic && v.numero_movil !== 'Móvil AVSEC' && v.numero_movil !== 'Móvil BATORG');
+    
+    if (generic && specific) {
+      if (!specific.conductor_nombre) {
+        specific.conductor_nombre = generic.conductor_nombre;
+        specific.conductor_id = generic.conductor_id;
+      }
+      if (!specific.placa_vehiculo || specific.placa_vehiculo === 'AVSEC' || specific.placa_vehiculo === 'BATORG') {
+        specific.placa_vehiculo = (generic.placa_vehiculo && generic.placa_vehiculo !== 'AVSEC' && generic.placa_vehiculo !== 'BATORG') ? generic.placa_vehiculo : specific.placa_vehiculo;
+      }
+      result.vehiculos = result.vehiculos.filter((v: any) => v !== generic);
+    }
   }
 
   return result;
