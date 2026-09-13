@@ -14,13 +14,13 @@ import { Btn3D } from '@/app/components/Btn3D';
 interface ValisBizSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  vendedores: VendedorAdmin[];
-  onSaved: () => void;
+  vendedores?: VendedorAdmin[];
+  onSaved?: () => void;
 }
 
 type TabType = 'septiembre' | 'crud' | 'metas';
 
-export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVendedores, onSaved }: ValisBizSettingsModalProps) {
+export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVendedores = [], onSaved = () => {} }: ValisBizSettingsModalProps) {
   const [tab, setTab] = useState<TabType>('septiembre');
   const [vendedores, setVendedores] = useState<VendedorAdmin[]>(initialVendedores);
   const [isPending, startTransition] = useTransition();
