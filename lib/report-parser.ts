@@ -242,13 +242,13 @@ export function parseReportText(text: string): any {
   }
 
   // 8. Asunto
-  const reporteMatch = cleanText.match(/\*(?:REPORTE|ASUNTO)[:.]?\*\s*([^\n]+)/i);
+  const reporteMatch = cleanText.match(/\*?(?:REPORTE|ASUNTO)\*?[:.]?\s*\n*([^\n]+)/i);
   if (reporteMatch) {
     const rawAsunto = reporteMatch[1].replace('.', '').trim().toLowerCase();
     if (rawAsunto.includes('recorrido')) result.asunto = 'Recorrido Perimetral';
     else if (rawAsunto.includes('relevo') || rawAsunto.includes('fijo') || rawAsunto.includes('puesto') || rawAsunto.includes('turno') || rawAsunto.includes('torre') || rawAsunto.includes('portón') || rawAsunto.includes('porton')) result.asunto = 'Relevo de Turno / Puesto Fijo';
     else if (rawAsunto.includes('traslado')) result.asunto = 'Traslado de Personal';
-    else result.asunto = reporteMatch[1].replace(/[*.]/g, '').trim(); 
+    else result.asunto = reporteMatch[1].replace(/[*.]/g, '').replace(/^[:\s]+/, '').trim(); 
   } else if (/Puesto|Pursto|A\.I\.P\.P/i.test(cleanText)) {
     result.asunto = 'Relevo de Turno / Puesto Fijo';
   }
