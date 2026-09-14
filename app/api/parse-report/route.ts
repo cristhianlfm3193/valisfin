@@ -22,25 +22,52 @@ export async function POST(req: Request) {
 
       // Recolectar todas las placas / pos_id presentes en el reporte
       const placasSet = new Set<string>();
-      if (parsedData.reporta?.placa) placasSet.add(parsedData.reporta.placa.trim());
-      if (parsedData.informa?.placa) placasSet.add(parsedData.informa.placa.trim());
-      
-      parsedData.unidades?.forEach((u: any) => {
-        if (u.placa_institucional) placasSet.add(u.placa_institucional.trim());
-      });
+      const nombresSet = new Set<string>();
 
+      const addPerson = (person: any) => {
+        if (person?.placa && person.placa.length >= 3) {
+          placasSet.add(person.placa.trim());
+        } else if (person?.nombre && person.nombre.length >= 4) {
+          // Si no tiene placa, extraemos el apellido o el nombre base
+          const parts = person.nombre.trim().split(' ');
+          const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+          nombresSet.add(lastName);
+        }
+      };
+
+      addPerson(parsedData.reporta);
+      addPerson(parsedData.informa);
+      parsedData.unidades?.forEach(addPerson);
       parsedData.vehiculos?.forEach((v: any) => {
-        if (v.conductor_id) placasSet.add(v.conductor_id.trim());
+        if (v.conductor_id && v.conductor_id.length >= 3) placasSet.add(v.conductor_id.trim());
+        else if (v.conductor_nombre && v.conductor_nombre.length >= 4) {
+          const parts = v.conductor_nombre.trim().split(' ');
+          const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+          nombresSet.add(lastName);
+        }
       });
 
-      const placas = Array.from(placasSet).filter(p => p.length >= 3);
+      const placas = Array.from(placasSet);
+      const nombres = Array.from(nombresSet);
 
-      if (placas.length > 0) {
-        // Consultar por pos_id (placa institucional) o por cedula
+      if (placas.length > 0 || nombres.length > 0) {
+        // Construir query `or`
+        let orQueries = [];
+        if (placas.length > 0) {
+          orQueries.push(`pos_id.in.(${placas.map(p => `"${p}"`).join(',')})`);
+          orQueries.push(`cedula.in.(${placas.map(p => `"${p}"`).join(',')})`);
+        }
+        if (nombres.length > 0) {
+          nombres.forEach(n => {
+            orQueries.push(`nombre_completo.ilike.%${n}%`);
+            orQueries.push(`apellido.ilike.%${n}%`);
+          });
+        }
+
         const { data: oficiales, error } = await supabase
           .from('valisan_bdrh')
           .select('pos_id, rango, cargo, nombre_completo, nombre, apellido, cedula, base, departamento')
-          .or(`pos_id.in.(${placas.map(p => `"${p}"`).join(',')}),cedula.in.(${placas.map(p => `"${p}"`).join(',')})`);
+          .or(orQueries.join(','));
 
         if (!error && oficiales && oficiales.length > 0) {
           const oficialesMap = new Map<string, any>();
@@ -69,8 +96,19 @@ export async function POST(req: Request) {
 
           // Enriquecer Unidades
           parsedData.unidades = parsedData.unidades.map((u: any) => {
+            let o = null;
             if (u.placa_institucional && oficialesMap.has(u.placa_institucional)) {
-              const o = oficialesMap.get(u.placa_institucional);
+              o = oficialesMap.get(u.placa_institucional);
+            } else if (!u.placa_institucional && u.nombre) {
+               // Buscar por nombre si no tiene placa
+               const parts = u.nombre.trim().split(' ');
+               const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+               o = oficiales.find((ofc: any) => 
+                 ofc.nombre_completo?.toLowerCase().includes(lastName.toLowerCase()) || 
+                 ofc.apellido?.toLowerCase().includes(lastName.toLowerCase())
+               );
+            }
+            if (o) {
               return {
                 ...u,
                 rango: o.rango || o.cargo || u.rango,
@@ -84,8 +122,18 @@ export async function POST(req: Request) {
 
           // Enriquecer Vehículos / Conductor
           parsedData.vehiculos = parsedData.vehiculos.map((v: any) => {
+            let o = null;
             if (v.conductor_id && oficialesMap.has(v.conductor_id)) {
-              const o = oficialesMap.get(v.conductor_id);
+              o = oficialesMap.get(v.conductor_id);
+            } else if (!v.conductor_id && v.conductor_nombre) {
+               const parts = v.conductor_nombre.trim().split(' ');
+               const lastName = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+               o = oficiales.find((ofc: any) => 
+                 ofc.nombre_completo?.toLowerCase().includes(lastName.toLowerCase()) || 
+                 ofc.apellido?.toLowerCase().includes(lastName.toLowerCase())
+               );
+            }
+            if (o) {
               return {
                 ...v,
                 conductor_nombre: o.nombre_completo?.replace(/\s+/g, ' ').trim() || v.conductor_nombre,

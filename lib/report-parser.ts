@@ -59,6 +59,10 @@ export function parseReportText(text: string): any {
 
   function extractOfficer(line: string) {
     if (!line) return null;
+    let depto = '';
+    const deptoMatch = line.match(/\(([^)]+)\)[.\s]*$/);
+    if (deptoMatch) depto = deptoMatch[1].trim();
+    
     const cleanLine = line
       .replace(/^[\s•*\-\d.]+(?=\s|[a-zA-ZÁÉÍÓÚáéíóúÑñ])/i, '')
       .replace(/\s*\([^)]*\)[.\s]*$/, '')
@@ -72,7 +76,8 @@ export function parseReportText(text: string): any {
       return {
         rango: normalizeRank(m1[1]),
         placa: m1[2].trim(),
-        nombre: m1[3].trim()
+        nombre: m1[3].trim(),
+        departamento: depto
       };
     }
 
@@ -83,7 +88,8 @@ export function parseReportText(text: string): any {
       return {
         rango: normalizeRank(m2[1] || 'Guardia'),
         placa: m2[3] ? m2[3].replace(/[^\w-]/g, '').trim() : '',
-        nombre: m2[2].trim()
+        nombre: m2[2].trim(),
+        departamento: depto
       };
     }
 
@@ -94,7 +100,8 @@ export function parseReportText(text: string): any {
       return {
         rango: 'Conductor / Agente',
         placa: m3[2].trim(),
-        nombre: m3[1].trim()
+        nombre: m3[1].trim(),
+        departamento: depto
       };
     }
 
@@ -140,7 +147,7 @@ export function parseReportText(text: string): any {
           rango: officer.rango,
           placa_institucional: officer.placa,
           nombre: officer.nombre,
-          destino: ''
+          destino: officer.departamento || ''
         });
       }
     }
@@ -185,7 +192,7 @@ export function parseReportText(text: string): any {
           rango: officer.rango,
           placa_institucional: officer.placa,
           nombre: officer.nombre,
-          destino: ''
+          destino: officer.departamento || ''
         });
       }
     }
@@ -262,7 +269,7 @@ export function parseReportText(text: string): any {
           rango: officer.rango,
           placa_institucional: officer.placa,
           nombre: officer.nombre,
-          destino: puestoNombre
+          destino: officer.departamento || puestoNombre
         });
       }
     }
@@ -291,7 +298,7 @@ export function parseReportText(text: string): any {
           rango: officer.rango,
           placa_institucional: officer.placa,
           nombre: officer.nombre,
-          destino: ''
+          destino: officer.departamento || ''
         });
       }
     }
@@ -358,6 +365,50 @@ export function parseReportText(text: string): any {
       });
     }
   }
+  // 10.5 Bloques de Móviles (ej: *Móvil 1064*\n*Conductor:* Cabo 1ro ...)
+  const movilBlockRegex = /\*?(?:M[oó]vil|Veh[ií]culo|Patrulla|Carro)\s+(?:de\s+)?([^:*\n]+)\*?[:.]?\s*\n([\s\S]*?)(?=\*?(?:Pista|Hangar|Puesto|Pursto|Informa|INFORMA|Reporta|REPORTA|Narrativa|Áreas|Equipos|Novedad|Unidad(?:es)?|UNIDADES|M[oó]vil|Veh[ií]culo|Carro)(?:\s|[:*])|PA\s*\*Dios|DIOS|$)/gi;
+  let movilBlockMatch: RegExpExecArray | null;
+  while ((movilBlockMatch = movilBlockRegex.exec(cleanText)) !== null) {
+    const ident = movilBlockMatch[1].trim();
+    const isAvsec = /AVSEC/i.test(ident);
+    const content = movilBlockMatch[2];
+    
+    let conductor = '';
+    let conductorId = '';
+    
+    const lines = content.split('\n');
+    for (const line of lines) {
+      const cleanL = line.trim();
+      if (!cleanL) continue;
+      
+      const off = extractOfficer(cleanL);
+      if (cleanL.match(/\*(?:Conductor|Cond)[\s:.*]*\s*([^\n]+)/i)) {
+        if (off) { conductor = `${off.rango} ${off.nombre}`; conductorId = off.placa; }
+        else conductor = cleanL.replace(/[*]/g,'').replace(/Conductor[:.*]*/i, '').trim();
+      } else if (cleanL.match(/\*Correr[ií]a[\s:.*]*\s*([^\n]+)/i)) {
+        if (off && !result.unidades.some((u: any) => u.placa_institucional === off.placa && off.placa)) {
+          result.unidades.push({ rol: 'Correría / Patrullaje', rango: off.rango, placa_institucional: off.placa, nombre: off.nombre, destino: off.departamento || '' });
+        }
+      } else if (!conductor && off) {
+        conductor = `${off.rango} ${off.nombre}`; conductorId = off.placa;
+      } else if (off) {
+        if (!result.unidades.some((u: any) => u.placa_institucional === off.placa && off.placa)) {
+           result.unidades.push({ rol: 'Patrullaje', rango: off.rango, placa_institucional: off.placa, nombre: off.nombre, destino: off.departamento || '' });
+        }
+      }
+    }
+    
+    if (!result.vehiculos.some((v: any) => v.numero_movil.includes(ident) || v.placa_vehiculo === ident)) {
+      result.vehiculos.push({
+        numero_movil: isAvsec ? 'Móvil AVSEC' : `Móvil ${ident}`,
+        placa_vehiculo: isAvsec ? 'AVSEC' : ident,
+        conductor_nombre: conductor,
+        conductor_id: conductorId,
+        correria: 'Patrullaje'
+      });
+    }
+  }
+
 
   // 11. Extraer Novedad / Equipos primero para no mezclarlo con Narrativa
   const novedadMatch = cleanText.match(/\*(?:EQUIPOS?|NOVEDAD(?:ES)?|EQUIPOS?\s*\/\s*NOVEDAD(?:ES)?)[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS|NARRATIVA)[:.]?\*|•En el movil|Movil|Unidad|$)/i);
