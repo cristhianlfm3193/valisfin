@@ -237,34 +237,6 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           </div>
         )}
 
-        {/* Tab Switcher */}
-        <div className="bg-[#1a2332] p-1.5 rounded-2xl mb-6 flex items-center justify-between gap-2 shadow-inner overflow-x-auto border border-white/5">
-          <div className="flex items-center gap-1.5 w-full sm:w-auto">
-            {[
-              { id: 'ventas', label: 'Ventas & Métricas', Icon: TrendingUp },
-              { id: 'estadisticas', label: 'Estadísticas', Icon: BarChart2 },
-              { id: 'mapa', label: 'Mapa CRM de Visitas', Icon: MapPin },
-            ].map(({ id, label, Icon: TabIcon }) => (
-              <button
-                key={id}
-                onClick={() => {
-                  setActiveTab(id as any);
-                  const params = new URLSearchParams(searchParams.toString());
-                  params.set('tab', id);
-                  router.push(`/valisbiz?${params.toString()}`, { scroll: false });
-                }}
-                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap border ${activeTab === id ? 'bg-pink-500/20 text-pink-400 border-pink-500/30 shadow-sm' : 'text-slate-400 hover:text-white border-transparent hover:bg-white/5'}`}
-              >
-                <TabIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>{label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="hidden lg:flex items-center gap-2 text-slate-400 font-mono text-xs pr-3 whitespace-nowrap">
-            <RefreshCw className={`w-4 h-4 text-pink-400 ${isPending ? 'animate-spin' : ''}`} />
-            <span>{isPending ? 'Cargando...' : 'Sincronizado'}</span>
-          </div>
-        </div>
 
         {/* Tab Contents */}
         {activeTab === 'ventas' && (
