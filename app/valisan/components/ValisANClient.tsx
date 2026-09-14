@@ -7,10 +7,11 @@ import { BarChart2, Target, Shield, Search, Calendar as CalendarIcon, FileDown, 
 import ReporteOperativoModal from './ReporteOperativoModal';
 import ValisAIAssistant from './ValisAIAssistant';
 import ReporteDetalleModal from './ReporteDetalleModal';
+import BDRHModal from './BDRHModal';
 
 const JURAMENTADOS_RANKS = [
-  "Director",
-  "Subdirector",
+  "Director General",
+  "Subdirector General",
   "Comisionado",
   "Subcomisionado",
   "Mayor",
@@ -30,8 +31,8 @@ function normalizeRank(rawRank: string | null | undefined): string {
   const normalized = rawRank.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const cleanStr = normalized.replace(/[^a-z0-9]/g, "");
   
-  if (cleanStr === "director") return "Director";
-  if (cleanStr === "subdirector") return "Subdirector";
+  if (cleanStr === "directorgeneral" || cleanStr === "director") return "Director General";
+  if (cleanStr === "subdirectorgeneral" || cleanStr === "subdirector") return "Subdirector General";
   if (cleanStr === "comisionado") return "Comisionado";
   if (cleanStr === "subcomisionado") return "Subcomisionado";
   if (cleanStr === "mayor") return "Mayor";
@@ -474,6 +475,58 @@ function ValisANBDRH() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const supabase = createClient();
 
+  const [selectedBdrhPerson, setSelectedBdrhPerson] = useState<any>(null);
+  const [isBdrhModalOpen, setIsBdrhModalOpen] = useState(false);
+  const [bdrhModalMode, setBdrhModalMode] = useState<'view' | 'edit'>('view');
+
+  const handleViewPerson = (person: any) => {
+    setSelectedBdrhPerson(person);
+    setBdrhModalMode('view');
+    setIsBdrhModalOpen(true);
+  };
+
+  const handleEditPerson = (person: any) => {
+    setSelectedBdrhPerson(person);
+    setBdrhModalMode('edit');
+    setIsBdrhModalOpen(true);
+  };
+
+  const handleSavePerson = async (updatedPerson: any) => {
+    const { id, ...updateData } = updatedPerson;
+    // Don't update the rank normalization field we added client side if it doesn't match db structure
+    // actually, we overwrite rango directly, which is fine since the DB has 'rango' column.
+    
+    const { error } = await supabase
+      .from('valisan_bdrh')
+      .update(updateData)
+      .eq('id', id);
+
+    if (error) {
+      console.error("Error updating person:", error);
+      alert("Hubo un error al guardar los cambios.");
+      return;
+    }
+
+    setData(prevData => prevData.map(p => p.id === id ? updatedPerson : p));
+  };
+
+  const handleDeletePerson = async (id: number) => {
+    if (window.confirm("¿Está seguro que desea eliminar este registro? Esta acción no se puede deshacer.")) {
+      const { error } = await supabase
+        .from('valisan_bdrh')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+        console.error("Error deleting person:", error);
+        alert("Hubo un error al eliminar el registro.");
+        return;
+      }
+      
+      setData(prevData => prevData.filter(p => p.id !== id));
+    }
+  };
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -525,8 +578,8 @@ function ValisANBDRH() {
     });
 
     const rankOrder = [
-      "Director",
-      "Subdirector",
+      "Director General",
+      "Subdirector General",
       "Comisionado",
       "Subcomisionado",
       "Mayor",
@@ -770,10 +823,19 @@ function ValisANBDRH() {
                   <td className="py-3 px-4 text-slate-400 truncate max-w-[150px]" title={row.departamento}>{row.departamento}</td>
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                      <button className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-900 hover:text-sky-300 text-slate-400 transition" title="Editar">
+                      <button 
+                        onClick={() => handleViewPerson(row)}
+                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-emerald-900 hover:text-emerald-300 text-slate-400 transition" title="Ver Info">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleEditPerson(row)}
+                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-sky-900 hover:text-sky-300 text-slate-400 transition" title="Editar">
                         <Edit2 className="w-4 h-4" />
                       </button>
-                      <button className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900 hover:text-rose-300 text-slate-400 transition" title="Eliminar">
+                      <button 
+                        onClick={() => handleDeletePerson(row.id)}
+                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900 hover:text-rose-300 text-slate-400 transition" title="Eliminar">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -826,6 +888,14 @@ function ValisANBDRH() {
           </div>
         </div>
       </div>
+
+      <BDRHModal 
+        isOpen={isBdrhModalOpen}
+        onClose={() => setIsBdrhModalOpen(false)}
+        person={selectedBdrhPerson}
+        mode={bdrhModalMode}
+        onSave={handleSavePerson}
+      />
     </section>
   );
 }
