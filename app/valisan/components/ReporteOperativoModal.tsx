@@ -56,14 +56,25 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
   };
 
   useEffect(() => {
-    if (initialData && isOpen) {
-      if (initialData.departamento) setDepartamento(initialData.departamento);
-      if (initialData.asunto) setAsunto(initialData.asunto);
-      if (initialData.fecha) setFecha(initialData.fecha);
-      if (initialData.hora) setHora(initialData.hora);
-      if (initialData.narrativa) setNarrativa(initialData.narrativa);
-      if (initialData.reporta) setReporta(initialData.reporta);
-      if (initialData.informa) setInforma(initialData.informa);
+    if (isOpen) {
+      if (initialData) {
+        if (initialData.departamento) setDepartamento(initialData.departamento);
+        if (initialData.asunto) setAsunto(initialData.asunto);
+        if (initialData.fecha) setFecha(initialData.fecha);
+        if (initialData.hora) setHora(initialData.hora);
+        if (initialData.narrativa) setNarrativa(initialData.narrativa);
+        if (initialData.reporta) setReporta(initialData.reporta);
+        if (initialData.informa) setInforma(initialData.informa);
+      } else {
+        setDepartamento('POLICÍA AEROPORTUARIA');
+        setAsunto('');
+        const today = new Date();
+        setFecha(today.toISOString().split('T')[0]);
+        setHora(today.toTimeString().split(' ')[0].substring(0, 5));
+        setNarrativa('');
+        setReporta({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+        setInforma({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+      }
     }
   }, [initialData, isOpen]);
 

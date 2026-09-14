@@ -97,10 +97,10 @@ export default function ValisANClient({ user, activeTab }: ValisANClientProps) {
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Valis<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400">AN</span> • Servicio Nacional Aeronaval
+              Valis<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400">AN</span> • III Capitán Cristhian Fuentes
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl font-medium tracking-wide">
-              Dios, Patria y Honor.
+              Servicio Nacional Aeronaval - Dios Patría y Honor.
             </p>
           </div>
         </div>
