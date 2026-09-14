@@ -4,6 +4,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { LoadingCube } from '@/app/components/LoadingCube';
 import { BarChart2, Target, Shield, Search, Calendar as CalendarIcon, FileDown, PlusCircle, SlidersHorizontal, CheckCircle2, AlertTriangle, Eye, ShieldCheck, MapPin, Download, Edit2, Trash2, Loader2, ArrowUpDown, ChevronUp, ChevronDown, FileText } from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell } from 'recharts';
+import { format, subDays, subMonths, parseISO, isAfter } from 'date-fns';
+import { es } from 'date-fns/locale';
 import ReporteOperativoModal from './ReporteOperativoModal';
 import ValisAIAssistant from './ValisAIAssistant';
 import ReporteDetalleModal from './ReporteDetalleModal';
@@ -141,97 +144,232 @@ export default function ValisANClient({ user, activeTab }: ValisANClientProps) {
 
 // Sub-components for Tabs to keep it organized
 function ValisANDashboard() {
+  const supabase = createClient();
+  const [reportes, setReportes] = useState<any[]>([]);
+  const [bdrhCount, setBdrhCount] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
+  const [dateFilter, setDateFilter] = useState<'all' | 'this_month' | 'last_month'>('this_month');
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      
+      // Fetch reportes
+      const { data: reportesData } = await supabase
+        .from('reportes')
+        .select('fecha, departamento');
+      
+      if (reportesData) {
+        setReportes(reportesData);
+      }
+
+      // Fetch BDRH count
+      const { count } = await supabase
+        .from('valisan_bdrh')
+        .select('*', { count: 'exact', head: true });
+        
+      if (count !== null) {
+        setBdrhCount(count);
+      }
+
+      setLoading(false);
+    }
+    fetchData();
+  }, [supabase]);
+
+  const filteredReportes = useMemo(() => {
+    if (!reportes.length) return [];
+    
+    const now = new Date();
+    return reportes.filter(r => {
+      if (!r.fecha) return false;
+      const date = parseISO(r.fecha);
+      if (dateFilter === 'all') return true;
+      if (dateFilter === 'this_month') {
+        return isAfter(date, subDays(now, 30));
+      }
+      if (dateFilter === 'last_month') {
+         // approx last month
+         return isAfter(date, subDays(now, 60)) && !isAfter(date, subDays(now, 30));
+      }
+      return true;
+    });
+  }, [reportes, dateFilter]);
+
+  const reportesPorDia = useMemo(() => {
+    const counts: Record<string, number> = {};
+    filteredReportes.forEach(r => {
+      if (!r.fecha) return;
+      const dateStr = format(parseISO(r.fecha), 'MMM dd', { locale: es });
+      counts[dateStr] = (counts[dateStr] || 0) + 1;
+    });
+    return Object.entries(counts).map(([name, Recorridos]) => ({ name, Recorridos }));
+  }, [filteredReportes]);
+
+  const reportesPorDepartamento = useMemo(() => {
+    const counts: Record<string, number> = {};
+    filteredReportes.forEach(r => {
+      const dep = r.departamento || 'Sin Asignar';
+      counts[dep] = (counts[dep] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .map(([name, Total]) => ({ name, Total }))
+      .sort((a, b) => b.Total - a.Total)
+      .slice(0, 10);
+  }, [filteredReportes]);
+
   return (
     <section className="space-y-6 animate-in fade-in zoom-in-95 duration-300 z-10 relative">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8]"></span>
-          <h2 className="text-xl font-bold tracking-tight text-white">Dashboard Power BI • Visión Ejecutiva Institucional</h2>
+          <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#38bdf8] animate-pulse"></span>
+          <h2 className="text-xl font-bold tracking-tight text-white">Dashboard ValisAN</h2>
         </div>
-        <span className="text-xs text-slate-400">Actualizado hace 3 min • Motor IA Valis Predictivo</span>
+        
+        {/* Filtro de Fecha */}
+        <div className="flex items-center gap-2 bg-[#0a1426]/80 p-1.5 rounded-xl border border-sky-500/30 shadow-inner">
+          <button 
+            onClick={() => setDateFilter('all')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition ${dateFilter === 'all' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+          >
+            Histórico
+          </button>
+          <button 
+            onClick={() => setDateFilter('last_month')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition ${dateFilter === 'last_month' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+          >
+            Mes Pasado
+          </button>
+          <button 
+            onClick={() => setDateFilter('this_month')}
+            className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition ${dateFilter === 'this_month' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+          >
+            Últimos 30 días
+          </button>
+        </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* KPI 1 */}
-        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 p-5 rounded-2xl border-l-4 border-l-cyan-400 relative overflow-hidden flex flex-col justify-between">
-          <div className="flex items-start justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* KPI 1: Reportes Operativos */}
+        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 p-6 rounded-2xl border-l-4 border-l-cyan-400 relative overflow-hidden flex flex-col justify-between shadow-2xl">
+          <div className="absolute -right-6 -top-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="flex items-start justify-between relative z-10">
             <div>
-              <p className="text-xs uppercase font-semibold tracking-wider text-slate-400">Índice Ejecución AIPP</p>
-              <p className="text-2xl sm:text-3xl font-black text-white mt-1">89.4%</p>
-              <div className="flex items-center gap-1.5 mt-1 text-[11px] font-semibold text-emerald-400">
-                <TrendingUpIcon className="w-3.5 h-3.5" />
-                <span>+4.2% vs meta mensual</span>
-              </div>
-            </div>
-            <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
-              <svg className="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
-                <path className="text-slate-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5" />
-                <path className="text-cyan-400 stroke-current drop-shadow-[0_0_4px_rgba(0,240,255,0.5)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeDasharray="89.4, 100" strokeLinecap="round" strokeWidth="3.5" />
-              </svg>
-              <CheckCircle2 className="absolute w-4 h-4 text-cyan-300" />
+              <p className="text-sm uppercase font-semibold tracking-wider text-slate-400 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-cyan-400" /> Registros Reporte Operativo
+              </p>
+              {loading ? (
+                <div className="h-10 w-24 bg-slate-800 animate-pulse rounded mt-2"></div>
+              ) : (
+                <p className="text-4xl sm:text-5xl font-black text-white mt-2 tracking-tighter">
+                  {filteredReportes.length.toLocaleString()}
+                </p>
+              )}
             </div>
           </div>
-          <div className="w-full bg-slate-800/80 rounded-full h-1.5 mt-4 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full" style={{ width: '89.4%' }}></div>
+          <div className="w-full bg-slate-800/80 rounded-full h-1.5 mt-6 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full w-full"></div>
           </div>
         </div>
 
-        {/* KPI 2 */}
-        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 p-5 rounded-2xl border-l-4 border-l-sky-500 flex flex-col justify-between">
-          <div className="flex items-start justify-between">
+        {/* KPI 2: BD-RH */}
+        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-indigo-500/20 p-6 rounded-2xl border-l-4 border-l-indigo-400 relative overflow-hidden flex flex-col justify-between shadow-2xl">
+          <div className="absolute -right-6 -top-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="flex items-start justify-between relative z-10">
             <div>
-              <p className="text-xs uppercase font-semibold tracking-wider text-slate-400">Presupuesto Operativo</p>
-              <p className="text-2xl sm:text-3xl font-black text-white mt-1">B/. 142,500<span className="text-base text-slate-400 font-normal">.00</span></p>
-              <p className="text-xs text-slate-300 mt-1">De B/. 160,000.00 asignado (89%)</p>
+              <p className="text-sm uppercase font-semibold tracking-wider text-slate-400 flex items-center gap-2">
+                <Shield className="w-4 h-4 text-indigo-400" /> Registros BD-RH
+              </p>
+              {loading ? (
+                 <div className="h-10 w-24 bg-slate-800 animate-pulse rounded mt-2"></div>
+              ) : (
+                <p className="text-4xl sm:text-5xl font-black text-white mt-2 tracking-tighter">
+                  {bdrhCount.toLocaleString()}
+                </p>
+              )}
             </div>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-4">
-            <span>Remanente: <strong className="text-cyan-300">B/. 17,500.00</strong></span>
-            <span className="text-emerald-400 font-medium">En rango sano</span>
-          </div>
-        </div>
-
-        {/* KPI 3 */}
-        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 p-5 rounded-2xl border-l-4 border-l-indigo-500 flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs uppercase font-semibold tracking-wider text-slate-400">Fuerza Humana Activa</p>
-              <p className="text-2xl sm:text-3xl font-black text-white mt-1">148 <span className="text-base text-slate-400 font-normal">Unidades</span></p>
-              <div className="flex items-center gap-1 text-[11px] font-semibold text-cyan-300 mt-1">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                <span>98.6% En Servicio Activo</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-4">
-            <span>2 en permiso • 0 bajas</span>
-            <span className="text-sky-300 font-medium">Panamá &amp; Oeste</span>
-          </div>
-        </div>
-
-        {/* KPI 4 */}
-        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 p-5 rounded-2xl border-l-4 border-l-amber-500 flex flex-col justify-between">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-xs uppercase font-semibold tracking-wider text-slate-400">Alertas Críticas BI</p>
-              <p className="text-2xl sm:text-3xl font-black text-amber-300 mt-1">3 <span className="text-sm font-semibold text-slate-400">Pendientes</span></p>
-              <p className="text-xs text-slate-300 mt-1">Auditoría en ruta y 2 hitos Q3</p>
-            </div>
-            <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-[11px] text-amber-300/90 mt-4">
-            <span className="flex items-center gap-1">Resolución &lt; 24h</span>
-            <span className="underline hover:text-white cursor-pointer">Ver detalles</span>
+          <div className="w-full bg-slate-800/80 rounded-full h-1.5 mt-6 overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-400 h-full rounded-full w-full"></div>
           </div>
         </div>
       </div>
       
-      {/* Additional charts area placeholder */}
-      <div className="h-64 border-2 border-dashed border-sky-500/20 rounded-3xl flex items-center justify-center text-slate-500 bg-[#0a1426]/40 backdrop-blur-sm">
-        <p className="font-medium flex items-center gap-2"><BarChart2 className="w-5 h-5 text-cyan-500" /> Área de Gráficos Dual Axis (En Desarrollo)</p>
+      {/* Visualizations Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        {/* Recorridos por Día (Area Chart) */}
+        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-sky-500/20 rounded-2xl p-5 shadow-2xl">
+          <div className="flex items-center gap-2 mb-6">
+            <BarChart2 className="w-5 h-5 text-cyan-400" />
+            <h3 className="font-semibold text-white">Recorridos por Día</h3>
+          </div>
+          <div className="h-72 w-full">
+            {loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
+              </div>
+            ) : reportesPorDia.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={reportesPorDia} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorRecorridos" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                  <XAxis dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#38bdf8', borderRadius: '0.75rem', color: '#f8fafc' }}
+                    itemStyle={{ color: '#38bdf8' }}
+                  />
+                  <Area type="monotone" dataKey="Recorridos" stroke="#06b6d4" strokeWidth={3} fillOpacity={1} fill="url(#colorRecorridos)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-slate-500 text-sm">No hay datos para el periodo seleccionado</div>
+            )}
+          </div>
+        </div>
+
+        {/* Reportes por Departamento (Bar Chart) */}
+        <div className="bg-[#0a1426]/68 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-2xl">
+          <div className="flex items-center gap-2 mb-6">
+            <Target className="w-5 h-5 text-indigo-400" />
+            <h3 className="font-semibold text-white">Top Departamentos Activos</h3>
+          </div>
+          <div className="h-72 w-full">
+            {loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+              </div>
+            ) : reportesPorDepartamento.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={reportesPorDepartamento} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
+                  <XAxis type="number" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis type="category" dataKey="name" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} width={100} />
+                  <Tooltip 
+                    cursor={{fill: '#1e293b'}}
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#818cf8', borderRadius: '0.75rem', color: '#f8fafc' }}
+                    itemStyle={{ color: '#818cf8' }}
+                  />
+                  <Bar dataKey="Total" fill="#6366f1" radius={[0, 4, 4, 0]}>
+                    {reportesPorDepartamento.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#6366f1' : '#4f46e5'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-slate-500 text-sm">No hay datos para el periodo seleccionado</div>
+            )}
+          </div>
+        </div>
+        
       </div>
     </section>
   );
