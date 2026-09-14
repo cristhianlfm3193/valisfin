@@ -216,53 +216,15 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
     await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id);
   };
 
-  // Metrics calculation based on RAW month-filtered payments
+  // Metrics calculation based on GROUPED payments (so counts match the UI cards)
   const { totalPaid, totalPending, paidCount, pendingCount } = useMemo(() => {
     let tPaid = 0;
     let tPending = 0;
     let pCount = 0;
     let pendCount = 0;
 
-    const processedSmartCards = new Set<string>();
-
-    monthFilteredPayments.forEach((payment) => {
-      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Uso Tarjeta de Credito';
-      
-      if (isSmart) {
-        if (!processedSmartCards.has(payment.title)) {
-          processedSmartCards.add(payment.title);
-          
-          if (payment.title === 'Uso Tarjeta de Credito') {
-            // Find how much was actually paid this month towards the card
-            const paidThisMonth = monthFilteredPayments
-              .filter(p => p.title === 'Uso Tarjeta de Credito' && p.is_paid)
-              .reduce((sum, p) => sum + p.amount, 0);
-            
-            // ccSpent represents the total outstanding debt
-            const currentDebt = ccSpent;
-            
-            tPaid += paidThisMonth; // ONLY add actual payments made to the card
-            tPending += currentDebt > 0 ? currentDebt : 0; // Add outstanding debt to 'Por Pagar'
-            
-            if (currentDebt <= 0) pCount++;
-            else pendCount++;
-          } else {
-            // Supermercado / Gasolina
-            const spent = payment.title === 'Supermercado' ? superSpent : gasSpent;
-            // Limit is the amount from the first unpaid record (or the first record if all paid)
-            const limitRecord = monthFilteredPayments.find(p => p.title === payment.title && !p.is_paid) || monthFilteredPayments.find(p => p.title === payment.title) || payment;
-            const connectedLimit = limitRecord.amount;
-
-            const pending = Math.max(connectedLimit - spent, 0);
-            
-            tPaid += spent;
-            tPending += pending;
-            
-            if (spent >= connectedLimit) pCount++;
-            else pendCount++;
-          }
-        }
-      } else {
+    groupedPayments.forEach((payment) => {
+      if (!payment.isSmartCard) {
         if (payment.is_paid) {
           tPaid += payment.amount;
           pCount++;
@@ -279,7 +241,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       paidCount: pCount,
       pendingCount: pendCount,
     };
-  }, [monthFilteredPayments]);
+  }, [groupedPayments]);
 
   const totalItems = paidCount + pendingCount;
   const progressPercent = totalItems > 0 ? Math.round((paidCount / totalItems) * 100) : 0;

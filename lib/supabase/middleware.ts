@@ -38,8 +38,9 @@ export async function updateSession(request: NextRequest) {
 
   // refresca el token de autenticación
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
+  const user = session?.user
 
   // Interceptar el código de OAuth si Supabase redirige a una URL no esperada (ej. al Site URL por defecto)
   if (request.nextUrl.searchParams.has('code') && !request.nextUrl.pathname.startsWith('/auth/callback')) {
@@ -53,40 +54,6 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
-  }
-
-  // Validar si el usuario está autorizado mediante la base de datos
-  if (user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
-    // Buscar perfil en base de datos para obtener el rol y estado
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, is_active')
-      .eq('id', user.id)
-      .single()
-
-    // Si no está activo en la base de datos, redirigir a unauthorized
-    if (!profile?.is_active) {
-      if (!request.nextUrl.pathname.startsWith('/unauthorized')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/unauthorized'
-        return NextResponse.redirect(url)
-      }
-    } else {
-      // Si ESTÁ activo pero está atrapado en la página de unauthorized, enviarlo al portal
-      if (request.nextUrl.pathname.startsWith('/unauthorized')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/'
-        return NextResponse.redirect(url)
-      }
-    }
-
-    // Lógica opcional: Si necesitas proteger rutas específicas según rol
-    // Por ejemplo, si tienes una ruta /admin y el rol no es administrador:
-    if (request.nextUrl.pathname.startsWith('/admin') && profile?.role !== 'administrador') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/' 
-      return NextResponse.redirect(url)
-    }
   }
 
   // Si hay usuario y está en la página de login, redirigir al portal

@@ -59,39 +59,22 @@ export async function getDashboardData() {
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const currentMonthPeriod = `${d.getFullYear()}-${m}`;
 
-  // 1. Fetch Fixed Payments
-  const { data: fixedPayments } = await supabase
-    .from('fixed_payments')
-    .select('*')
-    .order('created_at', { ascending: true });
-
-  // 2. Fetch Daily Expenses
-  const { data: dailyExpenses } = await supabase
-    .from('daily_expenses')
-    .select('*');
-
-  // 3. Fetch Incomes
-  const { data: incomes } = await supabase
-    .from('incomes')
-    .select('*')
-    .order('date_expected', { ascending: false });
-
-  // 4. Fetch Savings Goals
-  const { data: savingsGoals } = await supabase
-    .from('savings_goals')
-    .select('*');
-
-  // 5. Fetch Vehicle Metrics
-  const { data: vehicleMetrics } = await supabase
-    .from('vehicle_metrics')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
-
-  const { data: pendingWorks } = await supabase
-    .from('pending_works')
-    .select('*');
+  // Run all queries in parallel
+  const [
+    { data: fixedPayments },
+    { data: dailyExpenses },
+    { data: incomes },
+    { data: savingsGoals },
+    { data: vehicleMetrics },
+    { data: pendingWorks }
+  ] = await Promise.all([
+    supabase.from('fixed_payments').select('*').order('created_at', { ascending: true }),
+    supabase.from('daily_expenses').select('*'),
+    supabase.from('incomes').select('*').order('date_expected', { ascending: false }),
+    supabase.from('savings_goals').select('*'),
+    supabase.from('vehicle_metrics').select('*').order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('pending_works').select('*')
+  ]);
 
   // Base Arrays
   const fp = fixedPayments || [];
