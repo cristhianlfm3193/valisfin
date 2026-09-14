@@ -42,31 +42,31 @@ interface MetricasVentasProps {
 
 function getColors(pct: number) {
   if (pct >= 100) return { 
-    bg: 'bg-emerald-50/70', 
-    border: 'border-emerald-100',
+    bg: 'bg-emerald-500/10', 
+    border: 'border-emerald-500/20',
     text: 'text-emerald-400', 
-    badge: 'bg-emerald-500/20/90 text-emerald-800 border border-emerald-200/60', 
+    badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30', 
     bar: 'bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600', 
     icon: Sparkles, 
-    iconBg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-200/60'
+    iconBg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
   };
   if (pct >= 85) return { 
-    bg: 'bg-purple-50/60', 
-    border: 'border-purple-100',
-    text: 'text-purple-700', 
-    badge: 'bg-purple-100/90 text-purple-800 border border-purple-200/60', 
+    bg: 'bg-purple-500/10', 
+    border: 'border-purple-500/20',
+    text: 'text-purple-400', 
+    badge: 'bg-purple-500/20 text-purple-400 border border-purple-500/30', 
     bar: 'bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600', 
     icon: TrendingUp, 
-    iconBg: 'bg-purple-100 text-purple-600 border border-purple-200/60'
+    iconBg: 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
   };
   return { 
-    bg: 'bg-rose-50/60', 
-    border: 'border-rose-100',
+    bg: 'bg-rose-500/10', 
+    border: 'border-rose-500/20',
     text: 'text-rose-400', 
-    badge: 'bg-rose-500/20/90 text-rose-800 border border-rose-200/60', 
+    badge: 'bg-rose-500/20 text-rose-400 border border-rose-500/30', 
     bar: 'bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500', 
     icon: Sparkles, 
-    iconBg: 'bg-rose-500/20 text-pink-400 border border-rose-200/60'
+    iconBg: 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
   };
 }
 
