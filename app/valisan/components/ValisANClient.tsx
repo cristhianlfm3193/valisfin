@@ -243,7 +243,6 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
   const [searchReportes, setSearchReportes] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllReportes, setShowAllReportes] = useState(false);
-  const itemsPerPage = showAllReportes ? (filteredReportes?.length || 1) : 20;
   
   const [viewingReport, setViewingReport] = useState<any>(null);
   const [isDetalleModalOpen, setIsDetalleModalOpen] = useState(false);
@@ -292,6 +291,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
     });
   }, [reportes, searchReportes]);
 
+  const itemsPerPage = showAllReportes ? (filteredReportes?.length || 1) : 20;
   const totalPages = Math.max(1, Math.ceil(filteredReportes.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedReportes = filteredReportes.slice(startIndex, startIndex + itemsPerPage);
