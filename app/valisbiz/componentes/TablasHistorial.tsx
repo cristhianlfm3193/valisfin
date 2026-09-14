@@ -174,7 +174,9 @@ function ModalEditarFacturado({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (total <= 0) { setError('Contado + Crédito debe ser mayor a cero.'); return; }
+    const contadoNum = parseFloat(contado) || 0;
+    const creditoNum = parseFloat(credito) || 0;
+    if (contadoNum === 0 && creditoNum === 0) { setError('Debes ingresar un valor diferente de cero para Contado o Crédito.'); return; }
     startTransition(async () => {
       const r = await editarFacturado(
         registro.id,
@@ -216,7 +218,7 @@ function ModalEditarFacturado({
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
-                <input type="number" step="0.01" min="0" value={contado} onChange={e => setContado(e.target.value)}
+                <input type="number" step="0.01" value={contado} onChange={e => setContado(e.target.value)}
                   placeholder="0.00" className={inputBase} />
               </div>
             </div>
@@ -226,7 +228,7 @@ function ModalEditarFacturado({
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
-                <input type="number" step="0.01" min="0" value={credito} onChange={e => setCredito(e.target.value)}
+                <input type="number" step="0.01" value={credito} onChange={e => setCredito(e.target.value)}
                   placeholder="0.00" className={inputBase} />
               </div>
             </div>
@@ -645,10 +647,10 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                       </span>
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm text-emerald-400">
-                      {r.contado > 0 ? `B/.${fmt(r.contado)}` : '—'}
+                      {r.contado !== 0 ? `B/.${fmt(r.contado)}` : '—'}
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm text-blue-400">
-                      {r.credito > 0 ? `B/.${fmt(r.credito)}` : '—'}
+                      {r.credito !== 0 ? `B/.${fmt(r.credito)}` : '—'}
                     </td>
                     <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-400">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3 text-xs text-slate-400 max-w-[160px] truncate">{r.notas || '—'}</td>

@@ -77,8 +77,8 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
     if (tab === 'facturado') {
       const contadoNum = parseFloat(facContado) || 0;
       const creditoNum = parseFloat(facCredito) || 0;
-      if (contadoNum + creditoNum <= 0) {
-        setError('Contado + Crédito debe ser mayor a cero.');
+      if (contadoNum === 0 && creditoNum === 0) {
+        setError('Debes ingresar un valor diferente de cero para Contado o Crédito.');
         return;
       }
       startTransition(async () => {
@@ -208,7 +208,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                     </label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
-                      <input type="number" step="0.01" min="0" value={facContado}
+                      <input type="number" step="0.01" value={facContado}
                         onChange={e => setFacContado(e.target.value)} placeholder="0.00"
                         className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                     </div>
@@ -219,7 +219,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                     </label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
-                      <input type="number" step="0.01" min="0" value={facCredito}
+                      <input type="number" step="0.01" value={facCredito}
                         onChange={e => setFacCredito(e.target.value)} placeholder="0.00"
                         className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-pink-300 transition-all" />
                     </div>
