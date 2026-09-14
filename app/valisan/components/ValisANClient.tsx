@@ -375,7 +375,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
             </div>
           </div>
 
-          <div className="overflow-x-auto max-h-[600px] overflow-y-auto min-h-[250px]">
+          <div className="overflow-x-auto min-h-[250px]">
             <table className="w-full text-left border-collapse text-xs sm:text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">

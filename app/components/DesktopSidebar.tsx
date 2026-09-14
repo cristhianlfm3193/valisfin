@@ -222,32 +222,22 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
         <Link
           href="/"
           title={isCollapsed ? "Panel de Apps" : undefined}
-          className="btn3d btn3d-gray btn3d-md w-full flex justify-center bg-indigo-50 hover:bg-indigo-100 border-indigo-200"
+          className={`group relative flex items-center justify-center gap-2 w-full ${isCollapsed ? 'p-2' : 'px-4 py-2.5'} rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-indigo-500/20 hover:to-indigo-500/5 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-sm hover:shadow-indigo-500/10 overflow-hidden`}
         >
-          <div className="btn3d-outer w-full">
-            <div className="btn3d-inner w-full bg-indigo-600 border-b-indigo-800">
-              <span className="btn3d-label justify-center text-white">
-                <Orbit className="shrink-0 w-4 h-4 text-indigo-100" />
-                {!isCollapsed && <span>Panel de Apps</span>}
-              </span>
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+          <Orbit className={`shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} text-indigo-400 group-hover:text-indigo-300 transition-colors relative z-10`} />
+          {!isCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Panel de Apps</span>}
         </Link>
 
         {profile?.role === 'administrador' && !isAdmin && (
           <Link
             href="/admin"
             title={isCollapsed ? "Panel de Administrador" : undefined}
-            className="btn3d btn3d-gray btn3d-md w-full flex justify-center"
+            className={`group relative flex items-center justify-center gap-2 w-full ${isCollapsed ? 'p-2' : 'px-4 py-2.5'} rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-amber-500/20 hover:to-amber-500/5 border border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 shadow-sm hover:shadow-amber-500/10 overflow-hidden mt-1`}
           >
-            <div className="btn3d-outer w-full">
-              <div className="btn3d-inner w-full">
-                <span className="btn3d-label justify-center">
-                  <Shield className="shrink-0 w-4 h-4 text-amber-500" />
-                  {!isCollapsed && <span>Admin Panel</span>}
-                </span>
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+            <Shield className={`shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} text-amber-500 group-hover:text-amber-400 transition-colors relative z-10`} />
+            {!isCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Admin Panel</span>}
           </Link>
         )}
 
