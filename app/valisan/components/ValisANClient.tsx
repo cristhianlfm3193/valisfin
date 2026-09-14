@@ -27,17 +27,22 @@ const JURAMENTADOS_RANKS = [
 function normalizeRank(rawRank: string | null | undefined): string {
   if (!rawRank) return "No juramentado";
   
-  const rank = rawRank.trim();
-  const rankLower = rank.toLowerCase();
+  const normalized = rawRank.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const cleanStr = normalized.replace(/[^a-z0-9]/g, "");
   
-  if (rankLower === "capitan" || rankLower === "capitán") {
-    return "Capitán";
-  }
-
-  const match = JURAMENTADOS_RANKS.find(r => r.toLowerCase() === rankLower);
-  if (match) {
-    return match;
-  }
+  if (cleanStr === "director") return "Director";
+  if (cleanStr === "subdirector") return "Subdirector";
+  if (cleanStr === "comisionado") return "Comisionado";
+  if (cleanStr === "subcomisionado") return "Subcomisionado";
+  if (cleanStr === "mayor") return "Mayor";
+  if (cleanStr === "capitan" || cleanStr === "capitn") return "Capitán";
+  if (cleanStr === "teniente") return "Teniente";
+  if (cleanStr === "subteniente") return "Subteniente";
+  if (cleanStr === "sargento1ro") return "Sargento 1ro.";
+  if (cleanStr === "sargento2do") return "Sargento 2do.";
+  if (cleanStr === "cabo1ro") return "Cabo 1ro.";
+  if (cleanStr === "cabo2do") return "Cabo 2do.";
+  if (cleanStr === "guardia") return "Guardia";
   
   return "No juramentado";
 }
@@ -544,7 +549,7 @@ function ValisANBDRH() {
     return finalOrder.map(rank => ({
       rank,
       count: counts[rank] || 0
-    })).filter(r => r.count > 0); // Only show ranks that actually have people
+    })); // Always show all explicitly requested ranks
   }, [data]);
 
   // Filter and sort data
