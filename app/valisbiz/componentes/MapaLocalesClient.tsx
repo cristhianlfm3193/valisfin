@@ -8,7 +8,9 @@ import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
 import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
-import CardReporteEficiencia from './CardReporteEficiencia';
+import ModalReporteEficiencia from './ModalReporteEficiencia';
+import ModalDesempenoRuta from './ModalDesempenoRuta';
+import { TrendingUp, FileDown, Eye, Layers } from 'lucide-react';
 import { eliminarLocal, eliminarVisita } from '../acciones/crm';
 
 // Custom Map Pins icons
@@ -78,6 +80,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     }
   );
 
+  const [showModalRuta, setShowModalRuta] = useState(false);
+  const [showModalReporte, setShowModalReporte] = useState(false);
   const [filter, setFilter] = useState<string>('Todas');
   const [fechaDesde, setFechaDesde] = useState<string>('');
   const [fechaHasta, setFechaHasta] = useState<string>('');
@@ -376,16 +380,17 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           <span className="text-sm font-bold">Limpiar Filtros</span>
         </button>
 
-        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
-            <button 
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${filter === f ? 'bg-[#006948] text-white' : 'bg-indigo-500/10 text-slate-200 hover:bg-[#dae2fd]'}`}
-            >
-              {f}
-            </button>
-          ))}
+        <div className="w-full lg:w-48 shrink-0">
+          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block sm:hidden">Categoría</label>
+          <select 
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-full px-4 py-2.5 rounded-xl bg-[#121c27] border border-white/10 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+          >
+            {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
+              <option key={f} value={f}>{f === 'Todas' ? 'Todas las Categorías' : f}</option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -547,84 +552,82 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           </div>
         </div>
 
-        {/* Desempeño de Ruta (Clean Theme) */}
-        <div className="bg-[#121c27] rounded-2xl p-4 sm:p-6 shadow-sm border border-white/5 flex flex-col gap-5 mt-2 mb-2">
-          <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
-            <div>
-              <h3 className="text-lg font-bold text-slate-200 flex items-center gap-2">
+        {/* Top Action Bar (Modals) */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-2 mb-4">
+          <button 
+            onClick={() => setShowModalRuta(true)}
+            className="flex-1 bg-[#121c27] hover:bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center justify-between group transition-all shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-indigo-500/10 rounded-xl group-hover:bg-indigo-500/20 transition-colors">
                 <Route className="w-5 h-5 text-indigo-400" />
-                Desempeño de Ruta
-              </h3>
-              <p className="text-sm text-[#3d4a42]">Visualiza el recorrido exacto por las calles y la distancia cubierta en un día.</p>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-              <div className="flex flex-col flex-1 sm:flex-none">
-                <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Vendedor</label>
-                <select 
-                  className="bg-white/5 border border-white/10 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 focus:bg-[#121c27] transition-colors w-full sm:w-48 appearance-none"
-                  value={rutaVendedor}
-                  onChange={e => setRutaVendedor(e.target.value)}
-                >
-                  <option value="">Seleccione Vendedor</option>
-                  {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
-                </select>
               </div>
-              
-              <div className="flex flex-col flex-1 sm:flex-none">
-                <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Día Específico</label>
-                <input 
-                  type="date"
-                  value={rutaFecha}
-                  onChange={e => setRutaFecha(e.target.value)}
-                  className="bg-white/5 border border-white/10 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 focus:bg-[#121c27] transition-colors w-full sm:w-40"
-                />
-              </div>
-              
-              <div className="flex flex-col justify-end w-full sm:w-auto mt-2 sm:mt-0">
-                <button 
-                  onClick={calcularRuta}
-                  disabled={isCalculandoRuta || !rutaVendedor}
-                  className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-white/10 disabled:text-slate-400 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2 group"
-                >
-                  {isCalculandoRuta ? (
-                    <span className="w-4 h-4 border-2 border-slate-300 border-t-indigo-600 rounded-full animate-spin"></span>
-                  ) : (
-                    <MapPin className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  )}
-                  Trazar Ruta
-                </button>
+              <div className="text-left">
+                <h4 className="text-slate-200 font-bold text-sm">Desempeño de Ruta</h4>
+                <p className="text-[10px] text-slate-400">Ver recorrido del día</p>
               </div>
             </div>
-          </div>
-
-          {rutaError && (
-            <div className="bg-red-500/20 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
-              <X className="w-4 h-4 shrink-0" />
-              {rutaError}
-            </div>
-          )}
-
-          {rutaDistancia !== null && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/5 pt-5 mt-1">
-              <div className="bg-white/5/80 border border-white/5 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
-                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Distancia Recorrida</span>
-                <span className="text-2xl font-black text-slate-200 flex items-baseline gap-1">{rutaDistancia.toFixed(1)} <span className="text-sm text-indigo-400 font-bold">km</span></span>
+            <Eye className="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+          </button>
+          
+          <button 
+            onClick={() => setShowModalReporte(true)}
+            className="flex-1 bg-[#121c27] hover:bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center justify-between group transition-all shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-rose-500/10 rounded-xl group-hover:bg-rose-500/20 transition-colors">
+                <TrendingUp className="w-5 h-5 text-rose-400" />
               </div>
-              <div className="bg-white/5/80 border border-white/5 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
-                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Visitas del Día</span>
-                <span className="text-2xl font-black text-slate-200">{rutaVisitas.length}</span>
-              </div>
-              <div className="bg-white/5/80 border border-white/5 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
-                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Eficiencia Aprox.</span>
-                <span className="text-2xl font-black text-slate-200 flex items-baseline gap-1">{rutaVisitas.length > 0 ? (rutaDistancia / rutaVisitas.length).toFixed(1) : 0} <span className="text-sm text-emerald-400 font-bold">km/visita</span></span>
+              <div className="text-left">
+                <h4 className="text-slate-200 font-bold text-sm">Reporte de Eficiencia</h4>
+                <p className="text-[10px] text-slate-400">Generar PDF</p>
               </div>
             </div>
-          )}
+            <FileDown className="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors" />
+          </button>
         </div>
 
-        {/* Reporte de Eficiencia de Ruta PDF */}
-        <CardReporteEficiencia />
+        {/* Route Stats Banner (if exists) */}
+        {rutaError && (
+          <div className="bg-red-500/20 text-red-400 text-sm px-4 py-3 rounded-xl border border-red-500/30 flex items-center gap-2 mb-4">
+            <X className="w-4 h-4 shrink-0" />
+            {rutaError}
+          </div>
+        )}
+
+        {rutaDistancia !== null && (
+          <div className="bg-[#121c27] grid grid-cols-1 sm:grid-cols-3 gap-4 border border-white/5 rounded-2xl p-4 mb-4 shadow-sm">
+            <div className="flex flex-col justify-center items-center text-center">
+              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Distancia Recorrida</span>
+              <span className="text-2xl font-black text-slate-200 flex items-baseline gap-1">{rutaDistancia.toFixed(1)} <span className="text-sm text-indigo-400 font-bold">km</span></span>
+            </div>
+            <div className="flex flex-col justify-center items-center text-center">
+              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Visitas del Día</span>
+              <span className="text-2xl font-black text-slate-200">{rutaVisitas.length}</span>
+            </div>
+            <div className="flex flex-col justify-center items-center text-center">
+              <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Eficiencia Aprox.</span>
+              <span className="text-2xl font-black text-slate-200 flex items-baseline gap-1">{rutaVisitas.length > 0 ? (rutaDistancia / rutaVisitas.length).toFixed(1) : 0} <span className="text-sm text-emerald-400 font-bold">km/visita</span></span>
+            </div>
+          </div>
+        )}
+
+        {showModalRuta && (
+          <ModalDesempenoRuta 
+            onClose={() => setShowModalRuta(false)}
+            vendedores={vendedores}
+            rutaVendedor={rutaVendedor}
+            setRutaVendedor={setRutaVendedor}
+            rutaFecha={rutaFecha}
+            setRutaFecha={setRutaFecha}
+            calcularRuta={calcularRuta}
+            isCalculandoRuta={isCalculandoRuta}
+          />
+        )}
+        
+        {showModalReporte && (
+          <ModalReporteEficiencia onClose={() => setShowModalReporte(false)} />
+        )}
 
         {/* Locales Admin Table */}
         <div className="bg-[#121c27] rounded-2xl p-4 sm:p-6 shadow-sm border border-white/5 flex flex-col justify-between overflow-hidden">

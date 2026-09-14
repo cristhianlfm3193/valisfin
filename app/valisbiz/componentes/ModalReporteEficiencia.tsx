@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { FileDown, Loader2, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
+import { FileDown, Loader2, CheckCircle2, AlertCircle, TrendingUp, X } from 'lucide-react';
 import { getDatosReporteEficiencia, type DatosReporteEficiencia } from '../acciones/reporte';
 
 function fechaElegante(fechaStr: string) {
@@ -145,7 +145,7 @@ async function generarPDF(datos: DatosReporteEficiencia): Promise<Blob> {
   return doc.output('blob');
 }
 
-export default function CardReporteEficiencia() {
+export default function ModalReporteEficiencia({ onClose }: { onClose: () => void }) {
   const hoy = new Date().toISOString().split('T')[0];
   const primerDiaMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
   
@@ -184,70 +184,76 @@ export default function CardReporteEficiencia() {
     a.click();
   };
 
+  
   return (
-    <div className="bg-[#090a0f]/50 rounded-2xl p-4 sm:p-6 shadow-sm border border-white/5 flex flex-col gap-5 mt-2 mb-2">
-      <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090a0f]/80 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-[#121c27] rounded-2xl p-6 shadow-xl border border-white/10 w-full max-w-lg relative flex flex-col gap-5">
+        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+          <X className="w-5 h-5" />
+        </button>
+        
         <div>
-          <h3 className="text-lg font-bold text-slate-200 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-slate-200 flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-rose-400" />
-            Reporte de Eficiencia de Ruta (PDF)
+            Reporte de Eficiencia
           </h3>
-          <p className="text-sm text-[#3d4a42]">Genera un informe detallado con % de recorrido y efectividad de venta por periodo.</p>
+          <p className="text-sm text-slate-400">Genera un informe en PDF con efectividad de venta por periodo.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <div className="flex flex-col flex-1 sm:flex-none">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col flex-1">
             <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Desde</label>
             <input 
               type="date"
               value={fechaDesde}
               onChange={e => { setFechaDesde(e.target.value); setEstado('idle'); }}
-              className="bg-[#090a0f]/50 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-[#090a0f]/50 transition-colors w-full sm:w-40"
+              className="bg-white/5 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 transition-colors w-full"
             />
           </div>
           
-          <div className="flex flex-col flex-1 sm:flex-none">
+          <div className="flex flex-col flex-1">
             <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1">Hasta</label>
             <input 
               type="date"
               value={fechaHasta}
               onChange={e => { setFechaHasta(e.target.value); setEstado('idle'); }}
-              className="bg-[#090a0f]/50 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 focus:bg-[#090a0f]/50 transition-colors w-full sm:w-40"
+              className="bg-white/5 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-rose-500 transition-colors w-full"
             />
           </div>
+        </div>
           
-          <div className="flex flex-col justify-end w-full sm:w-auto mt-2 sm:mt-0">
-            {estado !== 'listo' ? (
-              <button 
-                onClick={handleGenerar}
-                disabled={isPending || estado === 'generando'}
-                className="bg-rose-600 hover:bg-rose-700 disabled:bg-[#090a0f]/50/5 disabled:text-slate-400 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2"
-              >
-                {estado === 'generando' ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <FileDown className="w-4 h-4" />
-                )}
-                {estado === 'generando' ? 'Generando...' : 'Generar PDF'}
-              </button>
-            ) : (
-              <button 
-                onClick={handleDescargar}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all h-[42px] flex items-center justify-center gap-2"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                Descargar PDF
-              </button>
-            )}
+        <div className="flex flex-col w-full mt-2">
+          {estado !== 'listo' ? (
+            <button 
+              onClick={handleGenerar}
+              disabled={isPending || estado === 'generando'}
+              className="bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:text-slate-400 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              {estado === 'generando' ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              {estado === 'generando' ? 'Generando...' : 'Generar PDF'}
+            </button>
+          ) : (
+            <button 
+              onClick={handleDescargar}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              Descargar PDF
+            </button>
+          )}
+        </div>
+
+        {estado === 'error' && (
+          <div className="bg-red-500/20 text-red-400 text-sm px-4 py-3 rounded-xl border border-red-500/30 flex items-center gap-2 mt-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {errorMsg}
           </div>
-        </div>
+        )}
       </div>
-      {estado === 'error' && (
-        <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          {errorMsg}
-        </div>
-      )}
     </div>
   );
 }
