@@ -19,7 +19,9 @@ import {
   MapPin,
   Heart,
   Orbit,
-  Sparkles
+  Sparkles,
+  BarChart3,
+  Store
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -79,6 +81,13 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   const isValisAN = pathname.startsWith('/valisan');
   const currentTab = searchParams.get('tab') || 'ventas';
   const valisANCurrentTab = searchParams.get('tab') || 'dashboard';
+  const isAdmin = pathname.startsWith('/admin');
+
+  const valisHubNavItems = [
+    { href: "/valisfin", label: "ValisFin", icon: Home, id: 'valisfin' },
+    { href: "/valisbiz", label: "ValisBiz", icon: Store, id: 'valisbiz' },
+    { href: "/valisan", label: "ValisAN", icon: BarChart3, id: 'valisan' },
+  ];
 
   const valisBizNavItems = [
     { href: "/valisbiz?tab=ventas", label: "Ventas & Métricas", icon: TrendingUp, id: 'ventas' },
@@ -92,7 +101,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
     { href: "/valisan?tab=bdrh", label: "BD-RH (Personal)", icon: Shield, id: 'bdrh' },
   ];
 
-  const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : navItems);
+  const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : (isAdmin ? valisHubNavItems : navItems));
 
   if (pathname === '/') {
     return null;
@@ -135,7 +144,11 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                     </div>
                   </div>
                   <span className="text-2xl font-black text-white tracking-tight drop-shadow-md">
-                    Valis<span className="text-emerald-400">Fin</span>
+                    {isAdmin ? (
+                      <>Valis<span className="text-emerald-400">Hub</span></>
+                    ) : (
+                      <>Valis<span className="text-emerald-400">Fin</span></>
+                    )}
                   </span>
                 </div>
               )}
@@ -164,7 +177,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
             
             const inactiveClass = isValisAN 
               ? "text-slate-400 hover:bg-sky-950/40 hover:text-white border-transparent hover:border-sky-500/30"
-              : "text-gray-400 hover:bg-[#121c27]/10 hover:text-white border-transparent";
+              : "text-gray-400 hover:bg-white/5 hover:text-white border-transparent";
             
             return (
               <Link
@@ -221,21 +234,17 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
           </div>
         </Link>
 
-        {profile?.role === 'administrador' && (
+        {profile?.role === 'administrador' && !isAdmin && (
           <Link
-            href={pathname === '/admin' ? '/valisfin' : '/admin'}
-            title={isCollapsed ? (pathname === '/admin' ? "Volver al Inicio" : "Panel de Administrador") : undefined}
-            className={`btn3d ${pathname === '/admin' ? 'btn3d-emerald' : 'btn3d-gray'} btn3d-md w-full flex justify-center`}
+            href="/admin"
+            title={isCollapsed ? "Panel de Administrador" : undefined}
+            className="btn3d btn3d-gray btn3d-md w-full flex justify-center"
           >
             <div className="btn3d-outer w-full">
               <div className="btn3d-inner w-full">
                 <span className="btn3d-label justify-center">
-                  {pathname === '/admin' ? (
-                    <Home className="shrink-0 w-4 h-4 text-emerald-100" />
-                  ) : (
-                    <Shield className="shrink-0 w-4 h-4 text-amber-500" />
-                  )}
-                  {!isCollapsed && <span>{pathname === '/admin' ? 'Salir del Panel' : 'Admin Panel'}</span>}
+                  <Shield className="shrink-0 w-4 h-4 text-amber-500" />
+                  {!isCollapsed && <span>Admin Panel</span>}
                 </span>
               </div>
             </div>
