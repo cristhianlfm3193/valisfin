@@ -8,6 +8,45 @@ import ReporteOperativoModal from './ReporteOperativoModal';
 import ValisAIAssistant from './ValisAIAssistant';
 import ReporteDetalleModal from './ReporteDetalleModal';
 
+const JURAMENTADOS_RANKS = [
+  "Director",
+  "Subdirector",
+  "Comisionado",
+  "Subcomisionado",
+  "Mayor",
+  "Capitán",
+  "Teniente",
+  "Subteniente",
+  "Sargento 1ro.",
+  "Sargento 2do.",
+  "Cabo 1ro.",
+  "Cabo 2do.",
+  "Guardia"
+];
+
+function normalizeRank(rawRank: string | null | undefined): string {
+  if (!rawRank) return "No juramentado";
+  
+  const rank = rawRank.trim();
+  const rankLower = rank.toLowerCase();
+  
+  if (rankLower === "capitan" || rankLower === "capitán") {
+    return "Capitán";
+  }
+
+  const match = JURAMENTADOS_RANKS.find(r => r.toLowerCase() === rankLower);
+  if (match) {
+    return match;
+  }
+  
+  return "No juramentado";
+}
+
+const rankOrder = (rank: string) => {
+  const idx = JURAMENTADOS_RANKS.indexOf(normalizeRank(rank));
+  return idx !== -1 ? idx : 999;
+};
+
 interface ValisANClientProps {
   user: { name: string; initial: string };
   activeTab: string;
@@ -451,7 +490,11 @@ function ValisANBDRH() {
         }
 
         if (bdrhData && bdrhData.length > 0) {
-          allData = [...allData, ...bdrhData];
+          const normalizedData = bdrhData.map((row: any) => ({
+            ...row,
+            rango: normalizeRank(row.rango)
+          }));
+          allData = [...allData, ...normalizedData];
           page++;
           if (bdrhData.length < pageSize) {
             hasMore = false;
@@ -477,6 +520,8 @@ function ValisANBDRH() {
     });
 
     const rankOrder = [
+      "Director",
+      "Subdirector",
       "Comisionado",
       "Subcomisionado",
       "Mayor",
@@ -488,10 +533,7 @@ function ValisANBDRH() {
       "Cabo 1ro.",
       "Cabo 2do.",
       "Guardia",
-      "Componente Civil",
-      "Director",
-      "Subdirector",
-      "Sin Rango"
+      "No juramentado"
     ];
 
     // Find any ranks in the data that aren't in the explicit order
@@ -510,7 +552,7 @@ function ValisANBDRH() {
     let result = data;
 
     if (selectedRanks.length > 0) {
-      result = result.filter(row => selectedRanks.includes(row.rango || 'Sin Rango'));
+      result = result.filter(row => selectedRanks.includes(row.rango || 'No juramentado'));
     }
 
     if (searchTerm) {
