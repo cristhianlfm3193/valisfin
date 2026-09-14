@@ -88,90 +88,17 @@ export default function ReporteDetalleModal({ isOpen, onClose, reporte }: Report
 
           <div className="h-px w-full bg-slate-800/80"></div>
 
-          {/* Información Específica */}
-          {(reporte.areas_recorrido || reporte.equipos_novedad) && (
-             <div className="space-y-4">
-               <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider">Detalles Operativos Específicos</h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 {reporte.areas_recorrido && (
-                   <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4">
-                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-2">Áreas de Recorrido</span>
-                     <p className="text-sm text-slate-300 leading-relaxed">{reporte.areas_recorrido}</p>
-                   </div>
-                 )}
-                 {reporte.equipos_novedad && (
-                   <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4">
-                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-2">Novedades de Equipos / Instalaciones</span>
-                     <p className="text-sm text-slate-300 leading-relaxed">{reporte.equipos_novedad}</p>
-                   </div>
-                 )}
-               </div>
-             </div>
-          )}
-
           {/* Narrativa */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5"><AlignLeft className="w-4 h-4"/> Narrativa Completa</h3>
+            <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5"><AlignLeft className="w-4 h-4"/> Detalle Operativo Completo</h3>
             <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
               <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">{reporte.narrativa || 'Sin observaciones detalladas.'}</p>
             </div>
           </div>
 
-          {/* Unidades y Vehículos Relacionados (Si los hay en el Join) */}
-          {(reporte.reporte_unidades?.length > 0 || reporte.reporte_vehiculos?.length > 0) && (
-            <>
-              <div className="h-px w-full bg-slate-800/80"></div>
-              <div className="space-y-6">
-                
-                {reporte.reporte_unidades?.length > 0 && (
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5"><Users className="w-4 h-4"/> Unidades en Servicio</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {reporte.reporte_unidades.map((u: any, i: number) => (
-                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-slate-800 bg-slate-900/40">
-                          <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400 text-xs font-bold border border-sky-500/20">
-                            {i+1}
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-white">{u.rango} {u.nombre}</p>
-                            <p className="text-[10px] text-slate-400">CIP/Placa: {u.placa_institucional || 'N/A'} • {u.rol}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          <div className="h-px w-full bg-slate-800/80"></div>
 
-                {reporte.reporte_vehiculos?.length > 0 && (
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5"><Truck className="w-4 h-4"/> Vehículos Asignados</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {reporte.reporte_vehiculos.map((v: any, i: number) => (
-                        <div key={i} className="flex flex-col gap-2 p-4 rounded-xl border border-slate-800 bg-slate-900/40">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="text-xs font-bold text-white uppercase">{v.numero_movil || 'Vehículo sin Nº'}</p>
-                              <p className="text-[10px] text-slate-400">Placa: {v.placa_vehiculo || 'N/A'}</p>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] bg-sky-500/10 text-sky-300 font-semibold border border-sky-500/20">
-                              {v.correria || 'Asignado'}
-                            </span>
-                          </div>
-                          {(v.conductor_nombre || v.conductor_id) && (
-                            <div className="pt-2 border-t border-slate-800/60 mt-1">
-                              <p className="text-[10px] text-slate-500">Conducido por:</p>
-                              <p className="text-xs font-medium text-slate-300">{v.conductor_nombre} <span className="text-slate-500 ml-1">{v.conductor_id}</span></p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-              </div>
-            </>
-          )}
+
 
         </div>
       </div>
