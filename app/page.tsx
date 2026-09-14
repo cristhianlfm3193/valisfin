@@ -14,6 +14,7 @@ import {
   Orbit
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { PortalButton } from '@/app/components/PortalButton';
 
 export const metadata = {
   title: 'Selección de Portal - Valis Hub',
@@ -25,6 +26,9 @@ export default async function PortalPage() {
   const fullName = user?.user_metadata?.full_name || "Usuario";
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
+
+  const { data: profile } = await supabase.from('profiles').select('app_access').eq('id', user?.id).single();
+  const appAccess = profile?.app_access || ['valisfin', 'valisbiz', 'valisan'];
 
   return (
     <div className="min-h-screen flex flex-col justify-between relative selection:bg-emerald-500 selection:text-white bg-[#090a0f] text-white overflow-x-hidden font-sans">
@@ -150,28 +154,31 @@ export default async function PortalPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl mx-auto">
           
           {/* ValisFin */}
-          <a href="/valisfin" className="group flex flex-col items-center justify-center gap-4 hover:scale-110 transition-transform duration-300 ease-out p-4">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-emerald-500/5 border border-emerald-500/40 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 group-hover:border-emerald-400/60 group-hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all">
-              <Home className="w-10 h-10 sm:w-12 sm:h-12" />
-            </div>
-            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Valis<span className="text-emerald-400">Fin</span></span>
-          </a>
+          <PortalButton 
+            href="/valisfin"
+            hasAccess={appAccess.includes('valisfin')}
+            title={<>Valis<span className="text-emerald-400">Fin</span></>}
+            icon={<Home className="w-10 h-10 sm:w-12 sm:h-12" />}
+            colorClass="bg-emerald-500/5 border-emerald-500/40 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:border-emerald-400/60 group-hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+          />
 
           {/* ValisBiz */}
-          <a href="/valisbiz" className="group flex flex-col items-center justify-center gap-4 hover:scale-110 transition-transform duration-300 ease-out p-4">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-pink-500/5 border border-pink-500/40 flex items-center justify-center text-pink-400 group-hover:bg-pink-500/20 group-hover:border-pink-400/60 group-hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] transition-all">
-              <Store className="w-10 h-10 sm:w-12 sm:h-12" />
-            </div>
-            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Valis<span className="text-pink-400">Biz</span></span>
-          </a>
+          <PortalButton 
+            href="/valisbiz"
+            hasAccess={appAccess.includes('valisbiz')}
+            title={<>Valis<span className="text-pink-400">Biz</span></>}
+            icon={<Store className="w-10 h-10 sm:w-12 sm:h-12" />}
+            colorClass="bg-pink-500/5 border-pink-500/40 text-pink-400 group-hover:bg-pink-500/20 group-hover:border-pink-400/60 group-hover:shadow-[0_0_30px_rgba(236,72,153,0.3)]"
+          />
 
           {/* ValisAN */}
-          <a href="/valisan" className="group flex flex-col items-center justify-center gap-4 hover:scale-110 transition-transform duration-300 ease-out p-4">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-sky-500/5 border border-sky-500/40 flex items-center justify-center text-sky-400 group-hover:bg-sky-500/20 group-hover:border-sky-400/60 group-hover:shadow-[0_0_30px_rgba(14,165,233,0.3)] transition-all">
-              <BarChart3 className="w-10 h-10 sm:w-12 sm:h-12" />
-            </div>
-            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Valis<span className="text-sky-400">AN</span></span>
-          </a>
+          <PortalButton 
+            href="/valisan"
+            hasAccess={appAccess.includes('valisan')}
+            title={<>Valis<span className="text-sky-400">AN</span></>}
+            icon={<BarChart3 className="w-10 h-10 sm:w-12 sm:h-12" />}
+            colorClass="bg-sky-500/5 border-sky-500/40 text-sky-400 group-hover:bg-sky-500/20 group-hover:border-sky-400/60 group-hover:shadow-[0_0_30px_rgba(14,165,233,0.3)]"
+          />
 
         </div>
 

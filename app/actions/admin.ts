@@ -188,3 +188,35 @@ export async function getAuditLogs() {
   }
   return data || [];
 }
+
+
+export async function updateUserAppAccess(userId: string, apps: string[]) {
+  const supabase = await createClient();
+  
+  // Verify admin role
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'administrador') {
+    throw new Error('Unauthorized: Requires admin role');
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ app_access: apps })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user app access:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/admin');
+  return { success: true };
+}

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { SettingsModal } from './components/SettingsModal';
 import { UsersModal } from './components/UsersModal';
 import { AuditLogTable } from './components/AuditLogTable';
-import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles } from 'lucide-react';
+import { AppsModal } from './components/AppsModal';
+import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles, Grid } from 'lucide-react';
 import Link from 'next/link';
 import { Btn3D } from '@/app/components/Btn3D';
 
@@ -18,11 +19,12 @@ interface AdminClientProps {
 export default function AdminClient({ initialSettings, initialUsers, initialLogs, vendedores = [] }: AdminClientProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = useState(false);
+  const [isAppsOpen, setIsAppsOpen] = useState(false);
 
   const loginImageUrl = initialSettings?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ";
 
   return (
-    <main className="min-h-screen bg-[#faf8ff] p-4 sm:p-6 lg:p-8 font-['Plus_Jakarta_Sans'] pb-24 lg:pb-8">
+    <main className="min-h-screen bg-[#090a0f] text-white p-4 sm:p-6 lg:p-8 font-['Plus_Jakarta_Sans'] pb-24 lg:pb-8">
       {/* Modals */}
       <SettingsModal 
         isOpen={isSettingsOpen} 
@@ -34,6 +36,13 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
       <UsersModal 
         isOpen={isUsersOpen} 
         onClose={() => setIsUsersOpen(false)} 
+        users={initialUsers} 
+        onSaved={() => window.location.reload()} 
+      />
+
+      <AppsModal 
+        isOpen={isAppsOpen} 
+        onClose={() => setIsAppsOpen(false)} 
         users={initialUsers} 
         onSaved={() => window.location.reload()} 
       />
@@ -172,10 +181,37 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
               
               <button 
                 onClick={() => setIsUsersOpen(true)}
-                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-white/5 text-slate-300 border border-white/10 font-semibold rounded-xl hover:bg-slate-100 transition-colors"
+                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-white/5 text-slate-300 font-semibold rounded-xl hover:bg-white/10 hover:text-white transition-colors border border-white/5 mt-auto"
               >
                 <span>Administrar Roles</span>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 group-hover:text-slate-300 transition-transform" />
+              </button>
+            </div>
+          </div>
+
+          {/* Card: Gestión de Apps */}
+          <div className="group relative overflow-hidden bg-[#121c27] rounded-3xl border border-white/10 shadow-sm hover:shadow-md transition-all flex flex-col h-full min-h-[280px]">
+            <div className="absolute top-6 right-6 flex -space-x-3 transition-transform duration-500 group-hover:-translate-x-1">
+              <div className="w-9 h-9 rounded-full border-[3px] border-white overflow-hidden shadow-sm hover:scale-110 relative z-10 transition-all bg-[#121c27] flex items-center justify-center">
+                <Grid className="w-4 h-4 text-sky-400" />
+              </div>
+            </div>
+
+            <div className="p-6 flex-1 flex flex-col relative z-20">
+              <div className="w-12 h-12 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-6">
+                <Grid className="w-6 h-6 text-sky-400" />
+              </div>
+              <h2 className="text-xl font-bold text-white mb-2">Gestión de Apps</h2>
+              <p className="text-sm text-slate-400 mb-6 flex-1">
+                Controla permisos de acceso a ValisFin, ValisBiz y ValisAN de forma individual por usuario.
+              </p>
+              
+              <button 
+                onClick={() => setIsAppsOpen(true)}
+                className="inline-flex items-center justify-between w-full px-5 py-3.5 bg-white/5 text-slate-300 font-semibold rounded-xl hover:bg-white/10 hover:text-white transition-colors border border-white/5 mt-auto"
+              >
+                <span>Administrar Accesos</span>
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 group-hover:text-slate-300 transition-transform" />
               </button>
             </div>
           </div>
