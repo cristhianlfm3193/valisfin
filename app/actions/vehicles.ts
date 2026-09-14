@@ -67,6 +67,7 @@ export async function addMaintenanceLog(formData: FormData) {
   const date = formData.get('date') as string;
   const shop = formData.get('shop') as string;
   const user_id = formData.get('user_id') as string;
+  const type = (formData.get('type') as string) || 'Mantenimiento';
 
   const km = parseInt(kmStr, 10);
   const next_km = nextKmStr ? parseInt(nextKmStr, 10) : null;
@@ -79,7 +80,7 @@ export async function addMaintenanceLog(formData: FormData) {
       date,
       km,
       service,
-      type: 'Mantenimiento',
+      type: type,
       cost,
       next_km,
       next_date: null,
@@ -92,6 +93,24 @@ export async function addMaintenanceLog(formData: FormData) {
   if (insertError) {
     console.error('Error inserting maintenance:', insertError);
     return { success: false, error: insertError.message };
+  }
+
+  // Also insert a mileage log to update the vehicle's current km
+  const { error: mileageError } = await supabase
+    .from('mileage_logs')
+    .insert({
+      vehicle_id,
+      date,
+      km,
+      user_id,
+      source: 'maintenance'
+    });
+
+  if (!mileageError) {
+    // Re-use the existing sync function to update the vehicles table
+    await syncVehicleKm(supabase, vehicle_id);
+  } else {
+    console.error('Error inserting mileage log from maintenance:', mileageError);
   }
 
   revalidatePath('/vehiculos');

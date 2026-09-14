@@ -22,6 +22,10 @@ export default async function VehiculosPage() {
     .select('*')
     .order('date', { ascending: false });
 
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, first_name, last_name');
+
   return (
     <>
       <header className="bg-[#090a0f]/90 backdrop-blur border-b border-white/10/80 sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
@@ -49,6 +53,7 @@ export default async function VehiculosPage() {
       vehicles={vehicles || []} 
       mileageLogs={mileageLogs || []} 
       maintenanceLogs={maintenanceLogs || []} 
+      profiles={profiles || []}
     />
       </>
   );

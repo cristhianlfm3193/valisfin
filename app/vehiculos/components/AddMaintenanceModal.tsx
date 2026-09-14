@@ -8,38 +8,65 @@ export default function AddMaintenanceModal({
   isOpen, 
   onClose, 
   vehicles,
-  initialData 
+  initialData,
+  uniqueServices = []
 }: { 
   isOpen: boolean; 
   onClose: () => void;
   vehicles: any[];
   initialData?: any;
+  uniqueServices?: string[];
 }) {
   const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]?.id || '');
   const [serviceDesc, setServiceDesc] = useState('');
+  const [maintenanceType, setMaintenanceType] = useState('Preventivo');
+  const [kmVal, setKmVal] = useState('');
+  const [nextKmVal, setNextKmVal] = useState('');
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const currentVehicleObj = vehicles.find(v => v.id === selectedVehicle);
+
   useEffect(() => {
-    if (initialData && isOpen) {
-      if (initialData.vehiculo) {
-        const match = vehicles.find(v => 
-          v.brand.toLowerCase().includes(initialData.vehiculo.toLowerCase()) || 
-          v.model.toLowerCase().includes(initialData.vehiculo.toLowerCase())
-        );
-        if (match) {
-          setSelectedVehicle(match.id);
+    if (isOpen) {
+      setServiceDesc('');
+      setMaintenanceType('Preventivo');
+      let initKm = '';
+      if (initialData) {
+        if (initialData.vehiculo) {
+          const match = vehicles.find(v => 
+            v.brand.toLowerCase().includes(initialData.vehiculo.toLowerCase()) || 
+            v.model.toLowerCase().includes(initialData.vehiculo.toLowerCase())
+          );
+          if (match) setSelectedVehicle(match.id);
         }
+        if (initialData.mantenimiento_tipo) {
+          setServiceDesc(initialData.mantenimiento_tipo);
+        }
+        initKm = initialData.km_lectura || '';
+      } else {
+        initKm = currentVehicleObj?.current_km?.toString() || '';
       }
-      if (initialData.mantenimiento_tipo) {
-        setServiceDesc(initialData.mantenimiento_tipo);
-      }
+      setKmVal(initKm);
+      setNextKmVal(initKm ? (Number(initKm) + 5000).toString() : '');
     }
-  }, [initialData, isOpen, vehicles]);
+  }, [initialData, isOpen, vehicles, currentVehicleObj?.current_km]);
 
   if (!isOpen) return null;
 
-  const currentVehicleObj = vehicles.find(v => v.id === selectedVehicle);
+  const handleKmChange = (val: string) => {
+    setKmVal(val);
+    if (maintenanceType === 'Preventivo' && val) {
+      setNextKmVal((Number(val) + 5000).toString());
+    }
+  };
+
+  const handleTypeChange = (type: string) => {
+    setMaintenanceType(type);
+    if (type === 'Preventivo' && kmVal) {
+      setNextKmVal((Number(kmVal) + 5000).toString());
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,20 +121,24 @@ export default function AddMaintenanceModal({
             </div>
           </div>
 
-          {/* Chips de selección rápida */}
+          {/* Tipo de Mantenimiento */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5">Servicios frecuentes sugeridos</label>
-            <div className="flex flex-wrap gap-1.5">
-              {['Aceite y Filtro OEM', 'Alineación y Balanceo', 'Frenos / Pastillas', 'Batería', 'Revisado & Placa'].map(serv => (
-                <button 
-                  key={serv}
-                  type="button" 
-                  onClick={() => setServiceDesc(serv)}
-                  className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-white/10 transition-colors"
-                >
-                  {serv}
-                </button>
-              ))}
+            <label className="block text-xs font-bold text-slate-300 mb-1.5">Tipo de Mantenimiento</label>
+            <div className="grid grid-cols-2 gap-2">
+              <label className={`cursor-pointer py-2 px-3 rounded-xl border font-semibold text-xs flex items-center justify-center gap-2 transition-colors ${
+                maintenanceType === 'Preventivo' ? 'border-blue-500 bg-blue-500/10 text-blue-400' : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+              }`}>
+                <input type="radio" name="type" value="Preventivo" className="sr-only" checked={maintenanceType === 'Preventivo'} onChange={() => handleTypeChange('Preventivo')} />
+                <span className="material-symbols-outlined text-[16px]">build</span>
+                Preventivo
+              </label>
+              <label className={`cursor-pointer py-2 px-3 rounded-xl border font-semibold text-xs flex items-center justify-center gap-2 transition-colors ${
+                maintenanceType === 'Correctivo' ? 'border-amber-500 bg-amber-500/10 text-amber-400' : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+              }`}>
+                <input type="radio" name="type" value="Correctivo" className="sr-only" checked={maintenanceType === 'Correctivo'} onChange={() => handleTypeChange('Correctivo')} />
+                <span className="material-symbols-outlined text-[16px]">handyman</span>
+                Correctivo
+              </label>
             </div>
           </div>
 
@@ -116,12 +147,18 @@ export default function AddMaintenanceModal({
             <input 
               name="service"
               type="text" 
+              list="service-suggestions"
               value={serviceDesc}
               onChange={e => setServiceDesc(e.target.value)}
               required
               placeholder="Ej: Cambio de aceite 10W-30 sintético..." 
               className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-on-surface focus:outline-none focus:bg-[#121c27] focus:border-[#006655] transition-all" 
             />
+            <datalist id="service-suggestions">
+              {uniqueServices.map(s => (
+                <option key={s} value={s} />
+              ))}
+            </datalist>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -130,7 +167,8 @@ export default function AddMaintenanceModal({
               <input 
                 name="km"
                 type="number" 
-                defaultValue={initialData?.km_lectura || currentVehicleObj?.current_km || ''}
+                value={kmVal}
+                onChange={(e) => handleKmChange(e.target.value)}
                 required
                 className="w-full px-3.5 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-mono text-on-surface focus:outline-none focus:bg-[#121c27] focus:border-[#006655] transition-all" 
               />
@@ -143,10 +181,12 @@ export default function AddMaintenanceModal({
               <input 
                 name="next_km"
                 type="number" 
-                placeholder={`Vacío = mantener alerta actual${currentVehicleObj ? ` (${(currentVehicleObj.km_service_alert || 'sin alerta')})` : ''}`}
+                value={nextKmVal}
+                onChange={(e) => setNextKmVal(e.target.value)}
+                placeholder={`Vacío = mantener alerta actual`}
                 className="w-full px-3.5 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-mono text-on-surface focus:outline-none focus:bg-[#121c27] focus:border-[#006655] transition-all placeholder:text-slate-400 placeholder:text-xs" 
               />
-              <p className="text-[10px] text-slate-400 mt-1">Deja en blanco si solo registras mantenimiento sin cambiar la alerta de aceite</p>
+              <p className="text-[10px] text-slate-400 mt-1">Suma 5k auto si es Preventivo.</p>
             </div>
           </div>
 

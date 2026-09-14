@@ -7,17 +7,19 @@ import AddPendingModal from './AddPendingModal';
 import EditPendingModal from './EditPendingModal';
 import EditCompletedModal from './EditCompletedModal';
 import { markMaintenanceAsDone, deleteMaintenance, deleteMileageLog, updateMileageLog } from '../../actions/vehicles';
-import { Trash2, Edit2, CheckCircle } from 'lucide-react';
+import { Trash2, Edit2, CheckCircle, Eye } from 'lucide-react';
 import { Btn3D } from '@/app/components/Btn3D';
 
 export default function VehiculosClient({
   vehicles,
   mileageLogs,
-  maintenanceLogs
+  maintenanceLogs,
+  profiles = []
 }: {
   vehicles: any[];
   mileageLogs: any[];
   maintenanceLogs: any[];
+  profiles?: any[];
 }) {
   const [isPending, startTransition] = useTransition();
 
@@ -53,6 +55,9 @@ export default function VehiculosClient({
   const [isEditCompletedModalOpen, setIsEditCompletedModalOpen] = useState(false);
   const [completedTaskToEdit, setCompletedTaskToEdit] = useState<any>(null);
   
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [taskToView, setTaskToView] = useState<any>(null);
+
   const [kmFilter, setKmFilter] = useState('all');
   const [kmPage, setKmPage] = useState(1);
   const [kmPageSize, setKmPageSize] = useState(10);
@@ -67,6 +72,11 @@ export default function VehiculosClient({
 
   const pendingTasks = maintenanceLogs.filter(log => log.is_pending);
   const completedMaintenance = maintenanceLogs.filter(log => !log.is_pending);
+
+  // Extraer servicios únicos del historial para el datalist
+  const uniqueServices = Array.from(
+    new Set(completedMaintenance.map(log => log.service).filter(Boolean))
+  ) as string[];
 
   const filteredPending = pendingFilter === 'all'
     ? pendingTasks
@@ -96,6 +106,11 @@ export default function VehiculosClient({
   const handleEditCompleted = (task: any) => {
     setCompletedTaskToEdit(task);
     setIsEditCompletedModalOpen(true);
+  };
+
+  const handleViewDetails = (task: any) => {
+    setTaskToView(task);
+    setIsViewModalOpen(true);
   };
 
   const filteredMileage = kmFilter === 'all' 
@@ -170,6 +185,12 @@ export default function VehiculosClient({
               
             const isJennifer = vehicle.owner_id === '7b5c62be-58f1-48d6-b366-0f504c39bdcb';
             
+            // Reemplazo dinámico del propietario
+            const ownerProfile = profiles.find(p => p.id === vehicle.owner_id);
+            const ownerName = ownerProfile 
+              ? `${ownerProfile.first_name || ''} ${ownerProfile.last_name || ''}`.trim() 
+              : (isJennifer ? 'Jennifer Camaño' : 'Cristhian Fuentes');
+            
             const vehiclePendingTasks = pendingTasks.filter(task => task.vehicle_id === vehicle.id);
             const totalPendingCost = vehiclePendingTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
 
@@ -177,13 +198,13 @@ export default function VehiculosClient({
             const totalInvested = vehicleCompletedTasks.reduce((sum, task) => sum + (task.cost || 0), 0);
             
             return (
-              <div key={vehicle.id} className={`bg-[#121c27] rounded-3xl p-6 border border-outline-subtle shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'hover:border-red-400' : (isJennifer ? 'hover:border-pink-300' : 'hover:border-slate-300')}`}>
-                {(isWarning || isOverdue) && <div className={`absolute top-0 left-0 right-0 h-1 ${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-400' : 'bg-amber-400')}`}></div>}
+              <div key={vehicle.id} className={`bg-[#121c27] rounded-3xl p-6 border shadow-card flex flex-col justify-between transition-all relative overflow-hidden ${isOverdue ? 'border-red-500/50 hover:border-red-400' : (isJennifer ? 'border-pink-500/20 hover:border-pink-500/40' : 'border-emerald-500/20 hover:border-emerald-500/40')}`}>
+                {(isWarning || isOverdue) && <div className={`absolute top-0 left-0 right-0 h-1 ${isOverdue ? 'bg-red-500' : (isJennifer ? 'bg-pink-500' : 'bg-amber-400')}`}></div>}
                 
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div className="flex items-center gap-3.5">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isJennifer ? 'bg-pink-50 text-pink-400 border-pink-100' : 'bg-emerald-50 text-[#006655] border-emerald-100'}`}>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isJennifer ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
                         <span className="material-symbols-outlined text-[26px]">
                           {vehicle.brand === 'Toyota' ? 'directions_car' : 'airport_shuttle'}
                         </span>
@@ -194,7 +215,7 @@ export default function VehiculosClient({
                           <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-white/10 text-slate-400 font-semibold">{vehicle.year}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
-                          <span className="font-semibold text-slate-200">{vehicle.owner_id === 'edc938dc-9fbc-4573-b007-0bdb95114f95' ? 'Cristhian Fuentes' : 'Jennifer Camaño'}</span>
+                          <span className="font-semibold text-slate-200">{ownerName}</span>
                           <span className="text-slate-300">•</span>
                           <span className="font-mono text-slate-500">Placa: {vehicle.plate}</span>
                         </div>
@@ -206,12 +227,12 @@ export default function VehiculosClient({
                         Mantenimiento Vencido
                       </span>
                     ) : isWarning ? (
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20 text-pink-800 border border-pink-200' : 'bg-amber-500/20 text-amber-800 border border-amber-200'}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20 text-pink-300 border border-pink-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`}>
                         <span className={`material-symbols-outlined text-[15px] ${isJennifer ? 'text-pink-400' : 'text-amber-400'}`}>warning</span>
                         Atención requerida
                       </span>
                     ) : (
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20/80 text-pink-400' : 'bg-emerald-500/20/80 text-[#006655]'}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20 text-pink-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                         <span className="material-symbols-outlined text-[14px]">check_circle</span>
                         Al día · En regla
                       </span>
@@ -252,13 +273,13 @@ export default function VehiculosClient({
                       )}
                       
                       {isWarning && (
-                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
+                        <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs ${isJennifer ? 'bg-pink-500/10 border-pink-500/20 text-pink-300' : 'bg-amber-500/10 border-amber-500/20 text-amber-300'}`}>
                           <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-400' : 'text-amber-400'} mt-0.5`}>error</span>
                           <span><strong>¡Atención!</strong> Faltan {remaining.toLocaleString()} km para mantenimiento.</span>
                         </div>
                       )}
 
-                      <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50/50 border-pink-100' : 'bg-white/5 border-white/10'}`}>
+                      <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-500/10 border-pink-500/20' : 'bg-white/5 border-white/10'}`}>
                         <div className="flex items-center gap-1.5">
                           <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-500' : 'text-slate-500'}`}>payments</span>
                           <span className={`font-semibold ${isJennifer ? 'text-pink-400' : 'text-slate-300'}`}>Inversión Histórica</span>
@@ -267,12 +288,12 @@ export default function VehiculosClient({
                       </div>
 
                       {vehiclePendingTasks.length > 0 && (
-                        <div className={`mt-2 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-50 border-pink-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                        <div className={`mt-2 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-sm transition-all ${isJennifer ? 'bg-pink-500/10 border-pink-500/20' : 'bg-emerald-500/10 border-emerald-500/20'}`}>
                           <div className="flex items-center gap-1.5">
-                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-400' : 'text-[#006655]'}`}>account_balance_wallet</span>
-                            <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-emerald-800'}`}>Presupuesto Pendiente</span>
+                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-400' : 'text-emerald-400'}`}>account_balance_wallet</span>
+                            <span className={`font-semibold ${isJennifer ? 'text-pink-300' : 'text-emerald-300'}`}>Presupuesto Pendiente</span>
                           </div>
-                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-400' : 'text-[#006655]'}`}>B/. {totalPendingCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-400' : 'text-emerald-400'}`}>B/. {totalPendingCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                         </div>
                       )}
                     </div>
@@ -571,7 +592,7 @@ export default function VehiculosClient({
                 <tr className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-white/5 font-semibold">
                   <th className="py-3 px-3">Fecha</th>
                   <th className="py-3 px-3">Vehículo</th>
-                  <th className="py-3 px-3">Servicio</th>
+                  <th className="py-3 px-3">Tipo de Mantenimiento</th>
                   <th className="py-3 px-3 font-mono">Kilometraje</th>
                   <th className="py-3 px-3 font-mono text-right">Costo (B/.)</th>
                   <th className="py-3 px-3 text-right">Taller</th>
@@ -583,16 +604,32 @@ export default function VehiculosClient({
                   const vehicle = vehicles.find(v => v.id === log.vehicle_id);
                   return (
                     <tr key={log.id} className="hover:bg-white/5/70 transition-colors">
-                      <td className="py-3.5 px-3 font-mono text-slate-500 text-xs">{log.date}</td>
-                      <td className="py-3.5 px-3 font-semibold text-on-surface">{vehicle?.brand} {vehicle?.model}</td>
-                      <td className="py-3.5 px-3 font-medium text-slate-200">
-                        {log.service}
+                      <td className="py-3.5 px-3 font-mono text-slate-500 text-xs whitespace-nowrap">{log.date}</td>
+                      <td className="py-3.5 px-3 font-semibold text-on-surface whitespace-nowrap">{vehicle?.brand} {vehicle?.model}</td>
+                      <td className="py-3.5 px-3 font-medium text-slate-200 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          {log.type === 'Preventivo' ? (
+                            <span className="material-symbols-outlined text-[16px] text-blue-400">build</span>
+                          ) : log.type === 'Correctivo' ? (
+                            <span className="material-symbols-outlined text-[16px] text-amber-400">handyman</span>
+                          ) : (
+                            <span className="material-symbols-outlined text-[16px] text-slate-400">info</span>
+                          )}
+                          <span>{log.type || 'Mantenimiento'}</span>
+                        </div>
                       </td>
-                      <td className="py-3.5 px-3 font-mono text-slate-400">{log.km?.toLocaleString()} km</td>
-                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-300">B/. {log.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</td>
-                      <td className="py-3.5 px-3 text-right text-xs text-slate-400 font-medium">{log.shop || 'N/A'}</td>
-                      <td className="py-3.5 px-3 text-center">
+                      <td className="py-3.5 px-3 font-mono text-slate-400 whitespace-nowrap">{log.km?.toLocaleString()} km</td>
+                      <td className="py-3.5 px-3 font-mono font-bold text-right text-slate-300 whitespace-nowrap">B/. {log.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</td>
+                      <td className="py-3.5 px-3 text-right text-xs text-slate-400 font-medium whitespace-nowrap">{log.shop || 'N/A'}</td>
+                      <td className="py-3.5 px-3 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-1">
+                          <button 
+                            onClick={() => handleViewDetails(log)}
+                            className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-emerald-50 rounded-lg transition-colors"
+                            title="Ver detalles"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
                           <button 
                             onClick={() => handleEditCompleted(log)}
                             className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors"
@@ -667,9 +704,9 @@ export default function VehiculosClient({
       <AddMaintenanceModal 
         isOpen={isMaintenanceModalOpen} 
         onClose={() => setIsMaintenanceModalOpen(false)} 
-        vehicles={vehicles} 
+        vehicles={vehicles}
+        uniqueServices={uniqueServices}
       />
-      
       <AddPendingModal 
         isOpen={isPendingModalOpen} 
         onClose={() => setIsPendingModalOpen(false)} 
@@ -687,6 +724,57 @@ export default function VehiculosClient({
         onClose={() => { setIsEditCompletedModalOpen(false); setCompletedTaskToEdit(null); }}
         task={completedTaskToEdit}
       />
+
+      {isViewModalOpen && taskToView && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-all duration-200">
+          <div className="bg-[#121c27] w-full max-w-md rounded-3xl p-6 shadow-2xl border border-outline-subtle relative">
+            <button type="button" onClick={() => setIsViewModalOpen(false)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#006655] block mb-1">Detalles del Registro</span>
+            <h3 className="text-xl font-extrabold text-on-surface mb-4">
+              {taskToView.type || 'Mantenimiento'}
+            </h3>
+            
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="text-slate-400 font-semibold text-xs mb-0.5">Servicio Realizado</p>
+                <p className="text-slate-200 bg-white/5 p-3 rounded-xl border border-white/10 leading-relaxed">
+                  {taskToView.service}
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                  <p className="text-slate-400 font-semibold text-xs mb-0.5">Fecha</p>
+                  <p className="text-slate-200 font-mono">{taskToView.date}</p>
+                </div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                  <p className="text-slate-400 font-semibold text-xs mb-0.5">Costo</p>
+                  <p className="text-slate-200 font-mono font-bold">B/. {taskToView.cost?.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</p>
+                </div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                  <p className="text-slate-400 font-semibold text-xs mb-0.5">Kilometraje</p>
+                  <p className="text-slate-200 font-mono">{taskToView.km?.toLocaleString()} km</p>
+                </div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                  <p className="text-slate-400 font-semibold text-xs mb-0.5">Próximo KM</p>
+                  <p className="text-slate-200 font-mono">{taskToView.next_km ? `${taskToView.next_km.toLocaleString()} km` : 'N/A'}</p>
+                </div>
+              </div>
+              <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                <p className="text-slate-400 font-semibold text-xs mb-0.5">Taller / Local</p>
+                <p className="text-slate-200">{taskToView.shop || 'N/A'}</p>
+              </div>
+            </div>
+            
+            <div className="mt-5 pt-3 border-t border-white/5 flex justify-end">
+              <button onClick={() => setIsViewModalOpen(false)} className="px-5 py-2 rounded-full bg-white/10 text-slate-300 font-semibold text-xs hover:bg-white/20 transition-colors">
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
