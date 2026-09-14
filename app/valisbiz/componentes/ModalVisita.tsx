@@ -38,6 +38,9 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   const [fecha, setFecha] = useState(
     visitaAEditar?.fecha || new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0]
   );
+  const [montoReportado, setMontoReportado] = useState<string>(
+    visitaAEditar?.monto_reportado ? String(visitaAEditar.monto_reportado) : ''
+  );
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,19 +49,23 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
     
     startTransition(async () => {
       if (isEditing && visitaAEditar) {
+
         await editarVisita(visitaAEditar.id, {
           local_id: localId,
           vendedor_id: vendedorId,
           estado_visita: estadoVisita,
-          fecha: fecha
+          fecha: fecha,
+          monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null
         });
       } else {
         await registrarVisita({
           local_id: localId,
           vendedor_id: vendedorId,
           estado_visita: estadoVisita,
-          fecha: fecha
+          fecha: fecha,
+          monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null
         });
+
       }
       onClose();
     });

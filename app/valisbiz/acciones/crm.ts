@@ -3,14 +3,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function registrarVisita(data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string }) {
+export async function registrarVisita(data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null }) {
   const supabase = await createClient();
   const { error } = await supabase.from('visitas_mensuales').insert(data);
   if (error) throw new Error(error.message);
   revalidatePath('/valisbiz');
 }
 
-export async function editarVisita(id: string, data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string }) {
+export async function editarVisita(id: string, data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null }) {
   const supabase = await createClient();
   const { error } = await supabase.from('visitas_mensuales').update(data).eq('id', id);
   if (error) throw new Error(error.message);
