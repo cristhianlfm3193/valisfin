@@ -241,6 +241,8 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
   const [reportes, setReportes] = useState<any[]>([]);
   const [loadingReportes, setLoadingReportes] = useState(true);
   const [searchReportes, setSearchReportes] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   
   const [viewingReport, setViewingReport] = useState<any>(null);
   const [isDetalleModalOpen, setIsDetalleModalOpen] = useState(false);
@@ -290,7 +292,23 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
 
       return matchBasico || matchUnidades || matchVehiculos;
     });
+
+    return result.sort((a, b) => {
+      const strA = `${a.fecha || ''} ${a.hora || ''}`;
+      const strB = `${b.fecha || ''} ${b.hora || ''}`;
+      if (strA < strB) return 1;
+      if (strA > strB) return -1;
+      return 0;
+    });
   }, [reportes, searchReportes]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredReportes.length / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedReportes = filteredReportes.slice(startIndex, startIndex + itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchReportes]);
 
   const handleDeleteReporte = async (id: string) => {
     if (window.confirm('¿Está seguro que desea eliminar este reporte? Esta acción no se puede deshacer.')) {
@@ -396,8 +414,8 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
                       </div>
                     </td>
                   </tr>
-                ) : filteredReportes.length > 0 ? (
-                  filteredReportes.map((rep) => (
+                ) : paginatedReportes.length > 0 ? (
+                  paginatedReportes.map((rep) => (
                     <tr key={rep.id} className="hover:bg-sky-950/30 transition group">
                       <td className="py-3 px-4 font-mono text-cyan-400">
                         {rep.fecha} <span className="text-slate-500 ml-1">{rep.hora.substring(0,5)}</span>
@@ -450,6 +468,44 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
             </table>
           </div>
         </div>
+        
+        {/* Paginación */}
+        {filteredReportes.length > 0 && (
+          <div className="px-4 py-3 border-t border-slate-800/80 bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-slate-400">
+              Mostrando <span className="font-semibold text-white">{Math.min(startIndex + 1, filteredReportes.length)}</span> a <span className="font-semibold text-white">{Math.min(startIndex + itemsPerPage, filteredReportes.length)}</span> de <span className="font-semibold text-cyan-400">{filteredReportes.length}</span> reportes
+            </p>
+            <div className="flex items-center gap-1.5">
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition border ${
+                  currentPage === 1 
+                    ? 'bg-slate-800/50 text-slate-500 border-slate-700/50 cursor-not-allowed' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                }`}
+              >
+                Anterior
+              </button>
+              <div className="hidden sm:flex items-center gap-1">
+                <span className="text-xs text-slate-400 font-medium px-2">
+                  Página {currentPage} de {totalPages}
+                </span>
+              </div>
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition border ${
+                  currentPage === totalPages 
+                    ? 'bg-slate-800/50 text-slate-500 border-slate-700/50 cursor-not-allowed' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                }`}
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <ReporteDetalleModal 
