@@ -73,7 +73,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
             <MapPin className="w-5 h-5 text-indigo-500" />
             <h3 className="font-bold text-lg">{isEditing ? 'Editar Local' : 'Nuevo Local'}</h3>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-400 hover:bg-white/10 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -177,7 +177,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
               id="cliente-activo"
               checked={activo}
               onChange={e => setActivo(e.target.checked)}
-              className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300"
+              className="w-5 h-5 rounded text-indigo-400 focus:ring-indigo-500 border-slate-300"
             />
             <label htmlFor="cliente-activo" className="text-sm font-bold text-slate-300 cursor-pointer select-none">
               Cliente Activo

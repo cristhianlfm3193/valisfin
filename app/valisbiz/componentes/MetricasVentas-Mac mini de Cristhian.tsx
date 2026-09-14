@@ -151,7 +151,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
           </div>
           <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
             <div
-              className="bg-white h-full rounded-full transition-all duration-1000"
+              className="bg-[#1a2332] h-full rounded-full transition-all duration-1000"
               style={{ width: `${Math.min(porcentajeGlobal, 100)}%` }}
             />
           </div>

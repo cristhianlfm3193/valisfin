@@ -12,7 +12,7 @@ export default function LoadingOverlay() {
         <div></div>
         <div></div>
       </div>
-      <p className="mt-6 text-sm font-semibold text-pink-600 tracking-wide animate-pulse">
+      <p className="mt-6 text-sm font-semibold text-pink-400 tracking-wide animate-pulse">
         Cargando datos…
       </p>
 

@@ -236,7 +236,7 @@ function ModalEditarFacturado({
             <span className="text-xs font-semibold text-gray-300 flex items-center gap-1">
               <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
             </span>
-            <span className="font-mono font-bold text-pink-700 text-sm">B/.{fmt(total)}</span>
+            <span className="font-mono font-bold text-pink-400 text-sm">B/.{fmt(total)}</span>
           </div>
           <div>
             <label className="block text-xs font-semibold text-gray-300 mb-1.5">Notas</label>
@@ -523,15 +523,15 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
         {/* Header */}
         <div className="px-5 py-4 border-b border-pink-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center">
-              <Building2 className="w-4 h-4 text-pink-600" />
+            <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
+              <Building2 className="w-4 h-4 text-pink-400" />
             </div>
             <div>
               <h4 className="font-bold text-white text-sm">Facturado por Finanzas</h4>
               <p className="text-[11px] text-gray-400">Snapshot diario · muestra el último registro por vendedor en la tabla comparativa</p>
             </div>
           </div>
-          <div className="font-mono text-sm font-bold text-pink-600 whitespace-nowrap flex items-center gap-3">
+          <div className="font-mono text-sm font-bold text-pink-400 whitespace-nowrap flex items-center gap-3">
             Total: B/.{fmt(totalMonto)}
             <button
               onClick={() => setVerTodos(v => !v)}
@@ -617,7 +617,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                 <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
                 <SortTh label="Contado" col="contado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitemerald-600" />
                 <SortTh label="Crédito" col="credito" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitelue-600" />
-                <SortTh label="Total" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-pink-600" />
+                <SortTh label="Total" col="monto" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right font-bold text-pink-400" />
                 <th className="py-2.5 px-3">Notas</th>
                 <th className="py-2.5 px-3 text-center">Acciones</th>
               </tr>
@@ -650,14 +650,14 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                     <td className="py-3 px-3 text-right font-mono text-sm text-whitelue-700">
                       {r.credito > 0 ? `B/.${fmt(r.credito)}` : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-600">B/.{fmt(r.monto)}</td>
+                    <td className="py-3 px-3 text-right font-mono text-sm font-bold text-pink-400">B/.{fmt(r.monto)}</td>
                     <td className="py-3 px-3 text-xs text-gray-400 max-w-[160px] truncate">{r.notas || '—'}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center justify-center gap-1.5 opacity-100 transition-opacity">
                         <button
                           onClick={() => setEditando(r)}
                           title="Editar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-600 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-pink-50 hover:bg-pink-500/20 text-pink-400 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -682,7 +682,7 @@ function TablaFacturado({ registros, onRefresh }: { registros: RegistroFacturado
                   </td>
                   <td className="py-2.5 px-3 text-right font-mono text-whitemerald-700">B/.{fmt(totalContado)}</td>
                   <td className="py-2.5 px-3 text-right font-mono text-whitelue-700">B/.{fmt(totalCredito)}</td>
-                  <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalMonto)}</td>
+                  <td className="py-2.5 px-3 text-right font-mono text-pink-400">B/.{fmt(totalMonto)}</td>
                   <td className="py-2.5 px-3" colSpan={2} />
                 </tr>
               </tfoot>
@@ -808,7 +808,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
         {/* Header */}
         <div className="px-5 py-4 border-b border-sky-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
               <FileText className="w-4 h-4 text-whitelue-600" />
             </div>
             <div>
@@ -942,7 +942,7 @@ function TablaVendido({ registros, onRefresh }: { registros: RegistroVendidoFila
                         <button
                           onClick={() => setEditando(r)}
                           title="Editar"
-                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-whitelue-600 transition-colors"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-500/20 text-whitelue-600 transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -1126,8 +1126,8 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
       {/* Header */}
       <div className="px-5 py-4 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
-            <Calculator className="w-4 h-4 text-amber-600" />
+          <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+            <Calculator className="w-4 h-4 text-amber-400" />
           </div>
           <div>
             <h4 className="font-bold text-white text-sm">Comparativa: Reportado vs Facturado</h4>
@@ -1221,7 +1221,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
               <SortTh label="Fecha" col="fecha" sort={sortCol} dir={sortDir} onSort={handleSort} />
               <SortTh label="Vendedor" col="vendedor" sort={sortCol} dir={sortDir} onSort={handleSort} />
               <SortTh label="Total Reportado" col="reportado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-whitelue-600" />
-              <SortTh label="Total Facturado" col="facturado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-pink-600" />
+              <SortTh label="Total Facturado" col="facturado" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right text-pink-400" />
               <SortTh label="Diferencia" col="diferencia" sort={sortCol} dir={sortDir} onSort={handleSort} className="text-right" />
             </tr>
           </thead>
@@ -1252,7 +1252,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
                     <td className="py-3 px-3 text-right font-mono text-sm text-whitelue-700">
                       {r.reportado > 0 ? `B/.${fmt(r.reportado)}` : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-sm text-pink-700">
+                    <td className="py-3 px-3 text-right font-mono text-sm text-pink-400">
                       {r.facturado > 0 ? `B/.${fmt(r.facturado)}` : '—'}
                     </td>
                     <td className={`py-3 px-3 text-right font-mono text-sm font-bold ${diff > 0 ? 'text-whitemerald-600' : diff < 0 ? 'text-red-600' : 'text-gray-400'}`}>
@@ -1270,7 +1270,7 @@ function TablaComparativaDiaria({ registrosFacturado, registrosVendido }: {
                   {hasFiltrosActivos ? 'Totales de Selección' : 'Totales del período'}
                 </td>
                 <td className="py-2.5 px-3 text-right font-mono text-whitelue-700">B/.{fmt(totalReportado)}</td>
-                <td className="py-2.5 px-3 text-right font-mono text-pink-700">B/.{fmt(totalFacturado)}</td>
+                <td className="py-2.5 px-3 text-right font-mono text-pink-400">B/.{fmt(totalFacturado)}</td>
                 <td className={`py-2.5 px-3 text-right font-mono font-bold ${totalDiferencia > 0 ? 'text-whitemerald-700' : totalDiferencia < 0 ? 'text-red-700' : 'text-gray-400'}`}>
                   {totalDiferencia === 0 ? '—' : `${totalDiferencia > 0 ? '+' : ''}B/.${fmt(totalDiferencia)}`}
                 </td>

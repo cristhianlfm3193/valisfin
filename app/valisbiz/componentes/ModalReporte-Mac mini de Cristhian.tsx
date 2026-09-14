@@ -326,7 +326,7 @@ export default function ModalReporte({ onClose }: ModalReporteProps) {
             </div>
           )}
           {estado === 'listo' && (
-            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-sm text-emerald-700">
+            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-sm text-emerald-400">
               <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
               PDF generado correctamente. Descarga o comparte.
             </div>

@@ -200,7 +200,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('sin_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-white/5 bg-[#090a0f]/50 text-gray-400 hover:border-amber-500/50'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-400' : 'border-white/5 bg-[#090a0f]/50 text-gray-400 hover:border-amber-500/50'}`}
               >
                 <XCircle className={`w-6 h-6 ${estadoVisita === 'sin_compra' ? 'text-amber-500' : 'text-gray-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Sin Compra</span>

@@ -44,11 +44,11 @@ function getColors(pct: number) {
   if (pct >= 100) return { 
     bg: 'bg-emerald-50/70', 
     border: 'border-emerald-100',
-    text: 'text-emerald-700', 
-    badge: 'bg-emerald-100/90 text-emerald-800 border border-emerald-200/60', 
+    text: 'text-emerald-400', 
+    badge: 'bg-emerald-500/20/90 text-emerald-800 border border-emerald-200/60', 
     bar: 'bg-gradient-to-r from-emerald-400 via-teal-500 to-emerald-600', 
     icon: Sparkles, 
-    iconBg: 'bg-emerald-100 text-emerald-600 border border-emerald-200/60'
+    iconBg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-200/60'
   };
   if (pct >= 85) return { 
     bg: 'bg-purple-50/60', 
@@ -62,11 +62,11 @@ function getColors(pct: number) {
   return { 
     bg: 'bg-rose-50/60', 
     border: 'border-rose-100',
-    text: 'text-rose-700', 
-    badge: 'bg-rose-100/90 text-rose-800 border border-rose-200/60', 
+    text: 'text-rose-400', 
+    badge: 'bg-rose-500/20/90 text-rose-800 border border-rose-200/60', 
     bar: 'bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500', 
     icon: Sparkles, 
-    iconBg: 'bg-rose-100 text-pink-600 border border-rose-200/60'
+    iconBg: 'bg-rose-500/20 text-pink-400 border border-rose-200/60'
   };
 }
 
@@ -165,7 +165,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
       <div>
         <div className="flex items-center gap-2 mb-3">
           <h2 className="text-base font-bold text-slate-200">Equipo de Vendedores</h2>
-          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${isMesCerrado ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${isMesCerrado ? 'bg-amber-500/20 text-amber-400' : 'bg-green-100 text-green-700'}`}>
             {isMesCerrado ? `📅 ${mesLabel} · Mes cerrado` : `🟢 ${mesLabel} · En curso`}
           </span>
         </div>
@@ -182,7 +182,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 {/* Header: Avatar, Clean Name (NO routes), Badge % */}
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-100 via-rose-50 to-purple-100 text-pink-700 text-sm font-bold flex items-center justify-center shrink-0 border border-pink-200/50 shadow-xs">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-100 via-rose-50 to-purple-100 text-pink-400 text-sm font-bold flex items-center justify-center shrink-0 border border-pink-200/50 shadow-xs">
                       {getInitials(v.nombre)}
                     </div>
                     <div>
@@ -226,7 +226,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                       <span className="text-[11px] font-semibold text-slate-500 block">
                         {isOver ? '🏆 Superó la meta' : 'Brecha / GAP'}
                       </span>
-                      <span className={`font-mono text-sm font-bold ${isOver ? 'text-emerald-700' : c.text}`}>
+                      <span className={`font-mono text-sm font-bold ${isOver ? 'text-emerald-400' : c.text}`}>
                         {isOver ? '+' : ''}B/.{fmt(Math.abs(v.gap_facturado))}
                       </span>
                     </div>
@@ -277,7 +277,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                 <th className="py-3 px-4">Vendedor</th>
                 <th className="py-3 px-4 text-right">Meta Mes</th>
                 <th className="py-3 px-4 text-right">
-                  <span className="text-pink-600">Facturado</span>
+                  <span className="text-pink-400">Facturado</span>
                   <span className="block font-normal normal-case text-[10px] text-slate-400">Finanzas · base de bono</span>
                 </th>
                 <th className="py-3 px-4 text-right">
@@ -298,7 +298,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                   <tr key={v.vendedor_id} className="hover:bg-white/5 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold ${isOver ? 'bg-emerald-100 text-emerald-700' : isGood ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold ${isOver ? 'bg-emerald-500/20 text-emerald-400' : isGood ? 'bg-blue-500/20 text-blue-400' : 'bg-red-100 text-red-700'}`}>
                           {getInitials(v.nombre)}
                         </div>
                         <div>
@@ -310,7 +310,7 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                     <td className="py-3.5 px-4 text-right font-mono text-sm font-semibold text-slate-300">
                       B/.{Number(v.cuota_mensual).toLocaleString()}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-mono text-sm font-bold text-pink-700">
+                    <td className="py-3.5 px-4 text-right font-mono text-sm font-bold text-pink-400">
                       B/.{fmt(v.total_facturado)}
                     </td>
                     <td className="py-3.5 px-4 text-right font-mono text-sm text-slate-500">
@@ -319,11 +319,11 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                         : <span className="text-slate-300 text-xs">Sin datos</span>}
                     </td>
                     <td className="py-3.5 px-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${isOver ? 'bg-emerald-100 text-emerald-700' : isGood ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
+                      <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${isOver ? 'bg-emerald-500/20 text-emerald-400' : isGood ? 'bg-blue-500/20 text-blue-400' : 'bg-red-100 text-red-700'}`}>
                         {pct.toFixed(1)}%
                       </span>
                     </td>
-                    <td className={`py-3.5 px-4 text-right font-mono text-sm font-bold ${isOver ? 'text-emerald-600' : 'text-red-500'}`}>
+                    <td className={`py-3.5 px-4 text-right font-mono text-sm font-bold ${isOver ? 'text-emerald-400' : 'text-red-500'}`}>
                       {isOver ? '+' : ''}B/.{fmt(Math.abs(gap))}
                     </td>
                   </tr>
@@ -334,14 +334,14 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
               <tr className="bg-white/5 border-t-2 border-white/10">
                 <td className="py-3 px-4 text-sm font-bold text-slate-300">TOTAL EQUIPO</td>
                 <td className="py-3 px-4 text-right font-mono text-sm font-bold text-slate-200">B/.{cuotaGlobal.toLocaleString()}</td>
-                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-700">B/.{fmt(facturadoGlobal)}</td>
+                <td className="py-3 px-4 text-right font-mono text-sm font-bold text-pink-400">B/.{fmt(facturadoGlobal)}</td>
                 <td className="py-3 px-4 text-right font-mono text-sm text-slate-500">—</td>
                 <td className="py-3 px-4 text-center">
-                  <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${porcentajeGlobal >= 85 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-bold ${porcentajeGlobal >= 85 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-100 text-red-700'}`}>
                     {porcentajeGlobal.toFixed(1)}%
                   </span>
                 </td>
-                <td className={`py-3 px-4 text-right font-mono text-sm font-bold ${porcentajeGlobal >= 100 ? 'text-emerald-600' : 'text-red-500'}`}>
+                <td className={`py-3 px-4 text-right font-mono text-sm font-bold ${porcentajeGlobal >= 100 ? 'text-emerald-400' : 'text-red-500'}`}>
                   B/.{fmt(Math.abs(Number(metas.gap_global)))}
                 </td>
               </tr>

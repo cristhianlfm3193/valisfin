@@ -72,7 +72,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           <h3 className="font-bold text-lg text-slate-200">
             {isEditing ? 'Editar Visita' : 'Registrar Visita'}
           </h3>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-400 hover:bg-white/10 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -192,7 +192,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('con_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50 text-emerald-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200'}`}
               >
                 <CheckCircle2 className={`w-6 h-6 ${estadoVisita === 'con_compra' ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Con Compra</span>
@@ -200,7 +200,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('sin_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-amber-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-amber-50 text-amber-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-amber-200'}`}
               >
                 <XCircle className={`w-6 h-6 ${estadoVisita === 'sin_compra' ? 'text-amber-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Sin Compra</span>

@@ -270,7 +270,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
           <div className="flex gap-2">
             <button 
               onClick={() => setSelectedVendedor('Todos')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-slate-800 text-white' : 'bg-white/10 text-slate-400 hover:bg-slate-200'}`}
             >
               Todos
             </button>
@@ -278,7 +278,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <button
                 key={v}
                 onClick={() => setSelectedVendedor(v)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === v ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-700 hover:bg-pink-100'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === v ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-400 hover:bg-pink-500/20'}`}
               >
                 {v}
               </button>
@@ -295,7 +295,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <button
                 key={t}
                 onClick={() => setTipoVenta(t as any)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${tipoVenta === t ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${tipoVenta === t ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-400 hover:bg-emerald-500/20'}`}
               >
                 {t}
               </button>
@@ -304,12 +304,12 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
         </div>
         <div className="flex flex-col">
           <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Agrupación de Tiempo</label>
-          <div className="flex bg-slate-100 p-1 rounded-xl">
+          <div className="flex bg-white/10 p-1 rounded-xl">
             {['Año', 'Mes', 'Día'].map(t => (
               <button
                 key={t}
                 onClick={() => setTimeFilter(t as any)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-[#121c27] text-emerald-700 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-300 shadow-none'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${timeFilter === t ? 'bg-[#121c27] text-emerald-400 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-300 shadow-none'}`}
               >
                 {t}
               </button>
@@ -344,7 +344,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
             {brechaGlobal > 0 ? <TrendingUp className="w-4 h-4 text-emerald-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
             <span className="text-xs font-bold uppercase tracking-wider">Brecha / GAP</span>
           </div>
-          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-600' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-400'}`}>
+          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-400' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-400'}`}>
             {brechaGlobal === 0 ? '—' : `${brechaGlobal > 0 ? '+' : ''}B/.${fmt(brechaGlobal)}`}
           </span>
         </div>
@@ -355,9 +355,9 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <Target className="w-4 h-4 text-indigo-500" />
               <span className="text-xs font-bold uppercase tracking-wider">Cumplimiento Meta</span>
             </div>
-            <span className="text-lg font-black text-indigo-600">{porcentajeCumplimiento.toFixed(1)}%</span>
+            <span className="text-lg font-black text-indigo-400">{porcentajeCumplimiento.toFixed(1)}%</span>
           </div>
-          <div className="w-full h-3 bg-slate-100 rounded-full mt-2 overflow-hidden">
+          <div className="w-full h-3 bg-white/10 rounded-full mt-2 overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full transition-all duration-1000 ease-out"
               style={{ width: `${porcentajeCumplimiento}%` }}

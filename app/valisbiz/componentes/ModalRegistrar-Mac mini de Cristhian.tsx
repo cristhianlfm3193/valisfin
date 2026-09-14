@@ -144,14 +144,14 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
         <div className="flex border-b border-white/10 bg-white/5 flex-shrink-0">
           <button
             onClick={() => handleTabChange('facturado')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'facturado' ? 'border-pink-500 text-pink-600 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'facturado' ? 'border-pink-500 text-pink-400 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
           >
             <Building2 className="w-4 h-4" />
             Facturado (Finanzas)
           </button>
           <button
             onClick={() => handleTabChange('vendido')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'vendido' ? 'border-blue-500 text-blue-600 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 text-sm font-semibold transition-all border-b-2 ${tab === 'vendido' ? 'border-blue-500 text-blue-400 bg-[#090a0f]/50' : 'border-transparent text-gray-400 hover:text-gray-200'}`}
           >
             <FileText className="w-4 h-4" />
             Vendido (Vendedor)
@@ -159,7 +159,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
         </div>
 
         {/* Context note */}
-        <div className={`px-6 py-2.5 text-[11px] font-medium flex-shrink-0 ${tab === 'facturado' ? 'bg-pink-50 text-pink-700 border-b border-pink-100' : 'bg-blue-50 text-blue-700 border-b border-blue-100'}`}>
+        <div className={`px-6 py-2.5 text-[11px] font-medium flex-shrink-0 ${tab === 'facturado' ? 'bg-pink-50 text-pink-400 border-b border-pink-100' : 'bg-blue-50 text-blue-400 border-b border-blue-100'}`}>
           {tab === 'facturado'
             ? '📊 Ingresa el acumulado que Finanzas reporta. Se guardará el monto del día.'
             : '📋 Informe diario del vendedor: visitas, compras y montos. El Total = Contado + Crédito.'}
@@ -203,7 +203,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-emerald-700 mb-1.5 flex items-center gap-1">
+                    <label className="block text-xs font-semibold text-emerald-400 mb-1.5 flex items-center gap-1">
                       <Banknote className="w-3.5 h-3.5" /> Contado (B/.)
                     </label>
                     <div className="relative">
@@ -214,7 +214,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-blue-700 mb-1.5 flex items-center gap-1">
+                    <label className="block text-xs font-semibold text-blue-400 mb-1.5 flex items-center gap-1">
                       <CreditCard className="w-3.5 h-3.5" /> Crédito (B/.)
                     </label>
                     <div className="relative">
@@ -230,7 +230,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                   <span className="text-xs font-semibold text-gray-300 flex items-center gap-1">
                     <Calculator className="w-3.5 h-3.5 text-pink-500" /> Total del día
                   </span>
-                  <span className="font-mono font-bold text-pink-700 text-sm">
+                  <span className="font-mono font-bold text-pink-400 text-sm">
                     B/.{totalFacturado.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -265,7 +265,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                     </div>
                     {/* Con Compra */}
                     <div>
-                      <label className="flex items-center gap-1 text-xs font-semibold text-emerald-700 mb-1.5">
+                      <label className="flex items-center gap-1 text-xs font-semibold text-emerald-400 mb-1.5">
                         <ShoppingCart className="w-3.5 h-3.5" /> Con Compra
                       </label>
                       <input
@@ -335,10 +335,10 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
                 <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Calculator className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm font-semibold text-blue-700">Total del día</span>
+                    <span className="text-sm font-semibold text-blue-400">Total del día</span>
                     <span className="text-[11px] text-blue-400">(Contado + Crédito)</span>
                   </div>
-                  <span className="font-mono text-lg font-bold text-blue-700">
+                  <span className="font-mono text-lg font-bold text-blue-400">
                     B/.{totalCalculado.toLocaleString('es-PA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -347,7 +347,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
             {/* Feedback */}
             {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
-            {success && <p className="text-sm text-emerald-600 bg-emerald-50 rounded-xl px-3 py-2">{success}</p>}
+            {success && <p className="text-sm text-emerald-400 bg-emerald-50 rounded-xl px-3 py-2">{success}</p>}
 
             {/* Actions */}
             <div className="flex gap-3 pt-2 pb-1">

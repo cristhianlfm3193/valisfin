@@ -177,7 +177,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
               id="cliente-activo"
               checked={activo}
               onChange={e => setActivo(e.target.checked)}
-              className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 border-white/15"
+              className="w-5 h-5 rounded text-indigo-400 focus:ring-indigo-500 border-white/15"
             />
             <label htmlFor="cliente-activo" className="text-sm font-bold text-gray-200 cursor-pointer select-none">
               Cliente Activo

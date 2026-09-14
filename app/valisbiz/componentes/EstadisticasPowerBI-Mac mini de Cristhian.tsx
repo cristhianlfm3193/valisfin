@@ -270,7 +270,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
           <div className="flex gap-2">
             <button 
               onClick={() => setSelectedVendedor('Todos')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-white text-black' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedVendedor === 'Todos' ? 'bg-[#1a2332] text-black' : 'bg-white/10 text-gray-400 hover:bg-white/20'}`}
             >
               Todos
             </button>

@@ -99,7 +99,7 @@ function ChipsProgreso({ cola, actual }: { cola: ItemCola[]; actual: number }) {
       {cola.map((item, i) => {
         const nombre = item.vendedor_nombre?.split(' ')[0] || `#${i + 1}`;
         if (item._estado === 'guardado') return (
-          <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-whitemerald-700">
+          <span key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-whitemerald-700">
             <Check className="w-3 h-3" />{nombre}
           </span>
         );
@@ -129,7 +129,7 @@ function FormularioItem({ item, vendedores, onChange }: {
       {/* Tab tipo */}
       <div className="flex rounded-xl border border-white/10 overflow-hidden bg-[#090a0f]/50/5 text-xs">
         <button onClick={() => onChange({ _tab: 'facturado' })}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-[#090a0f]/50 text-pink-600 shadow-sm' : 'text-gray-400'}`}>
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-[#090a0f]/50 text-pink-400 shadow-sm' : 'text-gray-400'}`}>
           <Building2 className="w-3.5 h-3.5" /> Facturado
         </button>
         <button onClick={() => onChange({ _tab: 'vendido' })}
@@ -180,7 +180,7 @@ function FormularioItem({ item, vendedores, onChange }: {
             <span className="text-[11px] font-semibold text-gray-300 flex items-center gap-1">
               <Calculator className="w-3 h-3 text-pink-500" /> Total del día
             </span>
-            <span className="font-mono font-bold text-pink-700 text-sm">
+            <span className="font-mono font-bold text-pink-400 text-sm">
               B/.{((parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0)).toLocaleString('es-PA', { minimumFractionDigits: 2 })}
             </span>
           </div>
