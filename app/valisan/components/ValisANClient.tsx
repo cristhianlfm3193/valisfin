@@ -242,7 +242,8 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
   const [loadingReportes, setLoadingReportes] = useState(true);
   const [searchReportes, setSearchReportes] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [showAllReportes, setShowAllReportes] = useState(false);
+  const itemsPerPage = showAllReportes ? (filteredReportes?.length || 1) : 20;
   
   const [viewingReport, setViewingReport] = useState<any>(null);
   const [isDetalleModalOpen, setIsDetalleModalOpen] = useState(false);
@@ -348,16 +349,8 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
         <div className="bg-[#0a1426]/68 backdrop-blur-xl rounded-3xl border border-sky-500/20 overflow-hidden shadow-2xl">
           
           {/* Header de la Tabla Integrado */}
-          <div className="p-5 sm:p-6 border-b border-slate-800/60 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900/30">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 shadow-inner">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">Reportes Operativos</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Control de recorridos, relevos y novedades operativas</p>
-              </div>
-            </div>
+          <div className="p-4 border-b border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/30">
+            <h2 className="text-xl font-bold text-white tracking-tight">Reportes Operativos</h2>
             
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* Buscador Integrado */}
@@ -382,7 +375,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
             </div>
           </div>
 
-          <div className="overflow-x-auto min-h-[250px]">
+          <div className="overflow-x-auto max-h-[600px] overflow-y-auto min-h-[250px]">
             <table className="w-full text-left border-collapse text-xs sm:text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 text-[11px] uppercase tracking-wider font-semibold">
@@ -491,6 +484,20 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
                 }`}
               >
                 Siguiente
+              </button>
+              <div className="w-px h-6 bg-slate-700 mx-2 hidden sm:block"></div>
+              <button 
+                onClick={() => {
+                  setShowAllReportes(!showAllReportes);
+                  setCurrentPage(1);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition border hidden sm:block ${
+                  showAllReportes 
+                    ? 'bg-sky-500/10 text-sky-400 border-sky-500/30 hover:bg-sky-500/20' 
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                }`}
+              >
+                {showAllReportes ? 'Ver Paginado' : 'Ver Todos'}
               </button>
             </div>
           </div>
