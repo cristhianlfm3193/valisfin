@@ -11,7 +11,8 @@ import {
   Smartphone, 
   RefreshCw,
   LogOut,
-  Orbit
+  Orbit,
+  Shield
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { PortalButton } from '@/app/components/PortalButton';
@@ -27,8 +28,9 @@ export default async function PortalPage() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  const { data: profile } = await supabase.from('profiles').select('app_access').eq('id', user?.id).single();
+  const { data: profile } = await supabase.from('profiles').select('app_access, role').eq('id', user?.id).single();
   const appAccess = profile?.app_access || ['valisfin', 'valisbiz', 'valisan'];
+  const isAdmin = profile?.role === 'administrador';
 
   return (
     <div className="min-h-screen flex flex-col justify-between relative selection:bg-emerald-500 selection:text-white bg-[#090a0f] text-white overflow-x-hidden font-sans">
@@ -121,8 +123,16 @@ export default async function PortalPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-[#121c27]/5 hover:bg-[#121c27]/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
-          <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner overflow-hidden">
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Link href="/admin" className="flex items-center gap-2 bg-[#121c27]/5 hover:bg-amber-500/10 transition-colors border border-amber-500/20 px-3 py-1.5 rounded-full backdrop-blur-md text-amber-500">
+              <Shield className="w-4 h-4" />
+              <span className="text-xs font-semibold hidden sm:inline">Admin</span>
+            </Link>
+          )}
+
+          <div className="flex items-center gap-3 bg-[#121c27]/5 hover:bg-[#121c27]/10 transition-colors border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+            <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-white shadow-inner overflow-hidden">
             {avatarUrl ? (
               <img src={avatarUrl} alt={fullName} className="w-full h-full object-cover" />
             ) : (
@@ -140,6 +150,7 @@ export default async function PortalPage() {
               <LogOut className="w-4 h-4" />
             </button>
           </form>
+          </div>
         </div>
       </header>
 
