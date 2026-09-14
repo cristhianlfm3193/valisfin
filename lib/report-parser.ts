@@ -102,7 +102,7 @@ export function parseReportText(text: string): any {
   }
 
   // 2. Extraer Conductor / Vehículo de Bloque (ej. *Conductor de AVSEC:* - *Ixan Barría* 8-946-2084)
-  const conductorBlockRegex = /\*Conductor(?:\s+de\s+([^*:]+))?[:.]?\*\s*\n*([\s\S]*?)(?=\*(?:Unidad|INFORMA|Informa|REPORTA|Reporta|Correría|Pursto|Puesto|DIOS)|$)/gi;
+  const conductorBlockRegex = /\*Conductor(?:\s+de\s+([^*:]+))?[:.]?\*\s*\n*([\s\S]*?)(?=\*(?:Unidad(?:es)?|INFORMA|Informa|REPORTA|Reporta|Correría|Pursto|Puesto|DIOS)|$)/gi;
   let condBlockMatch: RegExpExecArray | null;
   while ((condBlockMatch = conductorBlockRegex.exec(cleanText)) !== null) {
     const base = condBlockMatch[1] ? condBlockMatch[1].trim() : 'AVSEC';
@@ -126,7 +126,7 @@ export function parseReportText(text: string): any {
   }
 
   // 3. Extraer Unidad Aeronaval / Unidades de Bloque (ej. *Unidad Aeronaval.* - Cabo1ro 71310 *Luis Charles*)
-  const unidadBlockRegex = /\*Unidad(?:\s+Aeronaval)?[:.]?\*\s*\n*([\s\S]*?)(?=\*(?:REPORTA|Reporta|INFORMA|Informa|Conductor|Correría|Pursto|Puesto|DIOS)|$)/gi;
+  const unidadBlockRegex = /\*Unidad(?:\s+Aeronaval)?[:.]?\*\s*\n*([\s\S]*?)(?=\*(?:REPORTA|Reporta|INFORMA|Informa|Conductor|Correría|Pursto|Puesto|DIOS|Unidad(?:es)?|UNIDADES)|$)/gi;
   let uniBlockMatch: RegExpExecArray | null;
   while ((uniBlockMatch = unidadBlockRegex.exec(cleanText)) !== null) {
     const lines = uniBlockMatch[1].split('\n');
@@ -247,7 +247,7 @@ export function parseReportText(text: string): any {
   }
 
   // 9. Puestos y Unidades (ej: *Puesto la Retractil:* o *Pursto la Retractil:*)
-  const puestoBlockRegex = /\*(?:Puesto|Pursto)\s*([^:*]+)\*:\s*([\s\S]*?)(?=\*(?:Informa|INFORMA|Reporta|REPORTA|Correría|Narrativa|Áreas|Equipos|Novedad)|PA\s*\*Dios|DIOS|$)/gi;
+  const puestoBlockRegex = /\*(?:Puesto|Pursto)\s*([^:*]+)\*:\s*([\s\S]*?)(?=\*(?:Informa|INFORMA|Reporta|REPORTA|Correría|Narrativa|Áreas|Equipos|Novedad|Unidad(?:es)?|UNIDADES)|PA\s*\*Dios|DIOS|$)/gi;
   let puestoMatch: RegExpExecArray | null;
   while ((puestoMatch = puestoBlockRegex.exec(cleanText)) !== null) {
     const puestoNombre = puestoMatch[1].trim();
@@ -269,7 +269,7 @@ export function parseReportText(text: string): any {
   }
 
   // 9.5 Unidades Entrantes y Salientes
-  const unidadesBloqueRegex = /\*(?:UNIDADES\s+)?(SALIENTES|ENTRANTES|SALIENTE|ENTRANTE)[:.]?\*\s*([\s\S]*?)(?=\*(?:UNIDADES|INFORMA|REPORTA|CORRER[IÍ]A|NARRATIVA|ÁREAS|AREAS|EQUIPOS|NOVEDAD|DIOS|PUESTO|PURSTO)[:.]?\*|$)/gi;
+  const unidadesBloqueRegex = /\*(?:UNIDADES\s+)?(SALIENTES|ENTRANTES|SALIENTE|ENTRANTE)[:.]?\*\s*([\s\S]*?)(?=\*(?:UNIDADES(?:\s+(?:SALIENTES|ENTRANTES|SALIENTE|ENTRANTE))?|INFORMA|REPORTA|CORRER[IÍ]A|NARRATIVA|ÁREAS|AREAS|EQUIPOS|NOVEDAD|DIOS|PUESTO|PURSTO)[:.]?\*|$)/gi;
   let unidadesMatch;
   let blockCount = 0;
   while ((unidadesMatch = unidadesBloqueRegex.exec(cleanText)) !== null) {
@@ -359,8 +359,14 @@ export function parseReportText(text: string): any {
     }
   }
 
-  // 11. Narrativa / Observación Operativa
-  const narrativaExplicitMatch = cleanText.match(/\*(?:NARRATIVA|OBSERVACI[OÓ]N|NOVEDAD(?:ES)?):\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS):\*|•En el movil|Movil|Unidad|\n-|$)/i);
+  // 11. Extraer Novedad / Equipos primero para no mezclarlo con Narrativa
+  const novedadMatch = cleanText.match(/\*(?:EQUIPOS?|NOVEDAD(?:ES)?|EQUIPOS?\s*\/\s*NOVEDAD(?:ES)?)[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS|NARRATIVA)[:.]?\*|•En el movil|Movil|Unidad|$)/i);
+  if (novedadMatch && novedadMatch[1].trim().length > 3) {
+    result.equipos_novedad = novedadMatch[1].trim();
+  }
+
+  // 11.5 Narrativa / Observación Operativa
+  const narrativaExplicitMatch = cleanText.match(/\*(?:NARRATIVA|OBSERVACI[OÓ]N):\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS):\*|•En el movil|Movil|Unidad|\n-|$)/i);
   if (narrativaExplicitMatch && narrativaExplicitMatch[1].trim().length > 3) {
     result.narrativa = narrativaExplicitMatch[1].trim();
   } else {
