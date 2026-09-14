@@ -188,7 +188,7 @@ export default function CardReporteEficiencia() {
     <div className="bg-[#090a0f]/50 rounded-2xl p-4 sm:p-6 shadow-sm border border-white/5 flex flex-col gap-5 mt-2 mb-2">
       <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
         <div>
-          <h3 className="text-lg font-bold text-[#131b2e] flex items-center gap-2">
+          <h3 className="text-lg font-bold text-slate-200 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-rose-400" />
             Reporte de Eficiencia de Ruta (PDF)
           </h3>

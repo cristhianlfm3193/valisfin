@@ -474,7 +474,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             </div>
                           )}
                           <h4 className="font-bold text-sm m-0 leading-tight mb-1">{local.nombre_local}</h4>
-                          <p className="text-xs text-[#6d7a72] m-0 mb-2">{local.tipo}</p>
+                          <p className="text-xs text-slate-400 m-0 mb-2">{local.tipo}</p>
                           
                           <div className="border-t border-white/5 pt-2 mt-2">
                             {resumen ? (
@@ -666,7 +666,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#f2f3ff] text-[#6d7a72] text-xs uppercase tracking-wider">
+                  <tr className="bg-white/5 text-slate-400 text-xs uppercase tracking-wider">
                     <th className="py-3 px-3 rounded-l-xl min-w-[200px] cursor-pointer hover:bg-[#eaedff] transition-colors" onClick={() => handleSort('nombre')}>
                       <div className="flex items-center gap-1">
                         Tipo / Local
@@ -723,7 +723,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px] align-top">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#eaedff] text-sm text-white">
+                <tbody className="divide-y divide-white/10 text-sm text-white">
                   {paginatedLocales.map(local => {
                     let dotColor = 'bg-[#6d7a72]';
                     if (local.tipo === 'Supermercado') dotColor = 'bg-pink-500';
@@ -737,7 +737,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     return (
                       <tr 
                         key={local.id} 
-                        className={`hover:bg-[#f2f3ff] transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''} ${!local.activo ? 'opacity-50 grayscale' : ''}`}
+                        className={`hover:bg-white/5 transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''} ${!local.activo ? 'opacity-50 grayscale' : ''}`}
                       >
                         <td 
                           className="py-3.5 px-3 font-semibold flex items-center gap-3 cursor-pointer"
@@ -755,7 +755,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
                           <div>
                             <span className="block font-bold">{local.nombre_local}</span>
-                            <span className="text-xs text-[#6d7a72]">{local.tipo}</span>
+                            <span className="text-xs text-slate-400">{local.tipo}</span>
                           </div>
                         </td>
                         <td className="py-3.5 px-3">
@@ -872,14 +872,14 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[#f2f3ff] text-[#6d7a72] text-xs uppercase tracking-wider">
+                  <tr className="bg-white/5 text-slate-400 text-xs uppercase tracking-wider">
                     <th className="py-3 px-3 rounded-l-xl min-w-[150px]">Fecha / Vendedor</th>
                     <th className="py-3 px-3 min-w-[200px]">Local</th>
                     <th className="py-3 px-3">Estado</th>
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px]">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#eaedff] text-sm text-white">
+                <tbody className="divide-y divide-white/10 text-sm text-white">
                   {visitasMostradas.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-8 text-center text-gray-400">
@@ -888,14 +888,14 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     </tr>
                   ) : (
                     visitasMostradas.map(visita => (
-                      <tr key={visita.id} className="hover:bg-[#f2f3ff] transition-colors">
+                      <tr key={visita.id} className="hover:bg-white/5 transition-colors">
                         <td className="py-3 px-3">
                           <span className="block font-bold">{new Date(visita.fecha + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}</span>
-                          <span className="text-xs text-[#6d7a72]">{visita.vendedor?.nombre}</span>
+                          <span className="text-xs text-slate-400">{visita.vendedor?.nombre}</span>
                         </td>
                         <td className="py-3 px-3">
                           <span className="block font-bold">{visita.local?.nombre_local}</span>
-                          <span className="text-xs text-[#6d7a72]">{visita.local?.tipo}</span>
+                          <span className="text-xs text-slate-400">{visita.local?.tipo}</span>
                         </td>
                         <td className="py-3 px-3">
                           <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/20 text-whitemerald-700' : 'bg-amber-500/20 text-amber-400'}`}>
