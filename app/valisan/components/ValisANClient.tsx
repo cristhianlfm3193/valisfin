@@ -285,11 +285,9 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
     }
 
     return [...result].sort((a: any, b: any) => {
-      const strA = `${a.fecha || ''} ${a.hora || ''}`;
-      const strB = `${b.fecha || ''} ${b.hora || ''}`;
-      if (strA < strB) return 1;
-      if (strA > strB) return -1;
-      return 0;
+      const dateA = new Date(`${a.fecha || '1970-01-01'}T${a.hora || '00:00'}`);
+      const dateB = new Date(`${b.fecha || '1970-01-01'}T${b.hora || '00:00'}`);
+      return dateB.getTime() - dateA.getTime();
     });
   }, [reportes, searchReportes]);
 
@@ -347,43 +345,43 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
       
       {/* SECCIÓN ÚNICA: REPORTES OPERATIVOS */}
       <div className="space-y-5">
-        <div className="bg-[#0a1426]/68 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-sky-500/25 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">Reportes Operativos</h2>
-              <p className="text-xs text-slate-400">Control de recorridos, relevos y traslados de personal</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-
-            <button 
-              onClick={() => setIsGlobalReporteModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition"
-            >
-              <FileText className="w-4 h-4" />
-              Registrar Reporte
-            </button>
-          </div>
-        </div>
-
-        {/* Buscador de Reportes */}
-        <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
-          <div className="relative w-full lg:max-w-md shrink-0">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-sky-400" />
-            <input 
-              type="text" 
-              placeholder="Buscar por departamento, asunto, quien reporta..." 
-              value={searchReportes}
-              onChange={(e) => setSearchReportes(e.target.value)}
-              className="w-full bg-[#0a1426]/80 border border-sky-500/30 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition shadow-inner"
-            />
-          </div>
-        </div>
-
         <div className="bg-[#0a1426]/68 backdrop-blur-xl rounded-3xl border border-sky-500/20 overflow-hidden shadow-2xl">
+          
+          {/* Header de la Tabla Integrado */}
+          <div className="p-5 sm:p-6 border-b border-slate-800/60 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900/30">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 shadow-inner">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white tracking-tight">Reportes Operativos</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Control de recorridos, relevos y novedades operativas</p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Buscador Integrado */}
+              <div className="relative w-full sm:w-80 shrink-0">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-sky-400" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar en detalle operativo, asunto, placa..." 
+                  value={searchReportes}
+                  onChange={(e) => setSearchReportes(e.target.value)}
+                  className="w-full bg-slate-950/50 border border-slate-700/50 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
+                />
+              </div>
+              
+              <button 
+                onClick={() => setIsGlobalReporteModalOpen(true)}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/20 transition whitespace-nowrap shrink-0"
+              >
+                <FileText className="w-4 h-4" />
+                Registrar Reporte
+              </button>
+            </div>
+          </div>
+
           <div className="overflow-x-auto min-h-[250px]">
             <table className="w-full text-left border-collapse text-xs sm:text-sm whitespace-nowrap">
               <thead>

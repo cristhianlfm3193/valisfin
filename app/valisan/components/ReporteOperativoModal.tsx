@@ -174,7 +174,7 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
                 >
                   <option value="BATORG">Base Aérea Teniente Octavio Rodríguez Garrido (BATORG)</option>
                   <option value="POLICÍA AEROPORTUARIA">POLICÍA AEROPORTUARIA (AVSEC / DINOA)</option>
-                  <option value="G.O.T.A">G.O.T.A • Grupo de Operaciones Tácticas Aeronavales</option>
+                  <option value="OTA">OTA • Operaciones Tácticas Aeronavales</option>
                 </select>
               </div>
               

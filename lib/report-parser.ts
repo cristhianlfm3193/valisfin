@@ -15,7 +15,7 @@ export function parseReportText(text: string) {
 
   const headerMatch = cleanText.substring(0, 300);
   if (/BATORG/i.test(headerMatch)) result.departamento = 'BATORG';
-  else if (/G\.?O\.?T\.?A/i.test(headerMatch)) result.departamento = 'G.O.T.A';
+  else if (/G\.?O\.?T\.?A|T[AÁ]CTICAS\s+AERONAVALES|\bOTA\b/i.test(headerMatch)) result.departamento = 'OTA';
   else result.departamento = 'POLICÍA AEROPORTUARIA';
 
   const fechaRegex = /(?:\*?(?:FECHA|Fecha)[:.]?\*?\s*([\d\/\-]+)|\[?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}))/i;
