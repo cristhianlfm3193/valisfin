@@ -154,7 +154,7 @@ export function parseReportText(text: string): any {
   }
 
   // 4. Extraer *REPORTA:* o *Reporta:*
-  const reportaMatch = cleanText.match(/\*(?:REPORTA|Reporta)[:.]?\*\s*\n*([^\n*]+(?:\s*\*[^\n*]+\*)?)/i);
+  const reportaMatch = cleanText.match(/\*(?:REPORTA|Reporta)[:.]?\*\s*\n*([^\n]+)/i);
   if (reportaMatch) {
     const rawLine = reportaMatch[1].trim();
     const officer = extractOfficer(rawLine);
@@ -166,7 +166,7 @@ export function parseReportText(text: string): any {
   }
 
   // 5. Extraer *INFORMA:* o *Informa:*
-  const informaMatch = cleanText.match(/\*(?:INFORMA|Informa)[:.]?\*\s*\n*([^\n*]+(?:\s*\*[^\n*]+\*)?)/i);
+  const informaMatch = cleanText.match(/\*(?:INFORMA|Informa)[:.]?\*\s*\n*([^\n]+)/i);
   if (informaMatch) {
     const rawLine = informaMatch[1].trim();
     const officer = extractOfficer(rawLine);
@@ -411,38 +411,45 @@ export function parseReportText(text: string): any {
 
 
   // 11. Extraer Novedad / Equipos primero para no mezclarlo con Narrativa
-  const novedadMatch = cleanText.match(/\*(?:EQUIPOS?|NOVEDAD(?:ES)?|EQUIPOS?\s*\/\s*NOVEDAD(?:ES)?)[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS|NARRATIVA)[:.]?\*|•En el movil|Movil|Unidad|$)/i);
+  const novedadMatch = cleanText.match(/\*(?:EQUIPOS?|NOVEDAD(?:ES)?|EQUIPOS?\s*\/\s*NOVEDAD(?:ES)?)[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS|NARRATIVA)(?:[^\n*]*)\*|•En el movil|Movil|Unidad|$)/i);
   if (novedadMatch && novedadMatch[1].trim().length > 3) {
     result.equipos_novedad = novedadMatch[1].trim();
   }
 
   // 11.5 Narrativa / Observación Operativa
-  const narrativaExplicitMatch = cleanText.match(/\*(?:NARRATIVA|OBSERVACI[OÓ]N):\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS):\*|•En el movil|Movil|Unidad|\n-|$)/i);
+  const narrativaExplicitMatch = cleanText.match(/\*(?:NARRATIVA|OBSERVACI[OÓ]N)[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS)(?:[^\n*]*)\*|•En el movil|Movil|Unidad|\n-|$)/i);
   if (narrativaExplicitMatch && narrativaExplicitMatch[1].trim().length > 3) {
     result.narrativa = narrativaExplicitMatch[1].trim();
   } else {
-    const narrativeParts: string[] = [];
+    // Buscar si hay NARRATIVA y OBSERVACIÓN separadas, para concatenarlas
+    const narrativaM = cleanText.match(/\*NARRATIVA[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|NOVEDAD|OBSERVACI[OÓ]N|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS)(?:[^\n*]*)\*|•En el movil|Movil|Unidad|\n-|$)/i);
+    const obsM = cleanText.match(/\*OBSERVACI[OÓ]N[:.]?\*\s*([\s\S]*?)(?=\*(?:ÁREAS|AREAS|EQUIPOS|NOVEDAD|INFORMA|REPORTA|CORRERÍA|PURSTO|PUESTO|DIOS)(?:[^\n*]*)\*|•En el movil|Movil|Unidad|\n-|$)/i);
+    if (narrativaM || obsM) {
+       result.narrativa = [narrativaM?.[1]?.trim(), obsM?.[1]?.trim()].filter(Boolean).join('\n\n');
+    } else {
+      const narrativeParts: string[] = [];
 
-    if (result.vehiculos.length > 0) {
-      const conds = result.vehiculos.map((v: any) => `${v.numero_movil} con conductor ${v.conductor_nombre || 'de servicio'} (${v.conductor_id || v.placa_vehiculo})`).join(', ');
-      narrativeParts.push(`Móviles de servicio: ${conds}.`);
+      if (result.vehiculos.length > 0) {
+        const conds = result.vehiculos.map((v: any) => `${v.numero_movil} con conductor ${v.conductor_nombre || 'de servicio'} (${v.conductor_id || v.placa_vehiculo})`).join(', ');
+        narrativeParts.push(`Móviles de servicio: ${conds}.`);
+      }
+
+      if (result.unidades.length > 0) {
+        const puestosDesc = result.unidades.map((u: any) => `${u.rol}: ${u.rango} ${u.nombre} (${u.placa_institucional || 'Sin Placa'})`).join(', ');
+        narrativeParts.push(`Personal de servicio: ${puestosDesc}.`);
+      }
+
+      if (result.reporta.nombre) {
+        narrativeParts.push(`Oficial a cargo: ${result.reporta.rango} ${result.reporta.nombre} (${result.reporta.placa || ''}).`);
+      }
+
+      narrativeParts.push('Servicio operativo ejecutado sin novedades de relevancia. Dios, Patria y Honor.');
+      result.narrativa = narrativeParts.join(' ');
     }
-
-    if (result.unidades.length > 0) {
-      const puestosDesc = result.unidades.map((u: any) => `${u.rol}: ${u.rango} ${u.nombre} (${u.placa_institucional || 'Sin Placa'})`).join(', ');
-      narrativeParts.push(`Personal de servicio: ${puestosDesc}.`);
-    }
-
-    if (result.reporta.nombre) {
-      narrativeParts.push(`Oficial a cargo: ${result.reporta.rango} ${result.reporta.nombre} (${result.reporta.placa || ''}).`);
-    }
-
-    narrativeParts.push('Servicio operativo ejecutado sin novedades de relevancia. Dios, Patria y Honor.');
-    result.narrativa = narrativeParts.join(' ');
   }
 
   // 12. Áreas
-  const areasMatch = cleanText.match(/\*(?:ÁREAS|AREAS):\*\s*([\s\S]*?)(?=\*(?:EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS)[:.]?\*|•En el movil|Movil|Unidad|$)/i);
+  const areasMatch = cleanText.match(/\*(?:ÁREAS|AREAS)[:.]?\*\s*([\s\S]*?)(?=\*(?:EQUIPOS|NOVEDAD(?:ES)?|INFORMA|REPORTA|CONDUCTOR|VEH[IÍ]CULO|UNIDAD|DIOS)(?:[^\n*]*)\*|•En el movil|Movil|Unidad|$)/i);
   if (areasMatch) {
     const rawAreas = areasMatch[1].trim();
     const cleanAreas = rawAreas.split('\n')

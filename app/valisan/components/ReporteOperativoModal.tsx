@@ -455,7 +455,7 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
                     </button>
                   </div>
                   {unidades.map((uni, idx) => (
-                    <div key={`uni-${idx}`} className="grid grid-cols-1 sm:grid-cols-3 gap-3 relative p-3 bg-slate-950/50 rounded-xl border border-slate-800/50">
+                    <div key={`uni-${idx}`} className="grid grid-cols-1 sm:grid-cols-4 gap-3 relative p-3 bg-slate-950/50 rounded-xl border border-slate-800/50">
                       <div>
                         <input 
                           type="text" 
@@ -513,8 +513,22 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
                           }} 
                           className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" 
                         />
+                      </div>
+
+                      <div className="flex gap-2 items-center">
+                        <input 
+                          type="text" 
+                          placeholder="Dpto / Destino (Ej. INL)" 
+                          value={uni.destino || ''} 
+                          onChange={(e) => {
+                            const newU = [...unidades]; 
+                            newU[idx].destino = e.target.value; 
+                            setUnidades(newU);
+                          }} 
+                          className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" 
+                        />
                         {idx > 0 && (
-                          <button onClick={() => removeUnidad(idx)} className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition">
+                          <button onClick={() => removeUnidad(idx)} className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition shrink-0">
                             <Trash2 className="w-4 h-4"/>
                           </button>
                         )}
