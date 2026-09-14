@@ -7,6 +7,7 @@ import { AuditLogTable } from './components/AuditLogTable';
 import { AppsModal } from './components/AppsModal';
 import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles, Grid } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Btn3D } from '@/app/components/Btn3D';
 
 interface AdminClientProps {
@@ -17,6 +18,7 @@ interface AdminClientProps {
 }
 
 export default function AdminClient({ initialSettings, initialUsers, initialLogs, vendedores = [] }: AdminClientProps) {
+  const router = useRouter();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = useState(false);
   const [isAppsOpen, setIsAppsOpen] = useState(false);
@@ -30,21 +32,21 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
         isOpen={isSettingsOpen} 
         onClose={() => setIsSettingsOpen(false)} 
         currentSettings={initialSettings} 
-        onSaved={() => window.location.reload()} 
+        onSaved={() => router.refresh()} 
       />
       
       <UsersModal 
         isOpen={isUsersOpen} 
         onClose={() => setIsUsersOpen(false)} 
         users={initialUsers} 
-        onSaved={() => window.location.reload()} 
+        onSaved={() => router.refresh()} 
       />
 
       <AppsModal 
         isOpen={isAppsOpen} 
         onClose={() => setIsAppsOpen(false)} 
         users={initialUsers} 
-        onSaved={() => window.location.reload()} 
+        onSaved={() => router.refresh()} 
       />
 
       <div className="max-w-6xl mx-auto space-y-6 lg:space-y-8">
