@@ -63,16 +63,7 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
             <p className="text-sm text-slate-500">Gestión centralizada y auditoría de ValisFin.</p>
           </div>
           
-          <div className="flex flex-wrap items-center gap-3">
 
-            <Link 
-              href="/"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#121c27] border border-white/10 rounded-xl text-sm font-semibold text-slate-300 hover:bg-white/5 transition-colors shadow-sm"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Volver al Dashboard</span>
-            </Link>
-          </div>
         </header>
 
         {/* Stats Row */}
