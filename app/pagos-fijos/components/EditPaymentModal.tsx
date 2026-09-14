@@ -7,11 +7,12 @@ import { X, Save, Calendar, DollarSign } from 'lucide-react';
 interface EditPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) => Promise<void>;
+  onSubmit: (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null, is_accumulative?: boolean) => Promise<void>;
   currentAmount: number;
   currentBillingDay?: number | null;
   currentProfileId?: string;
   currentLinkedGoalId?: string | null;
+  currentIsAccumulative?: boolean;
   title: string;
   isVariable: boolean;
   goals?: any[];
@@ -25,6 +26,7 @@ export function EditPaymentModal({
   currentBillingDay,
   currentProfileId,
   currentLinkedGoalId,
+  currentIsAccumulative = true,
   title,
   isVariable,
   goals = []
@@ -34,6 +36,7 @@ export function EditPaymentModal({
   const [billingDay, setBillingDay] = useState(currentBillingDay ? currentBillingDay.toString() : '');
   const [profileId, setProfileId] = useState(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
   const [linkedGoalId, setLinkedGoalId] = useState(currentLinkedGoalId || '');
+  const [isAccumulative, setIsAccumulative] = useState(currentIsAccumulative);
   const [editedTitle, setEditedTitle] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -48,9 +51,10 @@ export function EditPaymentModal({
       setBillingDay(currentBillingDay ? currentBillingDay.toString() : '');
       setProfileId(currentProfileId || 'edc938dc-9fbc-4573-b007-0bdb95114f95');
       setLinkedGoalId(currentLinkedGoalId || '');
+      setIsAccumulative(currentIsAccumulative ?? true);
       setEditedTitle(title);
     }
-  }, [isOpen, currentAmount, currentBillingDay, currentProfileId, currentLinkedGoalId, title]);
+  }, [isOpen, currentAmount, currentBillingDay, currentProfileId, currentLinkedGoalId, currentIsAccumulative, title]);
 
   if (!isOpen) return null;
 
@@ -61,7 +65,7 @@ export function EditPaymentModal({
     try {
       const parsedAmount = parseFloat(amount);
       const parsedDay = billingDay ? parseInt(billingDay, 10) : null;
-      await onSubmit(parsedAmount, parsedDay, editedTitle, profileId, linkedGoalId || null);
+      await onSubmit(parsedAmount, parsedDay, editedTitle, profileId, linkedGoalId || null, isAccumulative);
       onClose();
     } catch (err) {
       console.error(err);
@@ -193,6 +197,31 @@ export function EditPaymentModal({
                   </select>
                 </div>
               )}
+
+              {/* Acumulable Toggle */}
+              <div>
+                <label className="flex items-center justify-between p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 transition-all">
+                  <div>
+                    <span className="block text-sm font-bold text-slate-200">¿Acumulable?</span>
+                    <span className="block text-xs text-slate-500 mt-0.5">Si no se paga, sumar la deuda al mes siguiente.</span>
+                  </div>
+                  <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input 
+                      type="checkbox" 
+                      checked={isAccumulative}
+                      onChange={(e) => setIsAccumulative(e.target.checked)}
+                      className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-[#121c27] appearance-none cursor-pointer transition-transform duration-200 ease-in-out peer" 
+                    />
+                    <label className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer peer-checked:bg-emerald-500 transition-colors duration-200 ease-in-out"></label>
+                  </div>
+                  <style jsx>{`
+                    .toggle-checkbox:checked {
+                      transform: translateX(100%);
+                      border-color: #10b981;
+                    }
+                  `}</style>
+                </label>
+              </div>
 
             </form>
           </div>

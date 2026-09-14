@@ -137,7 +137,8 @@ export async function addVariablePayment(formData: FormData) {
         subtitle,
         period,
         type: 'variable',
-        payment_cycle_days
+        payment_cycle_days,
+        is_accumulative: false // Variable smart budgets don't accumulate
       });
 
     if (insertError) {
@@ -250,7 +251,7 @@ export async function withdrawFromGoal(linkedGoalId: string) {
   return { success: true };
 }
 
-export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) {
+export async function updateFixedPaymentSettings(id: string, amount: number, billing_day: number | null, title: string, profile_id?: string, linked_goal_id?: string | null, is_accumulative?: boolean) {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -261,6 +262,10 @@ export async function updateFixedPaymentSettings(id: string, amount: number, bil
     billing_day,
     title
   };
+
+  if (is_accumulative !== undefined) {
+    payload.is_accumulative = is_accumulative;
+  }
 
   if (profile_id) {
     payload.profile_id = profile_id;
@@ -295,6 +300,7 @@ export async function createFixedPayment(formData: FormData) {
   const billingDayStr = formData.get('billing_day') as string;
   const profile_id = formData.get('profile_id') as string || 'edc938dc-9fbc-4573-b007-0bdb95114f95';
   const linked_goal_id = formData.get('linked_goal_id') as string;
+  const is_accumulative = formData.get('is_accumulative') === 'on';
   const amount = parseFloat(amountStr);
   const billing_day = billingDayStr ? parseInt(billingDayStr, 10) : null;
 
@@ -314,7 +320,8 @@ export async function createFixedPayment(formData: FormData) {
       subtitle: 'Obligación',
       type: 'fixed',
       billing_day,
-      period
+      period,
+      is_accumulative
     });
 
   if (error) {
@@ -423,7 +430,8 @@ export async function generateMonthObligations(targetMonth: string, previousMont
         subtitle: record.subtitle,
         type: record.type,
         billing_day: record.billing_day,
-        period: targetMonth
+        period: targetMonth,
+        is_accumulative: record.is_accumulative
       });
     }
   }

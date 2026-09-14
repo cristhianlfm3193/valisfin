@@ -61,6 +61,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       if (p.period < selectedMonth && !p.is_paid) {
         // Do not rollover smart budgets like Supermercado or Gasolina
         if (p.title === 'Supermercado' || p.title === 'Gasolina') return false;
+        // Do not rollover non-accumulative payments
+        if (p.is_accumulative === false) return false;
         return true;
       }
       return false;
@@ -207,13 +209,13 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
     }
   };
 
-  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) => {
+  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null, is_accumulative?: boolean) => {
     if (!editingPayment) return;
     const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
     if (!originalRecord) return;
 
-    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id, linked_goal_id: linked_goal_id } : p));
-    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id);
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id, linked_goal_id, is_accumulative } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id, is_accumulative);
   };
 
   // Metrics calculation based on GROUPED payments (so counts match the UI cards)
@@ -462,6 +464,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
           currentBillingDay={editingPayment.billing_day}
           currentProfileId={editingPayment.profile_id}
           currentLinkedGoalId={editingPayment.linked_goal_id}
+          currentIsAccumulative={editingPayment.is_accumulative}
           isVariable={!!editingPayment.isSmartCard}
           onSubmit={handleEditSubmit}
           goals={initialGoals}

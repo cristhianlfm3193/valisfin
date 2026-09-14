@@ -157,6 +157,26 @@ export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPa
                 </div>
               )}
 
+              {/* Acumulable Toggle */}
+              <div>
+                <label className="flex items-center justify-between p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 transition-all">
+                  <div>
+                    <span className="block text-sm font-bold text-slate-200">¿Acumulable?</span>
+                    <span className="block text-xs text-slate-500 mt-0.5">Si no se paga, sumar la deuda al mes siguiente.</span>
+                  </div>
+                  <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="is_accumulative" id="is_accumulative" defaultChecked className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-[#121c27] appearance-none cursor-pointer transition-transform duration-200 ease-in-out peer" />
+                    <label htmlFor="is_accumulative" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-600 cursor-pointer peer-checked:bg-emerald-500 transition-colors duration-200 ease-in-out"></label>
+                  </div>
+                  <style jsx>{`
+                    .toggle-checkbox:checked {
+                      transform: translateX(100%);
+                      border-color: #10b981;
+                    }
+                  `}</style>
+                </label>
+              </div>
+
             </form>
           </div>
 
