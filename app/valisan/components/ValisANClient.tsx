@@ -92,9 +92,13 @@ export default function ValisANClient({ user, activeTab }: ValisANClientProps) {
               <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 text-xs font-semibold uppercase tracking-wider">
                 Base de Datos
               </span>
-              <span className="text-xs text-slate-400 flex items-center gap-1">
+              <button 
+                onClick={() => window.location.reload()}
+                className="text-xs text-slate-400 flex items-center gap-1 hover:text-cyan-300 transition-colors cursor-pointer outline-none"
+                title="Actualizar página"
+              >
                 <RefreshCwIcon className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> Supabase Sync Activo
-              </span>
+              </button>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Valis<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400">AN</span> • III Capitán Cristhian Fuentes
