@@ -267,33 +267,36 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
   }, [supabase, refreshCounter]);
 
   const filteredReportes = useMemo(() => {
-    if (!searchReportes) return reportes;
-    const term = searchReportes.toLowerCase();
-    return reportes.filter(rep => {
-      const matchBasico = 
-        (rep.departamento && rep.departamento.toLowerCase().includes(term)) ||
-        (rep.asunto && rep.asunto.toLowerCase().includes(term)) ||
-        (rep.reporta_nombre && rep.reporta_nombre.toLowerCase().includes(term)) ||
-        (rep.reporta_rango && rep.reporta_rango.toLowerCase().includes(term)) ||
-        (rep.fecha && rep.fecha.includes(term)) ||
-        (rep.narrativa && rep.narrativa.toLowerCase().includes(term));
+    let result = reportes;
+
+    if (searchReportes) {
+      const term = searchReportes.toLowerCase();
+      result = reportes.filter(rep => {
+        const matchBasico = 
+          (rep.departamento && rep.departamento.toLowerCase().includes(term)) ||
+          (rep.asunto && rep.asunto.toLowerCase().includes(term)) ||
+          (rep.reporta_nombre && rep.reporta_nombre.toLowerCase().includes(term)) ||
+          (rep.reporta_rango && rep.reporta_rango.toLowerCase().includes(term)) ||
+          (rep.fecha && rep.fecha.includes(term)) ||
+          (rep.narrativa && rep.narrativa.toLowerCase().includes(term));
+          
+        const matchUnidades = rep.reporte_unidades?.some((u: any) => 
+          (u.nombre && u.nombre.toLowerCase().includes(term)) || 
+          (u.placa_institucional && u.placa_institucional.toLowerCase().includes(term)) ||
+          (u.rango && u.rango.toLowerCase().includes(term))
+        );
         
-      const matchUnidades = rep.reporte_unidades?.some((u: any) => 
-        (u.nombre && u.nombre.toLowerCase().includes(term)) || 
-        (u.placa_institucional && u.placa_institucional.toLowerCase().includes(term)) ||
-        (u.rango && u.rango.toLowerCase().includes(term))
-      );
-      
-      const matchVehiculos = rep.reporte_vehiculos?.some((v: any) => 
-        (v.conductor_nombre && v.conductor_nombre.toLowerCase().includes(term)) ||
-        (v.placa_vehiculo && v.placa_vehiculo.toLowerCase().includes(term)) ||
-        (v.numero_movil && v.numero_movil.toLowerCase().includes(term))
-      );
+        const matchVehiculos = rep.reporte_vehiculos?.some((v: any) => 
+          (v.conductor_nombre && v.conductor_nombre.toLowerCase().includes(term)) ||
+          (v.placa_vehiculo && v.placa_vehiculo.toLowerCase().includes(term)) ||
+          (v.numero_movil && v.numero_movil.toLowerCase().includes(term))
+        );
 
-      return matchBasico || matchUnidades || matchVehiculos;
-    });
+        return matchBasico || matchUnidades || matchVehiculos;
+      });
+    }
 
-    return result.sort((a, b) => {
+    return [...result].sort((a: any, b: any) => {
       const strA = `${a.fecha || ''} ${a.hora || ''}`;
       const strB = `${b.fecha || ''} ${b.hora || ''}`;
       if (strA < strB) return 1;
@@ -415,7 +418,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
                     </td>
                   </tr>
                 ) : paginatedReportes.length > 0 ? (
-                  paginatedReportes.map((rep) => (
+                  paginatedReportes.map((rep: any) => (
                     <tr key={rep.id} className="hover:bg-sky-950/30 transition group">
                       <td className="py-3 px-4 font-mono text-cyan-400">
                         {rep.fecha} <span className="text-slate-500 ml-1">{rep.hora.substring(0,5)}</span>

@@ -164,8 +164,7 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
           rol: u.rol,
           rango: u.rango,
           placa_institucional: u.placa_institucional,
-          nombre: u.nombre,
-          destino: u.destino
+          nombre: u.nombre
         }));
         
         const { error: unidadesError } = await supabase
