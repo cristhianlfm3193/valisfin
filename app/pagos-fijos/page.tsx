@@ -13,9 +13,11 @@ export default async function PagosFijosPage() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  const fixedPayments = await getFixedPayments();
-  const dailyExpenses = await getDailyExpenses();
-  const savingsGoals = await getSavingsGoals();
+  const [fixedPayments, dailyExpenses, savingsGoals] = await Promise.all([
+    getFixedPayments(),
+    getDailyExpenses(),
+    getSavingsGoals()
+  ]);
 
   return (
     <>

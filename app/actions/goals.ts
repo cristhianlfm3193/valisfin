@@ -6,21 +6,19 @@ import { revalidatePath } from "next/cache";
 export async function getSavingsGoals() {
   const supabase = await createClient();
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const [
+    { data: { user }, error: userError },
+    { data, error },
+    { data: maintenanceData }
+  ] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.from('savings_goals').select('*, profiles (first_name)').order('created_at', { ascending: false }),
+    supabase.from('maintenance').select('vehicle_id, cost').eq('is_pending', true)
+  ]);
 
   if (userError || !user) {
     throw new Error('Not authenticated');
   }
-
-  const { data, error } = await supabase
-    .from('savings_goals')
-    .select(`
-      *,
-      profiles (
-        first_name
-      )
-    `)
-    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching savings goals:', error);
@@ -28,12 +26,6 @@ export async function getSavingsGoals() {
   }
 
   const goals = data || [];
-
-  // Fetch pending maintenance costs to dynamically override linked goals
-  const { data: maintenanceData } = await supabase
-    .from('maintenance')
-    .select('vehicle_id, cost')
-    .eq('is_pending', true);
 
   if (maintenanceData && maintenanceData.length > 0) {
     const costMap: Record<string, number> = {};

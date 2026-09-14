@@ -13,9 +13,11 @@ export default async function Home() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  const dashboardData = await getDashboardData();
-  const fixedPayments = await getFixedPayments();
-  const { data: vehicles } = await supabase.from('vehicles').select('*');
+  const [dashboardData, fixedPayments, { data: vehicles }] = await Promise.all([
+    getDashboardData(),
+    getFixedPayments(),
+    supabase.from('vehicles').select('*')
+  ]);
 
   const d = new Date();
   const monthName = d.toLocaleString('es-ES', { month: 'long' });

@@ -6,19 +6,20 @@ import { revalidatePath } from "next/cache";
 export async function getFixedPayments() {
   const supabase = await createClient();
   
-  const { data: fixedPayments, error } = await supabase
-    .from('fixed_payments')
-    .select('*')
-    .order('created_at', { ascending: true });
+  const [
+    { data: fixedPayments, error },
+    { data: profiles },
+    { data: goals }
+  ] = await Promise.all([
+    supabase.from('fixed_payments').select('*').order('created_at', { ascending: true }),
+    supabase.from('profiles').select('id, first_name'),
+    supabase.from('savings_goals').select('id, title, saved_amount, target_amount')
+  ]);
 
   if (error || !fixedPayments) {
     console.error('Error fetching fixed payments:', error);
     return [];
   }
-
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select('id, first_name');
 
   const profilesMap: Record<string, string> = {};
   if (profiles) {
@@ -26,10 +27,6 @@ export async function getFixedPayments() {
       profilesMap[p.id] = p.first_name;
     });
   }
-
-  const { data: goals } = await supabase
-    .from('savings_goals')
-    .select('id, title, saved_amount, target_amount');
 
   const goalsMap: Record<string, any> = {};
   if (goals) {
