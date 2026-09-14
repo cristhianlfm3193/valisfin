@@ -169,32 +169,32 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         <div className="bg-[#121c27] rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-white/5">
           <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
             <div className="flex items-center gap-2 lg:gap-3 min-w-0">
-              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                 <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
               <div className="min-w-0">
                 <h2 className="text-base lg:text-lg font-bold text-white leading-tight truncate">Supermercado</h2>
-                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
+                <p className="text-[10px] lg:text-xs text-slate-400 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-slate-100 text-slate-400">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-white/10 text-slate-300">
               {Math.round(getProgress(spentSupermercado, budgets.Supermercado))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
               <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentSupermercado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Supermercado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-400 font-mono">de B/. {budgets.Supermercado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
+            <div className="w-full bg-white/10 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
-                className="bg-emerald-600 h-full rounded-full transition-all duration-500" 
+                className="bg-emerald-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentSupermercado, budgets.Supermercado)}%` }}
               ></div>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
-              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Supermercado - spentSupermercado).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
+              <span className="text-[10px] lg:text-xs text-slate-400">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-400 font-mono truncate">B/. {(budgets.Supermercado - spentSupermercado).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -203,32 +203,32 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         <div className="bg-[#121c27] rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-white/5">
           <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
             <div className="flex items-center gap-2 lg:gap-3 min-w-0">
-              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center">
                 <Fuel className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
               <div className="min-w-0">
                 <h2 className="text-base lg:text-lg font-bold text-white leading-tight truncate">Gasolina</h2>
-                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
+                <p className="text-[10px] lg:text-xs text-slate-400 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-slate-100 text-slate-400">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-white/10 text-slate-300">
               {Math.round(getProgress(spentGasolina, budgets.Gasolina))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
               <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentGasolina.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Gasolina.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-400 font-mono">de B/. {budgets.Gasolina.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
+            <div className="w-full bg-white/10 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
-                className="bg-emerald-600 h-full rounded-full transition-all duration-500" 
+                className="bg-sky-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentGasolina, budgets.Gasolina)}%` }}
               ></div>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
-              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-emerald-600 font-mono truncate">B/. {(budgets.Gasolina - spentGasolina).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
+              <span className="text-[10px] lg:text-xs text-slate-400">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-sky-400 font-mono truncate">B/. {(budgets.Gasolina - spentGasolina).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -237,32 +237,32 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         <div className="bg-[#121c27] rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-white/5">
           <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
             <div className="flex items-center gap-2 lg:gap-3 min-w-0">
-              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
                 <PartyPopper className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
               <div className="min-w-0">
                 <h2 className="text-base lg:text-lg font-bold text-white leading-tight truncate">Varios & Ocio</h2>
-                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
+                <p className="text-[10px] lg:text-xs text-slate-400 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-indigo-50 text-indigo-600">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-indigo-500/20 text-indigo-300">
               {Math.round(getProgress(spentOcio, budgets.Ocio))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
               <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentOcio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Ocio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-400 font-mono">de B/. {budgets.Ocio.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
+            <div className="w-full bg-white/10 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-indigo-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentOcio, budgets.Ocio)}%` }}
               ></div>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
-              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-white font-mono truncate">B/. {(budgets.Ocio - spentOcio).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
+              <span className="text-[10px] lg:text-xs text-slate-400">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-indigo-400 font-mono truncate">B/. {(budgets.Ocio - spentOcio).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -271,32 +271,32 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         <div className="bg-[#121c27] rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow border border-white/5">
           <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 mb-4">
             <div className="flex items-center gap-2 lg:gap-3 min-w-0">
-              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-2xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
                 <Utensils className="w-4 h-4 lg:w-5 lg:h-5" />
               </div>
               <div className="min-w-0">
                 <h2 className="text-base lg:text-lg font-bold text-white leading-tight truncate">Restaurante</h2>
-                <p className="text-[10px] lg:text-xs text-slate-500 truncate">Presupuesto mensual</p>
+                <p className="text-[10px] lg:text-xs text-slate-400 truncate">Presupuesto mensual</p>
               </div>
             </div>
-            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-orange-50 text-orange-700">
+            <span className="shrink-0 inline-flex items-center px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full text-[10px] lg:text-xs font-semibold bg-orange-500/20 text-orange-300">
               {Math.round(getProgress(spentRestaurante, budgets.Restaurante))}% usado
             </span>
           </div>
           <div className="space-y-3 mt-1">
             <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
               <span className="text-lg lg:text-xl xl:text-2xl font-bold text-rose-500 font-mono tracking-tight">B/. {spentRestaurante.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-500 font-mono">de B/. {budgets.Restaurante.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+              <span className="text-[10px] lg:text-xs xl:text-sm font-medium text-slate-400 font-mono">de B/. {budgets.Restaurante.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
+            <div className="w-full bg-white/10 rounded-full h-2 lg:h-2.5 overflow-hidden flex">
               <div 
                 className="bg-orange-500 h-full rounded-full transition-all duration-500" 
                 style={{ width: `${getProgress(spentRestaurante, budgets.Restaurante)}%` }}
               ></div>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pt-1">
-              <span className="text-[10px] lg:text-xs text-slate-500">No utilizado:</span>
-              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-white font-mono truncate">B/. {(budgets.Restaurante - spentRestaurante).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
+              <span className="text-[10px] lg:text-xs text-slate-400">No utilizado:</span>
+              <span className="text-[11px] lg:text-xs xl:text-sm font-semibold text-orange-400 font-mono truncate">B/. {(budgets.Restaurante - spentRestaurante).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} disp.</span>
             </div>
           </div>
         </div>
@@ -310,20 +310,20 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
             <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mr-1">Pagador:</span>
             <button 
               onClick={() => setPersonFilter('all')}
-              className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${personFilter === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-300 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap border ${personFilter === 'all' ? 'bg-white/10 text-white border-white/20' : 'bg-white/5 text-slate-400 hover:bg-white/10 border-white/10'}`}
             >
               Todos ({expenses.length})
             </button>
             <button 
               onClick={() => setPersonFilter('cristhian')}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap ${personFilter === 'cristhian' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-300 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap border ${personFilter === 'cristhian' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-white/5 text-slate-400 hover:bg-white/10 border-white/10'}`}
             >
               <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center">CF</span>
               <span>Cristhian Fuentes</span>
             </button>
             <button 
               onClick={() => setPersonFilter('jennifer')}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap ${personFilter === 'jennifer' ? 'bg-pink-500 text-white' : 'bg-slate-100 text-slate-300 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap border ${personFilter === 'jennifer' ? 'bg-pink-500/20 text-pink-400 border-pink-500/30' : 'bg-white/5 text-slate-400 hover:bg-white/10 border-white/10'}`}
             >
               <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${personFilter === 'jennifer' ? 'bg-[#121c27] text-pink-600' : 'bg-pink-500 text-white'}`}>JC</span>
               <span>Jennifer Camaño</span>
@@ -391,7 +391,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                   <tr key={expense.id} className="hover:bg-white/5 transition-colors border-b border-slate-50 last:border-0">
                     <td className="py-4 px-3 text-slate-500 font-mono">{formattedDate}</td>
                     <td className="py-4 px-3">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-300">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/10 text-slate-300 border border-white/10">
                         {expense.category}{expense.sub_category ? ` - ${expense.sub_category}` : ''}
                       </span>
                     </td>
