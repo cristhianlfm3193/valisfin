@@ -22,7 +22,8 @@ const markerIconHtml = (cadena: string, estadoVisita?: 'con_compra' | 'sin_compr
     color = '#10b981'; // Verde
     extraClass = 'marker-con-compra';
   } else if (estadoVisita === 'sin_compra') {
-    color = '#f59e0b'; // Naranja
+    color = '#ef4444'; // Rojo
+    extraClass = 'marker-sin-compra';
   }
 
   return L.divIcon({
@@ -491,7 +492,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
                                   <span>{resumen.ultimaVisita.vendedor?.nombre || 'Vendedor'}</span>
                                 </div>
-                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
                                   {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                                 </span>
                               </div>
@@ -528,8 +529,8 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             </button>
             <div className="flex justify-center gap-3 sm:gap-6 mt-4 text-xs font-bold uppercase text-slate-500 flex-wrap">
               <button onClick={() => setColFilterEstado(colFilterEstado === 'pendiente' ? '' : 'pendiente')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'pendiente' ? 'bg-white/10 text-slate-200' : 'hover:bg-white/5'}`}><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</button>
-              <button onClick={() => setColFilterEstado(colFilterEstado === 'con_compra' ? '' : 'con_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-800' : 'hover:bg-emerald-500/200/20'}`}><span className="w-3 h-3 rounded-full bg-emerald-500/200 marker-con-compra"></span> Con Compra</button>
-              <button onClick={() => setColFilterEstado(colFilterEstado === 'sin_compra' ? '' : 'sin_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'sin_compra' ? 'bg-amber-500/200/20 text-amber-800' : 'hover:bg-amber-500/200/20'}`}><span className="w-3 h-3 rounded-full bg-amber-500/200"></span> Sin Compra</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'con_compra' ? '' : 'con_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-emerald-500/20'}`}><span className="w-3 h-3 rounded-full bg-emerald-500 marker-con-compra"></span> Con Compra</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'sin_compra' ? '' : 'sin_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'sin_compra' ? 'bg-red-500/20 text-red-400' : 'hover:bg-red-500/20'}`}><span className="w-3 h-3 rounded-full bg-red-500 marker-sin-compra"></span> Sin Compra</button>
             </div>
             
             <div className="flex justify-center gap-2 mt-4 text-[10px] font-bold flex-wrap">
@@ -775,7 +776,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <td className="py-3.5 px-3 cursor-pointer" onClick={() => toggleLocalSelection(local)}>
                            {resumen ? (
                             <div className="flex flex-col gap-1 items-start">
-                              <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
+                              <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
                                 {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                               </span>
                               {resumen.count > 1 && (
@@ -901,7 +902,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                           <span className="text-xs text-slate-400">{visita.local?.tipo}</span>
                         </td>
                         <td className="py-3 px-3">
-                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
+                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
                             {visita.estado_visita === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                           </span>
                         </td>
