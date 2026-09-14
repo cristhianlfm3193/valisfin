@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
-import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route } from 'lucide-react';
+import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route, BadgeCheck } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
 import ModalReporteEficiencia from './ModalReporteEficiencia';
@@ -733,6 +733,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <option value="pendiente">Pendiente</option>
                       </select>
                     </th>
+                    <th className="py-3 px-3 text-center min-w-[80px] align-top">Verificado</th>
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px] align-top">Acciones</th>
                   </tr>
                 </thead>
@@ -766,7 +767,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                             </div>
                           )}
 
-                          <div>
+                          <div className="flex flex-col">
                             <span className="block font-bold">{local.nombre_local}</span>
                             <span className="text-xs text-slate-400">{local.tipo}</span>
                           </div>
@@ -797,6 +798,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                            ) : (
                             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-white/10 text-slate-500 whitespace-nowrap">Pendiente</span>
                            )}
+                        </td>
+                        <td className="py-3.5 px-3 text-center">
+                          {local.verificado && <BadgeCheck className="w-5 h-5 text-blue-400 mx-auto" title="Verificado" />}
                         </td>
                         <td className="py-3.5 px-3 text-right flex items-center justify-end gap-1">
                           <button 

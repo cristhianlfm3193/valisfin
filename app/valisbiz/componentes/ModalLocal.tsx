@@ -23,6 +23,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
   const [fotoUrl, setFotoUrl] = useState(localAEditar?.foto_url || '');
   const [vendedorId, setVendedorId] = useState(localAEditar?.vendedor_id || '');
   const [activo, setActivo] = useState(localAEditar?.activo ?? true);
+  const [verificado, setVerificado] = useState(localAEditar?.verificado ?? false);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +38,8 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
       direccion: direccion || null,
       foto_url: fotoUrl || null,
       vendedor_id: vendedorId || null,
-      activo: activo
+      activo: activo,
+      verificado: verificado
     };
 
     if (onOptimisticUpdate) {
@@ -171,17 +173,31 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
             </select>
           </div>
 
-          <div className="flex items-center gap-3 mt-2 bg-white/5 p-3 rounded-xl border border-white/10">
-            <input 
-              type="checkbox"
-              id="cliente-activo"
-              checked={activo}
-              onChange={e => setActivo(e.target.checked)}
-              className="w-5 h-5 rounded text-indigo-400 focus:ring-indigo-500 border-slate-300"
-            />
-            <label htmlFor="cliente-activo" className="text-sm font-bold text-slate-300 cursor-pointer select-none">
-              Cliente Activo
-            </label>
+          <div className="flex gap-4">
+            <div className="flex-1 flex items-center gap-3 mt-2 bg-white/5 p-3 rounded-xl border border-white/10">
+              <input 
+                type="checkbox"
+                id="cliente-activo"
+                checked={activo}
+                onChange={e => setActivo(e.target.checked)}
+                className="w-5 h-5 rounded text-indigo-400 focus:ring-indigo-500 border-slate-300"
+              />
+              <label htmlFor="cliente-activo" className="text-sm font-bold text-slate-300 cursor-pointer select-none">
+                Activo
+              </label>
+            </div>
+            <div className="flex-1 flex items-center gap-3 mt-2 bg-white/5 p-3 rounded-xl border border-white/10">
+              <input 
+                type="checkbox"
+                id="cliente-verificado"
+                checked={verificado}
+                onChange={e => setVerificado(e.target.checked)}
+                className="w-5 h-5 rounded text-indigo-400 focus:ring-indigo-500 border-slate-300"
+              />
+              <label htmlFor="cliente-verificado" className="text-sm font-bold text-slate-300 cursor-pointer select-none flex items-center gap-1.5">
+                Verificado
+              </label>
+            </div>
           </div>
 
           <div className="mt-4">

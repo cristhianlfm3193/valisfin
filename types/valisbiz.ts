@@ -25,6 +25,7 @@ export interface Local {
   vendedor_id?: string | null;
   vendedor?: Vendedor;
   activo: boolean;
+  verificado?: boolean;
   created_at: string;
 }
 
