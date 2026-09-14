@@ -326,7 +326,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
             <DollarSign className="w-4 h-4 text-pink-500" />
             <span className="text-xs font-bold uppercase tracking-wider">Facturado (Finanzas)</span>
           </div>
-          <span className="text-2xl font-black text-slate-200 font-mono">B/.{fmt(totalFacturado)}</span>
+          <span className="text-xl sm:text-2xl font-black text-slate-200 font-mono truncate" title={`B/.${fmt(totalFacturado)}`}>B/.{fmt(totalFacturado)}</span>
         </div>
 
         <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden">
@@ -335,7 +335,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
             <Activity className="w-4 h-4 text-blue-500" />
             <span className="text-xs font-bold uppercase tracking-wider">Reportado (Vendedor)</span>
           </div>
-          <span className="text-2xl font-black text-slate-200 font-mono">B/.{fmt(totalReportado)}</span>
+          <span className="text-xl sm:text-2xl font-black text-slate-200 font-mono truncate" title={`B/.${fmt(totalReportado)}`}>B/.{fmt(totalReportado)}</span>
         </div>
 
         <div className="bg-[#121c27] p-5 rounded-2xl border border-white/5 shadow-sm flex flex-col gap-2 relative overflow-hidden">
@@ -344,7 +344,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
             {brechaGlobal > 0 ? <TrendingUp className="w-4 h-4 text-emerald-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
             <span className="text-xs font-bold uppercase tracking-wider">Brecha / GAP</span>
           </div>
-          <span className={`text-2xl font-black font-mono ${brechaGlobal > 0 ? 'text-emerald-400' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-400'}`}>
+          <span className={`text-xl sm:text-2xl font-black font-mono truncate ${brechaGlobal > 0 ? 'text-emerald-400' : brechaGlobal < 0 ? 'text-red-600' : 'text-slate-400'}`} title={brechaGlobal === 0 ? '—' : `${brechaGlobal > 0 ? '+' : ''}B/.${fmt(brechaGlobal)}`}>
             {brechaGlobal === 0 ? '—' : `${brechaGlobal > 0 ? '+' : ''}B/.${fmt(brechaGlobal)}`}
           </span>
         </div>
@@ -355,7 +355,7 @@ export default function EstadisticasPowerBI({ registrosFacturado, registrosVendi
               <Target className="w-4 h-4 text-indigo-500" />
               <span className="text-xs font-bold uppercase tracking-wider">Cumplimiento Meta</span>
             </div>
-            <span className="text-lg font-black text-indigo-400">{porcentajeCumplimiento.toFixed(1)}%</span>
+            <span className="text-base sm:text-lg font-black text-indigo-400 truncate ml-2" title={`${porcentajeCumplimiento.toFixed(1)}%`}>{porcentajeCumplimiento.toFixed(1)}%</span>
           </div>
           <div className="w-full h-3 bg-white/10 rounded-full mt-2 overflow-hidden">
             <div 

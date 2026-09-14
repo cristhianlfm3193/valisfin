@@ -338,7 +338,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           <input 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-[#f2f3ff] text-[#131b2e] placeholder:text-[#6d7a72] text-sm focus:outline-none focus:bg-[#eaedff] transition-all" 
+            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-[#f2f3ff] text-[#131b2e] placeholder:text-[#6d7a72] text-sm focus:outline-none focus:bg-indigo-500/200/10 transition-all" 
             placeholder="Buscar por sucursal..." 
             type="text" 
           />
@@ -369,7 +369,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
         <button
           onClick={handleClearFilters}
-          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full lg:w-auto"
+          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 text-red-600 border border-red-100 hover:bg-red-500/200/200 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full lg:w-auto"
           title="Limpiar todos los filtros"
         >
           <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
@@ -381,7 +381,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
             <button 
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${filter === f ? 'bg-[#006948] text-white' : 'bg-[#eaedff] text-[#131b2e] hover:bg-[#dae2fd]'}`}
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${filter === f ? 'bg-[#006948] text-white' : 'bg-indigo-500/200/10 text-[#131b2e] hover:bg-[#dae2fd]'}`}
             >
               {f}
             </button>
@@ -420,7 +420,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   >
                     <CalendarCheck2 className="w-4 h-4" /> Registrar Visita
                   </button>
-                  <button onClick={handleToggleFullScreen} className="p-2 bg-white/10 hover:bg-slate-200 text-slate-300 rounded-xl transition-colors">
+                  <button onClick={handleToggleFullScreen} className="p-2 bg-white/10 hover:bg-white/10 text-slate-300 rounded-xl transition-colors">
                     <Minimize className="w-5 h-5" />
                   </button>
                 </div>
@@ -481,12 +481,12 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                               <div className="flex flex-col gap-1">
                                 <div className="flex items-center justify-between">
                                   <span className="text-[10px] font-bold text-slate-400 uppercase">Última Visita</span>
-                                  <span className="text-[10px] font-bold text-indigo-400 bg-indigo-50 px-1.5 py-0.5 rounded">{resumen.count} {resumen.count === 1 ? 'visita' : 'visitas'}</span>
+                                  <span className="text-[10px] font-bold text-indigo-400 bg-indigo-500/20 px-1.5 py-0.5 rounded">{resumen.count} {resumen.count === 1 ? 'visita' : 'visitas'}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
                                   <span>{resumen.ultimaVisita.vendedor?.nombre || 'Vendedor'}</span>
                                 </div>
-                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-fit mt-1 ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
                                   {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                                 </span>
                               </div>
@@ -522,9 +522,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               Registrar Visita
             </button>
             <div className="flex justify-center gap-3 sm:gap-6 mt-4 text-xs font-bold uppercase text-slate-500 flex-wrap">
-              <button onClick={() => setColFilterEstado(colFilterEstado === 'pendiente' ? '' : 'pendiente')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'pendiente' ? 'bg-slate-200 text-slate-200' : 'hover:bg-white/5'}`}><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</button>
-              <button onClick={() => setColFilterEstado(colFilterEstado === 'con_compra' ? '' : 'con_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-800' : 'hover:bg-emerald-50'}`}><span className="w-3 h-3 rounded-full bg-emerald-500 marker-con-compra"></span> Con Compra</button>
-              <button onClick={() => setColFilterEstado(colFilterEstado === 'sin_compra' ? '' : 'sin_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'sin_compra' ? 'bg-amber-500/20 text-amber-800' : 'hover:bg-amber-50'}`}><span className="w-3 h-3 rounded-full bg-amber-500"></span> Sin Compra</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'pendiente' ? '' : 'pendiente')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'pendiente' ? 'bg-white/10 text-slate-200' : 'hover:bg-white/5'}`}><span className="w-3 h-3 rounded-full bg-slate-400"></span> Pendiente</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'con_compra' ? '' : 'con_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-800' : 'hover:bg-emerald-500/200/20'}`}><span className="w-3 h-3 rounded-full bg-emerald-500/200 marker-con-compra"></span> Con Compra</button>
+              <button onClick={() => setColFilterEstado(colFilterEstado === 'sin_compra' ? '' : 'sin_compra')} className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${colFilterEstado === 'sin_compra' ? 'bg-amber-500/200/20 text-amber-800' : 'hover:bg-amber-500/200/20'}`}><span className="w-3 h-3 rounded-full bg-amber-500/200"></span> Sin Compra</button>
             </div>
             
             <div className="flex justify-center gap-2 mt-4 text-[10px] font-bold flex-wrap">
@@ -532,7 +532,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <button 
                   key={v.id} 
                   onClick={() => setColFilterVendedor(colFilterVendedor === v.id ? '' : v.id)}
-                  className={`px-3 py-1 rounded-full border transition-all ${colFilterVendedor === v.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm scale-105' : 'bg-indigo-50 text-indigo-400 border-indigo-100 hover:bg-indigo-500/20'}`}
+                  className={`px-3 py-1 rounded-full border transition-all ${colFilterVendedor === v.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm scale-105' : 'bg-indigo-500/20 text-indigo-400 border-indigo-100 hover:bg-indigo-500/200/200/20'}`}
                 >
                   {v.nombre}
                 </button>
@@ -599,7 +599,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           </div>
 
           {rutaError && (
-            <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
+            <div className="bg-red-500/20 text-red-600 text-sm px-4 py-3 rounded-xl border border-red-100 flex items-center gap-2">
               <X className="w-4 h-4 shrink-0" />
               {rutaError}
             </div>
@@ -634,7 +634,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-bold text-[#131b2e]">Directorio de Clientes</h3>
                   {selectedLocales.length > 0 && (
-                    <button onClick={() => setSelectedLocales([])} className="text-[10px] bg-white/10 hover:bg-slate-200 text-slate-400 px-2 py-1 rounded font-bold transition-colors">
+                    <button onClick={() => setSelectedLocales([])} className="text-[10px] bg-white/10 hover:bg-white/10 text-slate-400 px-2 py-1 rounded font-bold transition-colors">
                       Limpiar Filtro ({selectedLocales.length})
                     </button>
                   )}
@@ -657,7 +657,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               </div>
               <button 
                 onClick={() => { setLocalAEditar(null); setShowLocalModal(true); }}
-                className="inline-flex items-center justify-center gap-1 bg-indigo-50 text-indigo-400 hover:bg-indigo-500/20 px-3 py-2 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-1 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/200/200/20 px-3 py-2 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
               >
                 <Plus className="w-4 h-4" /> Nuevo Local
               </button>
@@ -667,7 +667,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#f2f3ff] text-[#6d7a72] text-xs uppercase tracking-wider">
-                    <th className="py-3 px-3 rounded-l-xl min-w-[200px] cursor-pointer hover:bg-[#eaedff] transition-colors" onClick={() => handleSort('nombre')}>
+                    <th className="py-3 px-3 rounded-l-xl min-w-[200px] cursor-pointer hover:bg-indigo-500/200/200/10 transition-colors" onClick={() => handleSort('nombre')}>
                       <div className="flex items-center gap-1">
                         Tipo / Local
                         {sortConfig.key === 'nombre' && (
@@ -737,7 +737,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     return (
                       <tr 
                         key={local.id} 
-                        className={`hover:bg-[#f2f3ff] transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-[#eaedff]' : ''} ${!local.activo ? 'opacity-50 grayscale' : ''}`}
+                        className={`hover:bg-white/5 transition-colors ${selectedLocales.find(l => l.id === local.id) ? 'bg-indigo-500/200/10' : ''} ${!local.activo ? 'opacity-50 grayscale' : ''}`}
                       >
                         <td 
                           className="py-3.5 px-3 font-semibold flex items-center gap-3 cursor-pointer"
@@ -760,7 +760,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         </td>
                         <td className="py-3.5 px-3">
                            {local.vendedor_id ? (
-                             <span className="text-[11px] font-bold text-indigo-400 bg-indigo-50 px-2 py-1 rounded-full uppercase flex items-center w-fit gap-1.5">
+                             <span className="text-[11px] font-bold text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded-full uppercase flex items-center w-fit gap-1.5">
                                {vendedores.find(v => v.id === local.vendedor_id)?.nombre.split(' ')[0] || 'Vendedor'}
                              </span>
                            ) : (
@@ -772,11 +772,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <td className="py-3.5 px-3 cursor-pointer" onClick={() => toggleLocalSelection(local)}>
                            {resumen ? (
                             <div className="flex flex-col gap-1 items-start">
-                              <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                              <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${resumen.mejorEstado === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
                                 {resumen.mejorEstado === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                               </span>
                               {resumen.count > 1 && (
-                                <span className="text-[10px] font-semibold text-indigo-400 bg-indigo-50 px-1.5 py-0.5 rounded w-fit">
+                                <span className="text-[10px] font-semibold text-indigo-400 bg-indigo-500/20 px-1.5 py-0.5 rounded w-fit">
                                   {resumen.count} visitas
                                 </span>
                               )}
@@ -788,7 +788,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <td className="py-3.5 px-3 text-right flex items-center justify-end gap-1">
                           <button 
                             onClick={() => { setLocalAEditar(local); setShowLocalModal(true); }}
-                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/200/20 rounded-lg transition-colors"
                             title="Editar"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -796,7 +796,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                           <button 
                             onClick={() => handleEliminarLocal(local.id)}
                             disabled={isPending}
-                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-500/200/20 rounded-lg transition-colors disabled:opacity-50"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -824,14 +824,14 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <button 
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(p => p - 1)}
-                    className="px-3 py-1.5 text-xs font-semibold bg-white/10 text-slate-400 rounded-lg hover:bg-slate-200 disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 text-xs font-semibold bg-white/10 text-slate-400 rounded-lg hover:bg-white/10 disabled:opacity-50 transition-colors"
                   >
                     Anterior
                   </button>
                   <button 
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(p => p + 1)}
-                    className="px-3 py-1.5 text-xs font-semibold bg-white/10 text-slate-400 rounded-lg hover:bg-slate-200 disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 text-xs font-semibold bg-white/10 text-slate-400 rounded-lg hover:bg-white/10 disabled:opacity-50 transition-colors"
                   >
                     Siguiente
                   </button>
@@ -844,7 +844,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   setShowAll(!showAll);
                   setCurrentPage(1);
                 }}
-                className="mt-4 w-full py-2.5 text-xs font-bold text-indigo-400 bg-indigo-50 hover:bg-indigo-500/20 rounded-xl transition-colors"
+                className="mt-4 w-full py-2.5 text-xs font-bold text-indigo-400 bg-indigo-500/20 hover:bg-indigo-500/200/200/20 rounded-xl transition-colors"
               >
                 {showAll ? 'Mostrar Paginado' : 'Mostrar Todos'}
               </button>
@@ -863,7 +863,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               </div>
               <button 
                 onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); }}
-                className="inline-flex items-center justify-center gap-1 bg-indigo-50 text-indigo-400 hover:bg-indigo-500/20 px-3 py-2 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-1 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/200/200/20 px-3 py-2 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
               >
                 <Plus className="w-4 h-4" /> Registrar Visita
               </button>
@@ -888,7 +888,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     </tr>
                   ) : (
                     visitasMostradas.map(visita => (
-                      <tr key={visita.id} className="hover:bg-[#f2f3ff] transition-colors">
+                      <tr key={visita.id} className="hover:bg-white/5 transition-colors">
                         <td className="py-3 px-3">
                           <span className="block font-bold">{new Date(visita.fecha + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}</span>
                           <span className="text-xs text-[#6d7a72]">{visita.vendedor?.nombre}</span>
@@ -898,14 +898,14 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                           <span className="text-xs text-[#6d7a72]">{visita.local?.tipo}</span>
                         </td>
                         <td className="py-3 px-3">
-                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                          <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/200/20 text-emerald-400' : 'bg-amber-500/200/20 text-amber-400'}`}>
                             {visita.estado_visita === 'con_compra' ? 'Con Compra' : 'Sin Compra'}
                           </span>
                         </td>
                         <td className="py-3 px-3 text-right flex items-center justify-end gap-1">
                           <button 
                             onClick={() => { setVisitaAEditar(visita); setShowVisitaModal(true); }}
-                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/200/20 rounded-lg transition-colors"
                             title="Editar"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -913,7 +913,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                           <button 
                             onClick={() => handleEliminarVisita(visita.id)}
                             disabled={isPending}
-                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-500/200/20 rounded-lg transition-colors disabled:opacity-50"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
