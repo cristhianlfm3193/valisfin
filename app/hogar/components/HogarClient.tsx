@@ -103,7 +103,7 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
           <div className="bg-[#121c27] rounded-2xl border border-white/10/80 p-5 shadow-sm relative overflow-hidden group hover:border-emerald-200 transition-all">
             <div className="flex items-start justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Presupuesto Estimado Pendiente</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                 <Wrench className="w-4 h-4" />
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
               <span className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight">B/. {formatCurrency(pendingBudget)}</span>
             </div>
             <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 font-medium">
-              <span className="inline-flex items-center text-emerald-400 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]">
+              <span className="inline-flex items-center text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded text-[11px]">
                 {pendingTasks.length} trabajos activos
               </span>
             </div>
@@ -121,7 +121,7 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
           <div className="bg-[#121c27] rounded-2xl border border-white/10/80 p-5 shadow-sm relative overflow-hidden group hover:border-emerald-200 transition-all">
             <div className="flex items-start justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Inversión Ejecutada</span>
-              <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
@@ -164,7 +164,7 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
         <div className="bg-[#121c27] rounded-2xl border border-white/10/90 shadow-sm overflow-hidden flex flex-col">
           <div className="p-5 border-b border-white/5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 text-brand-700 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                 <Wrench className="w-4 h-4" />
               </div>
               <h2 className="text-base font-bold text-slate-200">Trabajos y Reparaciones del Hogar</h2>
@@ -218,12 +218,12 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
                       <div className="flex flex-col gap-1.5">
                         <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Reg: {formatDate(task.registration_date)}</span>
                         {task.status === 'Completado' ? (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-400 text-[10px] font-semibold w-fit">
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold w-fit">
                             <CheckCircle2 className="w-3 h-3" />
                             <span>Fin: {formatDate(task.completion_date)}</span>
                           </div>
                         ) : (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-semibold w-fit">
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-semibold w-fit">
                             <Clock className="w-3 h-3" />
                             <span>Est: {formatDate(task.estimated_date)}</span>
                           </div>
@@ -243,14 +243,14 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
                     <td className="py-4 px-5 text-center whitespace-nowrap">
                       <div className="flex flex-col items-center gap-1.5">
                         {task.status === 'Completado' ? (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20/70 text-emerald-800 border border-emerald-300">✓ Resuelto</span>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✓ Resuelto</span>
                         ) : task.priority === 'Alta' || task.priority === 'Urgente' ? (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-400 border border-rose-200">Alta / {task.status}</span>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Alta / {task.status}</span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-400 border border-amber-200">Media / {task.status}</span>
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Media / {task.status}</span>
                         )}
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider border ${
-                          (task.profiles?.first_name || '').toLowerCase().includes('jennifer') ? 'bg-pink-50 text-pink-400 border-pink-100' : 'bg-emerald-50 text-emerald-400 border-emerald-100'
+                          (task.profiles?.first_name || '').toLowerCase().includes('jennifer') ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                         }`}>
                           {task.profiles?.first_name || 'Desconocido'}
                         </span>
@@ -262,14 +262,14 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
                     <td className="py-4 px-5 text-center whitespace-nowrap">
                       <div className="inline-flex items-center justify-center gap-1.5">
                         {task.status !== 'Completado' && (
-                          <button onClick={() => handleComplete(task.id)} className="w-8 h-8 rounded-lg border border-emerald-200 text-emerald-400 hover:bg-emerald-50 flex items-center justify-center transition-colors shadow-sm" title="Marcar como cumplido">
+                          <button onClick={() => handleComplete(task.id)} className="w-8 h-8 rounded-lg border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 flex items-center justify-center transition-colors shadow-sm" title="Marcar como cumplido">
                             <CheckCircle2 className="w-4 h-4" />
                           </button>
                         )}
                         <button onClick={() => setEditingTask(task)} className="w-8 h-8 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 flex items-center justify-center transition-colors shadow-sm" title="Editar trabajo">
                           <PenSquare className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(task.id)} className="w-8 h-8 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors shadow-sm" title="Eliminar registro">
+                        <button onClick={() => handleDelete(task.id)} className="w-8 h-8 rounded-lg border border-red-500/20 text-red-500 hover:bg-red-500/10 flex items-center justify-center transition-colors shadow-sm" title="Eliminar registro">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -291,11 +291,11 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
                       <span>{task.area}</span>
                     </div>
                     {task.status === 'Completado' ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20/70 text-emerald-800 border border-emerald-300">✓ Resuelto</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✓ Resuelto</span>
                     ) : task.priority === 'Alta' || task.priority === 'Urgente' ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-400 border border-rose-200">Alta / {task.status}</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Alta / {task.status}</span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-400 border border-amber-200">Media / {task.status}</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Media / {task.status}</span>
                     )}
                   </div>
                   <div>
@@ -308,20 +308,20 @@ export default function HogarClient({ tasks, acData }: { tasks: any[], acData: a
                     </div>
                     <span className="font-bold text-white">B/. {formatCurrency(task.budget || 0)}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-50">
+                  <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5 mt-2 pt-3">
                     <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold border ${
-                      (task.profiles?.first_name || '').toLowerCase().includes('jennifer') ? 'bg-pink-50 text-pink-400 border-pink-100' : 'bg-emerald-50 text-emerald-400 border-emerald-100'
+                      (task.profiles?.first_name || '').toLowerCase().includes('jennifer') ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                     }`}>{task.profiles?.first_name || 'Desconocido'}</span>
                     <div className="flex items-center gap-2">
                       {task.status !== 'Completado' && (
-                        <button onClick={() => handleComplete(task.id)} className="h-9 px-3 rounded-xl border border-emerald-200 text-emerald-400 hover:bg-emerald-50 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors">
+                        <button onClick={() => handleComplete(task.id)} className="h-9 px-3 rounded-xl border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors">
                           <CheckCircle2 className="w-4 h-4" /> Cumplir
                         </button>
                       )}
                       <button onClick={() => setEditingTask(task)} className="w-9 h-9 rounded-xl border border-white/10 text-slate-400 hover:bg-white/5 flex items-center justify-center transition-colors">
                         <PenSquare className="w-4 h-4" />
                       </button>
-                      <button onClick={() => handleDelete(task.id)} className="w-9 h-9 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors">
+                      <button onClick={() => handleDelete(task.id)} className="w-9 h-9 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 flex items-center justify-center transition-colors">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

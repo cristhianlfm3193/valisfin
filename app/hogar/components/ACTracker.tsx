@@ -13,7 +13,7 @@ export default function ACTracker({ acData }: { acData: any[] }) {
   };
 
   const getStatusInfo = (nextDateStr: string) => {
-    if (!nextDateStr) return { status: 'ok', text: 'Al día', color: 'bg-emerald-50 text-emerald-400 border-emerald-200' };
+    if (!nextDateStr) return { status: 'ok', text: 'Al día', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' };
     
     const today = new Date();
     const next = new Date(nextDateStr);
@@ -21,11 +21,11 @@ export default function ACTracker({ acData }: { acData: any[] }) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { status: 'overdue', text: 'Atrasado', color: 'bg-rose-50 text-rose-400 border-rose-200' };
+      return { status: 'overdue', text: 'Atrasado', color: 'bg-rose-500/10 text-rose-400 border-rose-500/20' };
     } else if (diffDays <= 30) {
-      return { status: 'warning', text: 'Pronto', color: 'bg-amber-50 text-amber-400 border-amber-200' };
+      return { status: 'warning', text: 'Pronto', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' };
     } else {
-      return { status: 'ok', text: 'Al día', color: 'bg-emerald-50 text-emerald-400 border-emerald-200' };
+      return { status: 'ok', text: 'Al día', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' };
     }
   };
 
@@ -42,11 +42,11 @@ export default function ACTracker({ acData }: { acData: any[] }) {
             const statusInfo = getStatusInfo(unit.latest_maintenance?.next_maintenance);
             
             return (
-              <div key={unit.id} className="bg-[#121c27] rounded-2xl border border-white/10/80 p-5 shadow-sm relative group hover:border-blue-200 transition-all flex flex-col justify-between">
+              <div key={unit.id} className="bg-[#121c27] rounded-2xl border border-white/10/80 p-5 shadow-sm relative group hover:border-blue-500/30 transition-all flex flex-col justify-between">
                 <div>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-400">
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
                         <Wind className="w-5 h-5" />
                       </div>
                       <div>
@@ -81,7 +81,7 @@ export default function ACTracker({ acData }: { acData: any[] }) {
 
                 <button 
                   onClick={() => setSelectedUnit(unit)}
-                  className="w-full py-2.5 bg-[#121c27] border border-blue-200 text-blue-400 rounded-xl text-xs font-bold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2.5 bg-[#121c27] border border-blue-500/20 text-blue-400 rounded-xl text-xs font-bold hover:bg-blue-500/10 transition-colors flex items-center justify-center gap-2"
                 >
                   <Wind className="w-4 h-4" /> Registrar Mantenimiento
                 </button>

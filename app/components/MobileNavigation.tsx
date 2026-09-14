@@ -74,7 +74,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
     { href: "/valisfin", label: "Inicio", icon: Home },
     { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
     { href: "/pagos-fijos", label: "P. Fijos", icon: CreditCard },
-    { href: "/gastos-diarios", label: "G. Diarios", icon: Wallet },
+    { href: "/gastos-diarios", label: "Gastos", icon: Wallet },
   ];
 
   const valisBizNavItems = [
