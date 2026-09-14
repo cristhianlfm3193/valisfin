@@ -173,7 +173,7 @@ export default async function IngresosPage(props: {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Link href="/valisfin">
-              <div className="lg:hidden flex items-center gap-2 px-1">
+              <div className="flex items-center gap-2 px-1">
                 <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_10px_rgba(45,212,191,0.2)] shrink-0">
                   <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
                     <span className="text-sm font-bold text-white">V</span>
@@ -184,7 +184,7 @@ export default async function IngresosPage(props: {
                 </span>
               </div>
             </Link>
-            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight hidden sm:block border-l border-white/10 pl-3 ml-1">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight border-l border-white/10 pl-3 ml-1">
               Ingresos
             </h2>
           </div>
@@ -207,10 +207,10 @@ export default async function IngresosPage(props: {
         <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-teal-100 text-teal-800">
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400">
                 <Wallet className="w-4 h-4" />
               </span>
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-semibold">Calendario Real de Cobro</span>
+              <span className="text-xs uppercase tracking-widest text-emerald-400 font-semibold">Calendario Real de Cobro</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Ingresos Familiares</h1>
           </div>
@@ -223,41 +223,41 @@ export default async function IngresosPage(props: {
 
         {/* Master Monthly Metrics */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5">
-          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
+          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
             <div className="flex items-start justify-between text-gray-400 gap-2">
               <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Ingresos Proyectados</span>
-              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#121c27]/5 border border-white/5 flex items-center justify-center text-emerald-700 shrink-0">
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#121c27]/5 border border-white/5 flex items-center justify-center text-emerald-400 shrink-0">
                 <TrendingUp className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
             <div className="mt-4">
               <div className="text-lg xl:text-xl font-bold font-mono text-white tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.projected)}</div>
               <span className="text-[10px] xl:text-xs text-gray-400 flex items-center gap-1 mt-1 leading-tight">
-                <Clock className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-emerald-600 shrink-0" /> {dynamicMetrics.projectedCount} planificados
+                <Clock className="w-3 h-3 xl:w-3.5 xl:h-3.5 text-emerald-500 shrink-0" /> {dynamicMetrics.projectedCount} planificados
               </span>
             </div>
           </div>
 
-          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent pointer-events-none"></div>
+          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent pointer-events-none"></div>
             <div className="relative z-10 flex items-start justify-between text-gray-400 gap-2">
-              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-bold text-emerald-700 leading-tight mt-0.5">Efectivo en Cuenta</span>
-              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-bold text-emerald-400 leading-tight mt-0.5">Efectivo en Cuenta</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
                 <CheckCircle2 className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
             <div className="relative z-10 mt-4">
-              <div className="text-lg xl:text-xl font-bold font-mono text-emerald-700 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.received)}</div>
-              <span className="text-[10px] xl:text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1 leading-tight">
+              <div className="text-lg xl:text-xl font-bold font-mono text-emerald-400 tracking-tight whitespace-nowrap">B/. {formatCurrency(dynamicMetrics.received)}</div>
+              <span className="text-[10px] xl:text-xs text-emerald-500 font-medium flex items-center gap-1 mt-1 leading-tight">
                 <CheckCircle2 className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" /> {dynamicMetrics.receivedCount} confirmados
               </span>
             </div>
           </div>
 
-          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-amber-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
+          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
             <div className="flex items-start justify-between text-gray-400 gap-2">
-              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold text-amber-700 leading-tight mt-0.5">Extraordinarios</span>
-              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+              <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold text-amber-500 leading-tight mt-0.5">Extraordinarios</span>
+              <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
                 <PlusCircle className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
               </span>
             </div>
@@ -269,7 +269,7 @@ export default async function IngresosPage(props: {
             </div>
           </div>
 
-          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
+          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
             <div className="flex items-start justify-between text-gray-400 gap-2">
               <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Pendiente por Cobrar</span>
               <span className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#121c27]/5 border border-white/5 flex items-center justify-center text-gray-400 shrink-0">
@@ -284,18 +284,18 @@ export default async function IngresosPage(props: {
             </div>
           </div>
 
-          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 border border-white/10/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition">
+          <div className="bg-[#121c27] border-white/10 rounded-2xl p-4 xl:p-5 shadow-[0_4px_12px_rgba(0,0,0,0.5)] flex flex-col justify-between hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition relative overflow-hidden">
             <div className="flex items-start justify-between text-gray-400 gap-2">
               <span className="text-[10px] xl:text-xs uppercase tracking-wider font-semibold leading-tight mt-0.5">Efectividad del Mes</span>
-              <span className="text-xs xl:text-sm font-bold text-emerald-700 shrink-0">{dynamicMetrics.percent}%</span>
+              <span className="text-xs xl:text-sm font-bold text-emerald-400 shrink-0">{dynamicMetrics.percent}%</span>
             </div>
             <div className="mt-3">
-              <div className="w-full bg-[#121c27]/10 h-1.5 xl:h-2 rounded-full overflow-hidden flex">
-                <div className="bg-emerald-600 h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(100, parseFloat(dynamicMetrics.percent))}%` }}></div>
+              <div className="w-full bg-[#121c27]/10 h-1.5 xl:h-2 rounded-full overflow-hidden flex border border-white/5">
+                <div className="bg-emerald-500 h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(100, parseFloat(dynamicMetrics.percent))}%` }}></div>
               </div>
               <div className="flex flex-wrap justify-between items-center text-gray-400 text-[10px] xl:text-xs mt-2 gap-1">
                 <span className="truncate">Recibido: B/. {formatCurrency(dynamicMetrics.received)}</span>
-                <span className="text-emerald-700 font-medium whitespace-nowrap">Meta: 100%</span>
+                <span className="text-emerald-400 font-medium whitespace-nowrap">Meta: 100%</span>
               </div>
             </div>
           </div>
