@@ -148,7 +148,8 @@ function ValisANDashboard() {
   const [reportes, setReportes] = useState<any[]>([]);
   const [bdrhCount, setBdrhCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [dateFilter, setDateFilter] = useState<'all' | 'this_month' | 'last_month'>('this_month');
+  const [dateFilter, setDateFilter] = useState<'all' | 'this_month' | 'last_month' | 'exact_date'>('this_month');
+  const [exactDate, setExactDate] = useState<string>('');
 
   useEffect(() => {
     async function fetchData() {
@@ -185,6 +186,10 @@ function ValisANDashboard() {
       if (!r.fecha) return false;
       const date = parseISO(r.fecha);
       if (dateFilter === 'all') return true;
+      if (dateFilter === 'exact_date') {
+        if (!exactDate) return true;
+        return r.fecha === exactDate;
+      }
       if (dateFilter === 'this_month') {
         return isAfter(date, subDays(now, 30));
       }
@@ -194,7 +199,7 @@ function ValisANDashboard() {
       }
       return true;
     });
-  }, [reportes, dateFilter]);
+  }, [reportes, dateFilter, exactDate]);
 
   const reportesPorDia = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -227,7 +232,19 @@ function ValisANDashboard() {
         </div>
         
         {/* Filtro de Fecha */}
-        <div className="flex items-center gap-2 bg-[#0a1426]/80 p-1.5 rounded-xl border border-sky-500/30 shadow-inner">
+        <div className="flex items-center gap-2 bg-[#0a1426]/80 p-1.5 rounded-xl border border-sky-500/30 shadow-inner flex-wrap">
+          <input 
+            type="date"
+            value={exactDate}
+            onChange={(e) => {
+              setExactDate(e.target.value);
+              if (e.target.value) {
+                setDateFilter('exact_date');
+              }
+            }}
+            className={`px-3 py-1.5 h-[32px] rounded-lg text-xs font-semibold bg-slate-900 border ${dateFilter === 'exact_date' ? 'border-cyan-400 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.3)]' : 'border-slate-700 text-slate-400'} focus:outline-none focus:border-cyan-400 transition cursor-pointer [color-scheme:dark]`}
+          />
+          <div className="w-px h-5 bg-slate-700/50 mx-1"></div>
           <button 
             onClick={() => setDateFilter('all')}
             className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition ${dateFilter === 'all' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
