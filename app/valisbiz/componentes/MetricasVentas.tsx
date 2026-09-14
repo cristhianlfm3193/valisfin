@@ -186,7 +186,14 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                       {getInitials(v.nombre)}
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-white leading-tight">{v.nombre}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-bold text-white leading-tight">{v.nombre}</h3>
+                        {v.activo === false && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-500/20 text-slate-400 uppercase tracking-wider">
+                            Inactivo/Vacaciones
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full font-mono text-xs font-extrabold ${c.badge} shrink-0`}>
@@ -302,7 +309,14 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
                           {getInitials(v.nombre)}
                         </div>
                         <div>
-                          <span className="text-sm font-semibold text-slate-200 block">{v.nombre}</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-semibold text-slate-200 block">{v.nombre}</span>
+                            {v.activo === false && (
+                              <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-slate-500/20 text-slate-400 uppercase">
+                                Inactivo
+                              </span>
+                            )}
+                          </div>
                           <span className="text-[11px] text-slate-400">{v.ruta_asignada || '—'}</span>
                         </div>
                       </div>

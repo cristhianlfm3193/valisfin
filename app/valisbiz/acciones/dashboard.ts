@@ -83,11 +83,14 @@ export async function getDashboardData(mes?: number, anio?: number) {
       porcentaje_facturado: porcentajeFacturado,
       gap_facturado: gapFacturado,
       total_vendido_reportado: totalVendidoReportado,
+      activo: v.activo,
     };
   });
 
   // Metas globales de Jennifer — basadas en FACTURADO
-  const cuotaGlobal = resumenMensual.reduce((acc, r) => acc + r.cuota_mensual, 0);
+  const cuotaGlobal = resumenMensual
+    .filter(r => r.activo !== false) // Excluir inactivos/vacaciones de la meta global
+    .reduce((acc, r) => acc + r.cuota_mensual, 0);
   const facturadoGlobal = resumenMensual.reduce((acc, r) => acc + r.total_facturado, 0);
   const metas: MetaSupervisor = {
     cuota_global: cuotaGlobal || 85000,

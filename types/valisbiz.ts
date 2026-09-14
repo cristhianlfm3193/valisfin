@@ -99,6 +99,7 @@ export interface ResumenMensualVendedor {
   gap_facturado: number;
   // VENDIDO REPORTADO (Vendedor) → solo informativo, no genera bono
   total_vendido_reportado: number;
+  activo?: boolean;
 }
 
 // Tabla de bonos de Jennifer según el contrato

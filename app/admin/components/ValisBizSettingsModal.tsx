@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { X, Heart, Users, UserPlus, CheckCircle2, ShieldAlert, Sparkles, RefreshCw, Edit2, Check, ArrowRight, DollarSign } from 'lucide-react';
 import { 
   VendedorAdmin, 
   createSellerAction, 
   updateSellerAction, 
   toggleSellerStateAction,
-  setupSeptiembreReplacementAction 
+  setupSeptiembreReplacementAction,
+  getAllSellersAdmin
 } from '@/app/actions/admin_valisbiz';
 import { Btn3D } from '@/app/components/Btn3D';
 
@@ -26,6 +27,16 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  // Fetch vendedores if not provided
+  useEffect(() => {
+    if (isOpen && initialVendedores.length === 0) {
+      startTransition(async () => {
+        const sellers = await getAllSellersAdmin();
+        setVendedores(sellers);
+      });
+    }
+  }, [isOpen, initialVendedores]);
 
   // Form para agregar nuevo vendedor
   const [nombre, setNombre] = useState('');
@@ -94,6 +105,8 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
         setNombre('');
         setRutaAsignada('');
         setCuotaMensual('');
+        const updated = await getAllSellersAdmin();
+        setVendedores(updated);
         onSaved();
       } else {
         setErrorMsg(res.error || 'Error al guardar el vendedor.');
@@ -124,6 +137,9 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
       if (res.success) {
         setSuccessMsg('✅ Vendedor actualizado.');
         setEditingId(null);
+        // Refresh local state if not reloading from parent
+        const updated = await getAllSellersAdmin();
+        setVendedores(updated);
         onSaved();
       } else {
         setErrorMsg(res.error || 'Error al actualizar vendedor.');
@@ -136,6 +152,8 @@ export function ValisBizSettingsModal({ isOpen, onClose, vendedores: initialVend
       const res = await toggleSellerStateAction(id, newEstado);
       if (res.success) {
         setSuccessMsg('✅ Estado actualizado.');
+        const updated = await getAllSellersAdmin();
+        setVendedores(updated);
         onSaved();
       } else {
         setErrorMsg(res.error || 'Error al cambiar estado.');
