@@ -183,7 +183,7 @@ export default function VehiculosClient({
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-5">
                     <div className="flex items-center gap-3.5">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isJennifer ? 'bg-pink-50 text-pink-600 border-pink-100' : 'bg-emerald-50 text-[#006655] border-emerald-100'}`}>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isJennifer ? 'bg-pink-50 text-pink-400 border-pink-100' : 'bg-emerald-50 text-[#006655] border-emerald-100'}`}>
                         <span className="material-symbols-outlined text-[26px]">
                           {vehicle.brand === 'Toyota' ? 'directions_car' : 'airport_shuttle'}
                         </span>
@@ -206,12 +206,12 @@ export default function VehiculosClient({
                         Mantenimiento Vencido
                       </span>
                     ) : isWarning ? (
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-100 text-pink-800 border border-pink-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
-                        <span className={`material-symbols-outlined text-[15px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'}`}>warning</span>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20 text-pink-800 border border-pink-200' : 'bg-amber-500/20 text-amber-800 border border-amber-200'}`}>
+                        <span className={`material-symbols-outlined text-[15px] ${isJennifer ? 'text-pink-400' : 'text-amber-400'}`}>warning</span>
                         Atención requerida
                       </span>
                     ) : (
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-100/80 text-pink-600' : 'bg-emerald-100/80 text-[#006655]'}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${isJennifer ? 'bg-pink-500/20/80 text-pink-400' : 'bg-emerald-500/20/80 text-[#006655]'}`}>
                         <span className="material-symbols-outlined text-[14px]">check_circle</span>
                         Al día · En regla
                       </span>
@@ -230,13 +230,13 @@ export default function VehiculosClient({
                       <span className="font-mono text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">
                         {vehicle.current_km?.toLocaleString()}
                       </span>
-                      <span className={`font-mono text-lg font-bold ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>km</span>
+                      <span className={`font-mono text-lg font-bold ${isJennifer ? 'text-pink-400' : 'text-[#006655]'}`}>km</span>
                     </div>
                     
                     <div className="mt-4 pt-2 border-t border-white/10/60">
                       <div className="flex items-center justify-between text-xs mb-1.5">
                         <span className="text-gray-300">Próximo servicio: <strong className="font-mono text-white font-semibold">{next_service_km?.toLocaleString() || 'N/A'} km</strong></span>
-                        <span className={`${isOverdue ? 'text-red-600' : (isJennifer ? 'text-pink-600' : 'text-[#006655]')} font-semibold font-mono`}>
+                        <span className={`${isOverdue ? 'text-red-600' : (isJennifer ? 'text-pink-400' : 'text-[#006655]')} font-semibold font-mono`}>
                           {isOverdue ? `Pasado por ${overdueBy.toLocaleString()} km` : next_service_km ? `Faltan ${remaining.toLocaleString()} km` : 'Sin programar'}
                         </span>
                       </div>
@@ -253,7 +253,7 @@ export default function VehiculosClient({
                       
                       {isWarning && (
                         <div className={`mt-2.5 px-2.5 py-1.5 rounded-lg border flex items-start gap-1.5 text-xs ${isJennifer ? 'bg-pink-50 border-pink-200/70 text-pink-800' : 'bg-amber-50 border-amber-200/70 text-amber-800'}`}>
-                          <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-600' : 'text-amber-600'} mt-0.5`}>error</span>
+                          <span className={`material-symbols-outlined text-[16px] ${isJennifer ? 'text-pink-400' : 'text-amber-400'} mt-0.5`}>error</span>
                           <span><strong>¡Atención!</strong> Faltan {remaining.toLocaleString()} km para mantenimiento.</span>
                         </div>
                       )}
@@ -261,18 +261,18 @@ export default function VehiculosClient({
                       <div className={`mt-3 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all ${isJennifer ? 'bg-pink-50/50 border-pink-100' : 'bg-white/5 border-white/10'}`}>
                         <div className="flex items-center gap-1.5">
                           <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-500' : 'text-gray-400'}`}>payments</span>
-                          <span className={`font-semibold ${isJennifer ? 'text-pink-700' : 'text-gray-300'}`}>Inversión Histórica</span>
+                          <span className={`font-semibold ${isJennifer ? 'text-pink-400' : 'text-gray-300'}`}>Inversión Histórica</span>
                         </div>
-                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-600' : 'text-gray-300'}`}>B/. {totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-400' : 'text-gray-300'}`}>B/. {totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                       </div>
 
                       {vehiclePendingTasks.length > 0 && (
                         <div className={`mt-2 px-3 py-2.5 rounded-xl border flex items-center justify-between text-sm shadow-[0_4px_12px_rgba(0,0,0,0.5)] transition-all ${isJennifer ? 'bg-pink-50 border-pink-200' : 'bg-emerald-50 border-emerald-200'}`}>
                           <div className="flex items-center gap-1.5">
-                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-600' : 'text-[#006655]'}`}>account_balance_wallet</span>
+                            <span className={`material-symbols-outlined text-[18px] ${isJennifer ? 'text-pink-400' : 'text-[#006655]'}`}>account_balance_wallet</span>
                             <span className={`font-semibold ${isJennifer ? 'text-pink-800' : 'text-emerald-800'}`}>Presupuesto Pendiente</span>
                           </div>
-                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-700' : 'text-[#006655]'}`}>B/. {totalPendingCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                          <span className={`font-mono font-bold text-base ${isJennifer ? 'text-pink-400' : 'text-[#006655]'}`}>B/. {totalPendingCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                         </div>
                       )}
                     </div>
@@ -339,7 +339,7 @@ export default function VehiculosClient({
                           <button 
                             disabled={isPending}
                             onClick={() => handleEditKm(log.id, log.km)}
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
                             title="Editar"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -347,7 +347,7 @@ export default function VehiculosClient({
                           <button 
                             disabled={isPending}
                             onClick={() => handleDeleteKm(log.id)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -408,14 +408,14 @@ export default function VehiculosClient({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-white/5">
               <div>
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 text-orange-400 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px]">assignment_late</span>
                   </div>
                   <h2 className="text-lg font-bold text-on-surface">Trabajos Pendientes de Revisión</h2>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700">
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-orange-500/20 text-orange-400">
                   {filteredPending.length} Tareas Críticas
                 </span>
                 <span className="text-xs font-bold px-3 py-1 rounded-full bg-white/10 text-gray-300">
@@ -450,7 +450,7 @@ export default function VehiculosClient({
                     return (
                       <tr key={task.id} className="hover:bg-orange-50/50 transition-colors">
                         <td className="py-3.5 px-3 font-mono text-gray-400 text-xs">{task.date}</td>
-                        <td className="py-3.5 px-3 font-semibold text-on-surface text-orange-700">{vehicle?.brand} {vehicle?.model}</td>
+                        <td className="py-3.5 px-3 font-semibold text-on-surface text-orange-400">{vehicle?.brand} {vehicle?.model}</td>
                         <td className="py-3.5 px-3 font-medium text-white">
                           {task.service}
                           {task.notes && <p className="text-[11px] text-gray-400 mt-0.5 max-w-[200px] truncate" title={task.notes}>{task.notes}</p>}
@@ -470,21 +470,21 @@ export default function VehiculosClient({
                           <div className="flex items-center justify-center gap-1">
                             <button 
                               onClick={() => handleMarkDone(task.id)}
-                              className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-emerald-50 rounded-lg transition-colors"
                               title="Marcar como Realizado"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleEdit(task)}
-                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Editar"
                             >
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button 
                               onClick={() => handleDelete(task.id)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-50 rounded-lg transition-colors"
                               title="Eliminar"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -595,14 +595,14 @@ export default function VehiculosClient({
                         <div className="flex items-center justify-center gap-1">
                           <button 
                             onClick={() => handleEditCompleted(log)}
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors"
                             title="Editar mantenimiento"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button 
                             onClick={() => handleDelete(log.id)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-50 rounded-lg transition-colors"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />

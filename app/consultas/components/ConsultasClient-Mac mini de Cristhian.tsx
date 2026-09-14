@@ -115,12 +115,12 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
 
   const getModuleStyle = (mod: string) => {
     switch (mod) {
-      case 'Hogar & Reparaciones': return { bg: 'bg-emerald-100', text: 'text-emerald-700', icon: Home };
-      case 'Gastos Diarios': return { bg: 'bg-rose-100', text: 'text-rose-700', icon: ShoppingBag };
-      case 'Pagos Fijos': return { bg: 'bg-amber-100', text: 'text-amber-700', icon: Zap };
+      case 'Hogar & Reparaciones': return { bg: 'bg-emerald-500/20', text: 'text-emerald-400', icon: Home };
+      case 'Gastos Diarios': return { bg: 'bg-rose-500/20', text: 'text-rose-400', icon: ShoppingBag };
+      case 'Pagos Fijos': return { bg: 'bg-amber-500/20', text: 'text-amber-400', icon: Zap };
       case 'Ingresos': return { bg: 'bg-brand-100', text: 'text-brand-700', icon: Wallet };
       case 'Vehículos': return { bg: 'bg-slate-200', text: 'text-gray-300', icon: Car };
-      case 'Metas Familiares': return { bg: 'bg-indigo-100', text: 'text-indigo-700', icon: Target };
+      case 'Metas Familiares': return { bg: 'bg-indigo-500/20', text: 'text-indigo-400', icon: Target };
       default: return { bg: 'bg-white/10', text: 'text-gray-300', icon: Filter };
     }
   };
@@ -321,12 +321,12 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
         <div className="p-5 rounded-2xl bg-[#121c27] border-white/10 border border-white/10/80 shadow-xs flex flex-col justify-between gap-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Salidas Totales</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+            <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-400">
               <AlertCircle className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <span className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">-B/. {formatCurrency(totalSalidas)}</span>
+            <span className="text-2xl sm:text-3xl font-black text-rose-400 tracking-tight">-B/. {formatCurrency(totalSalidas)}</span>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-gray-400">
               Gastos, Pagos, Hogar, Vehículos y Metas
             </div>
@@ -410,12 +410,12 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                       </div>
                     </td>
                     <td className="py-4 px-5 text-gray-400">{t.category}</td>
-                    <td className={`py-4 px-5 text-right font-mono font-bold whitespace-nowrap ${t.type === 'in' ? 'text-brand-600' : 'text-rose-600'}`}>
+                    <td className={`py-4 px-5 text-right font-mono font-bold whitespace-nowrap ${t.type === 'in' ? 'text-brand-600' : 'text-rose-400'}`}>
                       {t.type === 'in' ? '+' : '-'}B/. {formatCurrency(t.amount)}
                     </td>
                     <td className="py-4 px-5 text-center whitespace-nowrap">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold ${
-                        t.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        t.status === 'completed' ? 'bg-emerald-50 text-emerald-400 border border-emerald-200' : 'bg-amber-50 text-amber-400 border border-amber-200'
                       }`}>
                         {t.status === 'completed' ? 'Completado' : 'Pendiente'}
                       </span>
@@ -449,7 +449,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                     <ModuleIcon className="w-3.5 h-3.5" />
                     {t.module}
                   </span>
-                  <span className={`font-mono font-bold text-lg ${t.type === 'in' ? 'text-brand-600' : 'text-rose-600'}`}>
+                  <span className={`font-mono font-bold text-lg ${t.type === 'in' ? 'text-brand-600' : 'text-rose-400'}`}>
                     {t.type === 'in' ? '+' : '-'}B/. {formatCurrency(t.amount)}
                   </span>
                 </div>
@@ -462,7 +462,7 @@ export default function ConsultasClient({ initialTransactions }: ConsultasClient
                     <span className="text-xs font-bold text-gray-300">{t.responsibleName}</span>
                   </div>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-                    t.status === 'completed' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+                    t.status === 'completed' ? 'bg-emerald-50 text-emerald-400' : 'bg-amber-50 text-amber-400'
                   }`}>
                     {t.status === 'completed' ? 'Completado' : 'Pendiente'}
                   </span>

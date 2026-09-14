@@ -42,7 +42,7 @@ export default function AddACMaintenanceModal({
       <div className="max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#121c27] border-white/10 w-full max-w-md rounded-3xl p-6 shadow-2xl border border-white/10 transform scale-100 transition-all duration-200">
         <div className="flex items-center justify-between pb-4 border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-400 flex items-center justify-center">
               <Wind className="w-5 h-5" />
             </div>
             <div>
@@ -93,11 +93,11 @@ export default function AddACMaintenanceModal({
             <label className="block text-xs font-bold text-gray-300 mb-1.5">Responsable / Pagado por</label>
             <div className="grid grid-cols-2 gap-2">
               <label className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
-                <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" defaultChecked className="text-emerald-600 focus:ring-emerald-600" />
+                <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" defaultChecked className="text-emerald-400 focus:ring-emerald-600" />
                 <span className="text-xs font-semibold text-white">Cristhian</span>
               </label>
               <label className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
-                <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="text-pink-600 focus:ring-pink-600" />
+                <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="text-pink-400 focus:ring-pink-600" />
                 <span className="text-xs font-semibold text-white">Jennifer</span>
               </label>
             </div>

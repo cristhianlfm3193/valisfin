@@ -18,7 +18,7 @@ interface CalendarClientProps {
 }
 
 const CATEGORY_STYLES = {
-  'Ingresos': { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-200', dot: 'bg-emerald-600', icon: '💵' },
+  'Ingresos': { bg: 'bg-emerald-500/20', text: 'text-emerald-900', border: 'border-emerald-200', dot: 'bg-emerald-600', icon: '💵' },
   'Pagos Fijos': { bg: 'bg-indigo-50', text: 'text-indigo-900', border: 'border-indigo-200', dot: 'bg-indigo-600', icon: '⚡' },
   'Gastos Diarios': { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', dot: 'bg-rose-500', icon: '🛒' },
   'Vehículos': { bg: 'bg-sky-50', text: 'text-sky-900', border: 'border-sky-200', dot: 'bg-sky-500', icon: '🚗' },
@@ -162,7 +162,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
 
         <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-3">
           
-          <div className="flex items-center gap-4 bg-slate-100/90 p-1.5 rounded-2xl border border-white/10/60 shadow-sm relative overflow-hidden w-full lg:w-auto justify-between lg:justify-start">
+          <div className="flex items-center gap-4 bg-white/10/90 p-1.5 rounded-2xl border border-white/10/60 shadow-sm relative overflow-hidden w-full lg:w-auto justify-between lg:justify-start">
             {isLoading && (
               <div className="absolute inset-x-0 bottom-0 h-0.5 bg-brand-500 animate-pulse"></div>
             )}
@@ -206,7 +206,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
             </button>
           </div>
           
-          <div className="flex items-center bg-slate-100/90 p-1.5 rounded-2xl border border-white/10/60 text-xs font-bold shadow-sm w-full lg:w-auto">
+          <div className="flex items-center bg-white/10/90 p-1.5 rounded-2xl border border-white/10/60 text-xs font-bold shadow-sm w-full lg:w-auto">
             <button 
               onClick={() => setViewType('Año')} 
               className={`flex-1 lg:flex-none px-4 py-2 rounded-xl transition-all ${viewType === 'Año' ? 'bg-[#121c27] shadow-sm text-brand-700 ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-200/50'}`}>Año</button>
@@ -228,7 +228,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
           <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 text-xs">
             <button 
               onClick={() => setFilter('Todos')}
-              className={`px-3 py-1.5 rounded-full font-bold shadow-xs whitespace-nowrap transition-colors ${filter === 'Todos' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 rounded-full font-bold shadow-xs whitespace-nowrap transition-colors ${filter === 'Todos' ? 'bg-slate-900 text-white' : 'bg-white/10 text-slate-400 hover:bg-slate-200'}`}
             >
               Todos ({initialEvents.length})
             </button>
@@ -300,7 +300,7 @@ export function CalendarClient({ initialEvents, currentMonth, currentYear }: Cal
                       {dayEvents.length > 3 && (
                         <button 
                           onClick={(e) => { e.stopPropagation(); setSelectedDay(d.fullDate); }}
-                          className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-slate-500 hover:text-slate-300 hover:bg-slate-100 rounded transition-colors"
+                          className="w-full text-left px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold text-slate-500 hover:text-slate-300 hover:bg-white/10 rounded transition-colors"
                         >
                           + {dayEvents.length - 3} más...
                         </button>

@@ -70,7 +70,7 @@ export default function AddPendingModal({
         
         <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/5/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
               <span className="material-symbols-outlined">assignment_late</span>
             </div>
             <div>
@@ -100,7 +100,7 @@ export default function AddPendingModal({
                     onClick={() => setSelectedVehicle(v.id)}
                     className={`flex items-center gap-2 p-3 rounded-xl border text-sm font-semibold transition-all ${
                       selectedVehicle === v.id 
-                        ? 'border-orange-500 bg-orange-50 text-orange-700' 
+                        ? 'border-orange-500 bg-orange-50 text-orange-400' 
                         : 'border-white/10 hover:border-slate-300 text-gray-300'
                     }`}
                   >
@@ -123,7 +123,7 @@ export default function AddPendingModal({
                     type="button"
                     onClick={() => setService(sug)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                      service === sug ? 'bg-orange-100 border-orange-200 text-orange-700' : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                      service === sug ? 'bg-orange-500/20 border-orange-200 text-orange-400' : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
                     }`}
                   >
                     {sug}

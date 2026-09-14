@@ -117,9 +117,9 @@ export default function AddKmModal({
           <div>
             <label className="block text-xs font-bold text-gray-400 mb-1.5">Incremento rápido sugerido</label>
             <div className="grid grid-cols-3 gap-2">
-              <button type="button" onClick={() => incrementKm(300)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+300 km</button>
-              <button type="button" onClick={() => incrementKm(500)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+500 km</button>
-              <button type="button" onClick={() => incrementKm(1000)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+1,000 km</button>
+              <button type="button" onClick={() => incrementKm(300)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+300 km</button>
+              <button type="button" onClick={() => incrementKm(500)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+500 km</button>
+              <button type="button" onClick={() => incrementKm(1000)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+1,000 km</button>
             </div>
           </div>
 

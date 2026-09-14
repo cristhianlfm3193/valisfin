@@ -77,7 +77,7 @@ export default function AddKmModal({
             <span className="text-xs font-bold uppercase tracking-wider text-[#006655]">Lectura de Odómetro</span>
             <h3 className="text-xl font-extrabold text-on-surface">Registrar Kilometraje</h3>
           </div>
-          <button onClick={onClose} type="button" className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+          <button onClick={onClose} type="button" className="w-8 h-8 rounded-full bg-white/10 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
@@ -117,9 +117,9 @@ export default function AddKmModal({
           <div>
             <label className="block text-xs font-bold text-slate-500 mb-1.5">Incremento rápido sugerido</label>
             <div className="grid grid-cols-3 gap-2">
-              <button type="button" onClick={() => incrementKm(300)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+300 km</button>
-              <button type="button" onClick={() => incrementKm(500)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+500 km</button>
-              <button type="button" onClick={() => incrementKm(1000)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+1,000 km</button>
+              <button type="button" onClick={() => incrementKm(300)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+300 km</button>
+              <button type="button" onClick={() => incrementKm(500)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+500 km</button>
+              <button type="button" onClick={() => incrementKm(1000)} className="py-1.5 px-2 rounded-lg bg-emerald-50 hover:bg-emerald-500/20 text-[#006655] font-mono text-xs font-bold border border-emerald-200 transition-colors">+1,000 km</button>
             </div>
           </div>
 
@@ -138,7 +138,7 @@ export default function AddKmModal({
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/5">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-full text-xs font-semibold text-slate-400 hover:bg-slate-100 transition-colors">Cancelar</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-full text-xs font-semibold text-slate-400 hover:bg-white/10 transition-colors">Cancelar</button>
             <Btn3D type="submit" color="blue" isLoading={loading} loadingText="Guardando..." disabled={loading}>
               Guardar Lectura
             </Btn3D>

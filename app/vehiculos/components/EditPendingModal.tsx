@@ -43,7 +43,7 @@ export default function EditPendingModal({
       <div className="bg-[#121c27] rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[90vh]">
         <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/5/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
               <span className="material-symbols-outlined">edit</span>
             </div>
             <div>

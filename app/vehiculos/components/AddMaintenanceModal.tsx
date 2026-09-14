@@ -65,7 +65,7 @@ export default function AddMaintenanceModal({
             <span className="text-xs font-bold uppercase tracking-wider text-[#006655]">ValisFin Fleet</span>
             <h3 className="text-xl font-extrabold text-on-surface">Registrar Mantenimiento</h3>
           </div>
-          <button type="button" onClick={onClose} className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+          <button type="button" onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
@@ -103,7 +103,7 @@ export default function AddMaintenanceModal({
                   key={serv}
                   type="button" 
                   onClick={() => setServiceDesc(serv)}
-                  className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-white/10 transition-colors"
+                  className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 hover:bg-emerald-50 hover:text-[#006655] hover:border-emerald-300 border border-white/10 transition-colors"
                 >
                   {serv}
                 </button>
@@ -188,7 +188,7 @@ export default function AddMaintenanceModal({
           <input type="hidden" name="user_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" />
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/5">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-full text-xs font-semibold text-slate-400 hover:bg-slate-100 transition-colors">Cancelar</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-full text-xs font-semibold text-slate-400 hover:bg-white/10 transition-colors">Cancelar</button>
             <Btn3D type="submit" color="blue" isLoading={loading} loadingText="Guardando..." disabled={loading}>
               Guardar Servicio
             </Btn3D>

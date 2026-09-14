@@ -29,7 +29,7 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
         <div className="px-6 py-5 border-b border-white/5 flex items-start justify-between bg-white/5/50 shrink-0">
           <div className="space-y-1">
             <div>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-800 uppercase tracking-wider">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>Edición de Trabajo
               </span>
             </div>
@@ -37,7 +37,7 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-300 hover:bg-slate-100 transition-colors focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-300 hover:bg-white/10 transition-colors focus:outline-none"
           >
             <X className="w-5 h-5" />
           </button>
@@ -98,11 +98,11 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
                 <div className="grid grid-cols-2 gap-2">
                   <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
                     <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" onChange={() => setSelectedProfile('edc938dc-9fbc-4573-b007-0bdb95114f95')} checked={selectedProfile === 'edc938dc-9fbc-4573-b007-0bdb95114f95'} className="peer sr-only" required />
-                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-emerald-700">Cristhian</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-emerald-400">Cristhian</span>
                   </label>
                   <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
                     <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" onChange={() => setSelectedProfile('7b5c62be-58f1-48d6-b366-0f504c39bdcb')} checked={selectedProfile === '7b5c62be-58f1-48d6-b366-0f504c39bdcb'} className="peer sr-only" required />
-                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-pink-600">Jennifer</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-pink-400">Jennifer</span>
                   </label>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default function EditHomeTaskModal({ task, isOpen, onClose }: { task: any
             <button 
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-slate-400 hover:bg-slate-100 transition-colors min-h-[40px]"
+              className="px-4 py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-slate-400 hover:bg-white/10 transition-colors min-h-[40px]"
             >
               Cancelar
             </button>

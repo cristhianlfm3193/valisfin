@@ -65,7 +65,7 @@ export function AddReminderModal({ isOpen, onClose }: AddReminderModalProps) {
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-white/10 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

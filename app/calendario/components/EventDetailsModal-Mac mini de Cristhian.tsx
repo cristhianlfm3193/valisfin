@@ -66,7 +66,7 @@ export function EventDetailsModal({ event, onClose }: EventDetailsModalProps) {
               {event.amount !== undefined && event.amount !== null && (
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
                   <div className="bg-[#121c27] border-white/10 p-2 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
-                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                    <DollarSign className="w-4 h-4 text-emerald-400" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Monto</p>
@@ -88,7 +88,7 @@ export function EventDetailsModal({ event, onClose }: EventDetailsModalProps) {
               {event.time && (
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
                   <div className="bg-[#121c27] border-white/10 p-2 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
-                    <CalendarIcon className="w-4 h-4 text-indigo-600" />
+                    <CalendarIcon className="w-4 h-4 text-indigo-400" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hora</p>
@@ -100,7 +100,7 @@ export function EventDetailsModal({ event, onClose }: EventDetailsModalProps) {
 
             {event.isCompleted && (
               <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-center">
-                <span className="text-xs font-bold text-emerald-700">Este evento ya está completado / pagado</span>
+                <span className="text-xs font-bold text-emerald-400">Este evento ya está completado / pagado</span>
               </div>
             )}
           </div>

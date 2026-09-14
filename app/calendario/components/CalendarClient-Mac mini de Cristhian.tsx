@@ -18,7 +18,7 @@ interface CalendarClientProps {
 }
 
 const CATEGORY_STYLES = {
-  'Ingresos': { bg: 'bg-emerald-100', text: 'text-emerald-900', border: 'border-emerald-200', dot: 'bg-emerald-600', icon: '💵' },
+  'Ingresos': { bg: 'bg-emerald-500/20', text: 'text-emerald-900', border: 'border-emerald-200', dot: 'bg-emerald-600', icon: '💵' },
   'Pagos Fijos': { bg: 'bg-indigo-50', text: 'text-indigo-900', border: 'border-indigo-200', dot: 'bg-indigo-600', icon: '⚡' },
   'Gastos Diarios': { bg: 'bg-rose-50', text: 'text-rose-900', border: 'border-rose-200', dot: 'bg-rose-500', icon: '🛒' },
   'Vehículos': { bg: 'bg-sky-50', text: 'text-sky-900', border: 'border-sky-200', dot: 'bg-sky-500', icon: '🚗' },
