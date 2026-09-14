@@ -26,7 +26,7 @@ import { LogoutButton } from "./LogoutButton";
 import { ValisBizSettingsModal } from "@/app/admin/components/ValisBizSettingsModal";
 
 const navItems = [
-  { href: "/", label: "Inicio", icon: Home },
+  { href: "/valisfin", label: "Inicio", icon: Home },
   { href: "/ingresos", label: "Ingresos", icon: TrendingUp },
   { href: "/pagos-fijos", label: "Pagos Fijos", icon: CreditCard },
   { href: "/gastos-diarios", label: "Gastos Diarios", icon: Wallet },
@@ -135,7 +135,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                     </div>
                   </div>
                   <span className="text-2xl font-black text-white tracking-tight drop-shadow-md">
-                    Valis<span className="text-teal-400">Hub</span>
+                    Valis<span className="text-emerald-400">Fin</span>
                   </span>
                 </div>
               )}
