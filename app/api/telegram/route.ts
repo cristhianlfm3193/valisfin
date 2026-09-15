@@ -487,12 +487,32 @@ INSTRUCCIONES CRÍTICAS:
         return NextResponse.json({ ok: true });
       }
 
-      // 🔍 Búsqueda directa inteligente en BD-RH si el usuario solo escribe un nombre, cédula o posición
-      const isQuestionOrGreeting = /^(hola|buenas|buenos|que|qué|cual|cuál|como|cómo|donde|dónde|cuanto|cuánto|quien|quién|dime|por qué|porque)\b/i.test(text);
-      if (!isQuestionOrGreeting && text.length >= 3 && text.length <= 40 && !text.startsWith('/')) {
-        const directMatch = await searchBdrhPerson(text);
+      // 🔍 Búsqueda directa inteligente en BD-RH (sin IA)
+      // 1. Si el usuario escribe algo como "posicion de X", "placa de X", "quien es X"
+      const bdrhIntentMatch = text.match(/^(?:tienes\s+la\s+)?(?:placa|posici[oó]n|unidad|c[eé]dula|datos)\s+(?:de|del)?\s+(.+)$/i) || text.match(/^qui[eé]n\s+es\s+(.+)$/i);
+      
+      let termToSearch = '';
+      if (bdrhIntentMatch && bdrhIntentMatch[1]) {
+        termToSearch = bdrhIntentMatch[1].trim();
+      } else {
+        // 2. O si el usuario escribe solo un nombre, cédula o posición (heurística básica)
+        const isQuestionOrGreeting = /^(hola|buenas|buenos|que|qué|cual|cuál|como|cómo|donde|dónde|cuanto|cuánto|quien|quién|dime|por qué|porque)\b/i.test(text);
+        if (!isQuestionOrGreeting && text.length >= 3 && text.length <= 40 && !text.startsWith('/')) {
+          termToSearch = text.trim();
+        }
+      }
+
+      if (termToSearch) {
+        // Limpiar signos de interrogación si los hay
+        termToSearch = termToSearch.replace(/[¿?]/g, '').trim();
+        const directMatch = await searchBdrhPerson(termToSearch);
         if (!directMatch.startsWith('🔍 No se encontraron')) {
           await sendTelegramMessage(chatId, directMatch, getBackKeyboard('valisan'));
+          return NextResponse.json({ ok: true });
+        } else if (bdrhIntentMatch) {
+          // Si el usuario explícitamente preguntó por una placa/posición de alguien y no se encontró,
+          // respondemos directamente sin pasar a la IA para evitar alucinaciones.
+          await sendTelegramMessage(chatId, `🔍 No encontré a nadie con el término: *${termToSearch}* en la BD-RH. Revisa la ortografía o intenta buscar por cédula/posición.`, getBackKeyboard('valisan'));
           return NextResponse.json({ ok: true });
         }
       }

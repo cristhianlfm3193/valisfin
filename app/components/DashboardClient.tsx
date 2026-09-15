@@ -134,6 +134,7 @@ export function DashboardClient({
   const [convertStatus, setConvertStatus] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [aiExpenseData, setAiExpenseData] = useState<any>(null);
+  const [chatContext, setChatContext] = useState<'gasto' | 'ingreso' | 'vehiculo' | null>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -267,7 +268,6 @@ export function DashboardClient({
       let mimeType: string | undefined;
 
       if (aiFile) {
-        // Comprimir siempre antes de enviar, independientemente del tamaño
         let fileToSend = aiFile;
         if (aiFile.type.startsWith('image/')) {
           try { fileToSend = await resizeImage(aiFile, 900, 0.75); } catch { /* usar original */ }
@@ -276,7 +276,40 @@ export function DashboardClient({
         mimeType = fileToSend.type;
       }
 
-      const result = await analyzeUniversalText(aiText, base64Data, mimeType);
+      // ── LOCAL PARSER FALLBACK (AVOID AI OVERLOAD) ──
+      // Si no hay archivo y el usuario ya seleccionó un contexto, intentamos extraer los datos localmente primero.
+      let localResult = null;
+      if (!aiFile && chatContext && aiText) {
+        const textLow = aiText.toLowerCase();
+        const numMatches = textLow.match(/\b(\d+(?:\.\d{1,2})?)\b/g);
+        let monto = numMatches ? parseFloat(numMatches[numMatches.length - 1]) : null;
+        const explicitMoney = textLow.match(/(?:cost[oó]|por|\$)\s*(\d+(?:\.\d{1,2})?)/i) || textLow.match(/(\d+(?:\.\d{1,2})?)\s*(?:d[oó]lar|dolares|usd|pavos)/i);
+        if (explicitMoney) monto = parseFloat(explicitMoney[1]);
+
+        let fecha = new Date().toISOString().split('T')[0];
+        if (/ayer/i.test(textLow)) {
+          const d = new Date();
+          d.setDate(d.getDate() - 1);
+          fecha = d.toISOString().split('T')[0];
+        }
+
+        if (chatContext === 'gasto' && monto) {
+          localResult = { success: true, data: { accion: 'gasto', parametros: { monto, detalle: aiText, fecha } } };
+        } else if (chatContext === 'ingreso' && monto) {
+          localResult = { success: true, data: { accion: 'ingreso', parametros: { monto, detalle: aiText, fecha } } };
+        } else if (chatContext === 'vehiculo') {
+          const kmMatch = textLow.match(/\b(\d{4,6})\b/);
+          const vehiculo = /yaris/i.test(textLow) ? 'Yaris' : /tucson/i.test(textLow) ? 'Tucson' : '';
+          if (kmMatch && /km|kil[oó]metro|kilometraje/i.test(textLow)) {
+            localResult = { success: true, data: { accion: 'kilometraje', parametros: { vehiculo, km_lectura: parseFloat(kmMatch[1]), fecha } } };
+          } else if (monto) {
+            localResult = { success: true, data: { accion: 'mantenimiento_auto', parametros: { vehiculo, costo_estimado: monto, mantenimiento_tipo: aiText, fecha } } };
+          }
+        }
+      }
+
+      const result = localResult || await analyzeUniversalText(aiText, base64Data, mimeType, chatContext);
+      
       if (result.success && result.data) {
         // Siempre usamos el pagador del usuario activo, sin depender de la IA
         const parametros = {
@@ -357,8 +390,32 @@ export function DashboardClient({
           </h2>
         </div>
 
-        {/* AI Quick Entry */}
-        <div className="mb-4">
+        <div className="mb-4 space-y-2">
+          {/* Chatbot Context Menu */}
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <button
+              type="button"
+              onClick={() => setChatContext(chatContext === 'gasto' ? null : 'gasto')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${chatContext === 'gasto' ? 'bg-rose-500/20 border-rose-500/50 text-rose-400' : 'bg-[#121c27] border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+            >
+              🛒 Gasto Diario
+            </button>
+            <button
+              type="button"
+              onClick={() => setChatContext(chatContext === 'ingreso' ? null : 'ingreso')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${chatContext === 'ingreso' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-[#121c27] border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+            >
+              💰 Ingreso
+            </button>
+            <button
+              type="button"
+              onClick={() => setChatContext(chatContext === 'vehiculo' ? null : 'vehiculo')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${chatContext === 'vehiculo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-[#121c27] border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+            >
+              🚗 Vehículo
+            </button>
+          </div>
+
           <form onSubmit={handleAiSubmit} className="relative flex flex-col items-center w-full">
             <div className="relative flex items-center w-full">
               <input 
@@ -381,8 +438,18 @@ export function DashboardClient({
                 type="text"
                 value={aiText}
                 onChange={(e) => setAiText(e.target.value)}
-                placeholder="Ej: Gasté 15 en Súper 99..."
-                className="w-full pl-10 pr-12 py-3 rounded-xl border border-emerald-500/30 bg-black/30 shadow-sm text-sm font-medium text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                placeholder={
+                  chatContext === 'gasto' ? '[Modo Gasto]: Gasté 15 en comida...' :
+                  chatContext === 'ingreso' ? '[Modo Ingreso]: Recibí 50 por venta...' :
+                  chatContext === 'vehiculo' ? '[Modo Vehículo]: Cambié el aceite del Yaris por 60...' :
+                  'Selecciona arriba o escribe: Gasté 15 en Súper 99...'
+                }
+                className={`w-full pl-10 pr-12 py-3 rounded-xl border bg-black/30 shadow-sm text-sm font-medium text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                  chatContext === 'gasto' ? 'border-rose-500/50 focus:ring-rose-500/50 focus:border-rose-500' :
+                  chatContext === 'ingreso' ? 'border-emerald-500/50 focus:ring-emerald-500/50 focus:border-emerald-500' :
+                  chatContext === 'vehiculo' ? 'border-blue-500/50 focus:ring-blue-500/50 focus:border-blue-500' :
+                  'border-emerald-500/30 focus:ring-emerald-500/50 focus:border-emerald-500'
+                }`}
                 disabled={isAnalyzing}
               />
               <button 

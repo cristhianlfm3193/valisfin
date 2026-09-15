@@ -3,7 +3,7 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { createClient } from '@/lib/supabase/server';
 
-export async function analyzeUniversalText(text: string, base64Data?: string, mimeType?: string) {
+export async function analyzeUniversalText(text: string, base64Data?: string, mimeType?: string, contextHint?: string | null) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -52,15 +52,24 @@ export async function analyzeUniversalText(text: string, base64Data?: string, mi
     };
 
     const today = new Date().toISOString().split('T')[0];
+    
+    let contextInstructions = "";
+    if (contextHint === 'gasto') {
+      contextInstructions = "\nCONTEXTO ESTRICTO: El usuario está registrando explícitamente un GASTO DIARIO. Ignora cualquier otra interpretación y clasifícalo forzosamente como 'gasto'.";
+    } else if (contextHint === 'ingreso') {
+      contextInstructions = "\nCONTEXTO ESTRICTO: El usuario está registrando explícitamente un INGRESO. Ignora cualquier otra interpretación y clasifícalo forzosamente como 'ingreso'.";
+    } else if (contextHint === 'vehiculo') {
+      contextInstructions = "\nCONTEXTO ESTRICTO: El usuario está reportando algo sobre su VEHÍCULO. Clasifícalo forzosamente como 'kilometraje', 'mantenimiento_auto' o 'pendiente_auto' e intenta extraer los datos del auto (vehículo, km_lectura, mantenimiento_tipo).";
+    }
 
     const prompt = `Analiza el siguiente texto y/o imagen/PDF adjunto, clasifica la intención en una de las acciones permitidas y extrae los parámetros relevantes.
-La fecha de hoy es: ${today}.
+La fecha de hoy es: ${today}.${contextInstructions}
 
 REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
 1. Si recibes una imagen o PDF de una factura con múltiples artículos, NO los registres por separado. Suma o identifica el MONTO TOTAL a pagar (busca campos como 'TOTAL A PAGAR', 'TOTAL IMPORTE', 'GRAND TOTAL').
 2. NOMBRE DEL COMERCIO (DETALLE): Lee el nombre de la empresa/negocio que aparece en la PARTE SUPERIOR del recibo (generalmente en la cabecera/encabezado en letras grandes). Luego agrega un guión y un resumen de los artículos. Ejemplo: si el encabezado dice 'DISTRIBUIDORA IRIS PANAMA' y vendió bandejas de aluminio → detalle = 'Distribuidora Iris Panamá - Bandejas de aluminio extra grande'.
 3. CATEGORÍA: Infiere la categoría lógica según el tipo de negocio y productos (ej: ferretería, farmacia, supermercado, restaurante, tecnología).
-4. Devuelve la acción "gasto" y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
+4. Devuelve la acción "gasto" (a menos que el contexto indique lo contrario) y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
 5. FECHA OBLIGATORIA: Busca en la imagen el campo que diga 'FECHA:', 'FECHA DE EMISION:', 'Date:', 'Fecha:', o similar. Lee los números de ese campo y conviértelos a YYYY-MM-DD. Por ejemplo: si ves 'FECHA: 04/12/2024' → devuelve '2024-12-04'. Si ves 'FECHA: 12/04/2024' → devuelve '2024-04-12'. Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → ignora la hora y devuelve solo '2024-12-04'. NUNCA devuelvas la fecha de hoy (${today}) si el documento tiene una fecha impresa.
 
 EJEMPLOS DE MAPEO:
