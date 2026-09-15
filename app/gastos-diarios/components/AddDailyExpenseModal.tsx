@@ -77,19 +77,19 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
+          <div className="flex items-center justify-between p-5 border-b border-white/10 shrink-0 bg-transparent">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+              <div className="h-10 w-10 bg-emerald-500/20 border border-emerald-500/30 rounded-xl flex items-center justify-center text-emerald-400">
                 <Receipt className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white">Registrar Gasto</h3>
-                <p className="text-xs text-slate-500">Nuevo egreso cotidiano</p>
+                <p className="text-xs text-slate-400">Nuevo egreso cotidiano</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -182,13 +182,13 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
                   Pagador
                 </label>
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/20 transition-all">
                     <input type="radio" name="profile_id" value="edc938dc-9fbc-4573-b007-0bdb95114f95" className="peer sr-only" required defaultChecked={!initialData || initialData.pagador === 'Cristhian'} />
-                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-emerald-700">Cristhian</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-emerald-400">Cristhian</span>
                   </label>
-                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition-all">
+                  <label className="relative flex items-center justify-center p-3 border border-white/10 rounded-xl cursor-pointer hover:bg-white/5 peer-checked:border-pink-500 peer-checked:bg-pink-500/20 transition-all">
                     <input type="radio" name="profile_id" value="7b5c62be-58f1-48d6-b366-0f504c39bdcb" className="peer sr-only" required defaultChecked={initialData?.pagador === 'Jennifer'} />
-                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-pink-600">Jennifer</span>
+                    <span className="font-semibold text-sm text-slate-300 peer-checked:text-pink-400">Jennifer</span>
                   </label>
                 </div>
               </div>
@@ -215,7 +215,7 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
 
               {/* Uso Tarjeta de Crédito */}
               <div className="pt-2">
-                <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:bg-slate-100 transition-colors">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
                   <div className="relative flex items-center">
                     <input type="checkbox" name="is_credit_card" value="true" defaultChecked={initialData?.uso_tarjeta || false} className="peer sr-only" />
                     <div className="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#121c27] after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
@@ -234,7 +234,7 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
             <Btn3D type="button" color="gray" onClick={onClose} disabled={isLoading}>
               Cancelar
             </Btn3D>
-            <Btn3D type="submit" form="add-daily-expense-form" color="rose" isLoading={isLoading} loadingText="Guardando..." disabled={isLoading}>
+            <Btn3D type="submit" form="add-daily-expense-form" color="emerald" isLoading={isLoading} loadingText="Guardando..." disabled={isLoading}>
               Guardar
             </Btn3D>
           </div>
