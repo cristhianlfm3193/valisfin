@@ -606,19 +606,19 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
     text += `👤 <b>Pagador:</b> Cristhian Fuentes\n`;
     if (draft.is_credit_card) text += `💳 <b>Método:</b> Tarjeta de Crédito\n`;
-    text += `📌 <b>Acción:</b> Registrar en Gastos Diarios (ValisFin)\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>daily_expenses</code> (Gastos Diarios • ValisFin)\n`;
   } else if (draft.tipo === 'ingreso') {
     text += `💵 <b>Monto a ingresar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
     text += `📝 <b>Concepto:</b> ${draft.detalle || 'Ingreso'}\n`;
     text += `🏷️ <b>Categoría:</b> ${draft.categoria || 'Ventas / Otros'}\n`;
     text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
     text += `👤 <b>Beneficiario:</b> Cristhian Fuentes\n`;
-    text += `📌 <b>Acción:</b> Registrar en Ingresos (ValisFin)\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>incomes</code> (Módulo Ingresos • ValisFin)\n`;
   } else if (draft.tipo === 'pago_fijo') {
     text += `💳 <b>Compromiso:</b> ${draft.pago_titulo}\n`;
     text += `💵 <b>Monto a liquidar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
     text += `📅 <b>Periodo:</b> <code>${draft.pago_periodo}</code>\n`;
-    text += `📌 <b>Acción:</b> Marcar como Pagado en Supabase\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>fixed_payments</code> (is_paid = true • ValisFin)\n`;
   } else if (draft.tipo === 'vendido') {
     text += `👤 <b>Vendedor:</b> ${draft.vendedor_nombre}\n`;
     text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
@@ -628,12 +628,12 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `💳 <b>Crédito:</b> ${formatMoney(Number(draft.credito ?? 0))}\n`;
     const tot = draft.total || (Number(draft.contado ?? 0) + Number(draft.credito ?? 0));
     text += `💰 <b>Total Vendido:</b> ${formatMoney(tot)}\n`;
-    text += `📌 <b>Acción:</b> Registrar en Reporte de Ventas (ValisBiz)\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>registros_ventas</code> (Reporte Ventas Keiko • ValisBiz)\n`;
   } else if (draft.tipo === 'kilometraje') {
     text += `🚗 <b>Vehículo:</b> ${draft.vehicle_name}\n`;
     text += `📟 <b>Nueva lectura:</b> ${draft.km?.toLocaleString()} km\n`;
     text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
-    text += `📌 <b>Acción:</b> Actualizar Odómetro (ValisFin)\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>vehicles</code> & <code>mileage_logs</code> (ValisFin)\n`;
   }
 
   text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
@@ -647,7 +647,7 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `👆 <i>Seleccionado desde la lista de pagos pendientes.</i>\n`;
   }
 
-  text += `\n⚠️ <b>Verifica los datos antes de enviar a la base de datos:</b>`;
+  text += `\n⚠️ <b>Verifica los datos y la tabla antes de autorizar el envío:</b>`;
 
   const replyMarkup: InlineKeyboardMarkup = {
     inline_keyboard: [
@@ -691,7 +691,8 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     await deleteTelegramDraft(chatId);
     return {
       success: true,
-      text: `✅ <b>¡Gasto guardado con éxito en la base de datos!</b>\n\n` +
+      text: `✅ <b>¡Gasto guardado con éxito en la base de datos!</b>\n` +
+            `🗄️ <b>Tabla:</b> <code>daily_expenses</code> (Gastos Diarios • ValisFin)\n\n` +
             `🏢 Comercio / Detalle: <b>${draft.detalle}</b>\n` +
             `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
             `🏷️ Categoría: <code>${draft.categoria || 'Varios'}</code>\n` +
@@ -720,7 +721,8 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     await deleteTelegramDraft(chatId);
     return {
       success: true,
-      text: `✅ <b>¡Ingreso guardado con éxito en la base de datos!</b>\n\n` +
+      text: `✅ <b>¡Ingreso guardado con éxito en la base de datos!</b>\n` +
+            `🗄️ <b>Tabla:</b> <code>incomes</code> (Módulo Ingresos • ValisFin)\n\n` +
             `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
             `📝 Concepto: <b>${draft.detalle}</b>\n` +
             `🏷️ Categoría: <code>${draft.categoria || 'Ventas'}</code>\n` +
@@ -742,7 +744,8 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     await deleteTelegramDraft(chatId);
     return {
       success: true,
-      text: `✅ <b>¡Pago fijo cancelado y guardado en la base de datos!</b>\n\n` +
+      text: `✅ <b>¡Pago fijo cancelado y guardado en la base de datos!</b>\n` +
+            `🗄️ <b>Tabla:</b> <code>fixed_payments</code> (Pagos Fijos • ValisFin)\n\n` +
             `💳 Compromiso: <b>${draft.pago_titulo}</b>\n` +
             `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
             `📅 Periodo: <code>${draft.pago_periodo}</code>`
@@ -774,7 +777,8 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     await deleteTelegramDraft(chatId);
     return {
       success: true,
-      text: `✅ <b>¡Reporte de venta guardado con éxito en ValisBiz!</b>\n\n` +
+      text: `✅ <b>¡Reporte de venta guardado con éxito en ValisBiz!</b>\n` +
+            `🗄️ <b>Tabla:</b> <code>registros_ventas</code> (Supervisión Keiko • ValisBiz)\n\n` +
             `👤 Vendedor: <b>${draft.vendedor_nombre}</b>\n` +
             `👥 Visitas: <b>${draft.vistas ?? 0}</b> (Efectivos: ${draft.con_compra ?? 0} · Sin compra: ${draft.sin_compra ?? 0})\n` +
             `💵 Contado: <b>${formatMoney(Number(draft.contado ?? 0))}</b>\n` +
@@ -797,7 +801,8 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     await deleteTelegramDraft(chatId);
     return {
       success: true,
-      text: `✅ <b>¡Kilometraje actualizado con éxito en la base de datos!</b>\n\n` +
+      text: `✅ <b>¡Kilometraje actualizado con éxito en la base de datos!</b>\n` +
+            `🗄️ <b>Tablas:</b> <code>vehicles</code> & <code>mileage_logs</code> (ValisFin)\n\n` +
             `🚗 Vehículo: <b>${draft.vehicle_name}</b>\n` +
             `📟 Odómetro: <b>${draft.km.toLocaleString()} km</b>\n` +
             `📅 Fecha: <code>${today}</code>`
