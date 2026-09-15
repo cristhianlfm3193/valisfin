@@ -45,6 +45,7 @@ export async function GET(req: Request) {
         hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
         hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         hasSecretKey: !!(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_KEY),
+        hasAllowedChatIds: !!process.env.TELEGRAM_ALLOWED_CHAT_IDS,
         supabaseEnvKeysFound: Object.keys(process.env).filter(k => k.toUpperCase().includes('SUPABASE') || k.toUpperCase().includes('SERVICE_ROLE') || k.toUpperCase().includes('SECRET')),
       },
       instrucciones: {
