@@ -325,14 +325,22 @@ export async function getBizSellersMessage(): Promise<string> {
   const now = new Date();
   const mes = now.getMonth() + 1;
   const anio = now.getFullYear();
+  const mesStr = String(mes).padStart(2, '0');
+  const nextMesStr = String(mes + 1).padStart(2, '0');
+  const nextAnio = mes === 12 ? anio + 1 : anio;
+  const nextMesFixed = mes === 12 ? '01' : nextMesStr;
 
-  const [vendedoresRes, facturadoRes] = await Promise.all([
+  const [vendedoresRes, facturadoRes, registrosRes, visitasRes] = await Promise.all([
     supabase.from('vendedores').select('*').order('nombre', { ascending: true }),
-    supabase.from('facturado').select('*').eq('mes_periodo', mes).eq('anio_periodo', anio)
+    supabase.from('facturado').select('*').eq('mes_periodo', mes).eq('anio_periodo', anio),
+    supabase.from('registros_ventas').select('*').eq('mes_periodo', mes).eq('anio_periodo', anio),
+    supabase.from('visitas_mensuales').select('id, vendedor_id').gte('fecha', `${anio}-${mesStr}-01`).lt('fecha', `${nextAnio}-${nextMesFixed}-01`)
   ]);
 
   const vendedores = vendedoresRes.data || [];
   const facturado = facturadoRes.data || [];
+  const registros = registrosRes.data || [];
+  const visitas = visitasRes.data || [];
 
   if (vendedores.length === 0) {
     return '👥 No se encontraron vendedores registrados en la base de datos.';
@@ -344,6 +352,12 @@ export async function getBizSellersMessage(): Promise<string> {
     const ventasFacturado = facturado
       .filter((f: any) => f.vendedor_id === v.id)
       .reduce((acc: number, f: any) => acc + Number(f.monto_facturado || 0), 0);
+      
+    const ventasReportadas = registros
+      .filter((r: any) => r.vendedor_id === v.id)
+      .reduce((acc: number, r: any) => acc + Number(r.monto_facturado || 0), 0);
+      
+    const visitasVendedor = visitas.filter((vis: any) => vis.vendedor_id === v.id).length;
     
     const total = ventasFacturado > 0 ? ventasFacturado : Number(v.venta_real_acumulada || 0);
     const cuota = Number(v.cuota_mensual || 0);
@@ -354,6 +368,8 @@ export async function getBizSellersMessage(): Promise<string> {
     text += `👤 <b>${v.nombre}</b> ${estado} (${v.ruta_asignada || 'Ruta'})\n`;
     text += `  • Cuota: <b>${formatMoney(cuota)}</b>\n`;
     text += `  • Venta Real: <b>${formatMoney(total)}</b>\n`;
+    text += `  • Vendido Reportado: <b>${formatMoney(ventasReportadas)}</b>\n`;
+    text += `  • Visitas Realizadas: <b>${visitasVendedor}</b>\n`;
     text += `  • Logro: <b>${pct.toFixed(1)}%</b>`;
     if (gap > 0) {
       text += ` | GAP: <b>${formatMoney(gap)}</b>\n\n`;
