@@ -118,7 +118,6 @@ export default async function PortalPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-sm tracking-wide text-white">Valis<span className="text-emerald-400">Hub</span></span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#121c27]/10 text-gray-300 font-medium border border-white/10">v2.5 Multiapp</span>
             </div>
           </div>
         </div>

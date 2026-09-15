@@ -800,7 +800,11 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                            )}
                         </td>
                         <td className="py-3.5 px-3 text-center">
-                          {local.verificado && <BadgeCheck className="w-5 h-5 text-blue-400 mx-auto" title="Verificado" />}
+                          {local.verificado && (
+                            <span title="Verificado" className="inline-flex justify-center">
+                              <BadgeCheck className="w-5 h-5 text-blue-400 mx-auto" />
+                            </span>
+                          )}
                         </td>
                         <td className="py-3.5 px-3 text-right flex items-center justify-end gap-1">
                           <button 
