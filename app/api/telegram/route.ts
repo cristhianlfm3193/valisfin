@@ -24,6 +24,7 @@ import {
   getBizSellersMessage,
   getBizVisitsMessage,
   getRecentReportsMessage,
+  searchOperationalReports,
   getBdrhStatsMessage,
   searchBdrhPerson,
   getValisHubSummaryMessage,
@@ -262,20 +263,35 @@ export async function POST(req: Request) {
 
       try {
         // Obtenemos contexto integral de la base de datos para nutrir a Gemini
-        const [payments, expenses, vehicles, bizMetrics, reports] = await Promise.all([
+        const [payments, expenses, vehicles, bizMetrics, sellers, goals, reports] = await Promise.all([
           getPendingPaymentsMessage(),
           getMonthlyExpensesMessage(),
           getVehiclesMessage(),
           getBizMetricsMessage(),
+          getBizSellersMessage(),
+          getGoalsMessage(),
           getRecentReportsMessage(),
         ]);
+
+        // Búsqueda contextual específica de reportes operativos si el usuario pregunta por fechas, horas o novedades
+        let specificReportsContext = '';
+        const isAskingAboutReports = /(reporte|novedad|recorrido|operativo|aipp|turno|hora|fecha|ayer|hoy|\b\d{1,2}\b)/i.test(text);
+        if (isAskingAboutReports) {
+          // Extraer posibles fechas o palabras clave
+          const dateMatch = text.match(/\b\d{1,2}\b/);
+          const term = dateMatch ? dateMatch[0] : '';
+          const customReports = await searchOperationalReports(term);
+          if (!customReports.startsWith('📋 No se encontraron')) {
+            specificReportsContext = `\n--- DETALLE DE REPORTES OPERATIVOS AIPP ENCONTRADOS ---\n${customReports}\n`;
+          }
+        }
 
         // Si la pregunta menciona a una persona o término específico, buscamos en BD-RH
         let bdrhContext = '';
         const searchTerms = text
           .replace(/[?¿!¡,.:;]/g, '')
           .split(' ')
-          .filter((w: string) => w.length >= 3 && !/^(cual|cuál|como|cómo|donde|dónde|quien|quién|cuanto|cuánto|placa|placas|auto|autos|carro|carros|posicion|posición|vehiculo|vehículos|dime|saber|favor|por)$/i.test(w));
+          .filter((w: string) => w.length >= 3 && !/^(cual|cuál|como|cómo|donde|dónde|quien|quién|cuanto|cuánto|placa|placas|auto|autos|carro|carros|posicion|posición|vehiculo|vehículos|dime|saber|favor|por|reporte|reportes|vendedor|vendedores)$/i.test(w));
         
         if (searchTerms.length > 0) {
           const candidateTerm = searchTerms.join(' ');
@@ -292,17 +308,25 @@ export async function POST(req: Request) {
 
         const systemPrompt = 
           `Eres el asistente inteligente oficial de ValisHub en Telegram para Cristhian Fuentes.\n` +
-          `Tienes acceso a los datos en tiempo real de ValisFin (finanzas, pagos y vehículos familiares con sus placas y dueños), ValisBiz (supervisión y cuotas de Keiko) y ValisAN (reportes AIPP y personal BD-RH con sus números de posición y cargos).\n\n` +
+          `Tienes acceso total en tiempo real a los tres ecosistemas:\n` +
+          `1. ValisFin: Finanzas familiares, pagos pendientes/completados, gastos del mes, metas de ahorro y vehículos (Toyota Yaris de Cristhian y Hyundai Tucson de Jennifer, con odómetros, placas, próximos servicios y kilómetros restantes exactos).\n` +
+          `2. ValisBiz: Supervisión de ventas Keiko (cuotas, avance global, rendimiento individual y estados de Joseph Domínguez, Carolina Sucre, Enrique del Rosario y Andrés Chávez, y visitas a locales).\n` +
+          `3. ValisAN: Inteligencia y operaciones AIPP (reportes operativos detallados con turnos, horas, áreas, conductores AVSEC y unidades aeronavales) y personal BD-RH (con números de posición, cargos, salarios y departamentos).\n\n` +
           `--- VALISFIN: PAGOS Y GASTOS ---\n${payments}\n\n${expenses}\n\n` +
-          `--- VALISFIN: VEHÍCULOS, PLACAS Y ODÓMETRO ---\n${vehicles}\n\n` +
-          `--- VALISBIZ: SUPERVISIÓN Y VENTAS ---\n${bizMetrics}\n\n` +
+          `--- VALISFIN: VEHÍCULOS, PLACAS, ODÓMETRO Y MANTENIMIENTOS ---\n${vehicles}\n\n` +
+          `--- VALISFIN: METAS DE AHORRO ---\n${goals}\n\n` +
+          `--- VALISBIZ: SUPERVISIÓN Y VENTAS KEIKO ---\n${bizMetrics}\n\n` +
+          `--- VALISBIZ: DETALLE POR CADA VENDEDOR ---\n${sellers}\n\n` +
           `--- VALISAN: REPORTES AIPP ---\n${reports}\n` +
+          `${specificReportsContext}\n` +
           `${bdrhContext}\n` +
-          `INSTRUCCIONES:\n` +
-          `- Responde de forma muy concisa, clara, directa y profesional en español para Telegram.\n` +
-          `- Si preguntan por placas o autos familiares, menciona los datos exactos de los vehículos de la familia.\n` +
-          `- Si preguntan por posiciones de personal, cargos o cédulas, usa los datos de BD-RH.\n` +
-          `- Sé amable y útil.`;
+          `INSTRUCCIONES DE RESPUESTA:\n` +
+          `- Responde de forma muy concisa, precisa, directa y amable en español para Telegram.\n` +
+          `- Si preguntan por kilometraje o cuánto falta para el mantenimiento de un auto, da las cifras exactas calculadas arriba.\n` +
+          `- Si preguntan por un vendedor específico o cómo van las ventas, usa los datos individuales de ValisBiz.\n` +
+          `- Si preguntan por metas de ahorro o pagos, usa los datos de ValisFin.\n` +
+          `- Si preguntan por reportes operativos de tal día o turno, menciona el detalle de la narrativa, áreas recorridas, vehículo y personal.\n` +
+          `- Si preguntan por personas, posiciones o cédulas, usa los datos de BD-RH.`;
 
         let reply = '';
         try {

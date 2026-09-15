@@ -100,12 +100,19 @@ export async function getMonthlyExpensesMessage(): Promise<string> {
   return text;
 }
 
+function cleanText(str?: string | null): string {
+  if (!str) return '';
+  return str
+    .replace(/Capit[\ufffd\xef\xbf\xbd]n/gi, 'Capitán')
+    .replace(/[\ufffd]/g, 'á');
+}
+
 export async function getVehiclesMessage(): Promise<string> {
   const supabase = getBotSupabase();
 
   const [vehiclesRes, maintenanceRes, profilesRes] = await Promise.all([
     supabase.from('vehicles').select('*').order('created_at', { ascending: true }),
-    supabase.from('maintenance').select('*').order('date', { ascending: false }).limit(6),
+    supabase.from('maintenance').select('*').order('date', { ascending: false }),
     supabase.from('profiles').select('id, first_name')
   ]);
 
@@ -119,29 +126,45 @@ export async function getVehiclesMessage(): Promise<string> {
     profilesMap[p.id] = p.first_name;
   });
 
+  const allMaint = maintenanceRes.data || [];
+
   let text = `🚗 <b>Flota Familiar - ValisFin</b>\n\n`;
 
   vehicles.forEach((v: any) => {
     const brand = v.brand || v.make || 'Auto';
-    const kmVal = v.current_km ?? v.current_mileage;
-    const km = kmVal ? `${Number(kmVal).toLocaleString()} km` : 'No registrado';
+    const currentKm = Number(v.current_km ?? v.current_mileage ?? 0);
     const owner = profilesMap[v.owner_id] || 'Familiar';
+
+    // Buscar último mantenimiento y próximo mantenimiento
+    const vMaint = allMaint.filter((m: any) => m.vehicle_id === v.id);
+    const nextMaint = vMaint.find((m: any) => m.next_km && Number(m.next_km) > currentKm);
+    const lastDone = vMaint.find((m: any) => m.is_pending === false || m.status === 'completed');
+    const pendingList = vMaint.filter((m: any) => m.is_pending === true || m.status === 'pending');
+
     text += `🚘 <b>${brand} ${v.model} (${v.year || ''})</b>\n`;
     text += `• Propietario: <b>${owner}</b>\n`;
     text += `• Placa: <code>${v.plate || 'N/A'}</code>\n`;
-    text += `• Odómetro: <b>${km}</b>\n`;
-    if (v.km_date) text += `• Actualizado: <code>${v.km_date}</code>\n`;
+    text += `• Odómetro: <b>${currentKm.toLocaleString()} km</b>\n`;
+
+    if (nextMaint) {
+      const diff = Number(nextMaint.next_km) - currentKm;
+      text += `• Próximo Servicio: <b>${Number(nextMaint.next_km).toLocaleString()} km</b> (le faltan <b>${Math.max(0, diff).toLocaleString()} km</b>)\n`;
+    }
+
+    if (lastDone) {
+      const sDesc = lastDone.service || lastDone.title || 'Mantenimiento';
+      text += `• Último servicio: ${sDesc} (${lastDone.date || 'S/F'}) - ${formatMoney(Number(lastDone.cost || 0))}\n`;
+    }
+
+    if (pendingList.length > 0) {
+      text += `• ⚠️ Servicios pendientes (${pendingList.length}):\n`;
+      pendingList.slice(0, 3).forEach((p: any) => {
+        text += `   - ${p.service || p.title}: ${formatMoney(Number(p.cost || 0))}\n`;
+      });
+    }
+
     text += `\n`;
   });
-
-  const lastMaint = maintenanceRes.data || [];
-  if (lastMaint.length > 0) {
-    text += `🔧 <b>Últimos Servicios & Mantenimientos:</b>\n`;
-    lastMaint.slice(0, 3).forEach((m: any) => {
-      const desc = m.service || m.title || m.type || 'Mantenimiento';
-      text += `• ${desc} (${m.date || 'S/F'}): ${formatMoney(Number(m.cost || 0))}\n`;
-    });
-  }
 
   return text;
 }
@@ -209,7 +232,7 @@ export async function getBizMetricsMessage(): Promise<string> {
   const anio = now.getFullYear();
 
   const [vendedoresRes, facturadoRes] = await Promise.all([
-    supabase.from('vendedores').select('*').eq('activo', true),
+    supabase.from('vendedores').select('*'),
     supabase.from('facturado').select('*').eq('mes_periodo', mes).eq('anio_periodo', anio)
   ]);
 
@@ -217,18 +240,26 @@ export async function getBizMetricsMessage(): Promise<string> {
   const facturado = facturadoRes.data || [];
 
   const cuotaGlobal = vendedores.reduce((acc, v) => acc + Number(v.cuota_mensual || 0), 0) || 85000;
-  const totalFacturado = facturado.reduce((acc, f) => acc + Number(f.monto_facturado || 0), 0);
-  const porcentaje = cuotaGlobal > 0 ? (totalFacturado / cuotaGlobal) * 100 : 0;
-  const gap = cuotaGlobal - totalFacturado;
+  
+  const facturadoDelMes = facturado.reduce((acc, f) => acc + Number(f.monto_facturado || 0), 0);
+  const ventaAcumuladaVendedores = vendedores.reduce((acc, v) => acc + Number(v.venta_real_acumulada || 0), 0);
+  const totalVentas = facturadoDelMes > 0 ? facturadoDelMes : ventaAcumuladaVendedores;
+
+  const porcentaje = cuotaGlobal > 0 ? (totalVentas / cuotaGlobal) * 100 : 0;
+  const gap = cuotaGlobal - totalVentas;
   const bar = makeProgressBar(porcentaje, 10);
 
   let text = `📈 <b>Métricas ValisBiz • Supervisión Keiko</b>\n`;
   text += `📅 Periodo: <b>${mes}/${anio}</b>\n\n`;
   text += `🎯 Cuota Global: <b>${formatMoney(cuotaGlobal)}</b>\n`;
-  text += `💰 Facturado Total: <b>${formatMoney(totalFacturado)}</b>\n`;
+  text += `💰 Ventas Reales: <b>${formatMoney(totalVentas)}</b>\n`;
   text += `📊 Avance: [${bar}] <b>${porcentaje.toFixed(1)}%</b>\n`;
-  text += `📉 GAP Restante: <b>${formatMoney(Math.max(0, gap))}</b>\n\n`;
-  text += `👥 Vendedores activos: ${vendedores.length}`;
+  if (gap > 0) {
+    text += `📉 GAP Restante: <b>${formatMoney(gap)}</b>\n\n`;
+  } else {
+    text += `🎉 <b>Meta Superada por ${formatMoney(Math.abs(gap))}</b>\n\n`;
+  }
+  text += `👥 Vendedores registrados: ${vendedores.length}`;
 
   return text;
 }
@@ -248,20 +279,31 @@ export async function getBizSellersMessage(): Promise<string> {
   const facturado = facturadoRes.data || [];
 
   if (vendedores.length === 0) {
-    return '👥 No se encontraron vendedores registrados.';
+    return '👥 No se encontraron vendedores registrados en la base de datos.';
   }
 
   let text = `👥 <b>Rendimiento por Vendedor (${mes}/${anio})</b>\n\n`;
 
   vendedores.forEach((v: any) => {
-    const ventasVendedor = facturado.filter((f: any) => f.vendedor_id === v.id);
-    const total = ventasVendedor.reduce((acc: number, f: any) => acc + Number(f.monto_facturado || 0), 0);
+    const ventasFacturado = facturado
+      .filter((f: any) => f.vendedor_id === v.id)
+      .reduce((acc: number, f: any) => acc + Number(f.monto_facturado || 0), 0);
+    
+    const total = ventasFacturado > 0 ? ventasFacturado : Number(v.venta_real_acumulada || 0);
     const cuota = Number(v.cuota_mensual || 0);
-    const pct = cuota > 0 ? (total / cuota) * 100 : 0;
+    const pct = cuota > 0 ? (total / cuota) * 100 : Number(v.porcentaje_alcance || 0);
+    const gap = cuota - total;
+    const estado = v.estado ? `[${v.estado.toUpperCase()}]` : '';
 
-    text += `👤 <b>${v.nombre}</b> (${v.ruta_asignada || 'Ruta'})\n`;
-    text += `  • Facturado: ${formatMoney(total)} / ${formatMoney(cuota)}\n`;
-    text += `  • Logro: <b>${pct.toFixed(1)}%</b>\n\n`;
+    text += `👤 <b>${v.nombre}</b> ${estado} (${v.ruta_asignada || 'Ruta'})\n`;
+    text += `  • Cuota: <b>${formatMoney(cuota)}</b>\n`;
+    text += `  • Venta Real: <b>${formatMoney(total)}</b>\n`;
+    text += `  • Logro: <b>${pct.toFixed(1)}%</b>`;
+    if (gap > 0) {
+      text += ` | GAP: <b>${formatMoney(gap)}</b>\n\n`;
+    } else {
+      text += ` | 🎉 <b>+${formatMoney(Math.abs(gap))} sobre cuota</b>\n\n`;
+    }
   });
 
   return text;
@@ -301,24 +343,44 @@ export async function getBizVisitsMessage(): Promise<string> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function getRecentReportsMessage(): Promise<string> {
+  return await searchOperationalReports();
+}
+
+export async function searchOperationalReports(termOrDate?: string): Promise<string> {
   const supabase = getBotSupabase();
-
-  const { data: reportes, error } = await supabase
+  let query = supabase
     .from('reportes')
-    .select('id, asunto, departamento, fecha, hora, reporta_nombre')
-    .order('created_at', { ascending: false })
-    .limit(5);
+    .select('*')
+    .order('fecha', { ascending: false })
+    .order('hora', { ascending: false })
+    .limit(6);
 
-  if (error || !reportes || reportes.length === 0) {
-    return '📋 No hay reportes operativos recientes en AIPP.';
+  if (termOrDate && termOrDate.trim()) {
+    const clean = termOrDate.trim();
+    query = supabase
+      .from('reportes')
+      .select('*')
+      .or(`fecha.ilike.%${clean}%,asunto.ilike.%${clean}%,narrativa.ilike.%${clean}%,reporta_nombre.ilike.%${clean}%,departamento.ilike.%${clean}%`)
+      .order('fecha', { ascending: false })
+      .order('hora', { ascending: false })
+      .limit(6);
   }
 
-  let text = `📋 <b>Últimos 5 Reportes Operativos AIPP</b>\n\n`;
+  const { data: reportes, error } = await query;
+  if (error || !reportes || reportes.length === 0) {
+    return `📋 No se encontraron reportes operativos para: <code>${termOrDate || 'recientes'}</code>`;
+  }
+
+  let text = `📋 <b>Reportes Operativos AIPP (${reportes.length} encontrados)</b>\n\n`;
   reportes.forEach((r: any, idx: number) => {
     text += `<b>${idx + 1}. ${r.asunto || 'Novedad'}</b>\n`;
-    text += `• Depto: <code>${r.departamento}</code>\n`;
-    text += `• Fecha: ${r.fecha} ${r.hora ? r.hora.slice(0, 5) : ''}\n`;
-    if (r.reporta_nombre) text += `• Reporta: ${r.reporta_nombre}\n`;
+    text += `📅 Fecha: <code>${r.fecha}</code> | ⏰ Hora: <code>${r.hora ? r.hora.slice(0, 5) : 'S/H'}</code>\n`;
+    text += `🏢 Depto: ${r.departamento || 'AIPP'}\n`;
+    if (r.reporta_nombre) text += `👮 Informa: ${r.reporta_rango || ''} ${r.reporta_nombre} (${r.reporta_placa || ''})\n`;
+    if (r.narrativa) {
+      const shortNarrativa = r.narrativa.length > 280 ? r.narrativa.slice(0, 277) + '...' : r.narrativa;
+      text += `📝 <i>${shortNarrativa}</i>\n`;
+    }
     text += `\n`;
   });
 
@@ -366,14 +428,16 @@ export async function searchBdrhPerson(term: string): Promise<string> {
 
   let text = `🔍 <b>Resultados en BD-RH para "${cleanTerm}":</b>\n\n`;
   data.forEach((p: any) => {
-    text += `👤 <b>${p.nombre_completo || 'Efectivo'}</b>\n`;
-    text += `• Rango: <b>${p.rango || 'N/A'}</b>\n`;
+    const rangoClean = cleanText(p.rango) || 'N/A';
+    const cargoClean = cleanText(p.cargo) || 'N/A';
+    text += `👤 <b>${cleanText(p.nombre_completo) || 'Efectivo'}</b>\n`;
+    text += `• Rango: <b>${rangoClean}</b>\n`;
     text += `• Posición: <code>${p.pos_id || 'N/A'}</code> | Cédula: <code>${p.cedula || 'N/A'}</code>\n`;
-    if (p.cargo) text += `• Cargo: ${p.cargo}\n`;
-    if (p.departamento) text += `• Departamento: ${p.departamento}\n`;
-    if (p.base) text += `• Base: ${p.base}\n`;
+    text += `• Cargo: ${cargoClean}\n`;
+    if (p.departamento) text += `• Departamento: ${cleanText(p.departamento)}\n`;
+    if (p.base) text += `• Base: ${cleanText(p.base)}\n`;
     if (p.salario) text += `• Salario: ${formatMoney(Number(p.salario))} ${p.sobresueldo ? `(+${formatMoney(Number(p.sobresueldo))} sobresueldo)` : ''}\n`;
-    if (p.estado) text += `• Condición: <i>${p.estado}</i>\n`;
+    if (p.estado) text += `• Condición: <i>${cleanText(p.estado)}</i>\n`;
     text += `\n`;
   });
 
