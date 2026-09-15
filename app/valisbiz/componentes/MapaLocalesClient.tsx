@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect, useOptimistic } from 'react';
+import { useState, useTransition, useEffect, useOptimistic, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -51,6 +51,9 @@ function MapFitter({ selectedLocales }: { selectedLocales: Local[] }) {
       } else if (validLocales.length === 1) {
         map.setView([Number(validLocales[0].latitud), Number(validLocales[0].longitud)], 16, { animate: true });
       }
+    } else if (selectedLocales.length === 0) {
+      map.setView([8.8824, -79.7853], 13, { animate: true });
+      map.closePopup();
     }
   }, [selectedLocales, map]);
 
@@ -88,6 +91,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const [fechaHasta, setFechaHasta] = useState<string>('');
   const [search, setSearch] = useState('');
   const [selectedLocales, setSelectedLocales] = useState<Local[]>([]);
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
 
   // Sorting and Column Filters
   const [sortConfig, setSortConfig] = useState<{ key: 'nombre' | 'vendedor' | 'estado' | null, direction: 'asc' | 'desc' }>({ key: null, direction: 'asc' });
@@ -119,12 +123,29 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
 
   const toggleLocalSelection = (local: Local) => {
     setSelectedLocales(prev => {
+      // Si el local ya estaba seleccionado, lo deseleccionamos (comportamiento original)
       if (prev.find(l => l.id === local.id)) {
         return prev.filter(l => l.id !== local.id);
       }
-      return [...prev, local];
+      // Si se selecciona uno nuevo desde la tabla o mapa, lo ponemos solo (facilita enfocar y ver el popup)
+      return [local];
     });
+    // Hacemos scroll suave hacia el mapa si el usuario está abajo
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    if (selectedLocales.length === 1) {
+      const local = selectedLocales[0];
+      const marker = markerRefs.current[local.id];
+      if (marker) {
+        // Un pequeño timeout asegura que el mapa haya hecho el 'fit' primero
+        setTimeout(() => {
+          marker.openPopup();
+        }, 300);
+      }
+    }
+  }, [selectedLocales]);
 
   // Modals state
   const [showVisitaModal, setShowVisitaModal] = useState(false);
@@ -468,6 +489,9 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                       key={local.id} 
                       position={[Number(local.latitud), Number(local.longitud)]}
                       icon={markerIconHtml(local.tipo, resumen?.mejorEstado as any)}
+                      ref={(ref) => {
+                        markerRefs.current[local.id] = ref;
+                      }}
                       eventHandlers={{
                         click: () => toggleLocalSelection(local),
                       }}
