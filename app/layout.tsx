@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { DesktopSidebar } from "./components/DesktopSidebar";
@@ -30,6 +30,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#090a0f",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -39,11 +46,11 @@ export default async function RootLayout({
   const profile = user ? await getCachedProfile(user.id) : null;
 
   return (
-    <html lang="es" suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full bg-[#090a0f] overscroll-none`}>
+    <html lang="es" suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} min-h-screen min-h-[100dvh] bg-[#090a0f]`}>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
       </head>
-      <body suppressHydrationWarning className="h-full antialiased text-white selection:bg-emerald-500 selection:text-white bg-[#090a0f] flex flex-col lg:flex-row pb-[88px] lg:pb-0 custom-scrollbar overscroll-none font-sans overflow-x-hidden relative">
+      <body suppressHydrationWarning className="min-h-screen min-h-[100dvh] antialiased text-white selection:bg-emerald-500 selection:text-white bg-[#090a0f] flex flex-col lg:flex-row pb-[calc(88px+env(safe-area-inset-bottom,0px))] lg:pb-0 custom-scrollbar font-sans overflow-x-hidden relative">
         <Suspense fallback={null}>
           <NavigationLoader />
         </Suspense>

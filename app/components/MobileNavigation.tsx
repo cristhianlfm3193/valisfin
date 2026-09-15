@@ -39,7 +39,14 @@ const allNavItems = [
 
 export function MobileNavigation({ user, profile }: { user?: User, profile?: any }) {
   return (
-    <Suspense fallback={<div className="fixed bottom-4 left-4 right-4 h-16 bg-[#121c27]/95 backdrop-blur-md border border-white/10 rounded-[2rem] lg:hidden z-40 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" />}>
+    <Suspense fallback={
+      <div 
+        className="fixed inset-x-0 bottom-0 pointer-events-none z-40 lg:hidden px-3"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))' }}
+      >
+        <div className="mx-auto max-w-md h-16 bg-[#090a0f]/90 backdrop-blur-md border border-white/10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.12)]" />
+      </div>
+    }>
       <MobileNavigationInner user={user} profile={profile} />
     </Suspense>
   );
@@ -98,39 +105,48 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
 
   return (
     <>
-      {/* Bottom Navigation Bar (Floating Bubble) */}
-      <div className="fixed bottom-4 left-4 right-4 bg-[#090a0f]/80 backdrop-blur-xl border border-white/10 rounded-[2rem] lg:hidden z-40 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-        <div className="flex items-center justify-around px-2 py-1.5">
-          {currentBottomItems.map((item: any) => {
-            const isActive = isValisBiz ? item.id === currentTab : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
-            const Icon = item.icon;
+      {/* Bottom Navigation Bar (Floating Bubble con fijación suave y aceleración GPU) */}
+      <div 
+        className="fixed inset-x-0 bottom-0 pointer-events-none z-40 lg:hidden px-3"
+        style={{
+          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0.75rem))',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+        }}
+      >
+        <div className="pointer-events-auto mx-auto max-w-md bg-[#090a0f]/90 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+          <div className="flex items-center justify-around px-2 py-1.5">
+            {currentBottomItems.map((item: any) => {
+              const isActive = isValisBiz ? item.id === currentTab : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
+              const Icon = item.icon;
+              
+              const activeClass = isValisBiz 
+                ? 'bg-pink-500/20 text-pink-400 scale-105' 
+                : isValisAN 
+                  ? 'bg-sky-950 text-cyan-400 shadow-[0_0_15px_rgba(14,165,233,0.3)] scale-105' 
+                  : 'bg-[#121c27]/10 text-white scale-105';
+              
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isActive ? activeClass : 'text-gray-400 hover:text-white'}`}
+                >
+                  <Icon className={`w-6 h-6 mb-1 transition-all ${isActive ? (isValisBiz ? 'fill-pink-500/20 text-pink-400' : isValisAN ? 'fill-sky-500/20 text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]' : 'fill-white/20 text-white') : ''}`} />
+                  <span className={`text-[10px] font-bold transition-all ${isActive ? (isValisBiz ? 'text-pink-400' : isValisAN ? 'text-cyan-400' : 'text-white') : 'text-gray-400'}`}>{item.label}</span>
+                </Link>
+              );
+            })}
             
-            const activeClass = isValisBiz 
-              ? 'bg-pink-500/20 text-pink-400 scale-105' 
-              : isValisAN 
-                ? 'bg-sky-950 text-cyan-400 shadow-[0_0_15px_rgba(14,165,233,0.3)] scale-105' 
-                : 'bg-[#121c27]/10 text-white scale-105';
-            
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isActive ? activeClass : 'text-gray-400 hover:text-white'}`}
-              >
-                <Icon className={`w-6 h-6 mb-1 transition-all ${isActive ? (isValisBiz ? 'fill-pink-500/20 text-pink-400' : isValisAN ? 'fill-sky-500/20 text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]' : 'fill-white/20 text-white') : ''}`} />
-                <span className={`text-[10px] font-bold transition-all ${isActive ? (isValisBiz ? 'text-pink-400' : isValisAN ? 'text-cyan-400' : 'text-white') : 'text-gray-400'}`}>{item.label}</span>
-              </Link>
-            );
-          })}
-          
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isMenuOpen ? 'bg-[#121c27]/10 text-white scale-105' : 'text-gray-400 hover:text-white'}`}
-          >
-            <Menu className="w-6 h-6 mb-1 transition-all" />
-            <span className={`text-[10px] font-bold transition-all ${isMenuOpen ? 'text-white' : 'text-gray-400'}`}>Menú</span>
-          </button>
+            <button
+              onClick={() => setIsMenuOpen(true)}
+              className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isMenuOpen ? 'bg-[#121c27]/10 text-white scale-105' : 'text-gray-400 hover:text-white'}`}
+            >
+              <Menu className="w-6 h-6 mb-1 transition-all" />
+              <span className={`text-[10px] font-bold transition-all ${isMenuOpen ? 'text-white' : 'text-gray-400'}`}>Menú</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -138,7 +154,10 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
       {isMenuOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden flex flex-col justify-end transition-opacity">
           <div className="absolute inset-0" onClick={() => setIsMenuOpen(false)}></div>
-          <div className="bg-[#090a0f]/95 border-t border-white/10 backdrop-blur-2xl w-full rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300 relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+          <div 
+            className="bg-[#090a0f]/95 border-t border-white/10 backdrop-blur-2xl w-full rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full duration-300 relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+            style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))' }}
+          >
             <div className="flex items-center justify-between p-5 border-b border-white/10 shrink-0">
               <h2 className="text-xl font-extrabold text-white">Menú Principal</h2>
               <button onClick={() => setIsMenuOpen(false)} className="p-2 bg-[#121c27]/5 rounded-full text-gray-400 hover:bg-[#121c27]/10 hover:text-white transition-colors">
