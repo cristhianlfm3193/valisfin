@@ -211,8 +211,15 @@ export async function POST(req: Request) {
         return NextResponse.json({ ok: true });
       }
 
-      // Búsqueda en BD-RH
-      if (text.startsWith('/cip ') || text.startsWith('/cedula ') || text.startsWith('/persona ')) {
+      // Búsqueda en BD-RH por comandos explícitos
+      if (
+        text.startsWith('/cip ') || 
+        text.startsWith('/pos ') || 
+        text.startsWith('/posicion ') || 
+        text.startsWith('/cedula ') || 
+        text.startsWith('/persona ') ||
+        text.startsWith('/buscar ')
+      ) {
         const term = text.split(' ').slice(1).join(' ');
         const res = await searchBdrhPerson(term);
         await sendTelegramMessage(chatId, res, getBackKeyboard('valisan'));
@@ -238,36 +245,89 @@ export async function POST(req: Request) {
         return NextResponse.json({ ok: true });
       }
 
+      // 🔍 Búsqueda directa inteligente en BD-RH si el usuario solo escribe un nombre, cédula o posición
+      const isQuestionOrGreeting = /^(hola|buenas|buenos|que|qué|cual|cuál|como|cómo|donde|dónde|cuanto|cuánto|quien|quién|dime|por qué|porque)\b/i.test(text);
+      if (!isQuestionOrGreeting && text.length >= 3 && text.length <= 40 && !text.startsWith('/')) {
+        const directMatch = await searchBdrhPerson(text);
+        if (!directMatch.startsWith('🔍 No se encontraron')) {
+          await sendTelegramMessage(chatId, directMatch, getBackKeyboard('valisan'));
+          return NextResponse.json({ ok: true });
+        }
+      }
+
       // ─────────────────────────────────────────────────────────────────────────
-      // 💬 MODO HÍBRIDO CON IA (GEMINI): Cuando el usuario escribe preguntas libres
+      // 💬 MODO HÍBRIDO CON IA (GEMINI): Preguntas abiertas y análisis
       // ─────────────────────────────────────────────────────────────────────────
       await sendChatAction(chatId, 'typing');
 
       try {
-        // Obtenemos contexto rápido de la base de datos para nutrir a Gemini
-        const [payments, expenses, bizMetrics] = await Promise.all([
+        // Obtenemos contexto integral de la base de datos para nutrir a Gemini
+        const [payments, expenses, vehicles, bizMetrics, reports] = await Promise.all([
           getPendingPaymentsMessage(),
           getMonthlyExpensesMessage(),
+          getVehiclesMessage(),
           getBizMetricsMessage(),
+          getRecentReportsMessage(),
         ]);
+
+        // Si la pregunta menciona a una persona o término específico, buscamos en BD-RH
+        let bdrhContext = '';
+        const searchTerms = text
+          .replace(/[?¿!¡,.:;]/g, '')
+          .split(' ')
+          .filter((w: string) => w.length >= 3 && !/^(cual|cuál|como|cómo|donde|dónde|quien|quién|cuanto|cuánto|placa|placas|auto|autos|carro|carros|posicion|posición|vehiculo|vehículos|dime|saber|favor|por)$/i.test(w));
+        
+        if (searchTerms.length > 0) {
+          const candidateTerm = searchTerms.join(' ');
+          const candidateRes = await searchBdrhPerson(candidateTerm);
+          if (!candidateRes.startsWith('🔍 No se encontraron')) {
+            bdrhContext = `\n--- FICHA ENCONTRADA EN BD-RH ---\n${candidateRes}\n`;
+          } else if (searchTerms.length > 1) {
+            const fallbackRes = await searchBdrhPerson(searchTerms[0]);
+            if (!fallbackRes.startsWith('🔍 No se encontraron')) {
+              bdrhContext = `\n--- FICHA ENCONTRADA EN BD-RH ---\n${fallbackRes}\n`;
+            }
+          }
+        }
 
         const systemPrompt = 
           `Eres el asistente inteligente oficial de ValisHub en Telegram para Cristhian Fuentes.\n` +
-          `Tienes acceso a los datos en vivo de ValisFin, ValisBiz y ValisAN.\n` +
-          `Aquí tienes los datos actuales:\n\n` +
-          `--- DATOS VALISFIN ---\n${payments}\n\n${expenses}\n\n` +
-          `--- DATOS VALISBIZ ---\n${bizMetrics}\n\n` +
-          `INSTRUCCIONES: Responde de forma muy concisa, clara, profesional y amable en español (ideal para leer en Telegram). ` +
-          `No te extiendas innecesariamente. Si te piden consejos o análisis, usa los números reales proporcionados arriba.`;
+          `Tienes acceso a los datos en tiempo real de ValisFin (finanzas, pagos y vehículos familiares con sus placas y dueños), ValisBiz (supervisión y cuotas de Keiko) y ValisAN (reportes AIPP y personal BD-RH con sus números de posición y cargos).\n\n` +
+          `--- VALISFIN: PAGOS Y GASTOS ---\n${payments}\n\n${expenses}\n\n` +
+          `--- VALISFIN: VEHÍCULOS, PLACAS Y ODÓMETRO ---\n${vehicles}\n\n` +
+          `--- VALISBIZ: SUPERVISIÓN Y VENTAS ---\n${bizMetrics}\n\n` +
+          `--- VALISAN: REPORTES AIPP ---\n${reports}\n` +
+          `${bdrhContext}\n` +
+          `INSTRUCCIONES:\n` +
+          `- Responde de forma muy concisa, clara, directa y profesional en español para Telegram.\n` +
+          `- Si preguntan por placas o autos familiares, menciona los datos exactos de los vehículos de la familia.\n` +
+          `- Si preguntan por posiciones de personal, cargos o cédulas, usa los datos de BD-RH.\n` +
+          `- Sé amable y útil.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash-lite',
-          contents: [
-            { role: 'user', parts: [{ text: `${systemPrompt}\n\nPregunta del usuario: ${text}` }] }
-          ],
-        });
+        let reply = '';
+        try {
+          const response = await ai.models.generateContent({
+            model: 'gemini-3.5-flash-lite',
+            contents: [
+              { role: 'user', parts: [{ text: `${systemPrompt}\n\nPregunta de Cristhian: ${text}` }] }
+            ],
+          });
+          reply = response.text || '';
+        } catch (mErr) {
+          console.warn('Fallback a gemini-3.6-flash:', mErr);
+          const fallbackResponse = await ai.models.generateContent({
+            model: 'gemini-3.6-flash',
+            contents: [
+              { role: 'user', parts: [{ text: `${systemPrompt}\n\nPregunta de Cristhian: ${text}` }] }
+            ],
+          });
+          reply = fallbackResponse.text || '';
+        }
 
-        const reply = response.text || 'No pude generar una respuesta en este momento.';
+        if (!reply) {
+          reply = 'No pude procesar una respuesta en este momento. Por favor intenta de nuevo.';
+        }
+
         await sendTelegramMessage(chatId, reply, getBackKeyboard());
       } catch (aiErr: any) {
         console.error('Error en Gemini Telegram Assistant:', aiErr);

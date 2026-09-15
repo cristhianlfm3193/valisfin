@@ -31,9 +31,10 @@ export async function getPendingPaymentsMessage(): Promise<string> {
     .from('fixed_payments')
     .select('*')
     .eq('period', period)
-    .order('due_date', { ascending: true });
+    .order('billing_day', { ascending: true, nullsFirst: false });
 
   if (error || !payments) {
+    console.error('Error getPendingPaymentsMessage:', error);
     return '❌ Error al consultar pagos en la base de datos.';
   }
 
@@ -47,12 +48,12 @@ export async function getPendingPaymentsMessage(): Promise<string> {
 
   let text = `💳 <b>Pagos Fijos Pendientes (${period})</b>\n\n`;
   pending.forEach(p => {
-    const due = p.due_date ? p.due_date : 'Sin fecha';
-    text += `• <b>${p.title || p.concept || 'Pago'}</b>: ${formatMoney(Number(p.amount || 0))}\n  📅 Vence: <code>${due}</code>\n`;
+    const due = p.billing_day ? `Día ${p.billing_day} de cada mes` : (p.subtitle || 'Mensual');
+    text += `• <b>${p.title || 'Pago'}</b>: ${formatMoney(Number(p.amount || 0))}\n  📅 Fecha: <code>${due}</code>\n`;
   });
 
   text += `\n💰 <b>Total Pendiente: ${formatMoney(totalPending)}</b>\n`;
-  text += `✅ Pagos ya cancelados: ${completed.length}`;
+  text += `✅ Pagos ya cancelados este mes: ${completed.length}`;
   return text;
 }
 
@@ -102,10 +103,10 @@ export async function getMonthlyExpensesMessage(): Promise<string> {
 export async function getVehiclesMessage(): Promise<string> {
   const supabase = getBotSupabase();
 
-  const [vehiclesRes, maintenanceRes, metricsRes] = await Promise.all([
-    supabase.from('vehicles').select('*'),
+  const [vehiclesRes, maintenanceRes, profilesRes] = await Promise.all([
+    supabase.from('vehicles').select('*').order('created_at', { ascending: true }),
     supabase.from('maintenance').select('*').order('date', { ascending: false }).limit(6),
-    supabase.from('vehicle_metrics').select('*').order('created_at', { ascending: false }).limit(1).single()
+    supabase.from('profiles').select('id, first_name')
   ]);
 
   const vehicles = vehiclesRes.data || [];
@@ -113,21 +114,32 @@ export async function getVehiclesMessage(): Promise<string> {
     return '🚗 No hay vehículos registrados en el sistema.';
   }
 
+  const profilesMap: Record<string, string> = {};
+  (profilesRes.data || []).forEach((p: any) => {
+    profilesMap[p.id] = p.first_name;
+  });
+
   let text = `🚗 <b>Flota Familiar - ValisFin</b>\n\n`;
 
   vehicles.forEach((v: any) => {
-    const km = v.current_mileage ? `${Number(v.current_mileage).toLocaleString()} km` : 'No registrado';
-    text += `🚘 <b>${v.make} ${v.model} (${v.year || ''})</b>\n`;
+    const brand = v.brand || v.make || 'Auto';
+    const kmVal = v.current_km ?? v.current_mileage;
+    const km = kmVal ? `${Number(kmVal).toLocaleString()} km` : 'No registrado';
+    const owner = profilesMap[v.owner_id] || 'Familiar';
+    text += `🚘 <b>${brand} ${v.model} (${v.year || ''})</b>\n`;
+    text += `• Propietario: <b>${owner}</b>\n`;
     text += `• Placa: <code>${v.plate || 'N/A'}</code>\n`;
     text += `• Odómetro: <b>${km}</b>\n`;
-    text += `• Conductor: ${v.primary_driver || 'Familiar'}\n\n`;
+    if (v.km_date) text += `• Actualizado: <code>${v.km_date}</code>\n`;
+    text += `\n`;
   });
 
   const lastMaint = maintenanceRes.data || [];
   if (lastMaint.length > 0) {
-    text += `🔧 <b>Últimos Mantenimientos:</b>\n`;
+    text += `🔧 <b>Últimos Servicios & Mantenimientos:</b>\n`;
     lastMaint.slice(0, 3).forEach((m: any) => {
-      text += `• ${m.title || m.type} (${m.date || 'S/F'}): ${formatMoney(Number(m.cost || 0))}\n`;
+      const desc = m.service || m.title || m.type || 'Mantenimiento';
+      text += `• ${desc} (${m.date || 'S/F'}): ${formatMoney(Number(m.cost || 0))}\n`;
     });
   }
 
@@ -326,22 +338,26 @@ export async function getBdrhStatsMessage(): Promise<string> {
 
   let text = `👥 <b>Base de Datos de Recursos Humanos (BD-RH)</b>\n\n`;
   text += `🎖️ Total Personal Registrado: <b>${(count || 0).toLocaleString()} efectivos</b>\n\n`;
-  text += `💡 <i>Puedes buscar cualquier persona escribiendo:</i>\n`;
-  text += `<code>/cip 12345</code> o <code>/cedula 8-123-456</code>`;
+  text += `🔍 <b>¿Cómo consultar o buscar?</b>\n`;
+  text += `Puedes escribir directamente en este chat cualquier dato:\n`;
+  text += `• <b>Nombre:</b> <code>Cristhian Fuentes</code>\n`;
+  text += `• <b>Posición:</b> <code>70846</code>\n`;
+  text += `• <b>Cédula:</b> <code>4-770-399</code>\n\n`;
+  text += `👇 <i>Escribe el nombre o dato aquí abajo y te enviaré la ficha inmediatamente.</i>`;
 
   return text;
 }
 
 export async function searchBdrhPerson(term: string): Promise<string> {
   const cleanTerm = term.trim();
-  if (!cleanTerm) return 'Ingresa un término de búsqueda. Ej: <code>/cip 12345</code>';
+  if (!cleanTerm) return 'Ingresa un término de búsqueda. Ej: <code>Cristhian Fuentes</code> o <code>70846</code>';
 
   const supabase = getBotSupabase();
 
   const { data, error } = await supabase
     .from('valisan_bdrh')
-    .select('*')
-    .or(`cip.ilike.%${cleanTerm}%,cedula.ilike.%${cleanTerm}%,nombre_completo.ilike.%${cleanTerm}%`)
+    .select('id, pos_id, nombre_completo, rango, cedula, cargo, departamento, base, salario, sobresueldo, estado')
+    .or(`pos_id.ilike.%${cleanTerm}%,cedula.ilike.%${cleanTerm}%,nombre_completo.ilike.%${cleanTerm}%,cargo.ilike.%${cleanTerm}%`)
     .limit(4);
 
   if (error || !data || data.length === 0) {
@@ -350,10 +366,14 @@ export async function searchBdrhPerson(term: string): Promise<string> {
 
   let text = `🔍 <b>Resultados en BD-RH para "${cleanTerm}":</b>\n\n`;
   data.forEach((p: any) => {
-    text += `👤 <b>${p.nombre_completo || p.nombre || 'Efectivo'}</b>\n`;
+    text += `👤 <b>${p.nombre_completo || 'Efectivo'}</b>\n`;
     text += `• Rango: <b>${p.rango || 'N/A'}</b>\n`;
-    text += `• CIP: <code>${p.cip || 'N/A'}</code> | Cédula: <code>${p.cedula || 'N/A'}</code>\n`;
+    text += `• Posición: <code>${p.pos_id || 'N/A'}</code> | Cédula: <code>${p.cedula || 'N/A'}</code>\n`;
+    if (p.cargo) text += `• Cargo: ${p.cargo}\n`;
     if (p.departamento) text += `• Departamento: ${p.departamento}\n`;
+    if (p.base) text += `• Base: ${p.base}\n`;
+    if (p.salario) text += `• Salario: ${formatMoney(Number(p.salario))} ${p.sobresueldo ? `(+${formatMoney(Number(p.sobresueldo))} sobresueldo)` : ''}\n`;
+    if (p.estado) text += `• Condición: <i>${p.estado}</i>\n`;
     text += `\n`;
   });
 
