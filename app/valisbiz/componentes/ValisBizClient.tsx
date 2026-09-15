@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useTransition, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { TrendingUp, LayoutGrid, MapPin, RefreshCw, Heart, ChevronLeft, ChevronRight, Plus, FileDown, BarChart2 } from 'lucide-react';
@@ -130,14 +131,14 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           {/* Row 1: Logo + Brand + Button */}
           <div className="flex items-center justify-between gap-3">
             {/* Left: Logo + Brand */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md flex-shrink-0">
+            <Link href="/" title="Ir a ValisHub" className="flex items-center gap-3 min-w-0 group cursor-pointer hover:opacity-90 transition-opacity">
+              <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
                 <Image src="/keiko-logo.png" alt="Keiko" width={36} height={36} className="w-full h-full object-contain" />
               </div>
               <div className="h-8 w-px bg-pink-200 hidden sm:block flex-shrink-0" />
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-sm sm:text-base font-bold tracking-tight whitespace-nowrap">
+                  <span className="text-sm sm:text-base font-bold tracking-tight whitespace-nowrap group-hover:text-pink-400 transition-colors">
                     Valis<span className="text-pink-400">Biz</span>
                   </span>
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-pink-500/20 text-pink-400 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap">
@@ -149,7 +150,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
                   Panel de Control · Supervisión Panamá Oeste
                 </h1>
               </div>
-            </div>
+            </Link>
 
             {/* Right: Buttons */}
             <div className="flex items-center gap-2 flex-shrink-0">

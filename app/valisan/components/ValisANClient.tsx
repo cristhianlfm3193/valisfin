@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { LoadingCube } from '@/app/components/LoadingCube';
@@ -100,9 +101,11 @@ export default function ValisANClient({ user, activeTab }: ValisANClientProps) {
                 <RefreshCwIcon className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> Supabase Sync Activo
               </button>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Valis<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400">AN</span> • III Capitán Cristhian Fuentes
-            </h1>
+            <Link href="/" title="Ir a ValisHub" className="inline-block group cursor-pointer">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight group-hover:opacity-90 transition-opacity">
+                Valis<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400">AN</span> • III Capitán Cristhian Fuentes
+              </h1>
+            </Link>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl font-medium tracking-wide">
               Servicio Nacional Aeronaval - Dios Patría y Honor.
             </p>

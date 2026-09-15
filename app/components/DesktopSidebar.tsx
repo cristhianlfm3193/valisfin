@@ -41,7 +41,7 @@ const navItems = [
 
 export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }) {
   return (
-    <Suspense fallback={<aside className="hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 min-h-screen sticky top-0 w-64 p-5" />}>
+    <Suspense fallback={<aside className="hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 h-screen max-h-screen sticky top-0 self-start w-64 p-5" />}>
       <DesktopSidebarInner user={user} profile={profile} />
     </Suspense>
   );
@@ -110,13 +110,13 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   return (
     <>
       <aside
-        className={`hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between min-h-screen sticky top-0 transition-all duration-300 ease-in-out ${sidebarWidth} ${pClass}`}
+        className={`hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between h-screen max-h-screen sticky top-0 self-start transition-all duration-300 ease-in-out z-30 ${sidebarWidth} ${pClass}`}
         data-purpose="desktop-navigation"
       >
-        <div className="flex flex-col h-full overflow-y-auto custom-scrollbar overflow-x-hidden">
-        <div className={`flex items-center mb-6 px-2 ${isCollapsed ? 'justify-center mt-2' : 'justify-between'}`}>
-          {!isCollapsed && (
-            <Link href={isValisBiz ? "/valisbiz" : (isValisAN ? "/valisan" : "/valisfin")} className="shrink-0 overflow-hidden rounded-xl">
+        <div className="flex flex-col flex-1 min-h-0 overflow-y-auto custom-scrollbar overflow-x-hidden pr-1">
+        <div className={`flex items-center mb-6 px-2 shrink-0 ${isCollapsed ? 'flex-col gap-2 justify-center mt-2' : 'justify-between'}`}>
+          {!isCollapsed ? (
+            <Link href="/" title="Ir a ValisHub" className="shrink-0 overflow-hidden rounded-xl hover:opacity-90 transition-all cursor-pointer">
               {isValisBiz ? (
                 <img 
                   src="/valisbiz-logo.png" 
@@ -137,8 +137,8 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 relative z-10 px-1 py-2">
-                  <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_15px_rgba(45,212,191,0.2)] shrink-0">
+                <div className="flex items-center gap-3 relative z-10 px-1 py-2 group">
+                  <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_15px_rgba(45,212,191,0.2)] shrink-0 group-hover:scale-105 transition-transform">
                     <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
                       <span className="text-xl font-bold text-white">V</span>
                     </div>
@@ -150,6 +150,24 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                       <>Valis<span className="text-emerald-400">Fin</span></>
                     )}
                   </span>
+                </div>
+              )}
+            </Link>
+          ) : (
+            <Link href="/" title="Ir a ValisHub" className="p-1.5 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
+              {isValisBiz ? (
+                <div className="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 font-bold text-xs shadow-sm">
+                  K
+                </div>
+              ) : isValisAN ? (
+                <div className="w-8 h-8 rounded-xl bg-sky-950 border border-cyan-500/50 flex items-center justify-center text-cyan-400 shadow-sm">
+                  <BarChart2 className="w-4 h-4 text-cyan-400" />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 flex items-center justify-center shadow-sm">
+                  <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">V</span>
+                  </div>
                 </div>
               )}
             </Link>
@@ -200,7 +218,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
         </nav>
       </div>
 
-      <div className={`pt-4 border-t border-white/10 flex flex-col gap-3 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
+      <div className={`pt-4 border-t border-white/10 flex flex-col gap-2.5 shrink-0 mt-auto ${isCollapsed ? 'items-center' : ''}`}>
 
         {isValisBiz && (
           <button

@@ -31,7 +31,7 @@ export default async function Home() {
       >
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Link href="/valisfin">
+            <Link href="/" title="Ir a ValisHub" className="hover:opacity-90 transition-opacity">
               <div className="flex items-center gap-2 px-1">
                 <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_10px_rgba(45,212,191,0.3)] shrink-0">
                   <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
