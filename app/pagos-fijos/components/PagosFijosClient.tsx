@@ -254,11 +254,29 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       // Filter by status
       if (currentFilter === 'pending' && payment.is_paid) return false;
       if (currentFilter === 'paid' && !payment.is_paid) return false;
+      if (currentFilter === 'credit_card') {
+        const isCard = payment.title === 'Uso Tarjeta de Credito' || 
+                       payment.title.toLowerCase().includes('tarjeta') || 
+                       payment.title.toLowerCase().includes('credito') || 
+                       payment.title.toLowerCase().includes('crédito') ||
+                       (payment.category && (payment.category.toLowerCase().includes('tarjeta') || payment.category.toLowerCase().includes('credito')));
+        if (!isCard) return false;
+      }
 
       // Filter by search query
       if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        if (!payment.title.toLowerCase().includes(query)) {
+        const query = searchQuery.toLowerCase().trim();
+        const isCardSearch = ['tarjeta', 'credito', 'crédito', 'tc', 'visa', 'mastercard', 'card'].some(k => query.includes(k));
+        const matchesTitle = payment.title.toLowerCase().includes(query);
+        const matchesCategory = payment.category ? payment.category.toLowerCase().includes(query) : false;
+        const matchesCard = isCardSearch && (
+          payment.title === 'Uso Tarjeta de Credito' || 
+          payment.title.toLowerCase().includes('tarjeta') || 
+          payment.title.toLowerCase().includes('credito') ||
+          payment.title.toLowerCase().includes('crédito')
+        );
+
+        if (!matchesTitle && !matchesCategory && !matchesCard) {
           return false;
         }
       }
@@ -266,6 +284,15 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       return true;
     });
   }, [groupedPayments, currentFilter, searchQuery]);
+
+  const creditCardCount = useMemo(() => {
+    return groupedPayments.filter((payment) => {
+      return payment.title === 'Uso Tarjeta de Credito' || 
+             payment.title.toLowerCase().includes('tarjeta') || 
+             payment.title.toLowerCase().includes('credito') || 
+             payment.title.toLowerCase().includes('crédito');
+    }).length;
+  }, [groupedPayments]);
 
   const variablePayments = filteredPayments.filter(p => p.isSmartCard);
   const fixedPaymentsList = filteredPayments.filter(p => !p.isSmartCard);
@@ -358,6 +385,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
         totalCount={totalItems}
         pendingCount={pendingCount}
         paidCount={paidCount}
+        creditCardCount={creditCardCount}
       />
 
       {variablePayments.length > 0 && (

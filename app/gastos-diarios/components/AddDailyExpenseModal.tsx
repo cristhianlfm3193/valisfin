@@ -135,6 +135,7 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
                   <option value="Salud">Salud</option>
                   <option value="Gastos Valeria (Hija)">Gastos Valeria (Hija)</option>
                   <option value="Recargas / Telefonía">Recargas / Telefonía</option>
+                  <option value="Servicios Financieros">Servicios Financieros</option>
                   <option value="Intereses de Tarjeta de Crédito">Intereses de Tarjeta de Crédito</option>
                   <option value="Mantenimiento del Vehículo">Mantenimiento del Vehículo</option>
                   <option value="Otros">Otros</option>

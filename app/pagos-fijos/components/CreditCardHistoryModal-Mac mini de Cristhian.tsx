@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import { createPortal } from 'react-dom';
-import { X, CreditCard, ArrowDownRight, ArrowUpRight, Edit2, Trash2 } from 'lucide-react';
+import { X, CreditCard, ArrowDownRight, ArrowUpRight, Edit2, Trash2, Search } from 'lucide-react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
 import { deleteFixedPayment, updateFixedPaymentAmount } from '@/app/actions/fixed_payments';
 import { FixedPayment } from './PaymentCard';
@@ -18,6 +18,8 @@ interface CreditCardHistoryModalProps {
 export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, onEditExpense }: CreditCardHistoryModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<'all' | 'expense' | 'payment'>('all');
 
   useEffect(() => {
     setMounted(true);
@@ -40,13 +42,11 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
     }));
 
   // Filter paid credit card fixed payments and sort by date descending
-  // Since fixedPayments doesn't have a reliable paid_at date right now, we use created_at or just date them today for simplicity
-  // Assuming they are recent if they are paid.
   const ccPayments = payments
     .filter(p => p.is_paid && p.title === 'Uso Tarjeta de Credito')
     .map(p => ({
       id: p.id,
-      date: new Date((p as any).created_at || Date.now()), // Fallback to now if no created_at
+      date: new Date((p as any).created_at || Date.now()),
       title: 'Abono / Pago Total',
       category: 'Pago',
       amount: p.amount,
@@ -55,6 +55,19 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
     }));
 
   const allHistory = [...ccExpenses, ...ccPayments].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  const filteredHistory = allHistory.filter(item => {
+    if (typeFilter !== 'all' && item.type !== typeFilter) return false;
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesTitle = item.title.toLowerCase().includes(q);
+      const matchesCat = item.category.toLowerCase().includes(q);
+      const matchesPerson = item.person.toLowerCase().includes(q);
+      const matchesAmount = item.amount.toString().includes(q);
+      if (!matchesTitle && !matchesCat && !matchesPerson && !matchesAmount) return false;
+    }
+    return true;
+  });
 
   const totalSpent = ccExpenses.reduce((sum, item) => sum + item.amount, 0);
   const totalPaid = ccPayments.reduce((sum, item) => sum + item.amount, 0);
@@ -95,7 +108,7 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-[110] pointer-events-none p-4">
         <div 
-          className="bg-[#121c27] border-white/10 rounded-t-3xl sm:rounded-3xl w-full max-w-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
+          className="bg-[#121c27] rounded-t-3xl sm:rounded-3xl w-full max-w-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh] overflow-hidden"
           onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
@@ -105,12 +118,12 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white">Historial de Tarjeta</h3>
-                <p className="text-xs text-gray-400">Consumos y abonos registrados</p>
+                <p className="text-xs text-slate-500">Consumos y abonos registrados</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-gray-300 hover:bg-white/10 rounded-xl transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -119,30 +132,71 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
           <div className="p-5 overflow-y-auto flex-1 bg-white/5/50">
             
             <div className="grid grid-cols-3 gap-3 mb-6">
-              <div className="bg-[#121c27] border-white/10 border border-white/5 rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-center">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Deuda Actual</p>
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Deuda Actual</p>
                 <p className="text-lg sm:text-xl font-bold text-white font-mono">B/. {totalDebt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
-              <div className="bg-[#121c27] border-white/10 border border-white/5 rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-center">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Gastado</p>
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Gastado</p>
                 <p className="text-lg sm:text-xl font-bold text-rose-500 font-mono">B/. {totalSpent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
-              <div className="bg-[#121c27] border-white/10 border border-white/5 rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-center">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Abonado</p>
+              <div className="bg-[#121c27] border border-white/5 rounded-2xl p-4 shadow-sm text-center">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Abonado</p>
                 <p className="text-lg sm:text-xl font-bold text-emerald-500 font-mono">B/. {totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
               </div>
             </div>
 
-            <h4 className="text-sm font-bold text-white mb-3 ml-1">Movimientos</h4>
-            
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-1.5 p-1 bg-[#121c27] border border-white/10 rounded-xl shrink-0 overflow-x-auto">
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('all')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                    typeFilter === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  Todos ({allHistory.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('expense')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all border ${
+                    typeFilter === 'expense' ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'text-slate-400 hover:text-rose-300 border-transparent'
+                  }`}
+                >
+                  Gastos ({ccExpenses.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('payment')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all border ${
+                    typeFilter === 'payment' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'text-slate-400 hover:text-emerald-300 border-transparent'
+                  }`}
+                >
+                  Abonos ({ccPayments.length})
+                </button>
+              </div>
+
+              <div className="relative flex-1 sm:max-w-xs">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar en tarjeta..."
+                  className="w-full pl-8 pr-3 py-1.5 bg-[#121c27] border border-white/10 rounded-xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2.5">
-              {allHistory.length === 0 ? (
-                <div className="text-center py-8 text-gray-400 bg-[#121c27] border-white/10 rounded-2xl border border-white/5">
-                  <p className="text-sm">No hay movimientos registrados en esta tarjeta.</p>
+              {filteredHistory.length === 0 ? (
+                <div className="text-center py-8 text-slate-500 bg-[#121c27] rounded-2xl border border-white/5">
+                  <p className="text-sm">No se encontraron movimientos con los filtros aplicados.</p>
                 </div>
               ) : (
-                allHistory.map((item, index) => (
-                  <div key={`${item.id}-${index}`} className="bg-[#121c27] border-white/10 border border-white/5 rounded-2xl p-3.5 flex items-center justify-between shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)] transition-shadow">
+                filteredHistory.map((item, index) => (
+                  <div key={`${item.id}-${index}`} className="bg-[#121c27] border border-white/5 rounded-2xl p-3.5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                         item.type === 'expense' ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-500'
@@ -152,7 +206,7 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
                       <div>
                         <p className="text-sm font-bold text-white leading-tight">{item.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[11px] font-semibold text-gray-400 bg-white/10 px-2 py-0.5 rounded-md">
+                          <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
                             {item.category}
                           </span>
                           <span className="text-[11px] text-slate-400 font-medium">

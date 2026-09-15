@@ -235,12 +235,43 @@ export async function POST(req: Request) {
         }
 
         const today = new Date().toISOString().split('T')[0];
+        const VALID_CATEGORIES = [
+          "Supermercado",
+          "Super Reposición",
+          "Restaurante",
+          "Ocio",
+          "Tecnología",
+          "Gasolina",
+          "Transporte",
+          "Salud",
+          "Gastos Valeria (Hija)",
+          "Recargas / Telefonía",
+          "Servicios Financieros",
+          "Intereses de Tarjeta de Crédito",
+          "Mantenimiento del Vehículo",
+          "Otros"
+        ];
+
         const prompt = `Analiza este ticket, factura o recibo de compra en Panamá.
 INSTRUCCIONES CRÍTICAS:
 1. comercio: Nombre de la empresa, comercio o negocio (generalmente en la cabecera superior).
 2. detalle: Breve descripción de los artículos comprados. Si el usuario escribió una nota ("${caption}"), incorpórala.
 3. monto_total: Identifica el monto total a pagar (TOTAL A PAGAR, TOTAL IMPORTE, etc.) en dólares/balboas.
-4. categoria: Infiere la categoría lógica (Supermercado, Restaurante, Farmacia, Ferretería, Tecnología, Servicios Básicos, Transporte, etc.).
+4. categoria: DEBES elegir estrictamente una de las siguientes categorías oficiales:
+   - Supermercado
+   - Super Reposición
+   - Restaurante
+   - Ocio
+   - Tecnología
+   - Gasolina
+   - Transporte
+   - Salud
+   - Gastos Valeria (Hija)
+   - Recargas / Telefonía
+   - Servicios Financieros (usar para bancos, financieras, préstamos, comisiones, pagos de crédito como CrediViva)
+   - Intereses de Tarjeta de Crédito
+   - Mantenimiento del Vehículo
+   - Otros (REGLA ESTRICTA: Si el gasto no encaja con certeza en ninguna de las anteriores o se desconoce, clasifícalo obligatoriamente como "Otros").
 5. fecha: Busca la fecha impresa en el documento (formato panameño DD/MM/YYYY) y conviértela estrictamente a YYYY-MM-DD. Si no hay fecha legible en la imagen, usa '${today}'.`;
 
         const schema: Schema = {
@@ -249,7 +280,11 @@ INSTRUCCIONES CRÍTICAS:
             comercio: { type: Type.STRING, description: "Nombre del negocio emisor" },
             detalle: { type: Type.STRING, description: "Resumen de lo comprado" },
             monto_total: { type: Type.NUMBER, description: "Monto total a pagar" },
-            categoria: { type: Type.STRING, description: "Categoría de gasto" },
+            categoria: { 
+              type: Type.STRING, 
+              enum: VALID_CATEGORIES,
+              description: "Categoría oficial de gasto en ValisFin. Si no se conoce o no encaja, usar 'Otros'." 
+            },
             fecha: { type: Type.STRING, description: "Fecha en formato YYYY-MM-DD" }
           },
           required: ["comercio", "detalle", "monto_total", "categoria", "fecha"]
@@ -282,13 +317,15 @@ INSTRUCCIONES CRÍTICAS:
             return NextResponse.json({ ok: true });
           }
 
+          const finalCategory = VALID_CATEGORIES.includes(parsed.categoria) ? parsed.categoria : 'Otros';
+
           const draft: TelegramDraft = {
             tipo: 'gasto',
             origen: 'foto_gemini',
             fecha: parsed.fecha || today,
             monto: Number(parsed.monto_total),
             detalle: `${parsed.comercio} - ${parsed.detalle || 'Factura'}`,
-            categoria: parsed.categoria || 'Varios',
+            categoria: finalCategory,
             profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95', // Cristhian Fuentes
             is_credit_card: false,
           };

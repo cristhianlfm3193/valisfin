@@ -29,7 +29,26 @@ export async function analyzeUniversalText(text: string, base64Data?: string, mi
             fecha: { type: Type.STRING, description: "YYYY-MM-DD. PRIORIDAD MÁXIMA: Si hay imagen o PDF, lee el campo 'FECHA:', 'Date:', 'Fecha de emisión:' o similar que aparezca impreso en el documento y conviértelo a formato YYYY-MM-DD. NUNCA uses la fecha de hoy si el documento tiene una fecha visible. Ejemplo: si el documento dice 'FECHA: 04/12/2024', devuelve '2024-12-04'. Solo usa la fecha de hoy como último recurso si no encuentras ninguna fecha en el documento." },
             monto: { type: Type.NUMBER, description: "Monto de la transacción." },
             detalle: { type: Type.STRING, description: "Concepto o descripción." },
-            categoria: { type: Type.STRING, description: "Categoría inferida." },
+            categoria: { 
+              type: Type.STRING, 
+              enum: [
+                "Supermercado",
+                "Super Reposición",
+                "Restaurante",
+                "Ocio",
+                "Tecnología",
+                "Gasolina",
+                "Transporte",
+                "Salud",
+                "Gastos Valeria (Hija)",
+                "Recargas / Telefonía",
+                "Servicios Financieros",
+                "Intereses de Tarjeta de Crédito",
+                "Mantenimiento del Vehículo",
+                "Otros"
+              ],
+              description: "Categoría oficial de gasto en ValisFin. Si no encaja con certeza o no se conoce, usa obligatoriamente 'Otros'." 
+            },
             pagador: { type: Type.STRING, enum: ["Cristhian", "Jennifer"], description: "Quién pagó o recibió el dinero." },
             uso_tarjeta: { type: Type.BOOLEAN, description: "True si menciona tarjeta, crédito o visa." },
             
@@ -68,7 +87,7 @@ La fecha de hoy es: ${today}.${contextInstructions}
 REGLAS ESTRICTAS PARA FACTURAS/RECIBOS (IMÁGENES/PDF):
 1. Si recibes una imagen o PDF de una factura con múltiples artículos, NO los registres por separado. Suma o identifica el MONTO TOTAL a pagar (busca campos como 'TOTAL A PAGAR', 'TOTAL IMPORTE', 'GRAND TOTAL').
 2. NOMBRE DEL COMERCIO (DETALLE): Lee el nombre de la empresa/negocio que aparece en la PARTE SUPERIOR del recibo (generalmente en la cabecera/encabezado en letras grandes). Luego agrega un guión y un resumen de los artículos. Ejemplo: si el encabezado dice 'DISTRIBUIDORA IRIS PANAMA' y vendió bandejas de aluminio → detalle = 'Distribuidora Iris Panamá - Bandejas de aluminio extra grande'.
-3. CATEGORÍA: Infiere la categoría lógica según el tipo de negocio y productos (ej: ferretería, farmacia, supermercado, restaurante, tecnología).
+3. CATEGORÍA: Debe ser estrictamente una de las categorías oficiales: [Supermercado, Super Reposición, Restaurante, Ocio, Tecnología, Gasolina, Transporte, Salud, Gastos Valeria (Hija), Recargas / Telefonía, Servicios Financieros, Intereses de Tarjeta de Crédito, Mantenimiento del Vehículo, Otros]. Para financieras, bancos o pagos de crédito (como CrediViva), usa 'Servicios Financieros'. Si no encaja con certeza en ninguna de las anteriores o se desconoce, DEBES clasificarlo obligatoriamente como 'Otros'.
 4. Devuelve la acción "gasto" (a menos que el contexto indique lo contrario) y los parámetros correspondientes para pre-llenar el modal de Registrar Gasto.
 5. FECHA OBLIGATORIA: Busca en la imagen el campo que diga 'FECHA:', 'FECHA DE EMISION:', 'Date:', 'Fecha:', o similar. Lee los números de ese campo y conviértelos a YYYY-MM-DD. Por ejemplo: si ves 'FECHA: 04/12/2024' → devuelve '2024-12-04'. Si ves 'FECHA: 12/04/2024' → devuelve '2024-04-12'. Si ves 'FECHA: 04/12/2024 HORA: 1:29:45' → ignora la hora y devuelve solo '2024-12-04'. NUNCA devuelvas la fecha de hoy (${today}) si el documento tiene una fecha impresa.
 

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useTransition } from 'react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
-import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2, Utensils } from 'lucide-react';
+import { Wallet, SlidersHorizontal, PlusCircle, ShoppingCart, Fuel, PartyPopper, Search, ChevronLeft, ChevronRight, Calendar, Zap, Edit2, Trash2, Utensils, CreditCard, Maximize2, Minimize2 } from 'lucide-react';
 import { AddDailyExpenseModal } from './AddDailyExpenseModal';
 import { EditDailyExpenseModal } from './EditDailyExpenseModal';
 import { Btn3D } from '@/app/components/Btn3D';
@@ -19,6 +19,8 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [personFilter, setPersonFilter] = useState('all');
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState<'all' | 'credit_card' | 'cash'>('all');
+  const [showAllRows, setShowAllRows] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const d = new Date();
@@ -31,7 +33,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
   // Resetea a la página 1 cuando cambian los filtros
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, categoryFilter, personFilter, selectedMonth]);
+  }, [searchQuery, categoryFilter, personFilter, paymentMethodFilter, selectedMonth]);
 
   // Dynamic budgets from fixedPayments
   const budgets = useMemo(() => {
@@ -76,6 +78,10 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
     return Math.min(Math.max(pct, 0), 100);
   };
 
+  const creditCardCount = useMemo(() => {
+    return expenses.filter(e => e.date.startsWith(selectedMonth) && e.is_credit_card).length;
+  }, [expenses, selectedMonth]);
+
   const filteredExpenses = useMemo(() => {
     return expenses.filter(e => {
       // 0. Month Filter
@@ -83,10 +89,18 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         return false;
       }
       
-      // 1. Search Query
-      const q = searchQuery.toLowerCase();
-      if (q && !e.detail.toLowerCase().includes(q) && !e.category.toLowerCase().includes(q)) {
-        return false;
+      // 1. Search Query (supports commerce, category, subcategory and credit card keywords)
+      const q = searchQuery.toLowerCase().trim();
+      if (q) {
+        const isCardSearch = ['tarjeta', 'credito', 'crédito', 'tc', 'card', 'visa'].some(k => q.includes(k));
+        const matchesDetail = e.detail.toLowerCase().includes(q);
+        const matchesCategory = e.category.toLowerCase().includes(q);
+        const matchesSubCategory = e.sub_category ? e.sub_category.toLowerCase().includes(q) : false;
+        const matchesCard = isCardSearch && Boolean(e.is_credit_card);
+
+        if (!matchesDetail && !matchesCategory && !matchesSubCategory && !matchesCard) {
+          return false;
+        }
       }
       
       // 2. Category Filter
@@ -100,10 +114,14 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         if (personFilter === 'cristhian' && !firstName.includes('cristhian')) return false;
         if (personFilter === 'jennifer' && !firstName.includes('jennifer')) return false;
       }
+
+      // 4. Payment Method Filter (Tarjeta de crédito / Efectivo)
+      if (paymentMethodFilter === 'credit_card' && !e.is_credit_card) return false;
+      if (paymentMethodFilter === 'cash' && e.is_credit_card) return false;
       
       return true;
     });
-  }, [expenses, searchQuery, categoryFilter, personFilter]);
+  }, [expenses, selectedMonth, searchQuery, categoryFilter, personFilter, paymentMethodFilter]);
 
   const totalFiltered = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
 
@@ -336,19 +354,66 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" 
-              placeholder="Buscar por detalle o comercio..." 
+              placeholder="Buscar por detalle, comercio o tarjeta..." 
               type="text"
             />
           </div>
         </div>
 
+        {/* Método de Pago (Tarjeta de Crédito / Efectivo) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 text-nowrap scrollbar-none w-full min-w-0">
+          <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mr-1 shrink-0">Método de pago:</span>
+          <button
+            onClick={() => setPaymentMethodFilter('all')}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
+              paymentMethodFilter === 'all'
+                ? 'bg-white/20 text-white border-white/30'
+                : 'bg-white/5 text-slate-400 hover:bg-white/10 border-white/10'
+            }`}
+          >
+            Todos los métodos
+          </button>
+          <button
+            onClick={() => setPaymentMethodFilter(paymentMethodFilter === 'credit_card' ? 'all' : 'credit_card')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
+              paymentMethodFilter === 'credit_card'
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.2)]'
+                : 'bg-white/5 text-slate-400 hover:text-amber-300 hover:bg-white/10 border-white/10'
+            }`}
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>Tarjeta de Crédito ({creditCardCount})</span>
+          </button>
+        </div>
+
+        {/* Categorías */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 text-nowrap scrollbar-none w-full min-w-0">
           <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold mr-1 shrink-0">Categoría:</span>
-          {['all', 'Alimentación', 'Supermercado', 'Restaurante', 'Ocio', 'Tecnología', 'Gasolina', 'Transporte', 'Salud', 'Gastos Valeria (Hija)', 'Recargas / Telefonía', 'Otros'].map(cat => (
+          {[
+            'all',
+            'Supermercado',
+            'Super Reposición',
+            'Restaurante',
+            'Ocio',
+            'Tecnología',
+            'Gasolina',
+            'Transporte',
+            'Salud',
+            'Gastos Valeria (Hija)',
+            'Recargas / Telefonía',
+            'Servicios Financieros',
+            'Intereses de Tarjeta de Crédito',
+            'Mantenimiento del Vehículo',
+            'Otros'
+          ].map(cat => (
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${categoryFilter === cat ? 'bg-emerald-100 text-emerald-700 font-semibold' : 'bg-white/5 text-slate-400 hover:bg-slate-100 border border-white/10'}`}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors border ${
+                categoryFilter === cat
+                  ? 'bg-emerald-500/20 text-emerald-400 font-semibold border-emerald-500/40'
+                  : 'bg-white/5 text-slate-400 hover:bg-white/10 border-white/10'
+              }`}
             >
               {cat === 'all' ? 'Todas' : cat}
             </button>
@@ -358,14 +423,33 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
 
       {/* Data Section */}
       <div className="bg-[#121c27] rounded-3xl p-5 sm:p-7 shadow-sm space-y-4 border border-white/5 w-full min-w-0 overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold text-white">Gastos recientes</h2>
             <p className="text-sm text-slate-500">Los egresos se muestran con signo negativo y reflejo contable inmediato.</p>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm text-slate-500">Total filtrado:</span>
-            <span className="text-lg font-bold text-rose-500 font-mono">B/. {totalFiltered.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+            <button
+              onClick={() => setShowAllRows(prev => !prev)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition-colors shadow-sm cursor-pointer"
+              title={showAllRows ? "Volver a vista paginada (10 por página)" : "Ver toda la tabla de gastos recientes completa"}
+            >
+              {showAllRows ? (
+                <>
+                  <Minimize2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Ver paginado (10)</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Ver toda la tabla ({filteredExpenses.length})</span>
+                </>
+              )}
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-500">Total filtrado:</span>
+              <span className="text-lg font-bold text-rose-500 font-mono">B/. {totalFiltered.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            </div>
           </div>
         </div>
 
@@ -382,20 +466,33 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredExpenses.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((expense) => {
+              {(showAllRows 
+                ? filteredExpenses 
+                : filteredExpenses.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+              ).map((expense) => {
                 const formattedDate = new Date(expense.date).toLocaleDateString('es-ES', {
                   year: 'numeric', month: '2-digit', day: '2-digit'
                 });
                 
                 return (
-                  <tr key={expense.id} className="hover:bg-white/5 transition-colors border-b border-slate-50 last:border-0">
-                    <td className="py-4 px-3 text-slate-500 font-mono">{formattedDate}</td>
+                  <tr key={expense.id} className="hover:bg-white/5 transition-colors border-b border-slate-50/10 last:border-0">
+                    <td className="py-4 px-3 text-slate-400 font-mono">{formattedDate}</td>
                     <td className="py-4 px-3">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/10 text-slate-300 border border-white/10">
                         {expense.category}{expense.sub_category ? ` - ${expense.sub_category}` : ''}
                       </span>
                     </td>
-                    <td className="py-4 px-3 font-medium text-white max-w-xs truncate">{expense.detail}</td>
+                    <td className="py-4 px-3 font-medium text-white max-w-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate">{expense.detail}</span>
+                        {expense.is_credit_card && (
+                          <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <CreditCard className="w-3 h-3" />
+                            <span>Tarjeta</span>
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td className="py-4 px-3">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/10 bg-[#121c27] shadow-sm">
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white ${(expense.profiles?.first_name || '').toLowerCase().includes('cristhian') ? 'bg-emerald-600' : 'bg-pink-500'}`}>
@@ -407,10 +504,10 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
                     <td className="py-4 px-3 text-right font-bold text-rose-500 font-mono">B/. {expense.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td className="py-4 px-3">
                       <div className="flex justify-end items-center gap-1">
-                        <button onClick={() => setEditingExpense(expense)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
+                        <button onClick={() => setEditingExpense(expense)} className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors" title="Editar">
                           <Edit2 className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors disabled:opacity-50" title="Eliminar">
+                        <button onClick={() => handleDelete(expense.id)} disabled={isPending} className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors disabled:opacity-50" title="Eliminar">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -430,7 +527,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
         </div>
         
         {/* Pagination Controls */}
-        {filteredExpenses.length > ITEMS_PER_PAGE && (
+        {!showAllRows && filteredExpenses.length > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-2">
             <div className="text-sm text-slate-500">
               Mostrando <span className="font-medium text-white">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> a <span className="font-medium text-white">{Math.min(currentPage * ITEMS_PER_PAGE, filteredExpenses.length)}</span> de <span className="font-medium text-white">{filteredExpenses.length}</span> gastos
@@ -439,7 +536,7 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
               <button 
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                className="p-1 rounded-lg text-slate-500 hover:bg-white/10 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -449,11 +546,23 @@ export function GastosDiariosClient({ initialExpenses, fixedPayments = [] }: Gas
               <button 
                 onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE), p + 1))}
                 disabled={currentPage === Math.ceil(filteredExpenses.length / ITEMS_PER_PAGE)}
-                className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
+                className="p-1 rounded-lg text-slate-500 hover:bg-white/10 disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
+          </div>
+        )}
+
+        {showAllRows && filteredExpenses.length > 0 && (
+          <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-2 text-xs text-slate-500">
+            <span>Mostrando todos los <b>{filteredExpenses.length}</b> gastos sin paginación.</span>
+            <button
+              onClick={() => setShowAllRows(false)}
+              className="text-emerald-400 hover:underline font-semibold"
+            >
+              Volver a paginar (10 por página)
+            </button>
           </div>
         )}
       </div>

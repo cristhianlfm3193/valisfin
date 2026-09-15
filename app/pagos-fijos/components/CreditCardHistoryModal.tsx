@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import { createPortal } from 'react-dom';
-import { X, CreditCard, ArrowDownRight, ArrowUpRight, Edit2, Trash2 } from 'lucide-react';
+import { X, CreditCard, ArrowDownRight, ArrowUpRight, Edit2, Trash2, Search } from 'lucide-react';
 import { DailyExpense, deleteDailyExpense } from '@/app/actions/daily_expenses';
 import { deleteFixedPayment, updateFixedPaymentAmount } from '@/app/actions/fixed_payments';
 import { FixedPayment } from './PaymentCard';
@@ -18,6 +18,8 @@ interface CreditCardHistoryModalProps {
 export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, onEditExpense }: CreditCardHistoryModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<'all' | 'expense' | 'payment'>('all');
 
   useEffect(() => {
     setMounted(true);
@@ -40,13 +42,11 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
     }));
 
   // Filter paid credit card fixed payments and sort by date descending
-  // Since fixedPayments doesn't have a reliable paid_at date right now, we use created_at or just date them today for simplicity
-  // Assuming they are recent if they are paid.
   const ccPayments = payments
     .filter(p => p.is_paid && p.title === 'Uso Tarjeta de Credito')
     .map(p => ({
       id: p.id,
-      date: new Date((p as any).created_at || Date.now()), // Fallback to now if no created_at
+      date: new Date((p as any).created_at || Date.now()),
       title: 'Abono / Pago Total',
       category: 'Pago',
       amount: p.amount,
@@ -55,6 +55,19 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
     }));
 
   const allHistory = [...ccExpenses, ...ccPayments].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  const filteredHistory = allHistory.filter(item => {
+    if (typeFilter !== 'all' && item.type !== typeFilter) return false;
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesTitle = item.title.toLowerCase().includes(q);
+      const matchesCat = item.category.toLowerCase().includes(q);
+      const matchesPerson = item.person.toLowerCase().includes(q);
+      const matchesAmount = item.amount.toString().includes(q);
+      if (!matchesTitle && !matchesCat && !matchesPerson && !matchesAmount) return false;
+    }
+    return true;
+  });
 
   const totalSpent = ccExpenses.reduce((sum, item) => sum + item.amount, 0);
   const totalPaid = ccPayments.reduce((sum, item) => sum + item.amount, 0);
@@ -133,15 +146,56 @@ export function CreditCardHistoryModal({ isOpen, onClose, expenses, payments, on
               </div>
             </div>
 
-            <h4 className="text-sm font-bold text-white mb-3 ml-1">Movimientos</h4>
-            
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-1.5 p-1 bg-[#121c27] border border-white/10 rounded-xl shrink-0 overflow-x-auto">
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('all')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                    typeFilter === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  Todos ({allHistory.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('expense')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all border ${
+                    typeFilter === 'expense' ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'text-slate-400 hover:text-rose-300 border-transparent'
+                  }`}
+                >
+                  Gastos ({ccExpenses.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTypeFilter('payment')}
+                  className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all border ${
+                    typeFilter === 'payment' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'text-slate-400 hover:text-emerald-300 border-transparent'
+                  }`}
+                >
+                  Abonos ({ccPayments.length})
+                </button>
+              </div>
+
+              <div className="relative flex-1 sm:max-w-xs">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar en tarjeta..."
+                  className="w-full pl-8 pr-3 py-1.5 bg-[#121c27] border border-white/10 rounded-xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2.5">
-              {allHistory.length === 0 ? (
+              {filteredHistory.length === 0 ? (
                 <div className="text-center py-8 text-slate-500 bg-[#121c27] rounded-2xl border border-white/5">
-                  <p className="text-sm">No hay movimientos registrados en esta tarjeta.</p>
+                  <p className="text-sm">No se encontraron movimientos con los filtros aplicados.</p>
                 </div>
               ) : (
-                allHistory.map((item, index) => (
+                filteredHistory.map((item, index) => (
                   <div key={`${item.id}-${index}`} className="bg-[#121c27] border border-white/5 rounded-2xl p-3.5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${

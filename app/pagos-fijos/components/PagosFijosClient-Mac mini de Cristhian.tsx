@@ -61,6 +61,8 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       if (p.period < selectedMonth && !p.is_paid) {
         // Do not rollover smart budgets like Supermercado or Gasolina
         if (p.title === 'Supermercado' || p.title === 'Gasolina') return false;
+        // Do not rollover non-accumulative payments
+        if (p.is_accumulative === false) return false;
         return true;
       }
       return false;
@@ -207,62 +209,24 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
     }
   };
 
-  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null) => {
+  const handleEditSubmit = async (amount: number, billingDay: number | null, title: string, profile_id?: string, linked_goal_id?: string | null, is_accumulative?: boolean) => {
     if (!editingPayment) return;
     const originalRecord = payments.find(p => p.id === (editingPayment as any).originalIds?.[0] || p.id === editingPayment.id);
     if (!originalRecord) return;
 
-    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id, linked_goal_id: linked_goal_id } : p));
-    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id);
+    setPayments(prev => prev.map(p => p.id === originalRecord.id ? { ...p, amount, billing_day: billingDay, title, profile_id: profile_id || p.profile_id, linked_goal_id, is_accumulative } : p));
+    await updateFixedPaymentSettings(originalRecord.id, amount, billingDay, title, profile_id, linked_goal_id, is_accumulative);
   };
 
-  // Metrics calculation based on RAW month-filtered payments
+  // Metrics calculation based on GROUPED payments (so counts match the UI cards)
   const { totalPaid, totalPending, paidCount, pendingCount } = useMemo(() => {
     let tPaid = 0;
     let tPending = 0;
     let pCount = 0;
     let pendCount = 0;
 
-    const processedSmartCards = new Set<string>();
-
-    monthFilteredPayments.forEach((payment) => {
-      const isSmart = payment.title === 'Supermercado' || payment.title === 'Gasolina' || payment.title === 'Uso Tarjeta de Credito';
-      
-      if (isSmart) {
-        if (!processedSmartCards.has(payment.title)) {
-          processedSmartCards.add(payment.title);
-          
-          if (payment.title === 'Uso Tarjeta de Credito') {
-            // Find how much was actually paid this month towards the card
-            const paidThisMonth = monthFilteredPayments
-              .filter(p => p.title === 'Uso Tarjeta de Credito' && p.is_paid)
-              .reduce((sum, p) => sum + p.amount, 0);
-            
-            // ccSpent represents the total outstanding debt
-            const currentDebt = ccSpent;
-            
-            tPaid += paidThisMonth; // ONLY add actual payments made to the card
-            tPending += currentDebt > 0 ? currentDebt : 0; // Add outstanding debt to 'Por Pagar'
-            
-            if (currentDebt <= 0) pCount++;
-            else pendCount++;
-          } else {
-            // Supermercado / Gasolina
-            const spent = payment.title === 'Supermercado' ? superSpent : gasSpent;
-            // Limit is the amount from the first unpaid record (or the first record if all paid)
-            const limitRecord = monthFilteredPayments.find(p => p.title === payment.title && !p.is_paid) || monthFilteredPayments.find(p => p.title === payment.title) || payment;
-            const connectedLimit = limitRecord.amount;
-
-            const pending = Math.max(connectedLimit - spent, 0);
-            
-            tPaid += spent;
-            tPending += pending;
-            
-            if (spent >= connectedLimit) pCount++;
-            else pendCount++;
-          }
-        }
-      } else {
+    groupedPayments.forEach((payment) => {
+      if (!payment.isSmartCard) {
         if (payment.is_paid) {
           tPaid += payment.amount;
           pCount++;
@@ -279,7 +243,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       paidCount: pCount,
       pendingCount: pendCount,
     };
-  }, [monthFilteredPayments]);
+  }, [groupedPayments]);
 
   const totalItems = paidCount + pendingCount;
   const progressPercent = totalItems > 0 ? Math.round((paidCount / totalItems) * 100) : 0;
@@ -290,11 +254,29 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       // Filter by status
       if (currentFilter === 'pending' && payment.is_paid) return false;
       if (currentFilter === 'paid' && !payment.is_paid) return false;
+      if (currentFilter === 'credit_card') {
+        const isCard = payment.title === 'Uso Tarjeta de Credito' || 
+                       payment.title.toLowerCase().includes('tarjeta') || 
+                       payment.title.toLowerCase().includes('credito') || 
+                       payment.title.toLowerCase().includes('crédito') ||
+                       (payment.category && (payment.category.toLowerCase().includes('tarjeta') || payment.category.toLowerCase().includes('credito')));
+        if (!isCard) return false;
+      }
 
       // Filter by search query
       if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        if (!payment.title.toLowerCase().includes(query)) {
+        const query = searchQuery.toLowerCase().trim();
+        const isCardSearch = ['tarjeta', 'credito', 'crédito', 'tc', 'visa', 'mastercard', 'card'].some(k => query.includes(k));
+        const matchesTitle = payment.title.toLowerCase().includes(query);
+        const matchesCategory = payment.category ? payment.category.toLowerCase().includes(query) : false;
+        const matchesCard = isCardSearch && (
+          payment.title === 'Uso Tarjeta de Credito' || 
+          payment.title.toLowerCase().includes('tarjeta') || 
+          payment.title.toLowerCase().includes('credito') ||
+          payment.title.toLowerCase().includes('crédito')
+        );
+
+        if (!matchesTitle && !matchesCategory && !matchesCard) {
           return false;
         }
       }
@@ -302,6 +284,15 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
       return true;
     });
   }, [groupedPayments, currentFilter, searchQuery]);
+
+  const creditCardCount = useMemo(() => {
+    return groupedPayments.filter((payment) => {
+      return payment.title === 'Uso Tarjeta de Credito' || 
+             payment.title.toLowerCase().includes('tarjeta') || 
+             payment.title.toLowerCase().includes('credito') || 
+             payment.title.toLowerCase().includes('crédito');
+    }).length;
+  }, [groupedPayments]);
 
   const variablePayments = filteredPayments.filter(p => p.isSmartCard);
   const fixedPaymentsList = filteredPayments.filter(p => !p.isSmartCard);
@@ -340,20 +331,20 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
     <>
       {/* Month Selector */}
       <div className="flex justify-center mb-6">
-        <div className="inline-flex items-center bg-[#121c27] border-white/10 border border-white/10 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] p-1">
+        <div className="inline-flex items-center bg-[#121c27] border border-white/10 rounded-full shadow-sm p-1">
           <button 
             onClick={() => handleMonthChange(-1)}
-            className="p-2 rounded-full hover:bg-white/10 text-gray-400 transition-colors focus:outline-none"
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none"
             type="button"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
-          <span className="w-40 text-center text-sm font-bold text-white">
+          <span className="w-40 text-center text-sm font-bold text-slate-200">
             {getMonthLabel()}
           </span>
           <button 
             onClick={() => handleMonthChange(1)}
-            className="p-2 rounded-full hover:bg-white/10 text-gray-400 transition-colors focus:outline-none"
+            className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors focus:outline-none"
             type="button"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -394,6 +385,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
         totalCount={totalItems}
         pendingCount={pendingCount}
         paidCount={paidCount}
+        creditCardCount={creditCardCount}
       />
 
       {variablePayments.length > 0 && (
@@ -402,7 +394,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               Gastos Variables
             </h3>
-            <span className="text-xs text-gray-300">Límites adaptables</span>
+            <span className="text-xs text-slate-400">Límites adaptables</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -438,7 +430,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               Obligaciones Predeterminadas
             </h3>
-            <span className="text-xs text-gray-300">Toque directo para registrar pago</span>
+            <span className="text-xs text-slate-400">Toque directo para registrar pago</span>
           </div>
           <button 
             onClick={() => setIsAddModalOpen(true)}
@@ -462,7 +454,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
         </div>
 
         {filteredPayments.length === 0 && (
-          <div className="py-12 text-center bg-[#121c27] border-white/10 rounded-2xl border border-white/10 mt-2">
+          <div className="py-12 text-center bg-[#121c27] rounded-2xl border border-white/10 mt-2">
             <svg
               className="mx-auto h-12 w-12 text-slate-300"
               fill="none"
@@ -477,7 +469,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
               ></path>
             </svg>
             <h3 className="mt-2 text-sm font-semibold text-white">No se encontraron pagos</h3>
-            <p className="mt-1 text-xs text-gray-300">
+            <p className="mt-1 text-xs text-slate-400">
               Intente buscar con otro término como 'luz', 'seguro' o 'guardería'.
             </p>
           </div>
@@ -500,6 +492,7 @@ export function PagosFijosClient({ initialPayments, initialDailyExpenses = [], i
           currentBillingDay={editingPayment.billing_day}
           currentProfileId={editingPayment.profile_id}
           currentLinkedGoalId={editingPayment.linked_goal_id}
+          currentIsAccumulative={editingPayment.is_accumulative}
           isVariable={!!editingPayment.isSmartCard}
           onSubmit={handleEditSubmit}
           goals={initialGoals}
