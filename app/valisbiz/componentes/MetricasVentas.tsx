@@ -149,11 +149,13 @@ export default function MetricasVentas({ metas, resumenMensual, mesPeriodo, anio
             <span>Facturado Equipo · Meta B/.{cuotaGlobal.toLocaleString()}</span>
             <span className="font-mono font-bold text-white">B/.{fmt(facturadoGlobal)}</span>
           </div>
-          <div className="w-full h-3 bg-[#121c27]/20 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden shadow-inner backdrop-blur-sm border border-white/10">
             <div
-              className="bg-[#121c27] h-full rounded-full transition-all duration-1000"
+              className="h-full rounded-full transition-all duration-1000 bg-gradient-to-r from-yellow-200 to-yellow-400 shadow-[0_0_10px_rgba(253,224,71,0.5)] relative overflow-hidden group"
               style={{ width: `${Math.min(porcentajeGlobal, 100)}%` }}
-            />
+            >
+              <div className="absolute inset-0 bg-white/40 w-1/2 skew-x-[-20deg] animate-[pulse_2s_ease-in-out_infinite]" />
+            </div>
           </div>
           <div className="flex justify-between text-[10px] text-pink-200 mt-1 font-mono">
             <span>85% → B/.150</span><span>100% → B/.425</span><span>110% → B/.500</span>
