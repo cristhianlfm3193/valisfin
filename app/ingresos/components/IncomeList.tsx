@@ -26,8 +26,19 @@ export function IncomeList({ incomes, monthName = 'del Mes' }: { incomes: any[],
     });
   };
 
-  const q1Items = incomes.filter(i => i.period === 'q1');
-  const q2Items = incomes.filter(i => i.period === 'q2' || i.period === 'eventual');
+  const q1Items = incomes.filter(i => {
+    if (i.period === 'q1') return true;
+    if (i.period === 'q2' || i.period === 'eventual') return false;
+    const day = parseInt((i.date_expected || '').split('-')[2] || '1', 10);
+    return day <= 15;
+  });
+
+  const q2Items = incomes.filter(i => {
+    if (i.period === 'q2' || i.period === 'eventual') return true;
+    if (i.period === 'q1') return false;
+    const day = parseInt((i.date_expected || '').split('-')[2] || '16', 10);
+    return day > 15;
+  });
 
   const q1PendingCount = q1Items.filter(i => !i.is_received).length;
   const q2PendingCount = q2Items.filter(i => !i.is_received).length;

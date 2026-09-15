@@ -608,12 +608,14 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     if (draft.is_credit_card) text += `💳 <b>Método:</b> Tarjeta de Crédito\n`;
     text += `🗄️ <b>Tabla destino:</b> <code>daily_expenses</code> (Gastos Diarios • ValisFin)\n`;
   } else if (draft.tipo === 'ingreso') {
+    const dNum = parseInt((draft.fecha || '').split('-')[2] || '1', 10);
+    const qLabel = dNum <= 15 ? '1ra Quincena (1 al 15)' : '2da Quincena (16 al 30/31)';
     text += `💵 <b>Monto a ingresar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
     text += `📝 <b>Concepto:</b> ${draft.detalle || 'Ingreso'}\n`;
     text += `🏷️ <b>Categoría:</b> ${draft.categoria || 'Ventas / Otros'}\n`;
-    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
+    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code> (${qLabel})\n`;
     text += `👤 <b>Beneficiario:</b> Cristhian Fuentes\n`;
-    text += `🗄️ <b>Tabla destino:</b> <code>incomes</code> (Módulo Ingresos • ValisFin)\n`;
+    text += `🗄️ <b>Tabla destino:</b> <code>incomes</code> (${qLabel} • ValisFin)\n`;
   } else if (draft.tipo === 'pago_fijo') {
     text += `💳 <b>Compromiso:</b> ${draft.pago_titulo}\n`;
     text += `💵 <b>Monto a liquidar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
@@ -702,7 +704,10 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
 
   if (draft.tipo === 'ingreso') {
     const fechaDate = new Date((draft.fecha || new Date().toISOString().split('T')[0]) + 'T12:00:00');
-    const period = `${fechaDate.getFullYear()}-${String(fechaDate.getMonth() + 1).padStart(2, '0')}`;
+    const day = fechaDate.getDate();
+    const period = day <= 15 ? 'q1' : 'q2';
+    const quincenaLabel = day <= 15 ? '1ra Quincena (1 al 15)' : '2da Quincena (16 al 30/31)';
+
     const { error } = await supabase.from('incomes').insert({
       profile_id: draft.profile_id || 'edc938dc-9fbc-4573-b007-0bdb95114f95',
       category: draft.categoria || 'ventas',
@@ -722,11 +727,11 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
     return {
       success: true,
       text: `✅ <b>¡Ingreso guardado con éxito en la base de datos!</b>\n` +
-            `🗄️ <b>Tabla:</b> <code>incomes</code> (Módulo Ingresos • ValisFin)\n\n` +
+            `🗄️ <b>Tabla:</b> <code>incomes</code> (${quincenaLabel} • ValisFin)\n\n` +
             `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
             `📝 Concepto: <b>${draft.detalle}</b>\n` +
             `🏷️ Categoría: <code>${draft.categoria || 'Ventas'}</code>\n` +
-            `📅 Fecha: <code>${draft.fecha}</code>`
+            `📅 Fecha: <code>${draft.fecha}</code> (${quincenaLabel})`
     };
   }
 
