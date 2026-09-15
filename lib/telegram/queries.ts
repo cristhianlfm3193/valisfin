@@ -3,7 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 // Cliente Supabase con permisos de servicio para consultas del Bot
 function getBotSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const key = 
+    process.env.SUPABASE_SECRET_KEY || 
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 
+    process.env.SUPABASE_SERVICE_KEY || 
+    process.env.SERVICE_ROLE_KEY || 
+    process.env.SUPABASE_KEY || 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createClient(url, key);
 }
 

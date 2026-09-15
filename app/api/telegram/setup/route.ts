@@ -44,8 +44,8 @@ export async function GET(req: Request) {
         hasGeminiKey: !!process.env.GEMINI_API_KEY,
         hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
         hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        hasSecretKey: !!process.env.SUPABASE_SECRET_KEY,
-        hasServiceRoleKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        hasSecretKey: !!(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_KEY),
+        supabaseEnvKeysFound: Object.keys(process.env).filter(k => k.toUpperCase().includes('SUPABASE') || k.toUpperCase().includes('SERVICE_ROLE') || k.toUpperCase().includes('SECRET')),
       },
       instrucciones: {
         registrarWebhook: 'Para registrar el webhook cuando despliegues en Vercel o uses ngrok, llama a: GET /api/telegram/setup?url=https://tu-dominio.com/api/telegram',
