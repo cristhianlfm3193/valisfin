@@ -29,6 +29,7 @@ import {
   getBizVisitsMessage,
   getRecentReportsMessage,
   searchOperationalReports,
+  getComprehensiveReportsMessage,
   getBdrhStatsMessage,
   searchBdrhPerson,
   getValisHubSummaryMessage,
@@ -514,17 +515,12 @@ INSTRUCCIONES CRÍTICAS:
           getRecentReportsMessage(),
         ]);
 
-        // Búsqueda contextual específica de reportes operativos si el usuario pregunta por fechas, horas o novedades
+        // Búsqueda contextual integral de reportes operativos para análisis estadístico por la IA
         let specificReportsContext = '';
-        const isAskingAboutReports = /(reporte|novedad|recorrido|operativo|aipp|turno|hora|fecha|ayer|hoy|\b\d{1,2}\b)/i.test(text);
+        const isAskingAboutReports = /(reporte|novedad|recorrido|operativo|aipp|turno|hora|fecha|ayer|hoy|cuanto|cuánto|semana|mes|\b\d{1,2}\b)/i.test(text);
         if (isAskingAboutReports) {
-          // Extraer posibles fechas o palabras clave
-          const dateMatch = text.match(/\b\d{1,2}\b/);
-          const term = dateMatch ? dateMatch[0] : '';
-          const customReports = await searchOperationalReports(term);
-          if (!customReports.startsWith('📋 No se encontraron')) {
-            specificReportsContext = `\n--- DETALLE DE REPORTES OPERATIVOS AIPP ENCONTRADOS ---\n${customReports}\n`;
-          }
+          const comprehensiveReports = await getComprehensiveReportsMessage(30);
+          specificReportsContext = `\n--- BASE DE DATOS CRUDA DE REPORTES OPERATIVOS (PARA CONTEO Y ANÁLISIS DE LA IA) ---\n${comprehensiveReports}\n`;
         }
 
         // Si la pregunta menciona a una persona o término específico, buscamos en BD-RH
@@ -571,6 +567,7 @@ INSTRUCCIONES CRÍTICAS:
           `- Si preguntan por un vendedor específico o cómo van las ventas, usa los datos individuales de ValisBiz.\n` +
           `- Si preguntan por metas de ahorro, usa los datos de ValisFin.\n` +
           `- Si preguntan por reportes operativos de tal día o turno, menciona el detalle de la narrativa, áreas recorridas, vehículo y personal.\n` +
+          `- Si el usuario pide contar o filtrar reportes ('cuántos reportes hubo ayer', 'cuántas veces reportó X', 'cuántos recorridos hubo'), actúa como un analista de datos: revisa cuidadosamente la 'BASE DE DATOS CRUDA DE REPORTES OPERATIVOS', filtra por la fecha/persona/término, cuenta las coincidencias exactas matemáticamente y da el número total junto a un breve desglose.\n` +
           `- Si preguntan por personas, posiciones o cédulas, usa los datos de BD-RH.\n` +
           `- REGLA ESTRICTA DE SEGURIDAD: TÚ NO TIENES CAPACIDAD DE ESCRIBIR EN LA BASE DE DATOS DIRECTAMENTE. NUNCA respondas diciendo 'He registrado', 'Ya lo guardé' o similares. Si el usuario intenta registrar un gasto, venta o ingreso y no se activó la tarjeta interactiva, dile que use el formato directo (ej: 'Gasto 15 comida' o 'Vendí licencia a 1 dólar') para que el sistema le genere la tarjeta de confirmación obligatoria con botón.`;
 

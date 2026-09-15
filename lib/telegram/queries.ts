@@ -459,6 +459,33 @@ export async function searchOperationalReports(termOrDate?: string): Promise<str
   return text;
 }
 
+export async function getComprehensiveReportsMessage(days: number = 30): Promise<string> {
+  const supabase = getBotSupabase();
+  const dateThreshold = new Date();
+  dateThreshold.setDate(dateThreshold.getDate() - days);
+  const dateStr = dateThreshold.toISOString().split('T')[0];
+
+  const { data: reportes, error } = await supabase
+    .from('reportes')
+    .select('id, fecha, hora, asunto, departamento, reporta_nombre, narrativa')
+    .gte('fecha', dateStr)
+    .order('fecha', { ascending: false })
+    .order('hora', { ascending: false });
+
+  if (error || !reportes || reportes.length === 0) {
+    return `📋 No hay reportes operativos en los últimos ${days} días.`;
+  }
+
+  let text = `📋 <b>DATA PARA ANÁLISIS: REPORTES OPERATIVOS (Últimos ${days} días - ${reportes.length} total)</b>\n`;
+  reportes.forEach((r: any) => {
+    // Usar formato CSV ligero o simple JSON-like list para ahorrar tokens y facilitar el parseo
+    const shortNarrativa = r.narrativa && r.narrativa.length > 100 ? r.narrativa.slice(0, 97) + '...' : (r.narrativa || '');
+    text += `[${r.fecha} ${r.hora ? r.hora.slice(0, 5) : '00:00'}] | Subj: ${r.asunto || 'N/A'} | Por: ${r.reporta_nombre || 'Desconocido'} | Dept: ${r.departamento || 'N/A'} | Info: ${shortNarrativa}\n`;
+  });
+
+  return text;
+}
+
 export async function getBdrhStatsMessage(): Promise<string> {
   const supabase = getBotSupabase();
 
