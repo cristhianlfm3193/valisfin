@@ -5,6 +5,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { UsersModal } from './components/UsersModal';
 import { AuditLogTable } from './components/AuditLogTable';
 import { AppsModal } from './components/AppsModal';
+import { MonitoringModal } from './components/MonitoringModal';
 import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles, Grid } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -22,6 +23,7 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUsersOpen, setIsUsersOpen] = useState(false);
   const [isAppsOpen, setIsAppsOpen] = useState(false);
+  const [isMonitoringOpen, setIsMonitoringOpen] = useState(false);
 
   const loginImageUrl = initialSettings?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuB58d3sZphwVWt6fY1zPpSOxEQ-bPt4YS2Dm1VY099OvbywhQIaI7Csiq1BenqPYc90MpRW5VmE_-xGkNe7UzuREoZ9E2yVMR0NAdaQ1S7cTNVbwWUXIIdqfsjGSKkNWaqW9gJoaSVtuBa0847SuZueapEkFp4dbqzafxYhhfTOvLofTPdeAqQcwpbMzM6dm2e-Luvjtet4aLuqSiFs37NtsGdiKhurGWRXJic0OJOcd5GRoU9ivTIxhCmpR5PxmXttSQ";
 
@@ -49,6 +51,11 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
         onSaved={() => router.refresh()} 
       />
 
+      <MonitoringModal
+        isOpen={isMonitoringOpen}
+        onClose={() => setIsMonitoringOpen(false)}
+      />
+
       <div className="max-w-6xl mx-auto space-y-6 lg:space-y-8">
         
         {/* Header */}
@@ -60,23 +67,38 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white">Panel de Control</h1>
             </div>
-            <p className="text-sm text-slate-500">Gestión centralizada y auditoría de ValisFin.</p>
+            <p className="text-sm text-slate-500">Gestión centralizada, auditoría y monitoreo de ValisHub.</p>
           </div>
           
-
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsMonitoringOpen(true)}
+              className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl font-semibold text-sm transition-all shadow-sm hover:scale-105 active:scale-95 group cursor-pointer"
+            >
+              <Activity className="w-4 h-4 text-emerald-400 animate-pulse group-hover:scale-110 transition-transform" />
+              <span>Monitoreo</span>
+            </button>
+          </div>
         </header>
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
+          <div 
+            onClick={() => setIsMonitoringOpen(true)}
+            className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 cursor-pointer hover:border-emerald-500/40 hover:bg-[#152230] transition-all group"
+            title="Haz clic para abrir el monitoreo en vivo"
+          >
             <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Base de Datos (Gratis)</p>
-              <Database className="w-4 h-4 text-emerald-500" />
+              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase group-hover:text-emerald-400 transition-colors">Base de Datos (Gratis)</p>
+              <Database className="w-4 h-4 text-emerald-500 group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-sm sm:text-base font-semibold text-white">Almacenamiento 500 MB</p>
+            <p className="text-sm sm:text-base font-semibold text-white flex items-center justify-between">
+              <span>Almacenamiento 500 MB</span>
+              <span className="text-[10px] text-emerald-400 font-normal group-hover:underline">Ver detalles →</span>
+            </p>
             <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-emerald-700 leading-none">&lt; 1%</span>
-              <span className="text-xs text-slate-500 font-medium mb-0.5">uso aprox.</span>
+              <span className="text-2xl font-bold text-emerald-500 leading-none">~8%</span>
+              <span className="text-xs text-slate-500 font-medium mb-0.5">uso real estimado</span>
             </div>
           </div>
 
