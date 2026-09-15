@@ -39,6 +39,8 @@ import {
   parsearTextoWhatsAppLocal,
   matchPendingFixedPayment,
   parseQuickExpenseLocal,
+  parseQuickIncomeLocal,
+  classifyAndExtractTransactionAI,
   getValisPersistentKeyboard,
   getRegistrationGuideMessage,
   getFixedPaymentById,
@@ -398,6 +400,24 @@ INSTRUCCIONES CRÍTICAS:
         return NextResponse.json({ ok: true });
       }
 
+      // ── 2.6 REGISTRO RÁPIDO DE INGRESOS / VENTAS PROPIAS (PARSER LOCAL - 0 TOKENS) ──
+      const quickIncomeDraft = parseQuickIncomeLocal(text);
+      if (quickIncomeDraft) {
+        await saveTelegramDraft(chatId, quickIncomeDraft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(quickIncomeDraft);
+        await sendTelegramMessage(chatId, summaryText, replyMarkup);
+        return NextResponse.json({ ok: true });
+      }
+
+      // ── 2.7 CLASIFICADOR INTELIGENTE DE TRANSACCIONES (FALLBACK CON IA) ──
+      const aiTransactionDraft = await classifyAndExtractTransactionAI(text);
+      if (aiTransactionDraft) {
+        await saveTelegramDraft(chatId, aiTransactionDraft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(aiTransactionDraft);
+        await sendTelegramMessage(chatId, summaryText, replyMarkup);
+        return NextResponse.json({ ok: true });
+      }
+
       // Compatibilidad con comando legacy /gasto monto categoria detalle (con confirmación previa)
       if (text.startsWith('/gasto ')) {
         const parts = text.replace('/gasto ', '').trim().split(' ');
@@ -551,7 +571,8 @@ INSTRUCCIONES CRÍTICAS:
           `- Si preguntan por un vendedor específico o cómo van las ventas, usa los datos individuales de ValisBiz.\n` +
           `- Si preguntan por metas de ahorro, usa los datos de ValisFin.\n` +
           `- Si preguntan por reportes operativos de tal día o turno, menciona el detalle de la narrativa, áreas recorridas, vehículo y personal.\n` +
-          `- Si preguntan por personas, posiciones o cédulas, usa los datos de BD-RH.`;
+          `- Si preguntan por personas, posiciones o cédulas, usa los datos de BD-RH.\n` +
+          `- REGLA ESTRICTA DE SEGURIDAD: TÚ NO TIENES CAPACIDAD DE ESCRIBIR EN LA BASE DE DATOS DIRECTAMENTE. NUNCA respondas diciendo 'He registrado', 'Ya lo guardé' o similares. Si el usuario intenta registrar un gasto, venta o ingreso y no se activó la tarjeta interactiva, dile que use el formato directo (ej: 'Gasto 15 comida' o 'Vendí licencia a 1 dólar') para que el sistema le genere la tarjeta de confirmación obligatoria con botón.`;
 
         let reply = '';
         try {

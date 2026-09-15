@@ -536,10 +536,10 @@ export async function getValisHubSummaryMessage(): Promise<string> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface TelegramDraft {
-  tipo: 'gasto' | 'pago_fijo' | 'vendido';
+  tipo: 'gasto' | 'pago_fijo' | 'vendido' | 'ingreso' | 'kilometraje';
   origen: 'foto_gemini' | 'texto_local' | 'texto_gemini' | 'boton_inline';
   fecha: string; // YYYY-MM-DD
-  // Gasto
+  // Gasto o Ingreso
   monto?: number;
   detalle?: string;
   categoria?: string;
@@ -559,6 +559,10 @@ export interface TelegramDraft {
   contado?: number;
   credito?: number;
   total?: number;
+  // Kilometraje
+  vehicle_id?: string;
+  vehicle_name?: string;
+  km?: number;
 }
 
 export async function saveTelegramDraft(chatId: string | number, draft: TelegramDraft): Promise<boolean> {
@@ -602,6 +606,14 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
     text += `👤 <b>Pagador:</b> Cristhian Fuentes\n`;
     if (draft.is_credit_card) text += `💳 <b>Método:</b> Tarjeta de Crédito\n`;
+    text += `📌 <b>Acción:</b> Registrar en Gastos Diarios (ValisFin)\n`;
+  } else if (draft.tipo === 'ingreso') {
+    text += `💵 <b>Monto a ingresar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
+    text += `📝 <b>Concepto:</b> ${draft.detalle || 'Ingreso'}\n`;
+    text += `🏷️ <b>Categoría:</b> ${draft.categoria || 'Ventas / Otros'}\n`;
+    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
+    text += `👤 <b>Beneficiario:</b> Cristhian Fuentes\n`;
+    text += `📌 <b>Acción:</b> Registrar en Ingresos (ValisFin)\n`;
   } else if (draft.tipo === 'pago_fijo') {
     text += `💳 <b>Compromiso:</b> ${draft.pago_titulo}\n`;
     text += `💵 <b>Monto a liquidar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
@@ -616,6 +628,12 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `💳 <b>Crédito:</b> ${formatMoney(Number(draft.credito ?? 0))}\n`;
     const tot = draft.total || (Number(draft.contado ?? 0) + Number(draft.credito ?? 0));
     text += `💰 <b>Total Vendido:</b> ${formatMoney(tot)}\n`;
+    text += `📌 <b>Acción:</b> Registrar en Reporte de Ventas (ValisBiz)\n`;
+  } else if (draft.tipo === 'kilometraje') {
+    text += `🚗 <b>Vehículo:</b> ${draft.vehicle_name}\n`;
+    text += `📟 <b>Nueva lectura:</b> ${draft.km?.toLocaleString()} km\n`;
+    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
+    text += `📌 <b>Acción:</b> Actualizar Odómetro (ValisFin)\n`;
   }
 
   text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
@@ -623,6 +641,8 @@ export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; re
     text += `📸 <i>Extraído mediante Gemini Vision de tu factura/recibo.</i>\n`;
   } else if (draft.origen === 'texto_local') {
     text += `⚡ <i>Procesado al instante con script local (0 tokens).</i>\n`;
+  } else if (draft.origen === 'texto_gemini') {
+    text += `🤖 <i>Detectado inteligentemente por IA desde tu mensaje.</i>\n`;
   } else if (draft.origen === 'boton_inline') {
     text += `👆 <i>Seleccionado desde la lista de pagos pendientes.</i>\n`;
   }
@@ -675,6 +695,35 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
             `🏢 Comercio / Detalle: <b>${draft.detalle}</b>\n` +
             `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
             `🏷️ Categoría: <code>${draft.categoria || 'Varios'}</code>\n` +
+            `📅 Fecha: <code>${draft.fecha}</code>`
+    };
+  }
+
+  if (draft.tipo === 'ingreso') {
+    const fechaDate = new Date((draft.fecha || new Date().toISOString().split('T')[0]) + 'T12:00:00');
+    const period = `${fechaDate.getFullYear()}-${String(fechaDate.getMonth() + 1).padStart(2, '0')}`;
+    const { error } = await supabase.from('incomes').insert({
+      profile_id: draft.profile_id || 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+      category: draft.categoria || 'ventas',
+      period,
+      description: draft.detalle || 'Ingreso registrado vía Telegram',
+      amount: Number(draft.monto || 0),
+      date_expected: draft.fecha || new Date().toISOString().split('T')[0],
+      is_received: true
+    });
+
+    if (error) {
+      console.error('Error commit draft ingreso:', error);
+      return { success: false, text: `❌ Error al guardar el ingreso: ${error.message}` };
+    }
+
+    await deleteTelegramDraft(chatId);
+    return {
+      success: true,
+      text: `✅ <b>¡Ingreso guardado con éxito en la base de datos!</b>\n\n` +
+            `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
+            `📝 Concepto: <b>${draft.detalle}</b>\n` +
+            `🏷️ Categoría: <code>${draft.categoria || 'Ventas'}</code>\n` +
             `📅 Fecha: <code>${draft.fecha}</code>`
     };
   }
@@ -732,6 +781,26 @@ export async function commitDraft(chatId: string | number): Promise<{ success: b
             `💳 Crédito: <b>${formatMoney(Number(draft.credito ?? 0))}</b>\n` +
             `💰 <b>TOTAL: ${formatMoney(total)}</b>\n` +
             `📅 Fecha: <code>${draft.fecha}</code>`
+    };
+  }
+
+  if (draft.tipo === 'kilometraje' && draft.vehicle_id && draft.km) {
+    const today = draft.fecha || new Date().toISOString().split('T')[0];
+    await supabase.from('mileage_logs').insert({
+      vehicle_id: draft.vehicle_id,
+      date: today,
+      km: draft.km,
+      user_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+      source: 'telegram'
+    });
+    await supabase.from('vehicles').update({ current_km: draft.km, km_date: today }).eq('id', draft.vehicle_id);
+    await deleteTelegramDraft(chatId);
+    return {
+      success: true,
+      text: `✅ <b>¡Kilometraje actualizado con éxito en la base de datos!</b>\n\n` +
+            `🚗 Vehículo: <b>${draft.vehicle_name}</b>\n` +
+            `📟 Odómetro: <b>${draft.km.toLocaleString()} km</b>\n` +
+            `📅 Fecha: <code>${today}</code>`
     };
   }
 
@@ -898,6 +967,140 @@ export function parseQuickExpenseLocal(texto: string, todayInput?: string): Tele
     profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95', // Cristhian
     is_credit_card: false,
   };
+}
+
+export function parseQuickIncomeLocal(texto: string, todayInput?: string): TelegramDraft | null {
+  const today = todayInput || new Date().toISOString().split('T')[0];
+  const clean = texto.trim().toLowerCase().replace(/^hoy\s+/i, '').replace(/^ayer\s+/i, '').trim();
+
+  // Caso 1: vendi [detalle] a/por/en [monto] (dolares)
+  // Ej: vendi una licencia de office a 1 dolar
+  const m1 = clean.match(/^(?:vendi|vend[ií]|cobr[eé]|gan[eé]|recib[ií]|ingreso|me pagaron)\s+(.+?)\s+(?:a|por|en)\s+(\d+(?:[.,]\d+)?)(?:\s*(?:d[oó]lares|d[oó]lar|usd|balboas|b\/\.?))?$/i);
+  if (m1) {
+    const rawDetail = m1[1].trim();
+    const detalle = rawDetail.charAt(0).toUpperCase() + rawDetail.slice(1);
+    return {
+      tipo: 'ingreso',
+      origen: 'texto_local',
+      detalle,
+      monto: numLocal(m1[2]),
+      categoria: 'Ventas',
+      fecha: today,
+      profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+    };
+  }
+
+  // Caso 2: vendi/cobre/recibi [monto] por/de/en [detalle]
+  // Ej: cobre 50 por una asesoria, ingreso 100 de salario
+  const m2 = clean.match(/^(?:vendi|vend[ií]|cobr[eé]|gan[eé]|recib[ií]|ingreso|me pagaron)\s+(\d+(?:[.,]\d+)?)\s*(?:d[oó]lares|d[oó]lar|usd|balboas|b\/\.?)?\s+(?:por|de|en|a)?\s*(.+)$/i);
+  if (m2) {
+    const rawDetail = m2[2].trim();
+    const detalle = rawDetail.charAt(0).toUpperCase() + rawDetail.slice(1);
+    return {
+      tipo: 'ingreso',
+      origen: 'texto_local',
+      detalle,
+      monto: numLocal(m2[1]),
+      categoria: 'Ventas',
+      fecha: today,
+      profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+    };
+  }
+
+  return null;
+}
+
+export async function classifyAndExtractTransactionAI(texto: string, todayInput?: string): Promise<TelegramDraft | null> {
+  const today = todayInput || new Date().toISOString().split('T')[0];
+
+  // Si no contiene ningún número ni palabra clave de transacción, no llamar a IA
+  const hasNumber = /\d+/.test(texto);
+  const hasTransWord = /(vendi|vendí|cobre|cobré|gane|gané|recibi|recibí|gaste|gasté|compre|compré|pague|pagué|pagado|costo|costó|odometro|odómetro|km|kilometraje)/i.test(texto);
+  if (!hasNumber && !hasTransWord) return null;
+
+  const prompt = `Analiza este mensaje de Cristhian para el sistema ValisHub:
+"${texto}"
+Fecha actual de referencia: ${today}.
+
+Clasifica la intención del mensaje:
+- Si el usuario está comunicando que realizó una transacción (gasto, compra, venta, cobro, ingreso, pago de servicio o actualización de kilometraje), clasifícalo y extrae sus datos.
+- Si el usuario solo está haciendo una pregunta informativa ("¿cuánto gasté?", "¿cuáles pagos debo?", "¿cómo va el vendedor?", etc.), clasifícalo como tipo="consulta".`;
+
+  try {
+    const { GoogleGenAI, Type } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const res = await ai.models.generateContent({
+      model: 'gemini-3.5-flash-lite',
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            tipo: {
+              type: Type.STRING,
+              enum: ['gasto', 'ingreso', 'pago_fijo', 'kilometraje', 'consulta'],
+              description: "Tipo de acción"
+            },
+            monto: { type: Type.NUMBER },
+            detalle: { type: Type.STRING },
+            categoria: { type: Type.STRING },
+            fecha: { type: Type.STRING },
+            vehiculo_nombre: { type: Type.STRING },
+            km: { type: Type.NUMBER }
+          },
+          required: ['tipo']
+        }
+      }
+    });
+
+    const parsed = JSON.parse(res.text || '{}');
+    if (!parsed.tipo || parsed.tipo === 'consulta') return null;
+
+    if (parsed.tipo === 'ingreso' && parsed.monto) {
+      return {
+        tipo: 'ingreso',
+        origen: 'texto_gemini',
+        fecha: parsed.fecha || today,
+        monto: parsed.monto,
+        detalle: parsed.detalle || 'Ingreso personal',
+        categoria: parsed.categoria || 'Ventas',
+        profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95'
+      };
+    }
+
+    if (parsed.tipo === 'gasto' && parsed.monto) {
+      return {
+        tipo: 'gasto',
+        origen: 'texto_gemini',
+        fecha: parsed.fecha || today,
+        monto: parsed.monto,
+        detalle: parsed.detalle || 'Gasto registrado',
+        categoria: parsed.categoria || 'Varios',
+        profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+        is_credit_card: false
+      };
+    }
+
+    if (parsed.tipo === 'kilometraje' && parsed.km) {
+      const isTucson = /tucson/i.test(parsed.vehiculo_nombre || texto);
+      const vehicleId = isTucson ? 'f47ac10b-58cc-4372-a567-0e02b2c3d480' : 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+      const vehicleName = isTucson ? 'Hyundai Tucson' : 'Toyota Yaris';
+      return {
+        tipo: 'kilometraje',
+        origen: 'texto_gemini',
+        fecha: parsed.fecha || today,
+        vehicle_id: vehicleId,
+        vehicle_name: vehicleName,
+        km: parsed.km
+      };
+    }
+
+    return null;
+  } catch (err) {
+    console.error('Error en classifyAndExtractTransactionAI:', err);
+    return null;
+  }
 }
 
 export function getValisPersistentKeyboard(): ReplyKeyboardMarkup {
