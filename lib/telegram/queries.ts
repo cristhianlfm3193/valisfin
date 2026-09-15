@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { InlineKeyboardMarkup, ReplyKeyboardMarkup } from './bot';
 
 // Cliente Supabase con permisos de servicio para consultas del Bot
 function getBotSupabase() {
@@ -28,7 +29,7 @@ function makeProgressBar(percent: number, length = 10): string {
 // 🟢 CONSULTAS VALISFIN (0 TOKENS)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function getPendingPaymentsMessage(): Promise<string> {
+export async function getPendingPaymentsInteractive(): Promise<{ text: string; replyMarkup?: InlineKeyboardMarkup }> {
   const supabase = getBotSupabase();
   const d = new Date();
   const period = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -40,8 +41,8 @@ export async function getPendingPaymentsMessage(): Promise<string> {
     .order('billing_day', { ascending: true, nullsFirst: false });
 
   if (error || !payments) {
-    console.error('Error getPendingPaymentsMessage:', error);
-    return '❌ Error al consultar pagos en la base de datos.';
+    console.error('Error getPendingPaymentsInteractive:', error);
+    return { text: '❌ Error al consultar pagos en la base de datos.' };
   }
 
   const pending = payments.filter(p => !p.is_paid);
@@ -49,18 +50,38 @@ export async function getPendingPaymentsMessage(): Promise<string> {
   const totalPending = pending.reduce((acc, p) => acc + Number(p.amount || 0), 0);
 
   if (pending.length === 0) {
-    return `🎉 <b>¡Todo al día!</b>\nNo tienes pagos fijos pendientes para el periodo <b>${period}</b>.\nPagos completados este mes: ${completed.length}.`;
+    return {
+      text: `🎉 <b>¡Todo al día!</b>\nNo tienes pagos fijos pendientes para el periodo <b>${period}</b>.\nPagos completados este mes: ${completed.length}.`
+    };
   }
 
   let text = `💳 <b>Pagos Fijos Pendientes (${period})</b>\n\n`;
   pending.forEach(p => {
-    const due = p.billing_day ? `Día ${p.billing_day} de cada mes` : (p.subtitle || 'Mensual');
-    text += `• <b>${p.title || 'Pago'}</b>: ${formatMoney(Number(p.amount || 0))}\n  📅 Fecha: <code>${due}</code>\n`;
+    const due = p.billing_day ? `Día ${p.billing_day}` : (p.subtitle || 'Mensual');
+    text += `• <b>${p.title || 'Pago'}</b>: ${formatMoney(Number(p.amount || 0))} (<code>${due}</code>)\n`;
   });
 
   text += `\n💰 <b>Total Pendiente: ${formatMoney(totalPending)}</b>\n`;
-  text += `✅ Pagos ya cancelados este mes: ${completed.length}`;
-  return text;
+  text += `✅ Pagos ya cancelados: ${completed.length}\n\n`;
+  text += `👇 <i>Toca un botón para registrar el pago con 1 toque:</i>`;
+
+  // Construir botonera interactiva: 1 botón por cada pago pendiente
+  const buttons = pending.map(p => ([
+    {
+      text: `💳 Pagar ${p.title} (${formatMoney(Number(p.amount || 0))})`,
+      callback_data: `pay_fp:${p.id}`
+    }
+  ]));
+
+  return {
+    text,
+    replyMarkup: { inline_keyboard: buttons }
+  };
+}
+
+export async function getPendingPaymentsMessage(): Promise<string> {
+  const res = await getPendingPaymentsInteractive();
+  return res.text;
 }
 
 export async function getMonthlyExpensesMessage(): Promise<string> {
@@ -511,25 +532,399 @@ export async function getValisHubSummaryMessage(): Promise<string> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ⚡ REGISTRO RÁPIDO DE GASTO
+// 🛡️ GESTIÓN DE BORRADORES (DRAFTS) Y CONFIRMACIÓN PREVIA (REGLA DE ORO)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function registerQuickExpense(amount: number, category: string, detail: string): Promise<string> {
+export interface TelegramDraft {
+  tipo: 'gasto' | 'pago_fijo' | 'vendido';
+  origen: 'foto_gemini' | 'texto_local' | 'texto_gemini' | 'boton_inline';
+  fecha: string; // YYYY-MM-DD
+  // Gasto
+  monto?: number;
+  detalle?: string;
+  categoria?: string;
+  sub_category?: string;
+  is_credit_card?: boolean;
+  profile_id?: string;
+  // Pago Fijo
+  payment_id?: string;
+  pago_titulo?: string;
+  pago_periodo?: string;
+  // Vendido (Keiko)
+  vendedor_id?: string;
+  vendedor_nombre?: string;
+  vistas?: number;
+  con_compra?: number;
+  sin_compra?: number;
+  contado?: number;
+  credito?: number;
+  total?: number;
+}
+
+export async function saveTelegramDraft(chatId: string | number, draft: TelegramDraft): Promise<boolean> {
   const supabase = getBotSupabase();
-  const today = new Date().toISOString().split('T')[0];
-
-  const { error } = await supabase.from('daily_expenses').insert({
-    date: today,
-    category,
-    detail,
-    amount,
-    is_credit_card: false,
-  });
-
+  const key = `telegram_draft:${chatId}`;
+  const { error } = await supabase.from('app_settings').upsert({ key, value: draft });
   if (error) {
-    console.error('Error insertando gasto:', error);
-    return `❌ No se pudo guardar el gasto: ${error.message}`;
+    console.error('Error guardando draft en app_settings:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function getTelegramDraft(chatId: string | number): Promise<TelegramDraft | null> {
+  const supabase = getBotSupabase();
+  const key = `telegram_draft:${chatId}`;
+  const { data, error } = await supabase.from('app_settings').select('value').eq('key', key).single();
+  if (error || !data?.value) return null;
+  return data.value as TelegramDraft;
+}
+
+export async function deleteTelegramDraft(chatId: string | number): Promise<boolean> {
+  const supabase = getBotSupabase();
+  const key = `telegram_draft:${chatId}`;
+  const { error } = await supabase.from('app_settings').delete().eq('key', key);
+  if (error) {
+    console.error('Error eliminando draft de app_settings:', error);
+    return false;
+  }
+  return true;
+}
+
+export function formatDraftSummaryCard(draft: TelegramDraft): { text: string; replyMarkup: InlineKeyboardMarkup } {
+  let text = `📋 <b>RESUMEN DE REGISTRO</b>\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+
+  if (draft.tipo === 'gasto') {
+    text += `🏢 <b>Comercio / Detalle:</b> ${draft.detalle || 'Gasto'}\n`;
+    text += `💵 <b>Monto:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
+    text += `🏷️ <b>Categoría:</b> ${draft.categoria || 'Varios'}\n`;
+    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
+    text += `👤 <b>Pagador:</b> Cristhian Fuentes\n`;
+    if (draft.is_credit_card) text += `💳 <b>Método:</b> Tarjeta de Crédito\n`;
+  } else if (draft.tipo === 'pago_fijo') {
+    text += `💳 <b>Compromiso:</b> ${draft.pago_titulo}\n`;
+    text += `💵 <b>Monto a liquidar:</b> ${formatMoney(Number(draft.monto || 0))}\n`;
+    text += `📅 <b>Periodo:</b> <code>${draft.pago_periodo}</code>\n`;
+    text += `📌 <b>Acción:</b> Marcar como Pagado en Supabase\n`;
+  } else if (draft.tipo === 'vendido') {
+    text += `👤 <b>Vendedor:</b> ${draft.vendedor_nombre}\n`;
+    text += `📅 <b>Fecha:</b> <code>${draft.fecha}</code>\n`;
+    text += `👥 <b>Visitas del día:</b> ${draft.vistas ?? 0}\n`;
+    text += `✅ <b>Con Compra:</b> ${draft.con_compra ?? 0}  |  ❌ <b>Sin Compra:</b> ${draft.sin_compra ?? 0}\n`;
+    text += `💵 <b>Contado:</b> ${formatMoney(Number(draft.contado ?? 0))}\n`;
+    text += `💳 <b>Crédito:</b> ${formatMoney(Number(draft.credito ?? 0))}\n`;
+    const tot = draft.total || (Number(draft.contado ?? 0) + Number(draft.credito ?? 0));
+    text += `💰 <b>Total Vendido:</b> ${formatMoney(tot)}\n`;
   }
 
-  return `✅ <b>Gasto guardado con éxito</b>\n\n💵 Monto: <b>${formatMoney(amount)}</b>\n📂 Categoría: <b>${category}</b>\n📝 Detalle: <i>${detail}</i>\n📅 Fecha: <code>${today}</code>`;
+  text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  if (draft.origen === 'foto_gemini') {
+    text += `📸 <i>Extraído mediante Gemini Vision de tu factura/recibo.</i>\n`;
+  } else if (draft.origen === 'texto_local') {
+    text += `⚡ <i>Procesado al instante con script local (0 tokens).</i>\n`;
+  } else if (draft.origen === 'boton_inline') {
+    text += `👆 <i>Seleccionado desde la lista de pagos pendientes.</i>\n`;
+  }
+
+  text += `\n⚠️ <b>Verifica los datos antes de enviar a la base de datos:</b>`;
+
+  const replyMarkup: InlineKeyboardMarkup = {
+    inline_keyboard: [
+      [
+        { text: '💾 Enviar a la base de datos', callback_data: 'draft:commit' },
+        { text: '❌ Cancelar', callback_data: 'draft:cancel' }
+      ]
+    ]
+  };
+
+  return { text, replyMarkup };
 }
+
+export async function commitDraft(chatId: string | number): Promise<{ success: boolean; text: string }> {
+  const draft = await getTelegramDraft(chatId);
+  if (!draft) {
+    return {
+      success: false,
+      text: '⚠️ <b>No hay ningún registro pendiente</b> o ya fue procesado con anterioridad.'
+    };
+  }
+
+  const supabase = getBotSupabase();
+
+  if (draft.tipo === 'gasto') {
+    const { error } = await supabase.from('daily_expenses').insert({
+      date: draft.fecha || new Date().toISOString().split('T')[0],
+      category: draft.categoria || 'Varios',
+      detail: draft.detalle || 'Gasto registrado vía Telegram',
+      amount: Number(draft.monto || 0),
+      profile_id: draft.profile_id || 'edc938dc-9fbc-4573-b007-0bdb95114f95', // Cristhian
+      is_credit_card: Boolean(draft.is_credit_card),
+      sub_category: draft.sub_category || null,
+    });
+
+    if (error) {
+      console.error('Error commit draft gasto:', error);
+      return { success: false, text: `❌ Error al guardar el gasto: ${error.message}` };
+    }
+
+    await deleteTelegramDraft(chatId);
+    return {
+      success: true,
+      text: `✅ <b>¡Gasto guardado con éxito en la base de datos!</b>\n\n` +
+            `🏢 Comercio / Detalle: <b>${draft.detalle}</b>\n` +
+            `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
+            `🏷️ Categoría: <code>${draft.categoria || 'Varios'}</code>\n` +
+            `📅 Fecha: <code>${draft.fecha}</code>`
+    };
+  }
+
+  if (draft.tipo === 'pago_fijo') {
+    const { error } = await supabase
+      .from('fixed_payments')
+      .update({ is_paid: true })
+      .eq('id', draft.payment_id);
+
+    if (error) {
+      console.error('Error commit draft pago_fijo:', error);
+      return { success: false, text: `❌ Error al actualizar el pago fijo: ${error.message}` };
+    }
+
+    await deleteTelegramDraft(chatId);
+    return {
+      success: true,
+      text: `✅ <b>¡Pago fijo cancelado y guardado en la base de datos!</b>\n\n` +
+            `💳 Compromiso: <b>${draft.pago_titulo}</b>\n` +
+            `💵 Monto: <b>${formatMoney(Number(draft.monto || 0))}</b>\n` +
+            `📅 Periodo: <code>${draft.pago_periodo}</code>`
+    };
+  }
+
+  if (draft.tipo === 'vendido') {
+    const fechaDate = new Date((draft.fecha || new Date().toISOString().split('T')[0]) + 'T12:00:00');
+    const total = Number(draft.total || (Number(draft.contado || 0) + Number(draft.credito || 0)));
+
+    const { error } = await supabase.from('registros_ventas').insert({
+      vendedor_id: draft.vendedor_id,
+      monto_facturado: total,
+      fecha_registro: fechaDate.toISOString(),
+      mes_periodo: fechaDate.getMonth() + 1,
+      anio_periodo: fechaDate.getFullYear(),
+      vistas: draft.vistas ?? 0,
+      con_compra: draft.con_compra ?? 0,
+      sin_compra: draft.sin_compra ?? 0,
+      contado: Number(draft.contado ?? 0),
+      credito: Number(draft.credito ?? 0),
+    });
+
+    if (error) {
+      console.error('Error commit draft vendido:', error);
+      return { success: false, text: `❌ Error al guardar venta de vendedor: ${error.message}` };
+    }
+
+    await deleteTelegramDraft(chatId);
+    return {
+      success: true,
+      text: `✅ <b>¡Reporte de venta guardado con éxito en ValisBiz!</b>\n\n` +
+            `👤 Vendedor: <b>${draft.vendedor_nombre}</b>\n` +
+            `👥 Visitas: <b>${draft.vistas ?? 0}</b> (Efectivos: ${draft.con_compra ?? 0} · Sin compra: ${draft.sin_compra ?? 0})\n` +
+            `💵 Contado: <b>${formatMoney(Number(draft.contado ?? 0))}</b>\n` +
+            `💳 Crédito: <b>${formatMoney(Number(draft.credito ?? 0))}</b>\n` +
+            `💰 <b>TOTAL: ${formatMoney(total)}</b>\n` +
+            `📅 Fecha: <code>${draft.fecha}</code>`
+    };
+  }
+
+  return { success: false, text: '⚠️ Tipo de registro desconocido.' };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ⚡ PARSERS LOCALES (0 TOKENS - COPIADOS Y ADAPTADOS DE TUS SCRIPTS)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const VENDEDORES_LOCALES = [
+  { id: '1b3f2384-0469-4a49-8fd8-6c803209f556', nombre: 'Andrés Chávez', aliases: ['andres', 'andrés', 'chavez', 'chávez'] },
+  { id: '7be9dd90-9e32-4659-b46d-c307217175b9', nombre: 'Joseph Domínguez', aliases: ['joseph', 'josep', 'dominguez', 'domínguez'] },
+  { id: 'cfb71bc9-697b-4a5f-b618-cd62bee01c05', nombre: 'Enrique del Rosario', aliases: ['enrique', 'del rosario', 'rosario'] },
+  { id: '10a47134-528f-4ac4-8c63-bec4a9224d5b', nombre: 'Carolina Sucre', aliases: ['carolina', 'sucre', 'caro'] },
+];
+
+function numLocal(s: string | undefined): number {
+  if (!s) return 0;
+  let v = s.trim();
+  if (v.includes(',') && v.includes('.')) {
+    v = v.replace(/,/g, '');
+  } else if (/,\d{3}$/.test(v) || /^\d{1,3}(,\d{3})+$/.test(v)) {
+    v = v.replace(/,/g, '');
+  } else if (/,\d{1,2}$/.test(v)) {
+    v = v.replace(',', '.');
+  }
+  return parseFloat(v) || 0;
+}
+
+export function parsearTextoWhatsAppLocal(texto: string, todayInput?: string): TelegramDraft | null {
+  const today = todayInput || new Date().toISOString().split('T')[0];
+
+  // Patrones de visitas
+  const visitasMatch = texto.match(
+    /(?:clientes?\s+(?:visitados?|atendidos?|del\s+d[ií]a)|visitas?(?:\s+del\s+d[ií]a)?|locales?\s+visitados?|recorridos?|clientes?\s+recorridos?)\s*[:\-.]?\s*(\d+)/i
+  );
+
+  // Patrones de con compra / efectivos
+  const efectivosMatch = texto.match(
+    /(?:clientes?\s+(?:efectivos?|con\s+p(?:e|e)didos?|con\s+compra?|facturados?|cerrados?)|efectivos?|con\s+p(?:e|e)didos?|con\s+compra|compraron|ventas?\s+cerradas?|p(?:e|e)didos?\s+tomados?)\s*[:\-.]?\s*(\d+)/i
+  );
+
+  // Sin compra explícito
+  const sinCompraMatch = texto.match(/(?:sin\s+compra|no\s+compraron|sin\s+p(?:e|e)didos?|clientes?\s+sin\s+(?:compra|pedido))\s*[:\-.]?\s*(\d+)/i);
+
+  // Contado
+  const contadoMatch = texto.match(/(?:al?\s+contado|en\s+efectivo|contado)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
+  // Crédito
+  const creditoMatch = texto.match(/(?:a?\s*cr[eé]dito|en\s+cr[eé]dito)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
+  // Valor recaudado / total
+  const recaudadoMatch = texto.match(/(?:valor\s+recaudado|total\s+recaudado|recaud[eé]|recaudado|vendido\s+hoy|total\s+del\s+d[ií]a|monto\s+total|valor\s+cobrado|cobrado)\s*[:\-.]?\s*(\d[\d,\.]*)/i);
+
+  const tieneVentas = visitasMatch || efectivosMatch || contadoMatch || creditoMatch || recaudadoMatch;
+  if (!tieneVentas) return null;
+
+  const vistas = visitasMatch ? parseInt(visitasMatch[1]) : undefined;
+  const con_compra = efectivosMatch ? parseInt(efectivosMatch[1]) : undefined;
+  const sin_compra_explicito = sinCompraMatch ? parseInt(sinCompraMatch[1]) : undefined;
+  const sin_compra = sin_compra_explicito ?? (vistas !== undefined && con_compra !== undefined ? Math.max(0, vistas - con_compra) : 0);
+
+  let contado = contadoMatch ? numLocal(contadoMatch[1]) : 0;
+  const credito = creditoMatch ? numLocal(creditoMatch[1]) : 0;
+  if (!contadoMatch && recaudadoMatch && !creditoMatch) {
+    contado = numLocal(recaudadoMatch[1]);
+  } else if (!contadoMatch && recaudadoMatch && creditoMatch) {
+    contado = Math.max(0, numLocal(recaudadoMatch[1]) - credito);
+  }
+
+  // Detectar vendedor
+  const t = texto.toLowerCase();
+  let vend = VENDEDORES_LOCALES.find(v => v.aliases.some(a => t.includes(a)));
+  if (!vend) {
+    // Si no lo menciona, predeterminado Joseph si menciona ventas comunes o dejar primer vendedor
+    vend = VENDEDORES_LOCALES[1]; // Joseph
+  }
+
+  // Detectar fecha
+  let fecha = today;
+  if (/\bayer\b/i.test(texto)) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - 1);
+    fecha = d.toISOString().split('T')[0];
+  }
+
+  return {
+    tipo: 'vendido',
+    origen: 'texto_local',
+    fecha,
+    vendedor_id: vend.id,
+    vendedor_nombre: vend.nombre,
+    vistas: vistas ?? 0,
+    con_compra: con_compra ?? 0,
+    sin_compra: sin_compra ?? 0,
+    contado,
+    credito,
+    total: contado + credito,
+  };
+}
+
+export async function matchPendingFixedPayment(query: string): Promise<TelegramDraft | null> {
+  const supabase = getBotSupabase();
+  const d = new Date();
+  const period = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+
+  const cleanQuery = query.toLowerCase().replace(/^\/pagado\s*/i, '').replace(/^ya\s+pagu[eé]\s*/i, '').replace(/^pagu[eé]\s*/i, '').trim();
+  if (!cleanQuery) return null;
+
+  const { data: payments } = await supabase
+    .from('fixed_payments')
+    .select('*')
+    .eq('period', period)
+    .eq('is_paid', false);
+
+  if (!payments || payments.length === 0) return null;
+
+  // Buscar coincidencia parcial por título
+  const match = payments.find(p => p.title.toLowerCase().includes(cleanQuery) || cleanQuery.includes(p.title.toLowerCase()));
+  if (!match) return null;
+
+  return {
+    tipo: 'pago_fijo',
+    origen: 'texto_local',
+    fecha: d.toISOString().split('T')[0],
+    payment_id: match.id,
+    pago_titulo: match.title,
+    pago_periodo: match.period,
+    monto: Number(match.amount || 0)
+  };
+}
+
+export async function getFixedPaymentById(id: string) {
+  const supabase = getBotSupabase();
+  const { data } = await supabase.from('fixed_payments').select('*').eq('id', id).single();
+  return data;
+}
+
+export function parseQuickExpenseLocal(texto: string, todayInput?: string): TelegramDraft | null {
+  const today = todayInput || new Date().toISOString().split('T')[0];
+  const t = texto.trim();
+
+  // Patrones: "gasto 15 almuerzo", "gasté 22.50 gasolina", "compré 45 súper 99", "pagué 8 farmacia"
+  const m = t.match(/^(?:gasto|gast[eé]|compr[eé]|pagu[eé])\s+(\d+(?:[.,]\d+)?)\s+(?:en\s+)?(.+)$/i);
+  if (!m) return null;
+
+  const monto = numLocal(m[1]);
+  const detalle = m[2].trim();
+
+  // Inferencia básica de categoría
+  let categoria = 'Varios';
+  const detLow = detalle.toLowerCase();
+  if (/super|comida|almuerzo|cena|desayuno|restaurante|cafe|mcdonalds|kfc/i.test(detLow)) categoria = 'Alimentación';
+  else if (/gasolina|carro|combustible|taller|lavado|yaris|tucson/i.test(detLow)) categoria = 'Transporte / Auto';
+  else if (/farmacia|medicina|clinica|doctor/i.test(detLow)) categoria = 'Salud';
+  else if (/luz|agua|cable|internet|telefono|naturgy|idaan|tigo/i.test(detLow)) categoria = 'Servicios Básicos';
+
+  return {
+    tipo: 'gasto',
+    origen: 'texto_local',
+    fecha: today,
+    monto,
+    detalle,
+    categoria,
+    profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95', // Cristhian
+    is_credit_card: false,
+  };
+}
+
+export function getValisPersistentKeyboard(): ReplyKeyboardMarkup {
+  return {
+    keyboard: [
+      [{ text: '📊 Menú ValisHub' }, { text: '💳 Pagos Pendientes' }],
+      [{ text: '📈 Reporte Keiko' }, { text: '💡 Guía de Registro' }]
+    ],
+    resize_keyboard: true,
+    is_persistent: true
+  };
+}
+
+export function getRegistrationGuideMessage(): string {
+  return `💡 <b>Guía Rápida de Registro en ValisHub</b>\n\n` +
+    `Recuerda: <b>¡NUNCA se guarda directo!</b> Siempre verás una tarjeta de resumen con el botón <code>[💾 Enviar a la base de datos]</code> para tu aprobación.\n\n` +
+    `📸 <b>1. Fotos de Facturas o Recibos:</b>\n` +
+    `Envía cualquier foto de un ticket o recibo. La IA leerá el comercio, monto total, categoría y fecha impresa.\n\n` +
+    `💳 <b>2. Pagos Fijos:</b>\n` +
+    `• Toca el botón <b>💳 Pagos Pendientes</b> y pulsa sobre el compromiso a pagar.\n` +
+    `• O escribe: <code>/pagado Naturgy</code> o <code>Pagué el internet</code>.\n\n` +
+    `📈 <b>3. Reportes de Ventas Keiko (0 Tokens):</b>\n` +
+    `Pega el reporte tal como llega en WhatsApp:\n` +
+    `<code>Joseph: 12 visitados, 7 efectivos, 588.28 contado</code>\n` +
+    `El script local lo procesa en 1 ms a costo $0.\n\n` +
+    `💸 <b>4. Gastos Diarios Rápidos:</b>\n` +
+    `Escribe: <code>Gasto 15 almuerzo en Trapiche</code>\n\n` +
+    `🚫 <i>Si te equivocas en cualquier momento, pulsa Cancelar o escribe /cancelar.</i>`;
+}
+

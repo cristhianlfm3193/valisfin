@@ -15,6 +15,19 @@ export interface InlineKeyboardMarkup {
   inline_keyboard: InlineButton[][];
 }
 
+export interface KeyboardButton {
+  text: string;
+}
+
+export interface ReplyKeyboardMarkup {
+  keyboard: KeyboardButton[][];
+  resize_keyboard?: boolean;
+  one_time_keyboard?: boolean;
+  is_persistent?: boolean;
+}
+
+export type TelegramReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup;
+
 /**
  * Valida si un Chat ID está autorizado para usar el bot.
  * Si TELEGRAM_ALLOWED_CHAT_IDS no está definido, se permite para que el dueño
@@ -30,12 +43,12 @@ export function isChatAuthorized(chatId: number | string): boolean {
 }
 
 /**
- * Envía un mensaje con formato HTML y teclado opcional
+ * Envía un mensaje con formato HTML y teclado opcional (Inline o Reply)
  */
 export async function sendTelegramMessage(
   chatId: number | string,
   text: string,
-  replyMarkup?: InlineKeyboardMarkup
+  replyMarkup?: TelegramReplyMarkup
 ) {
   if (!BOT_TOKEN) {
     console.error('TELEGRAM_BOT_TOKEN no configurado');
@@ -131,3 +144,70 @@ export async function sendChatAction(chatId: number | string, action: 'typing' =
     // Silencioso
   }
 }
+
+/**
+ * Descarga una foto enviada por Telegram y la convierte a Base64
+ */
+export async function downloadTelegramImageAsBase64(fileId: string): Promise<{ base64: string; mimeType: string } | null> {
+  if (!BOT_TOKEN) return null;
+
+  try {
+    // 1. Obtener file_path
+    const fileRes = await fetch(`${TELEGRAM_API}/getFile?file_id=${encodeURIComponent(fileId)}`);
+    const fileData = await fileRes.json();
+    if (!fileData.ok || !fileData.result?.file_path) {
+      console.error('Error obteniendo file_path de Telegram:', fileData);
+      return null;
+    }
+
+    const filePath = fileData.result.file_path;
+    const downloadUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
+
+    // 2. Descargar el archivo binario
+    const imageRes = await fetch(downloadUrl);
+    if (!imageRes.ok) {
+      console.error('Error descargando imagen de Telegram:', imageRes.statusText);
+      return null;
+    }
+
+    const arrayBuffer = await imageRes.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+
+    let mimeType = 'image/jpeg';
+    if (filePath.endsWith('.png')) mimeType = 'image/png';
+    else if (filePath.endsWith('.webp')) mimeType = 'image/webp';
+    else if (filePath.endsWith('.pdf')) mimeType = 'application/pdf';
+
+    return { base64, mimeType };
+  } catch (err) {
+    console.error('Error descargando foto de Telegram:', err);
+    return null;
+  }
+}
+
+/**
+ * Configura la lista de comandos sugeridos en el menú nativo del bot en Telegram
+ */
+export async function setTelegramBotCommands() {
+  if (!BOT_TOKEN) return null;
+  const commands = [
+    { command: 'menu', description: '📊 Menú interactivo principal' },
+    { command: 'pagos', description: '💳 Ver y pagar compromisos pendientes' },
+    { command: 'gastos', description: '💸 Resumen de gastos del mes' },
+    { command: 'keiko', description: '📈 Reporte de ventas de vendedores' },
+    { command: 'cancelar', description: '🚫 Cancelar registro pendiente' },
+  ];
+
+  try {
+    const res = await fetch(`${TELEGRAM_API}/setMyCommands`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commands }),
+    });
+    return await res.json();
+  } catch (err) {
+    console.error('Error configurando comandos en Telegram:', err);
+    return null;
+  }
+}
+

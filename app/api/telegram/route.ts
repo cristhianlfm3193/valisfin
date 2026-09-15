@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { 
   sendTelegramMessage, 
   editTelegramMessage, 
   answerCallbackQuery, 
   sendChatAction, 
-  isChatAuthorized 
+  isChatAuthorized,
+  downloadTelegramImageAsBase64,
+  setTelegramBotCommands
 } from '@/lib/telegram/bot';
 import { 
   getMainMenuKeyboard, 
@@ -16,6 +18,7 @@ import {
 } from '@/lib/telegram/menus';
 import {
   getPendingPaymentsMessage,
+  getPendingPaymentsInteractive,
   getMonthlyExpensesMessage,
   getItemizedExpensesList,
   getVehiclesMessage,
@@ -29,7 +32,17 @@ import {
   getBdrhStatsMessage,
   searchBdrhPerson,
   getValisHubSummaryMessage,
-  registerQuickExpense
+  saveTelegramDraft,
+  deleteTelegramDraft,
+  commitDraft,
+  formatDraftSummaryCard,
+  parsearTextoWhatsAppLocal,
+  matchPendingFixedPayment,
+  parseQuickExpenseLocal,
+  getValisPersistentKeyboard,
+  getRegistrationGuideMessage,
+  getFixedPaymentById,
+  TelegramDraft
 } from '@/lib/telegram/queries';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -61,7 +74,49 @@ export async function POST(req: Request) {
         return NextResponse.json({ ok: true });
       }
 
-      // Despacho de Navegación de Menús
+      // ── 1.1 REGLA DE ORO: CONFIRMACIÓN Y CANCELACIÓN DE BORRADORES ────────
+      if (data === 'draft:commit') {
+        const result = await commitDraft(chatId);
+        await editTelegramMessage(chatId, messageId, result.text);
+        return NextResponse.json({ ok: true });
+      }
+
+      if (data === 'draft:cancel') {
+        await deleteTelegramDraft(chatId);
+        await editTelegramMessage(
+          chatId,
+          messageId,
+          `🚫 <b>Registro cancelado</b>. No se guardó ningún dato en la base de datos.`
+        );
+        return NextResponse.json({ ok: true });
+      }
+
+      // ── 1.2 PAGO FIJO SELECCIONADO POR BOTÓN INTERACTIVO ─────────────────
+      if (data.startsWith('pay_fp:')) {
+        const paymentId = data.replace('pay_fp:', '');
+        const payment = await getFixedPaymentById(paymentId);
+        if (!payment) {
+          await editTelegramMessage(chatId, messageId, '❌ No se encontró el pago fijo especificado.');
+          return NextResponse.json({ ok: true });
+        }
+
+        const draft: TelegramDraft = {
+          tipo: 'pago_fijo',
+          origen: 'boton_inline',
+          fecha: new Date().toISOString().split('T')[0],
+          payment_id: payment.id,
+          pago_titulo: payment.title,
+          pago_periodo: payment.period,
+          monto: Number(payment.amount || 0)
+        };
+
+        await saveTelegramDraft(chatId, draft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(draft);
+        await editTelegramMessage(chatId, messageId, summaryText, replyMarkup);
+        return NextResponse.json({ ok: true });
+      }
+
+      // ── 1.3 DESPACHO DE NAVEGACIÓN DE MENÚS ──────────────────────────────
       if (data === 'menu:main') {
         await editTelegramMessage(
           chatId,
@@ -93,8 +148,8 @@ export async function POST(req: Request) {
       } 
       // Despacho de Consultas ValisFin
       else if (data === 'valisfin:pagos') {
-        const text = await getPendingPaymentsMessage();
-        await editTelegramMessage(chatId, messageId, text, getBackKeyboard('valisfin'));
+        const res = await getPendingPaymentsInteractive();
+        await editTelegramMessage(chatId, messageId, res.text, res.replyMarkup || getBackKeyboard('valisfin'));
       } else if (data === 'valisfin:gastos') {
         const text = await getMonthlyExpensesMessage();
         await editTelegramMessage(chatId, messageId, text, getBackKeyboard('valisfin'));
@@ -135,29 +190,22 @@ export async function POST(req: Request) {
         const text = await getValisHubSummaryMessage();
         await editTelegramMessage(chatId, messageId, text, getMainMenuKeyboard());
       } else if (data === 'valishub:ayuda') {
-        const text = `💡 <b>Atajos Rápidos en ValisHub Bot:</b>\n\n` +
-          `• <code>/pagos</code> - Pagos fijos pendientes\n` +
-          `• <code>/gastos</code> - Resumen de gastos del mes\n` +
-          `• <code>/carros</code> - Kilometraje y mantenimientos\n` +
-          `• <code>/metas</code> - Metas de ahorro\n` +
-          `• <code>/biz</code> - Métricas de ventas Keiko\n` +
-          `• <code>/an</code> - Reportes de ValisAN\n` +
-          `• <code>/cip 12345</code> - Búsqueda en BD-RH\n` +
-          `• <code>/gasto 15.50 Super Pan y leche</code> - Registrar gasto rápido\n\n` +
-          `<i>También puedes hacerme cualquier pregunta abierta en texto si necesitas un análisis financiero con IA.</i>`;
+        const text = getRegistrationGuideMessage();
         await editTelegramMessage(chatId, messageId, text, getMainMenuKeyboard());
       }
 
       return NextResponse.json({ ok: true });
     }
 
-    // 2. Manejo de Mensajes de Texto
+    // 2. Manejo de Mensajes (Fotos y Texto)
     if (update.message) {
       const msg = update.message;
       const chatId = msg.chat?.id;
       const text = (msg.text || '').trim();
+      const photo = msg.photo;
+      const caption = (msg.caption || '').trim();
 
-      if (!chatId || !text) {
+      if (!chatId || (!text && (!photo || photo.length === 0))) {
         return NextResponse.json({ ok: true });
       }
 
@@ -169,24 +217,219 @@ export async function POST(req: Request) {
         return NextResponse.json({ ok: true });
       }
 
+      // ── 2.1 PROCESAMIENTO DE FOTOS (FACTURAS / RECIBOS CON GEMINI VISION) ──
+      if (photo && photo.length > 0) {
+        await sendChatAction(chatId, 'typing');
+        const photoObj = photo[photo.length - 1]; // Imagen de mayor resolución
+        const downloaded = await downloadTelegramImageAsBase64(photoObj.file_id);
+
+        if (!downloaded) {
+          await sendTelegramMessage(
+            chatId,
+            '❌ No se pudo descargar la imagen desde Telegram. Por favor intenta enviarla de nuevo.'
+          );
+          return NextResponse.json({ ok: true });
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        const prompt = `Analiza este ticket, factura o recibo de compra en Panamá.
+INSTRUCCIONES CRÍTICAS:
+1. comercio: Nombre de la empresa, comercio o negocio (generalmente en la cabecera superior).
+2. detalle: Breve descripción de los artículos comprados. Si el usuario escribió una nota ("${caption}"), incorpórala.
+3. monto_total: Identifica el monto total a pagar (TOTAL A PAGAR, TOTAL IMPORTE, etc.) en dólares/balboas.
+4. categoria: Infiere la categoría lógica (Supermercado, Restaurante, Farmacia, Ferretería, Tecnología, Servicios Básicos, Transporte, etc.).
+5. fecha: Busca la fecha impresa en el documento (formato panameño DD/MM/YYYY) y conviértela estrictamente a YYYY-MM-DD. Si no hay fecha legible en la imagen, usa '${today}'.`;
+
+        const schema: Schema = {
+          type: Type.OBJECT,
+          properties: {
+            comercio: { type: Type.STRING, description: "Nombre del negocio emisor" },
+            detalle: { type: Type.STRING, description: "Resumen de lo comprado" },
+            monto_total: { type: Type.NUMBER, description: "Monto total a pagar" },
+            categoria: { type: Type.STRING, description: "Categoría de gasto" },
+            fecha: { type: Type.STRING, description: "Fecha en formato YYYY-MM-DD" }
+          },
+          required: ["comercio", "detalle", "monto_total", "categoria", "fecha"]
+        };
+
+        try {
+          const aiRes = await ai.models.generateContent({
+            model: 'gemini-3.5-flash-lite',
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  { inlineData: { data: downloaded.base64, mimeType: downloaded.mimeType } },
+                  { text: prompt }
+                ]
+              }
+            ],
+            config: {
+              responseMimeType: 'application/json',
+              responseSchema: schema,
+            }
+          });
+
+          const parsed = JSON.parse(aiRes.text || '{}');
+          if (!parsed.monto_total || parsed.monto_total <= 0) {
+            await sendTelegramMessage(
+              chatId,
+              '⚠️ No pude detectar con precisión el monto total de la factura. Asegúrate de que la foto esté bien iluminada o regístralo escribiendo: <code>Gasto 15 Súper 99</code>.'
+            );
+            return NextResponse.json({ ok: true });
+          }
+
+          const draft: TelegramDraft = {
+            tipo: 'gasto',
+            origen: 'foto_gemini',
+            fecha: parsed.fecha || today,
+            monto: Number(parsed.monto_total),
+            detalle: `${parsed.comercio} - ${parsed.detalle || 'Factura'}`,
+            categoria: parsed.categoria || 'Varios',
+            profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95', // Cristhian Fuentes
+            is_credit_card: false,
+          };
+
+          await saveTelegramDraft(chatId, draft);
+          const { text: summaryText, replyMarkup } = formatDraftSummaryCard(draft);
+          await sendTelegramMessage(chatId, summaryText, replyMarkup);
+          return NextResponse.json({ ok: true });
+        } catch (aiPhotoErr) {
+          console.error('Error analizando foto con Gemini Vision:', aiPhotoErr);
+          await sendTelegramMessage(
+            chatId,
+            '❌ Ocurrió un error al analizar la factura con IA. Intenta de nuevo o escríbelo en texto: <code>Gasto 20 Farmacia</code>.'
+          );
+          return NextResponse.json({ ok: true });
+        }
+      }
+
+      // ── 2.2 BOTONES DEL TECLADO PERSISTENTE INFERIOR ────────────────────
+      if (text === '📊 Menú ValisHub') {
+        await sendTelegramMessage(
+          chatId,
+          `🏢 <b>Menú Principal • ValisHub</b>\n\nSelecciona el ecosistema que deseas consultar en tiempo real:`,
+          getMainMenuKeyboard()
+        );
+        return NextResponse.json({ ok: true });
+      }
+
+      if (text === '💳 Pagos Pendientes' || text === '/pagos') {
+        const res = await getPendingPaymentsInteractive();
+        await sendTelegramMessage(chatId, res.text, res.replyMarkup || getBackKeyboard('valisfin'));
+        return NextResponse.json({ ok: true });
+      }
+
+      if (text === '📈 Reporte Keiko' || text === '/keiko' || text === '/biz') {
+        const metrics = await getBizMetricsMessage();
+        const sellers = await getBizSellersMessage();
+        await sendTelegramMessage(chatId, `${metrics}\n\n${sellers}`, getBackKeyboard('valisbiz'));
+        return NextResponse.json({ ok: true });
+      }
+
+      if (text === '💡 Guía de Registro' || text === '/ayuda') {
+        const guide = getRegistrationGuideMessage();
+        await sendTelegramMessage(chatId, guide, getMainMenuKeyboard());
+        return NextResponse.json({ ok: true });
+      }
+
+      // Cancelación explícita de borrador
+      if (text === '/cancelar' || text.toLowerCase() === 'cancelar') {
+        await deleteTelegramDraft(chatId);
+        await sendTelegramMessage(chatId, `🚫 <b>Borrador cancelado</b>. No hay ningún registro pendiente.`);
+        return NextResponse.json({ ok: true });
+      }
+
       // Comando /start o /menu
       if (text === '/start' || text === '/menu') {
+        setTelegramBotCommands().catch(console.error);
+
+        // Enviar teclado persistente en pantalla y menú interactivo
         await sendTelegramMessage(
           chatId,
           `👋 <b>¡Hola Cristhian! Bienvenido a ValisHub Bot</b>\n\n` +
           `🆔 Tu Chat ID: <code>${chatId}</code>\n\n` +
+          `✅ Tienes botones rápidos permanentes en la parte inferior de tu pantalla para consultas en 1 toque.`,
+          getValisPersistentKeyboard()
+        );
+
+        await sendTelegramMessage(
+          chatId,
           `Elige el módulo que deseas consultar al instante (0 tokens de IA):`,
           getMainMenuKeyboard()
         );
         return NextResponse.json({ ok: true });
       }
 
-      // Atajos directos por comando
-      if (text === '/pagos') {
-        const res = await getPendingPaymentsMessage();
-        await sendTelegramMessage(chatId, res, getBackKeyboard('valisfin'));
+      // ── 2.3 OPCIÓN B: REGISTRAR PAGOS FIJOS POR TEXTO (0 TOKENS) ─────────
+      if (text.startsWith('/pagado') || /^ya\s+pagu[eé]/i.test(text) || /^pagu[eé]\s+(el|la|mi)?\s*/i.test(text)) {
+        const paymentDraft = await matchPendingFixedPayment(text);
+        if (paymentDraft) {
+          await saveTelegramDraft(chatId, paymentDraft);
+          const { text: summaryText, replyMarkup } = formatDraftSummaryCard(paymentDraft);
+          await sendTelegramMessage(chatId, summaryText, replyMarkup);
+          return NextResponse.json({ ok: true });
+        } else {
+          const res = await getPendingPaymentsInteractive();
+          await sendTelegramMessage(
+            chatId,
+            `⚠️ No encontré ningún pago fijo pendiente que coincida con esa búsqueda este mes.\n\nAquí tienes la lista actual de compromisos pendientes:`,
+            res.replyMarkup
+          );
+          return NextResponse.json({ ok: true });
+        }
+      }
+
+      // ── 2.4 REPORTES DE VENTAS KEIKO (PARSER LOCAL WHATSAPP - 0 TOKENS) ───
+      const whatsappSaleDraft = parsearTextoWhatsAppLocal(text);
+      if (whatsappSaleDraft) {
+        await saveTelegramDraft(chatId, whatsappSaleDraft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(whatsappSaleDraft);
+        await sendTelegramMessage(chatId, summaryText, replyMarkup);
         return NextResponse.json({ ok: true });
       }
+
+      // ── 2.5 REGISTRO RÁPIDO DE GASTOS (PARSER LOCAL - 0 TOKENS) ───────────
+      const quickExpenseDraft = parseQuickExpenseLocal(text);
+      if (quickExpenseDraft) {
+        await saveTelegramDraft(chatId, quickExpenseDraft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(quickExpenseDraft);
+        await sendTelegramMessage(chatId, summaryText, replyMarkup);
+        return NextResponse.json({ ok: true });
+      }
+
+      // Compatibilidad con comando legacy /gasto monto categoria detalle (con confirmación previa)
+      if (text.startsWith('/gasto ')) {
+        const parts = text.replace('/gasto ', '').trim().split(' ');
+        const amount = parseFloat(parts[0]);
+        if (isNaN(amount) || amount <= 0) {
+          await sendTelegramMessage(
+            chatId,
+            `⚠️ Formato incorrecto. Ejemplo de uso:\n<code>/gasto 15.50 Supermercado Pan y leche</code>`
+          );
+          return NextResponse.json({ ok: true });
+        }
+        const category = parts[1] || 'Varios';
+        const detail = parts.slice(2).join(' ') || 'Gasto registrado vía Telegram';
+
+        const draft: TelegramDraft = {
+          tipo: 'gasto',
+          origen: 'texto_local',
+          fecha: new Date().toISOString().split('T')[0],
+          monto: amount,
+          categoria: category,
+          detalle: detail,
+          profile_id: 'edc938dc-9fbc-4573-b007-0bdb95114f95',
+          is_credit_card: false,
+        };
+
+        await saveTelegramDraft(chatId, draft);
+        const { text: summaryText, replyMarkup } = formatDraftSummaryCard(draft);
+        await sendTelegramMessage(chatId, summaryText, replyMarkup);
+        return NextResponse.json({ ok: true });
+      }
+
+      // Atajos directos por comando
       if (text === '/gastos') {
         const res = await getMonthlyExpensesMessage();
         await sendTelegramMessage(chatId, res, getBackKeyboard('valisfin'));
@@ -200,11 +443,6 @@ export async function POST(req: Request) {
       if (text === '/metas') {
         const res = await getGoalsMessage();
         await sendTelegramMessage(chatId, res, getBackKeyboard('valisfin'));
-        return NextResponse.json({ ok: true });
-      }
-      if (text === '/biz') {
-        const res = await getBizMetricsMessage();
-        await sendTelegramMessage(chatId, res, getBackKeyboard('valisbiz'));
         return NextResponse.json({ ok: true });
       }
       if (text === '/an') {
@@ -225,25 +463,6 @@ export async function POST(req: Request) {
         const term = text.split(' ').slice(1).join(' ');
         const res = await searchBdrhPerson(term);
         await sendTelegramMessage(chatId, res, getBackKeyboard('valisan'));
-        return NextResponse.json({ ok: true });
-      }
-
-      // Registro rápido de gasto: /gasto 12.50 Supermercado Compras
-      if (text.startsWith('/gasto ')) {
-        const parts = text.replace('/gasto ', '').trim().split(' ');
-        const amount = parseFloat(parts[0]);
-        if (isNaN(amount) || amount <= 0) {
-          await sendTelegramMessage(
-            chatId,
-            `⚠️ Formato incorrecto. Ejemplo de uso:\n<code>/gasto 15.50 Supermercado Pan y leche</code>`
-          );
-          return NextResponse.json({ ok: true });
-        }
-        const category = parts[1] || 'Varios';
-        const detail = parts.slice(2).join(' ') || 'Gasto registrado vía Telegram';
-
-        const res = await registerQuickExpense(amount, category, detail);
-        await sendTelegramMessage(chatId, res, getBackKeyboard('valisfin'));
         return NextResponse.json({ ok: true });
       }
 
