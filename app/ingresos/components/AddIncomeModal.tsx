@@ -62,20 +62,20 @@ export function AddIncomeModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Modal Header */}
-          <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/5 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-white">
+          <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/10 flex items-start justify-between bg-transparent">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
                 <Wallet className="w-5 h-5" />
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Registrar Ingreso</h2>
-                <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Añade una quincena, bono o ingreso eventual al flujo</p>
+                <p className="text-xs sm:text-sm text-slate-400 mt-0.5">Añade una quincena, bono o ingreso eventual al flujo</p>
               </div>
             </div>
             <button 
               type="button"
               onClick={handleClose}
-              className="p-1.5 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors"
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

@@ -118,21 +118,21 @@ export function PayFixedPaymentModal({ isOpen, onClose, fixedPayments, initialDa
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/5 flex items-start justify-between bg-gradient-to-b from-slate-50/80 to-white">
+        <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/10 flex items-start justify-between bg-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-violet-50 border border-violet-100 text-violet-700 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-violet-500/20 border border-violet-500/30 text-violet-400 flex items-center justify-center shrink-0">
               <Calendar className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Pago de Gasto Fijo</h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Registra el pago de una obligación pendiente</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">Registra el pago de una obligación pendiente</p>
             </div>
           </div>
           <button 
             type="button"
             onClick={handleClose}
             disabled={isPending}
-            className="p-1.5 text-slate-400 hover:text-slate-400 hover:bg-slate-100 rounded-full transition-colors disabled:opacity-50"
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
