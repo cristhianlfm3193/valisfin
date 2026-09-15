@@ -180,7 +180,7 @@ function ValisANDashboard() {
       setLoading(false);
     }
     fetchData();
-  }, [supabase]);
+  }, []);
 
   const filteredReportes = useMemo(() => {
     if (!reportes.length) return [];
@@ -423,7 +423,7 @@ function ValisANAIPP({ setGlobalAiData, setIsGlobalReporteModalOpen, refreshCoun
 
   useEffect(() => {
     fetchReportes();
-  }, [supabase, refreshCounter]);
+  }, [refreshCounter]);
 
   const filteredReportes = useMemo(() => {
     let result = reportes;
@@ -777,7 +777,7 @@ function ValisANBDRH() {
       setLoading(false);
     }
     fetchData();
-  }, [supabase]);
+  }, []);
 
   // Calculate rank counts for filter buttons
   const rankCounts = useMemo(() => {

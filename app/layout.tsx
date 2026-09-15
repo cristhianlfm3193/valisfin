@@ -7,7 +7,7 @@ import StarBackground from "./components/StarBackground";
 import { NavigationLoader } from "./components/NavigationLoader";
 import { Suspense } from "react";
 
-import { createClient } from "@/lib/supabase/server";
+import { getCachedUser, getCachedProfile } from "@/lib/supabase/server";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -35,14 +35,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let profile = null;
-  if (user) {
-    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    profile = data;
-  }
+  const user = await getCachedUser();
+  const profile = user ? await getCachedProfile(user.id) : null;
 
   return (
     <html lang="es" suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full bg-[#090a0f] overscroll-none`}>

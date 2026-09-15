@@ -14,7 +14,7 @@ import {
   Orbit,
   Shield
 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
+import { getCachedUser, getCachedProfile } from '@/lib/supabase/server';
 import { PortalButton } from '@/app/components/PortalButton';
 
 export const metadata = {
@@ -22,13 +22,12 @@ export const metadata = {
 };
 
 export default async function PortalPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCachedUser();
+  const profile = user ? await getCachedProfile(user.id) : null;
   const fullName = user?.user_metadata?.full_name || "Usuario";
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  const { data: profile } = await supabase.from('profiles').select('app_access, role').eq('id', user?.id).single();
   const appAccess = profile?.app_access || ['valisfin', 'valisbiz', 'valisan'];
   const isAdmin = profile?.role === 'administrador';
 

@@ -93,7 +93,7 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'audit_logs' },
-        async (payload) => {
+        async (payload: any) => {
           const newLog = payload.new;
           if (newLog.user_id) {
             const { data: profile } = await supabase
@@ -113,7 +113,7 @@ export function AuditLogTable({ initialLogs }: AuditLogTableProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, []);
 
   // Filtering Logic
   const filteredLogs = logs.filter(log => {
