@@ -66,15 +66,21 @@ export async function getPendingPaymentsMessage(): Promise<string> {
 export async function getMonthlyExpensesMessage(): Promise<string> {
   const supabase = getBotSupabase();
   const d = new Date();
-  const period = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const year = d.getFullYear();
+  const month = d.getMonth();
+  const firstDay = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+  const lastDayDate = new Date(year, month + 1, 0);
+  const lastDay = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDayDate.getDate()).padStart(2, '0')}`;
+  const period = `${year}-${String(month + 1).padStart(2, '0')}`;
 
   const { data: expenses, error } = await supabase
     .from('daily_expenses')
     .select('*')
-    .gte('date', `${period}-01`)
-    .lte('date', `${period}-31`);
+    .gte('date', firstDay)
+    .lte('date', lastDay);
 
   if (error || !expenses) {
+    console.error('Error fetching daily expenses:', error);
     return '❌ Error al consultar los gastos diarios.';
   }
 
@@ -104,6 +110,29 @@ export async function getMonthlyExpensesMessage(): Promise<string> {
 
   text += `\n💵 <b>Total Acumulado: ${formatMoney(totalSpent)}</b> (${expenses.length} transacciones)`;
   return text;
+}
+
+export async function getItemizedExpensesList(): Promise<string> {
+  const supabase = getBotSupabase();
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = d.getMonth();
+  const firstDay = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+  const lastDayDate = new Date(year, month + 1, 0);
+  const lastDay = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDayDate.getDate()).padStart(2, '0')}`;
+
+  const { data: expenses, error } = await supabase
+    .from('daily_expenses')
+    .select('date, category, detail, amount, is_credit_card')
+    .gte('date', firstDay)
+    .lte('date', lastDay)
+    .order('date', { ascending: false });
+
+  if (error || !expenses || expenses.length === 0) {
+    return 'No hay compras registradas en este mes.';
+  }
+
+  return expenses.map((e: any) => `- ${e.date} | ${e.category}: ${e.detail} (${formatMoney(Number(e.amount || 0))})${e.is_credit_card ? ' [TC]' : ''}`).join('\n');
 }
 
 function cleanText(str?: string | null): string {

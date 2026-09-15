@@ -17,6 +17,7 @@ import {
 import {
   getPendingPaymentsMessage,
   getMonthlyExpensesMessage,
+  getItemizedExpensesList,
   getVehiclesMessage,
   getGoalsMessage,
   getHomeTasksMessage,
@@ -263,9 +264,10 @@ export async function POST(req: Request) {
 
       try {
         // Obtenemos contexto integral de la base de datos para nutrir a Gemini
-        const [payments, expenses, vehicles, bizMetrics, sellers, goals, reports] = await Promise.all([
+        const [payments, expenses, itemizedExpenses, vehicles, bizMetrics, sellers, goals, reports] = await Promise.all([
           getPendingPaymentsMessage(),
           getMonthlyExpensesMessage(),
+          getItemizedExpensesList(),
           getVehiclesMessage(),
           getBizMetricsMessage(),
           getBizSellersMessage(),
@@ -291,7 +293,7 @@ export async function POST(req: Request) {
         const searchTerms = text
           .replace(/[?¿!¡,.:;]/g, '')
           .split(' ')
-          .filter((w: string) => w.length >= 3 && !/^(cual|cuál|como|cómo|donde|dónde|quien|quién|cuanto|cuánto|placa|placas|auto|autos|carro|carros|posicion|posición|vehiculo|vehículos|dime|saber|favor|por|reporte|reportes|vendedor|vendedores)$/i.test(w));
+          .filter((w: string) => w.length >= 3 && !/^(cual|cuál|como|cómo|donde|dónde|quien|quién|cuanto|cuánto|placa|placas|auto|autos|carro|carros|posicion|posición|vehiculo|vehículos|dime|saber|favor|por|reporte|reportes|vendedor|vendedores|gasto|gastos|compra|compras|fijos|fijo)$/i.test(w));
         
         if (searchTerms.length > 0) {
           const candidateTerm = searchTerms.join(' ');
@@ -309,10 +311,12 @@ export async function POST(req: Request) {
         const systemPrompt = 
           `Eres el asistente inteligente oficial de ValisHub en Telegram para Cristhian Fuentes.\n` +
           `Tienes acceso total en tiempo real a los tres ecosistemas:\n` +
-          `1. ValisFin: Finanzas familiares, pagos pendientes/completados, gastos del mes, metas de ahorro y vehículos (Toyota Yaris de Cristhian y Hyundai Tucson de Jennifer, con odómetros, placas, próximos servicios y kilómetros restantes exactos).\n` +
+          `1. ValisFin: Finanzas familiares, pagos pendientes/completados, todas las compras diarias con fechas y descripciones exactas, metas de ahorro y vehículos (Toyota Yaris de Cristhian y Hyundai Tucson de Jennifer, con odómetros, placas, próximos servicios y kilómetros restantes exactos).\n` +
           `2. ValisBiz: Supervisión de ventas Keiko (cuotas, avance global, rendimiento individual y estados de Joseph Domínguez, Carolina Sucre, Enrique del Rosario y Andrés Chávez, y visitas a locales).\n` +
           `3. ValisAN: Inteligencia y operaciones AIPP (reportes operativos detallados con turnos, horas, áreas, conductores AVSEC y unidades aeronavales) y personal BD-RH (con números de posición, cargos, salarios y departamentos).\n\n` +
-          `--- VALISFIN: PAGOS Y GASTOS ---\n${payments}\n\n${expenses}\n\n` +
+          `--- VALISFIN: ESTADO DE PAGOS FIJOS Y DEUDAS PENDIENTES ---\n${payments}\n\n` +
+          `--- VALISFIN: RESUMEN DE GASTOS POR CATEGORÍA ---\n${expenses}\n\n` +
+          `--- VALISFIN: TODAS LAS COMPRAS Y GASTOS DEL MES (ITEMIZADO CON FECHAS Y DETALLE) ---\n${itemizedExpenses}\n\n` +
           `--- VALISFIN: VEHÍCULOS, PLACAS, ODÓMETRO Y MANTENIMIENTOS ---\n${vehicles}\n\n` +
           `--- VALISFIN: METAS DE AHORRO ---\n${goals}\n\n` +
           `--- VALISBIZ: SUPERVISIÓN Y VENTAS KEIKO ---\n${bizMetrics}\n\n` +
@@ -321,10 +325,12 @@ export async function POST(req: Request) {
           `${specificReportsContext}\n` +
           `${bdrhContext}\n` +
           `INSTRUCCIONES DE RESPUESTA:\n` +
-          `- Responde de forma muy concisa, precisa, directa y amable en español para Telegram.\n` +
+          `- Responde de forma muy concisa, precisa, directa y amable en español para Telegram (usa negritas o viñetas cuando convenga).\n` +
+          `- Si preguntan qué cosas ha comprado o qué gastos ha hecho de una categoría específica (ej: Tecnología, Supermercado, Salud, Restaurantes, etc.), revisa la lista itemizada arriba y lista cada compra con su fecha, descripción y monto exacto, y calcula el total.\n` +
+          `- Si preguntan por los gastos fijos que no ha pagado o cuánto debe, lista los pagos pendientes y la suma total exacta que debe.\n` +
           `- Si preguntan por kilometraje o cuánto falta para el mantenimiento de un auto, da las cifras exactas calculadas arriba.\n` +
           `- Si preguntan por un vendedor específico o cómo van las ventas, usa los datos individuales de ValisBiz.\n` +
-          `- Si preguntan por metas de ahorro o pagos, usa los datos de ValisFin.\n` +
+          `- Si preguntan por metas de ahorro, usa los datos de ValisFin.\n` +
           `- Si preguntan por reportes operativos de tal día o turno, menciona el detalle de la narrativa, áreas recorridas, vehículo y personal.\n` +
           `- Si preguntan por personas, posiciones o cédulas, usa los datos de BD-RH.`;
 
