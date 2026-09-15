@@ -1,23 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedUser, createClient } from "@/lib/supabase/server";
 import { getDashboardData } from "../actions/dashboard";
 import { getFixedPayments } from "../actions/fixed_payments";
 import { DashboardClient } from "../components/DashboardClient";
 
 export default async function Home() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const fullName = user?.user_metadata?.full_name || "Usuario";
-  const avatarUrl = user?.user_metadata?.avatar_url;
-  const initial = fullName.charAt(0).toUpperCase();
 
-  const [dashboardData, fixedPayments, { data: vehicles }] = await Promise.all([
+  const [user, dashboardData, fixedPayments, { data: vehicles }] = await Promise.all([
+    getCachedUser(),
     getDashboardData(),
     getFixedPayments(),
     supabase.from('vehicles').select('*')
   ]);
+
+  const fullName = user?.user_metadata?.full_name || "Usuario";
 
   const d = new Date();
   const monthName = d.toLocaleString('es-ES', { month: 'long' });

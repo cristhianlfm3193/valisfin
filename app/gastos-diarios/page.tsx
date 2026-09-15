@@ -6,8 +6,10 @@ import { GastosDiariosClient } from './components/GastosDiariosClient';
 export const dynamic = 'force-dynamic';
 
 export default async function GastosDiariosPage() {
-  const initialExpenses = await getDailyExpenses();
-  const fixedPayments = await getFixedPayments();
+  const [initialExpenses, fixedPayments] = await Promise.all([
+    getDailyExpenses(),
+    getFixedPayments()
+  ]);
 
   return (
     <>

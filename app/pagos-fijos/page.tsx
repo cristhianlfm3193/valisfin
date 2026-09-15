@@ -7,12 +7,6 @@ import Link from "next/link";
 import { Bell } from "lucide-react";
 
 export default async function PagosFijosPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const fullName = user?.user_metadata?.full_name || "Usuario";
-  const avatarUrl = user?.user_metadata?.avatar_url;
-  const initial = fullName.charAt(0).toUpperCase();
-
   const [fixedPayments, dailyExpenses, savingsGoals] = await Promise.all([
     getFixedPayments(),
     getDailyExpenses(),

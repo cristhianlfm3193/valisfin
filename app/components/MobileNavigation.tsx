@@ -130,6 +130,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={true}
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isActive ? activeClass : 'text-gray-400 hover:text-white'}`}
                 >
@@ -185,6 +186,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
                     <Link
                       key={item.href}
                       href={item.href}
+                      prefetch={true}
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex flex-col items-center text-center gap-2 p-4 rounded-2xl border transition-all ${isActive ? activeClass : inactiveClass}`}
                     >

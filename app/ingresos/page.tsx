@@ -51,10 +51,6 @@ export default async function IngresosPage(props: {
   await generateMonthlyIncomes(selectedYear, selectedMonth);
 
   // 2. Fetch all incomes for calculations
-  const { data: { user } } = await supabase.auth.getUser();
-  const fullName = user?.user_metadata?.full_name || "Usuario";
-  const avatarUrl = user?.user_metadata?.avatar_url;
-  const initial = fullName.charAt(0).toUpperCase();
 
   // Calculate first and last day of the selected month
   const firstDay = new Date(selectedYear, selectedMonth, 1).toISOString().split('T')[0];

@@ -201,6 +201,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 title={isCollapsed ? item.label : undefined}
                 className={`flex items-center rounded-xl font-medium text-sm transition-all group overflow-hidden border ${
                   isActive ? activeBgClass : inactiveClass
