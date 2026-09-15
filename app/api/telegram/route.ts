@@ -489,7 +489,7 @@ INSTRUCCIONES CRÍTICAS:
 
       // 🔍 Búsqueda directa inteligente en BD-RH (sin IA)
       // 1. Si el usuario escribe algo como "posicion de X", "placa de X", "quien es X"
-      const bdrhIntentMatch = text.match(/^(?:tienes\s+la\s+)?(?:placa|posici[oó]n|unidad|c[eé]dula|datos)\s+(?:de|del)?\s+(.+)$/i) || text.match(/^qui[eé]n\s+es\s+(.+)$/i);
+      const bdrhIntentMatch = text.match(/^(?:tiene[sn]?\s+(?:la|el|los|las)\s+)?(?:placa|posici[oó]n|unidad|c[eé]dula|datos|departamento|grupo\s*pd|direcci[oó]n|rango)\s+(?:de|del)?\s+(.+)$/i) || text.match(/^qui[eé]n\s+es\s+(.+)$/i);
       
       let termToSearch = '';
       if (bdrhIntentMatch && bdrhIntentMatch[1]) {

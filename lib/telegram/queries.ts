@@ -515,17 +515,20 @@ export async function searchBdrhPerson(term: string): Promise<string> {
 
   const supabase = getBotSupabase();
 
-  const { data, error } = await supabase
+  // Buscar en TODAS las columnas solicitadas
+  const filter = `pos_id.ilike.%${cleanTerm}%,cedula.ilike.%${cleanTerm}%,nombre_completo.ilike.%${cleanTerm}%,cargo.ilike.%${cleanTerm}%,departamento.ilike.%${cleanTerm}%,grupo_pd.ilike.%${cleanTerm}%,direccion.ilike.%${cleanTerm}%,rango.ilike.%${cleanTerm}%`;
+
+  const { data, error, count } = await supabase
     .from('valisan_bdrh')
-    .select('id, pos_id, nombre_completo, rango, cedula, cargo, departamento, base, salario, sobresueldo, estado')
-    .or(`pos_id.ilike.%${cleanTerm}%,cedula.ilike.%${cleanTerm}%,nombre_completo.ilike.%${cleanTerm}%,cargo.ilike.%${cleanTerm}%`)
-    .limit(4);
+    .select('id, pos_id, nombre_completo, rango, cedula, cargo, departamento, base, salario, sobresueldo, estado', { count: 'exact' })
+    .or(filter)
+    .limit(10); // Aumentado a 10 resultados para mejor visibilidad
 
   if (error || !data || data.length === 0) {
     return `🔍 No se encontraron registros en BD-RH para: <code>${cleanTerm}</code>`;
   }
 
-  let text = `🔍 <b>Resultados en BD-RH para "${cleanTerm}":</b>\n\n`;
+  let text = `🔍 <b>Resultados en BD-RH para "${cleanTerm}"</b> (${count} en total):\n\n`;
   data.forEach((p: any) => {
     const rangoClean = cleanText(p.rango) || 'N/A';
     const cargoClean = cleanText(p.cargo) || 'N/A';
@@ -539,6 +542,10 @@ export async function searchBdrhPerson(term: string): Promise<string> {
     if (p.estado) text += `• Condición: <i>${cleanText(p.estado)}</i>\n`;
     text += `\n`;
   });
+
+  if (count && count > 10) {
+    text += `<i>Mostrando 10 de ${count} resultados. Sé más específico si no encuentras a quien buscas.</i>`;
+  }
 
   return text;
 }
