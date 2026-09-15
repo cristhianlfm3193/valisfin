@@ -6,7 +6,7 @@ import { UsersModal } from './components/UsersModal';
 import { AuditLogTable } from './components/AuditLogTable';
 import { AppsModal } from './components/AppsModal';
 import { MonitoringModal } from './components/MonitoringModal';
-import { LayoutDashboard, Users, Image as ImageIcon, Shield, ArrowRight, Activity, Database, Lock, Server, Sparkles, Grid } from 'lucide-react';
+import { Users, Image as ImageIcon, Shield, ArrowRight, Activity, Grid } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Btn3D } from '@/app/components/Btn3D';
@@ -80,64 +80,6 @@ export default function AdminClient({ initialSettings, initialUsers, initialLogs
             </button>
           </div>
         </header>
-
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div 
-            onClick={() => setIsMonitoringOpen(true)}
-            className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2 cursor-pointer hover:border-emerald-500/40 hover:bg-[#152230] transition-all group"
-            title="Haz clic para abrir el monitoreo en vivo"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase group-hover:text-emerald-400 transition-colors">Base de Datos (Gratis)</p>
-              <Database className="w-4 h-4 text-emerald-500 group-hover:scale-110 transition-transform" />
-            </div>
-            <p className="text-sm sm:text-base font-semibold text-white flex items-center justify-between">
-              <span>Almacenamiento 500 MB</span>
-              <span className="text-[10px] text-emerald-400 font-normal group-hover:underline">Ver detalles →</span>
-            </p>
-            <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-emerald-500 leading-none">~8%</span>
-              <span className="text-xs text-slate-500 font-medium mb-0.5">uso real estimado</span>
-            </div>
-          </div>
-
-          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Autenticación (Auth)</p>
-              <Users className="w-4 h-4 text-emerald-500" />
-            </div>
-            <p className="text-sm sm:text-base font-semibold text-white">Límite 50,000 MAU</p>
-            <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-white leading-none">{initialUsers.length}</span>
-              <span className="text-xs text-emerald-600 font-medium mb-0.5 bg-emerald-50 px-2 py-0.5 rounded-full">Óptimo</span>
-            </div>
-          </div>
-
-          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Seguridad y Accesos</p>
-              <Users className="w-4 h-4 text-blue-500" />
-            </div>
-            <p className="text-sm sm:text-base font-semibold text-white">Cuentas Registradas</p>
-            <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-white leading-none">{initialUsers.length}</span>
-              <span className="text-xs text-slate-500 font-medium mb-0.5">miembros activos</span>
-            </div>
-          </div>
-
-          <div className="bg-[#121c27] p-4 rounded-2xl border border-white/10 shadow-sm flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wider uppercase">Actividad Reciente</p>
-              <Activity className="w-4 h-4 text-slate-300" />
-            </div>
-            <p className="text-sm sm:text-base font-semibold text-white">Operaciones DB</p>
-            <div className="flex items-end gap-2 mt-1">
-              <span className="text-2xl font-bold text-white leading-none">{initialLogs.length}+</span>
-              <span className="text-xs text-slate-500 font-medium mb-0.5">transacciones</span>
-            </div>
-          </div>
-        </div>
 
         {/* Main Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
