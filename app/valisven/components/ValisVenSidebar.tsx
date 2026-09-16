@@ -123,50 +123,43 @@ export function ValisVenSidebar() {
         </div>
 
         <div className="flex flex-col border-t border-amber-500/10 bg-slate-950/40 p-4 gap-3">
-          <div className="flex flex-col gap-1">
-            <Link 
-              href="/"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-amber-300 hover:bg-slate-900/70 transition-all group"
-            >
-              <LayoutDashboard className="w-[19px] h-[19px] text-amber-400/80 group-hover:text-amber-300" />
-              <span className="text-sm font-semibold">Volver a ValisHub</span>
-            </Link>
-            <Link 
-              href="/admin"
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-amber-300 hover:bg-slate-900/70 transition-all group"
-            >
-              <Shield className="w-[19px] h-[19px] text-amber-400 group-hover:text-amber-300" />
-              <span className="text-sm font-semibold">Admin Panel</span>
-            </Link>
-          </div>
+          <Link 
+            href="/"
+            className="group relative flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-indigo-500/20 hover:to-indigo-500/5 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-sm hover:shadow-indigo-500/10 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+            <LayoutDashboard className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300 transition-colors relative z-10" />
+            <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Volver a ValisHub</span>
+          </Link>
           
-          <div className="my-1 h-px bg-slate-800/80"></div>
-          
-          <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/50 border border-amber-500/15">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 p-[1px] shadow-sm">
-                <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
-                  <span className="font-mono text-amber-300 font-bold text-xs">
-                    {user?.user_metadata?.avatar_url ? (
-                      <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-full h-full rounded-full object-cover" />
-                    ) : (
-                      initial
-                    )}
-                  </span>
-                </div>
+          <Link 
+            href="/admin"
+            className="group relative flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-amber-500/20 hover:to-amber-500/5 border border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 shadow-sm hover:shadow-amber-500/10 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+            <Shield className="w-4 h-4 text-amber-500 group-hover:text-amber-400 transition-colors relative z-10" />
+            <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Admin Panel</span>
+          </Link>
+
+          <div className="flex items-center gap-3 px-2 py-2 rounded-xl bg-slate-900/40 border border-white/5 mt-1">
+            {user?.user_metadata?.avatar_url ? (
+              <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-9 h-9 rounded-full border border-white/20 shrink-0" />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center font-bold text-amber-300 text-xs shrink-0">
+                {initial}
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold text-white leading-tight max-w-[100px] truncate">{fullName}</span>
-                <span className="text-xs text-amber-400/80 leading-none mt-0.5">{user?.email ? user.email.split('@')[0] : 'Comandante'}</span>
-              </div>
+            )}
+            <div className="overflow-hidden flex-1 min-w-0">
+              <p className="text-xs font-semibold text-white truncate">{fullName}</p>
+              <p className="text-[11px] text-gray-400 truncate">{user?.email ? user.email.split('@')[0] : 'Comandante'}</p>
             </div>
           </div>
           
           <button 
             onClick={handleSignOut}
-            className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-red-950/20 hover:bg-red-900/40 text-rose-300 hover:text-rose-100 border border-rose-900/30 transition-all"
+            className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-slate-900/50 hover:bg-red-950/40 text-slate-400 hover:text-rose-400 border border-transparent hover:border-rose-900/30 transition-all group"
           >
-            <LogOut className="w-[18px] h-[18px]" />
+            <LogOut className="w-4 h-4 group-hover:text-rose-400 transition-colors" />
             <span className="text-xs font-semibold">Cerrar Sesión</span>
           </button>
         </div>
