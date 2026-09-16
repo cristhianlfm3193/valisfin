@@ -358,63 +358,61 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   return (
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Filter and Query Bar */}
-      <div className="bg-[#121c27] p-4 rounded-2xl shadow-sm border border-white/5 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
-        <div className="relative w-full lg:w-64 shrink-0">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+      <div className="bg-[#121c27] p-3 rounded-2xl shadow-sm border border-white/5 flex flex-col lg:flex-row gap-3 items-stretch lg:items-end justify-between">
+        <div className="relative w-full lg:w-64 shrink-0 mb-0 lg:mb-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white/5 text-slate-200 placeholder:text-slate-400 text-sm focus:outline-none focus:bg-indigo-500/10 transition-all" 
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/5 text-slate-200 placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none focus:bg-indigo-500/10 transition-all border border-transparent focus:border-indigo-500/30" 
             placeholder="Buscar por sucursal..." 
             type="text" 
           />
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-          <div className="w-full flex-1">
-            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Desde</label>
+        <div className="grid grid-cols-2 lg:flex lg:flex-row gap-3 w-full lg:w-auto flex-1">
+          <div className="col-span-1">
+            <label className="text-[9px] font-bold text-slate-500 uppercase mb-1 ml-1 block leading-none">Desde</label>
             <input 
               type="date"
               value={fechaDesde}
               onChange={(e) => setFechaDesde(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-white/5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
-              title="Fecha inicial del periodo"
+              className="w-full px-2 py-1.5 rounded-lg bg-white/5 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all border border-white/10"
             />
           </div>
-          <div className="w-full flex-1">
-            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Hasta</label>
+          <div className="col-span-1">
+            <label className="text-[9px] font-bold text-slate-500 uppercase mb-1 ml-1 block leading-none">Hasta</label>
             <input 
               type="date"
               value={fechaHasta}
               onChange={(e) => setFechaHasta(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-white/5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
-              title="Fecha final del periodo"
+              className="w-full px-2 py-1.5 rounded-lg bg-white/5 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all border border-white/10"
             />
           </div>
-        </div>
-
-        <div className="w-full lg:w-48 shrink-0">
-          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Categoría</label>
-          <select 
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
-          >
-            {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
-              <option key={f} value={f} className="bg-[#121c27]">{f === 'Todas' ? 'Todas las Categorías' : f}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-full lg:w-auto flex items-end">
-          <button
-            onClick={handleClearFilters}
-            className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 text-red-600 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full"
-            title="Limpiar todos los filtros"
-          >
-            <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
-            <span className="text-sm font-bold">Limpiar Filtros</span>
-          </button>
+          <div className="col-span-1 lg:w-40">
+            <label className="text-[9px] font-bold text-slate-500 uppercase mb-1 ml-1 block leading-none">Categoría</label>
+            <select 
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="w-full px-2 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all appearance-none"
+            >
+              <option value="Todas" className="bg-[#121c27]">Todas</option>
+              <option value="Supermercado" className="bg-[#121c27]">Supermercado</option>
+              <option value="Distribuidora" className="bg-[#121c27]">Distribuidora</option>
+              <option value="Tienda" className="bg-[#121c27]">Tienda</option>
+              <option value="Mini Super" className="bg-[#121c27]">Mini Super</option>
+              <option value="Restaurante" className="bg-[#121c27]">Restaurante</option>
+            </select>
+          </div>
+          <div className="col-span-1 flex items-end">
+            <button
+              onClick={handleClearFilters}
+              className="group flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all shadow-sm w-full h-[28px] shrink-0"
+            >
+              <X className="w-3.5 h-3.5 transition-transform group-hover:rotate-90 shrink-0" />
+              <span className="text-xs font-bold leading-none">Limpiar</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -448,9 +446,6 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2 px-3 rounded-xl transition-all"
                   >
                     <CalendarCheck2 className="w-4 h-4" /> Registrar Visita
-                  </button>
-                  <button onClick={handleToggleFullScreen} className="p-2 bg-white/10 hover:bg-white/10 text-slate-300 rounded-xl transition-colors">
-                    <Minimize className="w-5 h-5" />
                   </button>
                 </div>
               </div>

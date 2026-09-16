@@ -95,7 +95,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   const valisBizNavItems = [
     { href: "/valisbiz?tab=ventas", label: "Ventas & Métricas", icon: TrendingUp, id: 'ventas' },
     { href: "/valisbiz?tab=estadisticas", label: "Estadísticas", icon: BarChart2, id: 'estadisticas' },
-    { href: "/valisbiz?tab=mapa", label: "Mapa CRM de Visitas", icon: MapPin, id: 'mapa' },
+    { href: "/valisbiz?tab=mapa", label: "Mapa de Visitas", icon: MapPin, id: 'mapa' },
   ];
 
   const valisANNavItems = [

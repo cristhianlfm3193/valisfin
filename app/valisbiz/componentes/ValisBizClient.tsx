@@ -149,27 +149,28 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Generar Reporte */}
-            <Btn3D
-              color="gray"
-              size="sm"
-              onClick={() => setShowReporte(true)}
-            >
-              <FileDown className="w-4 h-4" />
-              <span className="hidden sm:inline">Reporte</span>
-            </Btn3D>
-            {/* Registrar */}
-            <Btn3D
-              color="pink"
-              size="sm"
-              onClick={() => setShowModal(true)}
-            >
-              <Plus className="w-4 h-4" />
-              <span>Registrar</span>
-            </Btn3D>
-          </div>
-
+          {activeTab === 'ventas' && (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Generar Reporte */}
+              <Btn3D
+                color="gray"
+                size="sm"
+                onClick={() => setShowReporte(true)}
+              >
+                <FileDown className="w-4 h-4" />
+                <span className="hidden sm:inline">Reporte</span>
+              </Btn3D>
+              {/* Registrar */}
+              <Btn3D
+                color="pink"
+                size="sm"
+                onClick={() => setShowModal(true)}
+              >
+                <Plus className="w-4 h-4" />
+                <span>Registrar</span>
+              </Btn3D>
+            </div>
+          )}
         </div>
       </header>
 
