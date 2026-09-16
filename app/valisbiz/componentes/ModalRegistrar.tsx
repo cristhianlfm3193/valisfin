@@ -356,7 +356,6 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
             {/* Feedback */}
             {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
-            {success && <p className="text-sm text-emerald-400 bg-emerald-50 rounded-xl px-3 py-2">{success}</p>}
 
             {/* Actions */}
             <div className="flex gap-3 pt-2 pb-1">

@@ -58,6 +58,10 @@ export default function VentasPage() {
     fecha_inicio: new Date().toISOString().split('T')[0],
     fecha_vencimiento: ''
   });
+  
+  const [usarMejorPrecio, setUsarMejorPrecio] = useState(false);
+  const [costoDistribuidorPersonalizado, setCostoDistribuidorPersonalizado] = useState('');
+  const [nombreProveedorPersonalizado, setNombreProveedorPersonalizado] = useState('');
 
   // Fetch initial data
   useEffect(() => {
@@ -147,7 +151,11 @@ export default function VentasPage() {
     try {
       // 1. Encontrar el producto base para saber los costos
       const productoBase = licencias.find(l => l.id === nuevaVenta.licencia_id);
-      const costo_distribuidor = productoBase ? productoBase.costo_distribuidor : 0;
+      let costo_distribuidor = productoBase ? productoBase.costo_distribuidor : 0;
+      
+      if (usarMejorPrecio && costoDistribuidorPersonalizado !== '') {
+        costo_distribuidor = parseFloat(costoDistribuidorPersonalizado) || 0;
+      }
       
       // 2. Crear Licencia Activa (asumimos que creamos una nueva al momento de vender para simplificar)
       const { data: licActiva, error: errLic } = await supabase
@@ -199,6 +207,9 @@ export default function VentasPage() {
         fecha_inicio: new Date().toISOString().split('T')[0],
         fecha_vencimiento: ''
       });
+      setUsarMejorPrecio(false);
+      setCostoDistribuidorPersonalizado('');
+      setNombreProveedorPersonalizado('');
       fetchData(); // Recargar datos
       
     } catch (err: any) {
@@ -550,8 +561,9 @@ export default function VentasPage() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="flex items-center gap-1.5 text-xs text-slate-300 font-semibold mb-1.5">
-                        <ShoppingBag className="w-3.5 h-3.5" /> Producto / Licencia
+                      <label className="flex items-center justify-between gap-1.5 text-xs text-slate-300 font-semibold mb-1.5">
+                        <span className="flex items-center gap-1.5"><ShoppingBag className="w-3.5 h-3.5" /> Producto / Licencia</span>
+                        <button type="button" onClick={() => setUsarMejorPrecio(!usarMejorPrecio)} className="text-amber-400 hover:underline text-[10px]">¿Mejor Proveedor/Precio?</button>
                       </label>
                       <select 
                         value={nuevaVenta.licencia_id} onChange={e => setNuevaVenta({...nuevaVenta, licencia_id: e.target.value})}
@@ -572,6 +584,36 @@ export default function VentasPage() {
                       </select>
                     </div>
                   </div>
+
+                  {usarMejorPrecio && (
+                    <div className="col-span-1 sm:col-span-2 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                          <TrendingUp className="w-3.5 h-3.5" /> Proveedor y Precio Personalizado
+                        </h4>
+                        <button type="button" onClick={() => setUsarMejorPrecio(false)} className="text-[10px] text-amber-400/70 hover:text-amber-300">Cerrar</button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-[11px] text-amber-200/80 font-semibold mb-1 block">Nombre del Distribuidor (Opcional)</label>
+                          <input 
+                            value={nombreProveedorPersonalizado} onChange={e => setNombreProveedorPersonalizado(e.target.value)} 
+                            type="text" className="w-full bg-slate-900/90 text-amber-100 text-sm px-3.5 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-amber-500/50 border border-amber-500/20 placeholder:text-amber-500/30" 
+                            placeholder="Ej: Distribuidor VIP" 
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-amber-200/80 font-semibold mb-1 block">Precio Distribuidor / Costo (B/.)</label>
+                          <input 
+                            value={costoDistribuidorPersonalizado} onChange={e => setCostoDistribuidorPersonalizado(e.target.value)} 
+                            type="number" step="0.01" className="w-full bg-slate-900/90 font-mono text-amber-400 font-bold text-sm px-3.5 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-amber-500/50 border border-amber-500/20 placeholder:text-amber-500/30" 
+                            placeholder="0.00" 
+                            required={usarMejorPrecio}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
