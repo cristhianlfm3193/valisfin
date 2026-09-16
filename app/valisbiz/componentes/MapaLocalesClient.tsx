@@ -359,7 +359,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Filter and Query Bar */}
       <div className="bg-[#121c27] p-4 rounded-2xl shadow-sm border border-white/5 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
-        <div className="relative w-full lg:w-72 shrink-0">
+        <div className="relative w-full lg:w-64 shrink-0">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
           <input 
             value={search}
@@ -370,49 +370,51 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           />
         </div>
         
-        <div className="flex flex-row items-center gap-3 w-full lg:w-auto">
-          <div className="relative flex-1">
-            <span className="absolute -top-2.5 left-3 bg-[#121c27] px-1 text-[10px] font-bold text-slate-500 rounded">Desde</span>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+          <div className="w-full flex-1">
+            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Desde</label>
             <input 
               type="date"
               value={fechaDesde}
               onChange={(e) => setFechaDesde(e.target.value)}
-              className="w-full pl-3 pr-2 py-2 rounded-xl bg-[#121c27] text-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
+              className="w-full px-3 py-2 rounded-xl bg-white/5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
               title="Fecha inicial del periodo"
             />
           </div>
-          <div className="relative flex-1">
-            <span className="absolute -top-2.5 left-3 bg-[#121c27] px-1 text-[10px] font-bold text-slate-500 rounded">Hasta</span>
+          <div className="w-full flex-1">
+            <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Hasta</label>
             <input 
               type="date"
               value={fechaHasta}
               onChange={(e) => setFechaHasta(e.target.value)}
-              className="w-full pl-3 pr-2 py-2 rounded-xl bg-[#121c27] text-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
+              className="w-full px-3 py-2 rounded-xl bg-white/5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all border border-white/10"
               title="Fecha final del periodo"
             />
           </div>
         </div>
 
-        <button
-          onClick={handleClearFilters}
-          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-red-500/20 text-red-600 border border-red-100 hover:bg-red-500/200/200 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full lg:w-auto"
-          title="Limpiar todos los filtros"
-        >
-          <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
-          <span className="text-sm font-bold">Limpiar Filtros</span>
-        </button>
-
         <div className="w-full lg:w-48 shrink-0">
-          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block sm:hidden">Categoría</label>
+          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1 ml-1 block">Categoría</label>
           <select 
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-[#121c27] border border-white/10 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
           >
             {['Todas', 'Supermercado', 'Distribuidora', 'Tienda', 'Mini Super', 'Restaurante'].map(f => (
-              <option key={f} value={f}>{f === 'Todas' ? 'Todas las Categorías' : f}</option>
+              <option key={f} value={f} className="bg-[#121c27]">{f === 'Todas' ? 'Todas las Categorías' : f}</option>
             ))}
           </select>
+        </div>
+
+        <div className="w-full lg:w-auto flex items-end">
+          <button
+            onClick={handleClearFilters}
+            className="group flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/20 text-red-600 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0 whitespace-nowrap w-full"
+            title="Limpiar todos los filtros"
+          >
+            <X className="w-4 h-4 transition-transform group-hover:rotate-90" />
+            <span className="text-sm font-bold">Limpiar Filtros</span>
+          </button>
         </div>
       </div>
 
@@ -461,7 +463,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 style={{ height: '100%', width: '100%', zIndex: 1 }}
               >
                 <MapFitter selectedLocales={selectedLocales} />
-                <LayersControl position="topright">
+                <LayersControl position="topleft">
                   <LayersControl.BaseLayer name="Mapa Estándar">
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -531,15 +533,17 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 })}
               </MapContainer>
 
-              {!isFullScreen && (
-                <button 
-                  onClick={handleToggleFullScreen}
-                  className="absolute top-3 right-3 z-[400] p-2 bg-[#121c27]/95 backdrop-blur shadow-sm border border-white/10 hover:bg-white/5 rounded-xl text-slate-300 transition-colors flex items-center gap-2 group"
-                  title="Ampliar mapa"
-                >
-                  <Maximize className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                </button>
-              )}
+              <button 
+                onClick={handleToggleFullScreen}
+                className="absolute top-3 right-3 z-[400] p-2 bg-[#121c27]/95 backdrop-blur shadow-sm border border-white/10 hover:bg-white/5 rounded-xl text-slate-300 transition-colors flex items-center gap-2 group"
+                title={isFullScreen ? "Reducir mapa" : "Ampliar mapa"}
+              >
+                {isFullScreen ? (
+                  <Minimize className="w-5 h-5 group-hover:scale-90 transition-transform" />
+                ) : (
+                  <Maximize className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                )}
+              </button>
             </div>
           </div>
 
