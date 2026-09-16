@@ -52,24 +52,24 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
 function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsedState, setIsCollapsedState] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [isValisBizOpen, setIsValisBizOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-
+  const isCollapsed = isMobileOpen ? false : isCollapsedState;
 
   useEffect(() => {
     setMounted(true);
     const stored = localStorage.getItem('valisfin_sidebar_collapsed');
     if (stored) {
-      setIsCollapsed(stored === 'true');
+      setIsCollapsedState(stored === 'true');
     }
   }, []);
 
   const toggleSidebar = () => {
-    const newState = !isCollapsed;
-    setIsCollapsed(newState);
+    const newState = !isCollapsedState;
+    setIsCollapsedState(newState);
     localStorage.setItem('valisfin_sidebar_collapsed', String(newState));
   };
 
