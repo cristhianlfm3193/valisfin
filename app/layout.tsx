@@ -50,7 +50,7 @@ export default async function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
       </head>
-      <body suppressHydrationWarning className="min-h-screen min-h-[100dvh] antialiased text-white selection:bg-emerald-500 selection:text-white bg-[#090a0f] flex flex-col lg:flex-row pb-[calc(88px+env(safe-area-inset-bottom,0px))] lg:pb-0 custom-scrollbar font-sans overflow-x-hidden relative">
+      <body suppressHydrationWarning className="min-h-screen min-h-[100dvh] antialiased text-white selection:bg-emerald-500 selection:text-white bg-[#090a0f] flex flex-col lg:flex-row custom-scrollbar font-sans overflow-x-hidden relative">
         <Suspense fallback={null}>
           <NavigationLoader />
         </Suspense>
@@ -59,7 +59,6 @@ export default async function RootLayout({
         <div className="flex-1 flex flex-col min-w-0 z-10 relative">
           {children}
         </div>
-        {user && <MobileNavigation user={user} profile={profile} />}
       </body>
     </html>
   );

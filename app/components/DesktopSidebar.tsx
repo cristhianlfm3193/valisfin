@@ -21,7 +21,9 @@ import {
   Orbit,
   Sparkles,
   BarChart3,
-  Store
+  Store,
+  Menu,
+  X
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -53,6 +55,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isValisBizOpen, setIsValisBizOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
 
 
@@ -103,14 +106,61 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
 
   const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : (isAdmin ? valisHubNavItems : navItems));
 
+  const colorClasses = isValisBiz 
+    ? { text: 'text-pink-400', border: 'border-pink-500/20', bg: 'bg-pink-500/10' }
+    : isValisAN
+      ? { text: 'text-cyan-400', border: 'border-cyan-500/20', bg: 'bg-cyan-500/10' }
+      : { text: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10' };
+
   if (pathname === '/' || pathname.startsWith('/valisven')) {
     return null;
   }
 
   return (
     <>
+      {/* Mobile Header */}
+      <div className="lg:hidden w-full h-20 bg-[#090a0f]/95 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+        <Link href="/" title="Ir a ValisHub" className="flex items-center gap-3">
+          {isValisBiz ? (
+            <img src="/valisbiz-logo.png" alt="ValisBiz" className="w-36 h-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+          ) : isValisAN ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-600 via-cyan-500 to-blue-700 p-[1.5px]">
+                <div className="w-full h-full bg-[#090a0f] rounded-[10px] flex items-center justify-center">
+                  <BarChart2 className="w-4 h-4 text-cyan-400" />
+                </div>
+              </div>
+              <span className="text-lg font-bold tracking-wider text-white">Valis<span className="text-cyan-400 font-extrabold">AN</span></span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full p-[1.5px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400">
+                <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
+                  <span className="text-lg font-bold text-white">V</span>
+                </div>
+              </div>
+              <span className="text-xl font-black text-white tracking-tight">Valis<span className="text-emerald-400">{isAdmin ? 'Hub' : 'Fin'}</span></span>
+            </div>
+          )}
+        </Link>
+        <button 
+          className={`p-2 rounded-lg ${colorClasses.bg} ${colorClasses.text} border ${colorClasses.border}`}
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+        >
+          {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 z-[45] bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
       <aside
-        className={`hidden lg:flex flex-col bg-[#121c27]/5 border-r border-white/10 backdrop-blur-xl shrink-0 justify-between h-screen max-h-screen sticky top-0 self-start transition-all duration-300 ease-in-out z-30 ${sidebarWidth} ${pClass}`}
+        className={`fixed lg:sticky top-0 left-0 h-screen max-h-screen self-start transition-transform duration-300 ease-in-out z-50 flex flex-col bg-[#090a0f]/95 lg:bg-[#121c27]/5 border-r border-white/10 lg:backdrop-blur-xl shrink-0 justify-between ${sidebarWidth} ${pClass} ${isMobileOpen ? 'translate-x-0 shadow-[0_0_40px_rgba(0,0,0,0.85)]' : '-translate-x-full lg:translate-x-0'}`}
         data-purpose="desktop-navigation"
       >
         <div className="flex flex-col flex-1 min-h-0 overflow-y-auto custom-scrollbar overflow-x-hidden pr-1">
@@ -174,7 +224,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
           )}
           <button 
             onClick={toggleSidebar}
-            className={`text-gray-400 hover:text-white hover:bg-[#121c27]/10 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
+            className={`hidden lg:block text-gray-400 hover:text-white hover:bg-[#121c27]/10 p-1.5 rounded-lg transition-colors ${isCollapsed ? '' : ''}`}
             aria-label="Colapsar menú lateral"
             title={isCollapsed ? "Expandir menú" : "Colapsar menú"}
           >
@@ -202,10 +252,11 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                 key={item.href}
                 href={item.href}
                 prefetch={true}
+                onClick={() => setIsMobileOpen(false)}
                 title={isCollapsed ? item.label : undefined}
                 className={`flex items-center rounded-xl font-medium text-sm transition-all group overflow-hidden border ${
                   isActive ? activeBgClass : inactiveClass
-                } ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3.5 py-2.5'}`}
+                } ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3.5 py-2.5 lg:py-2.5 py-3'}`}
               >
                 <Icon className={`shrink-0 w-5 h-5 transition-colors ${isActive ? (isValisBiz ? "text-pink-400" : isValisAN ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]" : "text-emerald-400") : (isValisAN ? "text-slate-500 group-hover:text-cyan-400" : "text-gray-500 group-hover:text-gray-300")}`} />
                 {!isCollapsed && (
