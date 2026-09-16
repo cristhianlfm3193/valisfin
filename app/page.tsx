@@ -28,7 +28,7 @@ export default async function PortalPage() {
   const avatarUrl = user?.user_metadata?.avatar_url;
   const initial = fullName.charAt(0).toUpperCase();
 
-  const appAccess = profile?.app_access || ['valisfin', 'valisbiz', 'valisan'];
+  const appAccess = profile?.app_access || ['valisfin', 'valisbiz', 'valisan', 'valisven'];
   const isAdmin = profile?.role === 'administrador';
 
   return (
@@ -108,10 +108,9 @@ export default async function PortalPage() {
       {/* Header */}
       <header className="relative z-10 p-6 flex justify-between items-center max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-lg backdrop-blur-md relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-50"></div>
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-inner relative z-10">
-              <span className="text-white font-bold text-xs">V</span>
+          <div className="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-emerald-400 to-pink-400 flex items-center justify-center shadow-lg shrink-0">
+            <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
+              <span className="text-white font-bold text-lg">V</span>
             </div>
           </div>
           <div>
@@ -187,6 +186,15 @@ export default async function PortalPage() {
             title={<>Valis<span className="text-sky-400">AN</span></>}
             icon={<BarChart3 className="w-10 h-10 sm:w-12 sm:h-12" />}
             colorClass="bg-sky-500/5 border-sky-500/40 text-sky-400 group-hover:bg-sky-500/20 group-hover:border-sky-400/60 group-hover:shadow-[0_0_30px_rgba(14,165,233,0.3)]"
+          />
+
+          {/* ValisVen */}
+          <PortalButton 
+            href="/valisven"
+            hasAccess={appAccess.includes('valisven')}
+            title={<>Valis<span className="text-amber-400">Ven</span></>}
+            icon={<Shield className="w-10 h-10 sm:w-12 sm:h-12" />}
+            colorClass="bg-amber-500/5 border-amber-500/40 text-amber-400 group-hover:bg-amber-500/20 group-hover:border-amber-400/60 group-hover:shadow-[0_0_30px_rgba(251,191,36,0.3)]"
           />
 
         </div>
