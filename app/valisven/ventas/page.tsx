@@ -63,6 +63,18 @@ export default function VentasPage() {
   const [costoDistribuidorPersonalizado, setCostoDistribuidorPersonalizado] = useState('');
   const [nombreProveedorPersonalizado, setNombreProveedorPersonalizado] = useState('');
 
+  // Helper for dynamic calculation
+  const getCostoDistribuidor = () => {
+    const productoBase = licencias.find(l => l.id === nuevaVenta.licencia_id);
+    let costo = productoBase ? productoBase.costo_distribuidor : 0;
+    if (usarMejorPrecio && costoDistribuidorPersonalizado !== '') {
+      costo = parseFloat(costoDistribuidorPersonalizado) || 0;
+    }
+    return costo;
+  };
+
+  const gananciaCalculada = (parseFloat(nuevaVenta.precio_venta) || 0) - getCostoDistribuidor();
+
   // Fetch initial data
   useEffect(() => {
     fetchData();
@@ -175,7 +187,7 @@ export default function VentasPage() {
       
       // 3. Crear Venta
       const pVenta = parseFloat(nuevaVenta.precio_venta) || 0;
-      const gNeta = parseFloat(nuevaVenta.ganancia_neta) || 0;
+      const gNeta = pVenta - costo_distribuidor;
       
       const { error: errVen } = await supabase
         .from('valisven_ventas')
@@ -566,7 +578,15 @@ export default function VentasPage() {
                         <button type="button" onClick={() => setUsarMejorPrecio(!usarMejorPrecio)} className="text-amber-400 hover:underline text-[10px]">¿Mejor Proveedor/Precio?</button>
                       </label>
                       <select 
-                        value={nuevaVenta.licencia_id} onChange={e => setNuevaVenta({...nuevaVenta, licencia_id: e.target.value})}
+                        value={nuevaVenta.licencia_id} onChange={e => {
+                          const licId = e.target.value;
+                          const pb = licencias.find(l => l.id === licId);
+                          setNuevaVenta({
+                            ...nuevaVenta, 
+                            licencia_id: licId,
+                            precio_venta: pb ? pb.costo_venta?.toString() : ''
+                          });
+                        }}
                         className="w-full bg-slate-900 text-white text-sm px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-amber-500/40 outline-none border border-white/5" required>
                         <option value="">Selecciona producto...</option>
                         {licencias.map(l => <option key={l.id} value={l.id}>{l.producto}</option>)}
@@ -662,9 +682,9 @@ export default function VentasPage() {
                       <label className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold mb-1.5">
                         <TrendingUp className="w-3.5 h-3.5" /> Ganancia Neta (B/.)
                       </label>
-                      <input 
-                        value={nuevaVenta.ganancia_neta} onChange={e => setNuevaVenta({...nuevaVenta, ganancia_neta: e.target.value})}
-                        className="w-full bg-emerald-950/20 text-emerald-400 font-mono text-sm px-3.5 py-2.5 rounded-xl focus:ring-2 focus:ring-emerald-500/40 outline-none border border-emerald-500/20" placeholder="0.00" required type="number" step="0.01" />
+                      <div className="w-full bg-emerald-950/20 text-emerald-400 font-mono text-sm px-3.5 py-2.5 rounded-xl border border-emerald-500/20 h-[42px] flex items-center">
+                        {gananciaCalculada.toFixed(2)}
+                      </div>
                     </div>
                   </div>
                 </form>
