@@ -107,18 +107,18 @@ export default async function PortalPage() {
 
       {/* Header */}
       <header className="relative z-10 p-6 flex justify-between items-center max-w-6xl mx-auto w-full">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-emerald-400 to-pink-400 flex items-center justify-center shadow-lg shrink-0">
+        <a href="/" title="Recargar ValisHub" className="flex items-center gap-3 group cursor-pointer">
+          <div className="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-tr from-emerald-400 to-pink-400 flex items-center justify-center shadow-lg shrink-0 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:scale-105 transition-all">
             <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
               <span className="text-white font-bold text-lg">V</span>
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm tracking-wide text-white">Valis<span className="text-emerald-400">Hub</span></span>
+              <span className="font-extrabold text-sm tracking-wide text-white">Valis<span className="text-emerald-400 group-hover:text-emerald-300 transition-colors">Hub</span></span>
             </div>
           </div>
-        </div>
+        </a>
 
         <div className="flex items-center gap-3">
           {isAdmin && (

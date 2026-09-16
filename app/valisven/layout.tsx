@@ -12,7 +12,7 @@ export default function ValisVenLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#05070e] text-slate-200 font-sans selection:bg-amber-500/30 selection:text-amber-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#05070e] text-slate-200 font-sans selection:bg-amber-500/30 selection:text-amber-200 relative overflow-x-hidden flex flex-col lg:flex-row">
       <style dangerouslySetInnerHTML={{ __html: `
         .space-star-bg {
           background-color: #05070e;
@@ -33,10 +33,10 @@ export default function ValisVenLayout({
 
       <ValisVenSidebar />
       
-      <div className="lg:pl-72 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10 min-h-screen">
         <ValisVenHeader />
         
-        <main className="w-full pt-20 flex-1 px-4 sm:px-6 lg:px-8 py-8 relative">
+        <main className="w-full flex-1 px-4 sm:px-6 lg:px-8 py-8 relative">
           {children}
         </main>
         

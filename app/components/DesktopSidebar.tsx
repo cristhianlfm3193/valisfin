@@ -52,7 +52,7 @@ export function DesktopSidebar({ user, profile }: { user?: User, profile?: any }
 function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [isValisBizOpen, setIsValisBizOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
