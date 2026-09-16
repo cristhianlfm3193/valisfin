@@ -21,7 +21,7 @@ export function AppsModal({ isOpen, onClose, users, onSaved }: AppsModalProps) {
     setLoadingId(userId + '-' + appToToggle);
     setError('');
     try {
-      const accessArray = currentAccess || ['valisfin', 'valisbiz', 'valisan'];
+      const accessArray = currentAccess || ['valisfin', 'valisbiz', 'valisan', 'valisven'];
       let newAccess: string[];
       if (accessArray.includes(appToToggle)) {
         newAccess = accessArray.filter(app => app !== appToToggle);
@@ -72,7 +72,7 @@ export function AppsModal({ isOpen, onClose, users, onSaved }: AppsModalProps) {
 
           <div className="space-y-3">
             {users.map((user) => {
-              const accessArray = user.app_access || ['valisfin', 'valisbiz', 'valisan'];
+              const accessArray = user.app_access || ['valisfin', 'valisbiz', 'valisan', 'valisven'];
 
               return (
                 <div key={user.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors gap-4">
@@ -94,7 +94,7 @@ export function AppsModal({ isOpen, onClose, users, onSaved }: AppsModalProps) {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3">
-                    {['valisfin', 'valisbiz', 'valisan'].map(app => {
+                    {['valisfin', 'valisbiz', 'valisan', 'valisven'].map(app => {
                       const hasAccess = accessArray.includes(app);
                       const isLoading = loadingId === `${user.id}-${app}`;
                       return (
