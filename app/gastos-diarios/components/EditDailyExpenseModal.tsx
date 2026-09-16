@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Receipt, Save } from 'lucide-react';
 import { updateDailyExpense, DailyExpense } from '@/app/actions/daily_expenses';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface EditDailyExpenseModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(expense?.category || 'Alimentación');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -31,7 +33,11 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
       const result = await updateDailyExpense(expense.id, formData);
       
       if (result.success) {
-        onClose();
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          onClose();
+        }, 2000);
       } else {
         alert(result.error || 'Error al actualizar el gasto');
       }
@@ -47,6 +53,7 @@ export function EditDailyExpenseModal({ isOpen, onClose, expense }: EditDailyExp
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Gasto actualizado con éxito." theme="fin" />}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
         onClick={onClose}

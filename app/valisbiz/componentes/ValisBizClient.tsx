@@ -101,7 +101,6 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
   };
 
   const handleModalSuccess = () => {
-    setShowModal(false);
     startTransition(() => { router.refresh(); });
   };
 

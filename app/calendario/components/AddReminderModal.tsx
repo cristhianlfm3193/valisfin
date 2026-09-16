@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar as CalendarIcon, Save } from 'lucide-react';
 import { addReminder } from '@/app/actions/calendario';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface AddReminderModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ interface AddReminderModalProps {
 export function AddReminderModal({ isOpen, onClose }: AddReminderModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -29,7 +32,11 @@ export function AddReminderModal({ isOpen, onClose }: AddReminderModalProps) {
       const result = await addReminder(null, formData);
       
       if (result.success) {
-        onClose();
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          if (formRef.current) formRef.current.reset();
+        }, 2000);
       } else {
         alert(result.error || 'Error al agregar el recordatorio');
       }
@@ -43,6 +50,7 @@ export function AddReminderModal({ isOpen, onClose }: AddReminderModalProps) {
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Recordatorio guardado." theme="fin" />}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
         onClick={onClose}
@@ -72,7 +80,7 @@ export function AddReminderModal({ isOpen, onClose }: AddReminderModalProps) {
           </div>
 
           <div className="p-5 overflow-y-auto">
-            <form id="add-reminder-form" onSubmit={handleSubmit} className="space-y-4">
+            <form id="add-reminder-form" ref={formRef} onSubmit={handleSubmit} className="space-y-4">
               
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">

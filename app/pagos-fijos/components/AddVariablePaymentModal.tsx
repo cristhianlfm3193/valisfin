@@ -1,15 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { PlusCircle, Wallet, X, Check } from 'lucide-react';
 import { addVariablePayment } from '@/app/actions/fixed_payments';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 export function AddVariablePaymentModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [serviceTitle, setServiceTitle] = useState('Luz (Electricidad)');
   const [mounted, setMounted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -24,7 +27,11 @@ export function AddVariablePaymentModal() {
       const res = await addVariablePayment(formData);
       
       if (res.success) {
-        setIsOpen(false);
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          if (formRef.current) formRef.current.reset();
+        }, 2000);
       } else {
         alert('Error guardando el registro: ' + res.error);
       }
@@ -51,6 +58,7 @@ export function AddVariablePaymentModal() {
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Pago registrado con éxito." theme="fin" />}
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
@@ -83,8 +91,8 @@ export function AddVariablePaymentModal() {
           </div>
 
           {/* Form */}
-          <div className="p-6 overflow-y-auto custom-scrollbar">
-            <form id="add-variable-form" onSubmit={handleSubmit} className="space-y-6">
+          <div className="p-5 overflow-y-auto">
+            <form id="add-variable-form" ref={formRef} onSubmit={handleSubmit} className="space-y-4">
               
               <div className="space-y-4">
                 {/* Servicio Selector */}

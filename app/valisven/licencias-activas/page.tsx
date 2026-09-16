@@ -21,6 +21,7 @@ import {
   Clock,
   Briefcase
 } from 'lucide-react';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 export default function LicenciasActivasPage() {
   const supabase = createClient();
@@ -39,6 +40,8 @@ export default function LicenciasActivasPage() {
   // Modal
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   
   const [nuevoProducto, setNuevoProducto] = useState({
     tipo: 'Streaming',
@@ -110,8 +113,10 @@ export default function LicenciasActivasPage() {
     if (error) {
       alert('Error registrando producto: ' + error.message);
     } else {
-      alert('Producto registrado en el catálogo.');
-      setRegisterModalOpen(false);
+      setSuccessMessage('Producto registrado en el catálogo.');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+      
       setNuevoProducto({ tipo: 'Streaming', producto: '', costo_distribuidor: '', costo_venta: '' });
       fetchData();
     }
@@ -165,6 +170,7 @@ export default function LicenciasActivasPage() {
 
   return (
     <div className="flex flex-col w-full">
+      {showSuccess && <LoadingCube text={successMessage} theme="fin" />}
       {/* Header Area */}
       <div className="relative w-full overflow-hidden rounded-xl bg-slate-900/40 shadow-xl p-6 mb-8 border border-white/5">
         <div className="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>

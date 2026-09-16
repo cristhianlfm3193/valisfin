@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { X, MapPin } from 'lucide-react';
 import type { Local, TipoLocal, Vendedor } from '@/types/valisbiz';
 import { crearLocal, editarLocal } from '../acciones/crm';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface ModalLocalProps {
   onClose: () => void;
@@ -25,6 +26,8 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
   const [activo, setActivo] = useState(localAEditar?.activo ?? true);
   const [verificado, setVerificado] = useState(localAEditar?.verificado ?? false);
   const [isPending, startTransition] = useTransition();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,17 +51,33 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
         id: localAEditar ? localAEditar.id : crypto.randomUUID() 
       });
     }
-    
-    // Cierra el modal primero para que la UI se sienta instantánea
-    onClose();
 
     startTransition(async () => {
       try {
         if (isEditing && localAEditar) {
           await editarLocal(localAEditar.id, data);
+          setSuccessMessage('Local editado con éxito.');
         } else {
           await crearLocal(data);
+          setSuccessMessage('Local registrado con éxito.');
         }
+        
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          if (isEditing) {
+            onClose();
+          } else {
+            // Limpiar formulario para nuevo
+            setNombre('');
+            setTipo('Supermercado');
+            setLatitud('');
+            setLongitud('');
+            setDireccion('');
+            setFotoUrl('');
+            setVendedorId('');
+          }
+        }, 2000);
       } catch (error: any) {
         alert("Error al guardar: " + error.message);
         console.error(error);
@@ -68,6 +87,7 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
 
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4 animate-in fade-in duration-200">
+      {showSuccess && <LoadingCube text={successMessage} theme="biz" />}
       <div className="bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
         
         <div className="flex items-center justify-between p-5 border-b border-white/5">

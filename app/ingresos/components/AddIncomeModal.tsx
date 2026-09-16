@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { PlusCircle, Wallet, X, Check } from 'lucide-react';
 import { addIncome } from '@/app/actions/income';
 import { Btn3D } from '@/app/components/Btn3D';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 export function AddIncomeModal({
   isOpen: externalIsOpen,
@@ -18,6 +19,8 @@ export function AddIncomeModal({
   const [isLoading, setIsLoading] = useState(false);
   const [person, setPerson] = useState<'cristhian' | 'jennifer'>('cristhian');
   const [category, setCategory] = useState('extra');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
@@ -61,6 +64,7 @@ export function AddIncomeModal({
           className="relative w-full max-w-xl bg-[#121c27] rounded-3xl shadow-2xl border border-white/5/80 max-h-[90vh] overflow-y-auto custom-scrollbar z-50 transition-all"
           onClick={(e) => e.stopPropagation()}
         >
+          {showSuccess && <LoadingCube text="Ingreso registrado con éxito." theme="fin" />}
           {/* Modal Header */}
           <header className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-white/10 flex items-start justify-between bg-transparent">
             <div className="flex items-center gap-3">
@@ -83,19 +87,21 @@ export function AddIncomeModal({
 
           {/* Modal Form Body */}
           <form 
+            ref={formRef}
             className="px-6 sm:px-8 py-5 sm:py-6 space-y-5" 
             action={async (formData) => {
               setIsLoading(true);
               try {
-                // Since fields might be disabled/readonly, we can ensure they are in formData 
-                // but readOnly inputs are submitted normally.
-                // Wait, if an input is disabled or readOnly but we need its value, we should make sure it's passed.
-                // readOnly inputs ARE passed in formData.
                 const res = await addIncome(formData);
                 if (res && res.success === false) {
                   alert("Error de base de datos: " + res.error);
                 } else {
-                  handleClose();
+                  setShowSuccess(true);
+                  setTimeout(() => {
+                    setShowSuccess(false);
+                    if (formRef.current) formRef.current.reset();
+                    setCategory('extra');
+                  }, 2000);
                 }
               } catch (e) {
                 console.error(e);

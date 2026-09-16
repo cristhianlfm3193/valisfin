@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, Save } from 'lucide-react';
 import { createFixedPayment } from '@/app/actions/fixed_payments';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface AddFixedPaymentModalProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ interface AddFixedPaymentModalProps {
 export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPaymentModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -30,7 +33,11 @@ export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPa
       const result = await createFixedPayment(formData);
       
       if (result.success) {
-        onClose();
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          if (formRef.current) formRef.current.reset();
+        }, 2000);
       } else {
         alert(result.error || 'Error al guardar la obligación');
       }
@@ -44,6 +51,7 @@ export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPa
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Obligación agregada con éxito." theme="fin" />}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
         onClick={onClose}
@@ -73,7 +81,7 @@ export function AddFixedPaymentModal({ isOpen, onClose, goals = [] }: AddFixedPa
           </div>
 
           <div className="p-5 overflow-y-auto">
-            <form id="add-fixed-payment-form" onSubmit={handleSubmit} className="space-y-4">
+            <form ref={formRef} id="add-fixed-payment-form" onSubmit={handleSubmit} className="space-y-4">
               
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">

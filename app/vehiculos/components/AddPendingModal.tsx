@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useActionState } from 'react';
 import { addPendingMaintenance } from '../../actions/vehicles';
 import { Btn3D } from '@/app/components/Btn3D';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 const SUGGESTIONS = [
   "Cambio de Llantas (Desgaste)",
@@ -30,19 +31,29 @@ export default function AddPendingModal({
   
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(addPendingMaintenance, { success: false, error: '' });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const lastStateRef = useRef(state);
 
   // Get current km of selected vehicle
   const currentKm = vehicles.find(v => v.id === selectedVehicle)?.current_km || 0;
 
   useEffect(() => {
-    if (state?.success) {
-      setService('');
-      setCost('');
-      onClose();
-    } else if (state?.error) {
+    if (state?.success && state !== lastStateRef.current) {
+      lastStateRef.current = state;
+      setSuccessMessage('Mantenimiento pendiente agregado con éxito.');
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        setService('');
+        setCost('');
+        // No cerramos para permitir agregar más
+      }, 2000);
+    } else if (state?.error && state !== lastStateRef.current) {
+      lastStateRef.current = state;
       alert(state.error);
     }
-  }, [state, onClose]);
+  }, [state]);
 
   useEffect(() => {
     if (initialData && isOpen) {
@@ -66,6 +77,7 @@ export default function AddPendingModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-opacity">
+      {showSuccess && <LoadingCube text={successMessage} theme="biz" />}
       <div className="bg-[#121c27] rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[90vh]">
         
         <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/5/50">

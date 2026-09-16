@@ -3,6 +3,7 @@
 import { useRef, useEffect, useActionState, useState } from 'react';
 import { Btn3D } from '@/app/components/Btn3D';
 import { updateCompletedMaintenance } from '../../actions/vehicles';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 export default function EditCompletedModal({ 
   isOpen, 
@@ -15,6 +16,8 @@ export default function EditCompletedModal({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(updateCompletedMaintenance, { success: false, error: '' });
+  const [showSuccess, setShowSuccess] = useState(false);
+  const lastStateRef = useRef(state);
 
   const [service, setService] = useState('');
   const [cost, setCost] = useState('');
@@ -33,9 +36,15 @@ export default function EditCompletedModal({
   }, [task, isOpen]);
 
   useEffect(() => {
-    if (state?.success) {
-      onClose();
-    } else if (state?.error) {
+    if (state?.success && state !== lastStateRef.current) {
+      lastStateRef.current = state;
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
+    } else if (state?.error && state !== lastStateRef.current) {
+      lastStateRef.current = state;
       alert(state.error);
     }
   }, [state, onClose]);
@@ -44,6 +53,7 @@ export default function EditCompletedModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm transition-opacity">
+      {showSuccess && <LoadingCube text="Registro actualizado con éxito." theme="fin" />}
       <div className="bg-[#121c27] rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-white/5 flex flex-col max-h-[90vh]">
         <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/5/50">
           <div className="flex items-center gap-3">

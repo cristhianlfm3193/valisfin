@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Wallet, X, Check } from 'lucide-react';
 import { FixedPayment } from './PaymentCard';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface PartialPaymentModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export function PartialPaymentModal({ isOpen, onClose, onSubmit, payment }: Part
   const [amount, setAmount] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +50,11 @@ export function PartialPaymentModal({ isOpen, onClose, onSubmit, payment }: Part
     setIsLoading(true);
     try {
       await onSubmit(parsedAmount);
-      onClose();
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
     } catch (err) {
       console.error(err);
       alert('Error procesando el abono');
@@ -59,6 +65,7 @@ export function PartialPaymentModal({ isOpen, onClose, onSubmit, payment }: Part
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Abono parcial registrado." theme="fin" />}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
         onClick={onClose}

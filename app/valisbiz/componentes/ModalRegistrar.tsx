@@ -4,6 +4,7 @@ import { useState, useTransition, useEffect } from 'react';
 import { X, Building2, FileText, Eye, ShoppingCart, XCircle, CreditCard, Banknote, Calculator } from 'lucide-react';
 import { registrarFacturado, registrarVenta } from '../acciones/dashboard';
 import { Btn3D } from '@/app/components/Btn3D';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface Vendedor {
   id: string;
@@ -22,7 +23,8 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
   const [tab, setTab] = useState<TabType>('facturado');
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Campos comunes
   const [vendedorId, setVendedorId] = useState('');
@@ -56,7 +58,6 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
     setContado('');
     setCredito('');
     setError('');
-    setSuccess('');
   };
 
   const handleTabChange = (newTab: TabType) => {
@@ -67,7 +68,6 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
 
     if (!vendedorId || !fecha) {
       setError('Por favor completa todos los campos requeridos.');
@@ -84,9 +84,13 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
       startTransition(async () => {
         const result = await registrarFacturado(vendedorId, contadoNum, creditoNum, new Date(fecha + 'T12:00:00'), notas);
         if (result.success) {
-          setSuccess('✅ Facturación registrada correctamente.');
-          reset();
-          setTimeout(() => onSuccess(), 1200);
+          setSuccessMessage('Facturación registrada correctamente.');
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            reset();
+            onSuccess(); // Ensure parent refreshes data
+          }, 2000);
         } else {
           setError('Error al guardar: ' + result.error);
         }
@@ -112,9 +116,13 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
           }
         );
         if (result.success) {
-          setSuccess('✅ Reporte diario del vendedor guardado.');
-          reset();
-          setTimeout(() => onSuccess(), 1200);
+          setSuccessMessage('Reporte diario del vendedor guardado.');
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            reset();
+            onSuccess(); // Ensure parent refreshes data
+          }, 2000);
         } else {
           setError('Error al guardar: ' + result.error);
         }
@@ -124,6 +132,7 @@ export default function ModalRegistrar({ vendedores, onClose, onSuccess }: Modal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {showSuccess && <LoadingCube text={successMessage} theme="biz" />}
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 

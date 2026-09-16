@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Receipt, Save } from 'lucide-react';
 import { Btn3D } from '@/app/components/Btn3D';
 import { addDailyExpense } from '@/app/actions/daily_expenses';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface AddDailyExpenseModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Alimentación');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +51,12 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
       const result = await addDailyExpense(formData);
       
       if (result.success) {
-        onClose();
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          if (formRef.current) formRef.current.reset();
+          setSelectedCategory('Supermercado');
+        }, 2000);
       } else {
         alert(result.error || 'Error al guardar el gasto');
       }
@@ -64,6 +72,7 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Gasto registrado." theme="fin" />}
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
@@ -97,7 +106,7 @@ export function AddDailyExpenseModal({ isOpen, onClose, initialData }: AddDailyE
 
           {/* Form Content */}
           <div className="p-5 overflow-y-auto">
-            <form id="add-daily-expense-form" onSubmit={handleSubmit} className="space-y-4">
+            <form ref={formRef} id="add-daily-expense-form" onSubmit={handleSubmit} className="space-y-4">
               
               {/* Fecha */}
               <div>

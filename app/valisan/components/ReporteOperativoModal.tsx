@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle, Clock, Calendar, Shield, Save, FileText, Loader2, Sparkles, UserCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,9 +12,11 @@ interface ModalProps {
   initialData?: any;
 }
 
-export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, initialData }: ModalProps) {
+  export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, initialData }: ModalProps) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Form State
   const [departamento, setDepartamento] = useState('POLICÍA AEROPORTUARIA');
@@ -120,8 +123,24 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
         reporteId = reporteData.id;
       }
 
-      if (onSuccess) onSuccess();
-      onClose();
+      setSuccessMessage(isEditing ? 'Reporte actualizado con éxito' : 'Reporte creado con éxito');
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        if (onSuccess) onSuccess();
+        if (isEditing) {
+          onClose();
+        } else {
+          setDepartamento('POLICÍA AEROPORTUARIA');
+          setAsunto('');
+          const now = new Date();
+          setFecha(now.toISOString().split('T')[0]);
+          setHora(now.toTimeString().split(' ')[0].substring(0, 5));
+          setNarrativa('');
+          setReporta({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+          setInforma({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+        }
+      }, 2000);
     } catch (error) {
       console.error("Error guardando reporte:", error);
       alert("Hubo un error al guardar el reporte. Verifique la consola.");
@@ -132,6 +151,7 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {showSuccess && <LoadingCube text={successMessage} theme="an" />}
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"

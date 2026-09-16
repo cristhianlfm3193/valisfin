@@ -21,6 +21,7 @@ import {
   CalendarDays,
   Filter
 } from 'lucide-react';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 export default function VentasPage() {
   const supabase = createClient();
@@ -41,6 +42,8 @@ export default function VentasPage() {
   // Modal states
   const [newSaleModal, setNewSaleModal] = useState(false);
   const [modalTab, setModalTab] = useState<'venta' | 'cliente'>('venta');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   
   // Form states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -123,7 +126,9 @@ export default function VentasPage() {
       setNuevoCliente({ nombre: '', correo: '', celular: '' });
       setNuevaVenta({...nuevaVenta, cliente_id: data.id});
       setModalTab('venta');
-      alert('Cliente registrado con éxito.');
+      setSuccessMessage('Cliente registrado con éxito.');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
     } else {
       alert('Error registrando cliente: ' + error?.message);
     }
@@ -179,8 +184,21 @@ export default function VentasPage() {
         
       if (errVen) throw new Error('Error guardando la venta');
       
-      alert('Venta registrada con éxito.');
-      setNewSaleModal(false);
+      setSuccessMessage('Venta registrada con éxito.');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+      
+      // Limpiar formulario de venta en lugar de cerrar el modal
+      setNuevaVenta({
+        cliente_id: '',
+        licencia_id: '',
+        tipo_venta: 'Nueva Venta',
+        tiempo_vigencia: '1 Mes',
+        precio_venta: '',
+        ganancia_neta: '',
+        fecha_inicio: new Date().toISOString().split('T')[0],
+        fecha_vencimiento: ''
+      });
       fetchData(); // Recargar datos
       
     } catch (err: any) {
@@ -230,6 +248,7 @@ export default function VentasPage() {
 
   return (
     <div className="flex flex-col w-full">
+      {showSuccess && <LoadingCube text={successMessage} theme="fin" />}
       {/* Header Area */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>

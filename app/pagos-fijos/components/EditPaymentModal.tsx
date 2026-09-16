@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Save, Calendar, DollarSign } from 'lucide-react';
+import { LoadingCube } from '@/app/components/LoadingCube';
 
 interface EditPaymentModalProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function EditPaymentModal({
   const [editedTitle, setEditedTitle] = useState(title);
   const [isLoading, setIsLoading] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -66,7 +68,11 @@ export function EditPaymentModal({
       const parsedAmount = parseFloat(amount);
       const parsedDay = billingDay ? parseInt(billingDay, 10) : null;
       await onSubmit(parsedAmount, parsedDay, editedTitle, profileId, linkedGoalId || null, isAccumulative);
-      onClose();
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        onClose();
+      }, 2000);
     } catch (err) {
       console.error(err);
       alert('Error al guardar los cambios');
@@ -77,6 +83,7 @@ export function EditPaymentModal({
 
   const modalContent = (
     <>
+      {showSuccess && <LoadingCube text="Pago actualizado con éxito." theme="fin" />}
       <div 
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] transition-opacity"
         onClick={onClose}
