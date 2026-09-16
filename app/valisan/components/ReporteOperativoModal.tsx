@@ -142,24 +142,13 @@ export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, init
       <div className="relative bg-[#0a1426] border border-cyan-500/30 rounded-3xl w-full max-w-4xl shadow-[0_0_40px_-10px_rgba(6,182,212,0.3)] overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-cyan-500/20 bg-slate-900/50 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-cyan-500/10 rounded-xl text-cyan-400 border border-cyan-500/20">
-              <Shield className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                Registro de Reporte Operativo
-                <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> BD-RH Conectada
-                </span>
-              </h2>
-              <p className="text-xs text-slate-400">Sistema Automatizado ValisAN simplificado</p>
-            </div>
-          </div>
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-cyan-500/20 bg-slate-900/50 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
+          <h2 className="text-lg font-bold text-white tracking-tight">
+            Reporte Operativo
+          </h2>
           <button 
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition"
+            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
