@@ -160,7 +160,7 @@ export default async function PortalPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl mx-auto">
+        <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-10 sm:gap-16 w-full max-w-4xl mx-auto">
           
           {/* ValisFin */}
           <PortalButton 
