@@ -18,7 +18,8 @@ import {
   AlertTriangle,
   Mail,
   Phone,
-  CalendarDays
+  CalendarDays,
+  Filter
 } from 'lucide-react';
 
 export default function VentasPage() {
