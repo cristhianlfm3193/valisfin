@@ -103,7 +103,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
 
   const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : (isAdmin ? valisHubNavItems : navItems));
 
-  if (pathname === '/') {
+  if (pathname === '/' || pathname.startsWith('/valisven')) {
     return null;
   }
 

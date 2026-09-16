@@ -99,7 +99,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
   const currentBottomItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : valisFinBottomItems);
   const currentAllNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : allNavItems);
 
-  if (pathname === '/') {
+  if (pathname === '/' || pathname.startsWith('/valisven')) {
     return null;
   }
 
