@@ -18,14 +18,15 @@ export function ValisVenHeader() {
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-          <Lock className="text-emerald-400 w-4 h-4" />
+        <button 
+          onClick={() => window.location.reload()}
+          title="Recargar datos de Supabase"
+          className="hidden sm:inline-flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full bg-emerald-950/50 hover:bg-emerald-900/60 transition-colors border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)] group"
+        >
+          <Lock className="text-emerald-400 w-4 h-4 group-hover:scale-110 transition-transform" />
           <span className="text-xs font-semibold text-emerald-300 tracking-wide">Supabase Encriptado</span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        </div>
-        <div className="w-8 h-8 rounded-full bg-emerald-900 flex items-center justify-center">
-          <User className="text-white w-4 h-4" />
-        </div>
+        </button>
       </div>
     </header>
   );
