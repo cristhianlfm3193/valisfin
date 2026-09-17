@@ -12,7 +12,7 @@ import { registrarVenta, registrarFacturado } from '../acciones/dashboard';
 import { registrarVisita } from '../acciones/crm';
 
 interface Vendedor { id: string; nombre: string; }
-interface Local { id: string; nombre_local: string; vendedor_id?: string | null; }
+interface Local { id: string; nombre_local: string; vendedor_id?: string | null; tipo?: string; }
 
 interface AccionesRapidasIAProps {
   vendedores: Vendedor[];
@@ -189,8 +189,8 @@ function FormularioItem({ item, vendedores, locales, onChange }: {
       </div>
 
       {/* Vendedor + Fecha */}
-      <div className="grid grid-cols-2 gap-2">
-        {item._tab !== 'visita' ? (
+      <div className={`grid gap-2 ${item._tab === 'visita' ? 'grid-cols-1' : 'grid-cols-2'}`}>
+        {item._tab !== 'visita' && (
           <div>
             <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vendedor *</label>
             <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300`}>
@@ -198,7 +198,7 @@ function FormularioItem({ item, vendedores, locales, onChange }: {
               {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
             </select>
           </div>
-        ) : <div />}
+        )}
         <div>
           <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Fecha</label>
           <input type="date" value={item._fecha} onChange={e => onChange({ _fecha: e.target.value })} className={inp} />
@@ -431,7 +431,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
     setEstado('guardando');
     startTransition(async () => {
       const fecha = new Date(item._fecha + 'T12:00:00');
-      let res;
+      let res: { success: boolean; error?: string } = { success: false, error: 'Acción no reconocida' };
       if (item._tab === 'facturado') {
         const contado = parseFloat(item._contado) || 0;
         const credito = parseFloat(item._credito) || 0;
