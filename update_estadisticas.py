@@ -1,7 +1,9 @@
-'use client';
+import re
+
+new_content = """'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase';
 import {
   BarChart, RefreshCcw, ChevronDown, SlidersHorizontal, DollarSign, Wallet, Ticket, Package, Repeat as RepeatIcon, ArrowUpRight, Info as InfoIcon, Trophy, Megaphone, TrendingUp
 } from 'lucide-react';
@@ -13,7 +15,6 @@ export default function EstadisticasPage() {
   
   const [loading, setLoading] = useState(true);
   const [rawVentas, setRawVentas] = useState<any[]>([]);
-  const supabase = createClient();
 
   useEffect(() => {
     fetchData();
@@ -665,3 +666,7 @@ export default function EstadisticasPage() {
     </div>
   );
 }
+"""
+
+with open('app/valisven/estadisticas/page.tsx', 'w') as f:
+    f.write(new_content)
