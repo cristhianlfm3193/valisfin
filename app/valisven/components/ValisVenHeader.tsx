@@ -1,11 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { Lock, User } from 'lucide-react';
 
 export function ValisVenHeader() {
   return (
     <header className="sticky top-0 z-40 h-20 bg-slate-950/70 backdrop-blur-2xl border-b border-amber-500/20 px-6 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
-      <div className="flex items-center gap-3">
+      <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 p-[1px] shadow-[0_0_12px_rgba(245,158,11,0.5)]">
           <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
             <span className="text-sm font-extrabold text-amber-400 font-sans">V</span>
@@ -15,7 +16,7 @@ export function ValisVenHeader() {
           <span className="font-bold text-white">Valis</span>
           <span className="font-bold text-amber-400">Ven</span>
         </div>
-      </div>
+      </Link>
       
       <div className="flex items-center gap-4">
         <button 

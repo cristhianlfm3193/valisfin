@@ -87,7 +87,7 @@ export function ValisVenSidebar() {
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
           <div className={`h-20 px-6 flex items-center ${effectivelyCollapsed ? 'justify-center px-0' : 'justify-between'} border-b border-amber-500/10 shrink-0`}>
             {!effectivelyCollapsed ? (
-              <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-[1.5px] shadow-[0_0_18px_rgba(245,158,11,0.45)]">
                   <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
                     <span className="text-xl font-extrabold text-amber-400 font-sans">V</span>
@@ -97,13 +97,13 @@ export function ValisVenSidebar() {
                   <span className="text-xl font-bold text-white">Valis</span>
                   <span className="text-xl font-bold text-amber-400 ml-1">Ven</span>
                 </div>
-              </div>
+              </Link>
             ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-[1.5px]">
+              <Link href="/" className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-[1.5px] hover:opacity-80 transition-opacity">
                 <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
                   <span className="text-xl font-extrabold text-amber-400 font-sans">V</span>
                 </div>
-              </div>
+              </Link>
             )}
             <button 
               onClick={() => setIsCollapsed(!isCollapsed)}
