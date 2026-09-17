@@ -367,6 +367,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
   const [isOpen, setIsOpen] = useState(false);
   const [texto, setTexto] = useState('');
   const [archivo, setArchivo] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [estado, setEstado] = useState<EstadoIA>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [resumen, setResumen] = useState('');
@@ -387,8 +388,29 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
   }, [estado, cola, indexActual]);
 
   const resetTodo = () => {
-    setTexto(''); setArchivo(null); setEstado('idle');
+    setTexto(''); setArchivo(null); setEstado('idle'); setIsDragging(false);
     setErrorMsg(''); setResumen(''); setCola([]); setIndexActual(0);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(false); };
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith('image/') || file.type === 'application/pdf') setArchivo(file);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+      const file = e.clipboardData.files[0];
+      if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+        e.preventDefault();
+        setArchivo(file);
+      }
+    }
   };
 
   const handleAnalizar = () => {
@@ -509,7 +531,18 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
 
   // ── Panel abierto ───────────────────────────────────────────────────────────
   return (
-    <div className="fixed bottom-24 right-4 lg:bottom-6 lg:right-6 w-[calc(100vw-2rem)] sm:w-[420px] h-[640px] max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-2rem)] bg-[#121c27] rounded-2xl shadow-2xl border border-white/10 flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+    <div 
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`fixed bottom-24 right-4 lg:bottom-6 lg:right-6 w-[calc(100vw-2rem)] sm:w-[420px] h-[640px] max-h-[calc(100vh-8rem)] lg:max-h-[calc(100vh-2rem)] bg-[#121c27] rounded-2xl shadow-2xl border flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-10 fade-in duration-300 transition-colors ${isDragging ? 'border-purple-500 bg-purple-900/20' : 'border-white/10'}`}>
+
+      {isDragging && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#121c27]/80 backdrop-blur-sm border-2 border-dashed border-purple-500 rounded-2xl m-2 pointer-events-none">
+          <ImagePlus className="w-12 h-12 text-purple-400 mb-2 animate-bounce" />
+          <p className="text-purple-300 font-bold text-lg">Suelta la imagen aquí</p>
+        </div>
+      )}
 
       {/* ── Header ── */}
       <div className="bg-gradient-to-r from-purple-700 to-pink-600 p-4 flex items-center justify-between text-white shrink-0">
@@ -690,6 +723,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
             value={texto}
             onChange={e => setTexto(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAnalizar(); } }}
+            onPaste={handlePaste}
             placeholder="Ej: Andrés: 12 vistas, 9 con compra…"
             className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 resize-none min-h-[44px] max-h-32"
             rows={1}
