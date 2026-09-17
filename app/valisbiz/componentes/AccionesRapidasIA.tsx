@@ -49,6 +49,32 @@ async function comprimirImagen(file: File, maxPx = 900, calidad = 0.75): Promise
     const buf = await file.arrayBuffer();
     return { base64: Buffer.from(buf).toString('base64'), mime: file.type };
   }
+
+  const fileName = file.name.toLowerCase();
+  const isHeic = file.type === 'image/heic' || file.type === 'image/heif' || fileName.endsWith('.heic') || fileName.endsWith('.heif');
+
+  if (isHeic) {
+    try {
+      // Intento 1: Nativo en iOS/Safari
+      const bitmap = await createImageBitmap(file);
+      const canvas = document.createElement('canvas');
+      const ratio = Math.min(1, maxPx / Math.max(bitmap.width, bitmap.height));
+      const w = Math.round(bitmap.width * ratio);
+      const h = Math.round(bitmap.height * ratio);
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d')!.drawImage(bitmap, 0, 0, w, h);
+      bitmap.close();
+      const dataUrl = canvas.toDataURL('image/jpeg', calidad);
+      return { base64: dataUrl.split(',')[1], mime: 'image/jpeg' };
+    } catch {
+      // Intento 2: Fallback WebAssembly para PC/Chrome
+      const heic2any = (await import('heic2any')).default;
+      const convertedBlob = await heic2any({ blob: file, toType: 'image/jpeg', quality: calidad });
+      const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+      file = new File([finalBlob], fileName.replace(/\.heic?$/i, '.jpg'), { type: 'image/jpeg' });
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -422,12 +448,14 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
       let mimeT: string | undefined;
       if (archivo) {
         try {
-          // Comprime la imagen antes de enviar (4MB → ~150KB)
+          const isHeic = archivo.name.toLowerCase().endsWith('.heic') || archivo.name.toLowerCase().endsWith('.heif');
+          if (isHeic) setTexto('Convirtiendo foto de iPhone...'); // Feedback visual rápido
           const comprimido = await comprimirImagen(archivo);
           base64 = comprimido.base64;
           mimeT = comprimido.mime;
-        } catch {
-          // fallback sin comprimir
+          if (isHeic) setTexto(''); // Limpiar si fue exitoso
+        } catch (e) {
+          console.error("Error al comprimir/convertir imagen:", e);
           const buf = await archivo.arrayBuffer();
           base64 = Buffer.from(buf).toString('base64');
           mimeT = archivo.type;
