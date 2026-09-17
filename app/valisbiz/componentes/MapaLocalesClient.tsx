@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect, useOptimistic, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -12,6 +13,7 @@ import ModalReporteEficiencia from './ModalReporteEficiencia';
 import ModalDesempenoRuta from './ModalDesempenoRuta';
 import { TrendingUp, FileDown, Eye, Layers } from 'lucide-react';
 import { eliminarLocal, eliminarVisita } from '../acciones/crm';
+import { Btn3D } from '@/app/components/Btn3D';
 
 // Custom Map Pins icons
 const markerIconHtml = (cadena: string, estadoVisita?: 'con_compra' | 'sin_compra') => {
@@ -83,6 +85,12 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
       return [newOrUpdatedLocal, ...state];
     }
   );
+
+  const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+  
+  useEffect(() => {
+    setPortalElement(document.getElementById('header-actions-portal'));
+  }, []);
 
   const [showModalRuta, setShowModalRuta] = useState(false);
   const [showModalReporte, setShowModalReporte] = useState(false);
@@ -569,56 +577,24 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
           </div>
         </div>
 
-        {/* Top Action Bar (Modals) */}
-        <div className="flex flex-col lg:flex-row gap-3 mt-2 mb-4">
-          <button 
-            onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); }}
-            className="flex-1 bg-[#121c27] hover:bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center justify-between group transition-all shadow-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-emerald-500/10 rounded-xl group-hover:bg-emerald-500/20 transition-colors">
-                <CalendarCheck2 className="w-5 h-5 text-emerald-400" />
-              </div>
-              <div className="text-left">
-                <h4 className="text-slate-200 font-bold text-sm">Registrar Visita</h4>
-                <p className="text-[10px] text-slate-400">Crear nuevo registro</p>
-              </div>
-            </div>
-            <Plus className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
-          </button>
-          
-          <button 
-            onClick={() => setShowModalRuta(true)}
-            className="flex-1 bg-[#121c27] hover:bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center justify-between group transition-all shadow-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-indigo-500/10 rounded-xl group-hover:bg-indigo-500/20 transition-colors">
-                <Route className="w-5 h-5 text-indigo-400" />
-              </div>
-              <div className="text-left">
-                <h4 className="text-slate-200 font-bold text-sm">Desempeño de Ruta</h4>
-                <p className="text-[10px] text-slate-400">Ver recorrido del día</p>
-              </div>
-            </div>
-            <Eye className="w-4 h-4 text-slate-500 group-hover:text-indigo-400 transition-colors" />
-          </button>
-          
-          <button 
-            onClick={() => setShowModalReporte(true)}
-            className="flex-1 bg-[#121c27] hover:bg-white/5 border border-white/5 p-4 rounded-2xl flex items-center justify-between group transition-all shadow-sm"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-rose-500/10 rounded-xl group-hover:bg-rose-500/20 transition-colors">
-                <TrendingUp className="w-5 h-5 text-rose-400" />
-              </div>
-              <div className="text-left">
-                <h4 className="text-slate-200 font-bold text-sm">Reporte de Eficiencia</h4>
-                <p className="text-[10px] text-slate-400">Generar PDF</p>
-              </div>
-            </div>
-            <FileDown className="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors" />
-          </button>
-        </div>
+        {/* Top Action Bar (Modals) -> Ported to Top Header */}
+        {portalElement && createPortal(
+          <>
+            <Btn3D color="gray" size="sm" onClick={() => setShowModalReporte(true)}>
+              <FileDown className="w-4 h-4" />
+              <span className="hidden sm:inline">Eficiencia</span>
+            </Btn3D>
+            <Btn3D color="indigo" size="sm" onClick={() => setShowModalRuta(true)}>
+              <Route className="w-4 h-4" />
+              <span className="hidden sm:inline">Desempeño</span>
+            </Btn3D>
+            <Btn3D color="emerald" size="sm" onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); }}>
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Registrar Visita</span>
+            </Btn3D>
+          </>,
+          portalElement
+        )}
 
         {/* Route Stats Banner (if exists) */}
         {rutaError && (
