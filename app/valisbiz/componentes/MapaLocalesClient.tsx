@@ -580,15 +580,15 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         {/* Top Action Bar (Modals) -> Ported to Top Header */}
         {portalElement && createPortal(
           <>
-            <Btn3D color="gray" size="sm" onClick={() => setShowModalReporte(true)}>
+            <Btn3D color="rose" size="sm" onClick={() => setShowModalReporte(true)}>
               <FileDown className="w-4 h-4" />
               <span className="hidden sm:inline">Eficiencia</span>
             </Btn3D>
-            <Btn3D color="blue" size="sm" onClick={() => setShowModalRuta(true)}>
+            <Btn3D color="violet" size="sm" onClick={() => setShowModalRuta(true)}>
               <Route className="w-4 h-4" />
               <span className="hidden sm:inline">Desempeño</span>
             </Btn3D>
-            <Btn3D color="emerald" size="sm" onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); }}>
+            <Btn3D color="pink" size="sm" onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); }}>
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">Registrar Visita</span>
             </Btn3D>

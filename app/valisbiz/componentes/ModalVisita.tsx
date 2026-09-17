@@ -208,9 +208,9 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('con_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50/10 text-emerald-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200/20'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-pink-500 bg-pink-50/10 text-pink-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-pink-200/20'}`}
               >
-                <CheckCircle2 className={`w-6 h-6 ${estadoVisita === 'con_compra' ? 'text-emerald-500' : 'text-slate-400'}`} />
+                <CheckCircle2 className={`w-6 h-6 ${estadoVisita === 'con_compra' ? 'text-pink-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Con Compra</span>
               </button>
               <button 
@@ -237,7 +237,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     value={montoReportado}
                     onChange={e => setMontoReportado(e.target.value)}
                     placeholder="0.00"
-                    className="w-full bg-white/5 border border-emerald-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
                   />
                 </div>
               </div>
@@ -251,7 +251,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     value={ordenPedido}
                     onChange={e => setOrdenPedido(e.target.value)}
                     placeholder="Número de orden único"
-                    className="w-full bg-white/5 border border-emerald-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
                   />
                 </div>
               </div>
