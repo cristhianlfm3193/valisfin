@@ -113,10 +113,14 @@ function buscarLocal(nombre: string | undefined, locales: Local[]): string {
 
 function construirItem(d: DatosIAVendedor, vendedores: Vendedor[], locales: Local[]): ItemCola {
   const today = new Date().toISOString().split('T')[0];
+  const _localId = buscarLocal(d.local_nombre, locales);
+  const localEncontrado = locales.find(l => l.id === _localId);
+  const _vendedorId = buscarVendedor(d.vendedor_nombre, vendedores) || localEncontrado?.vendedor_id || '';
+  
   return {
     ...d,
     _estado: 'pendiente',
-    _vendedorId: buscarVendedor(d.vendedor_nombre, vendedores),
+    _vendedorId,
     _fecha: d.fecha || today,
     _notas: d.notas || '',
     _vistas: d.vistas?.toString() || '0',
@@ -417,6 +421,8 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
       setResumen(r.data.resumen);
       setIndexActual(0);
       setEstado('cola');
+      setTexto('');
+      setArchivo(null);
     });
   };
 
