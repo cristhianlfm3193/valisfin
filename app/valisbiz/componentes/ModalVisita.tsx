@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { X, CheckCircle2, XCircle } from 'lucide-react';
+import { X, CheckCircle2, XCircle, Plus } from 'lucide-react';
 import type { Local, Vendedor, VisitaMensual } from '@/types/valisbiz';
 import { registrarVisita, editarVisita } from '../acciones/crm';
+import ModalLocal from './ModalLocal';
 
 interface ModalVisitaProps {
   onClose: () => void;
@@ -44,6 +45,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [showModalNuevoLocal, setShowModalNuevoLocal] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,8 +81,9 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+    <>
+      <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="bg-[#121c27] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
         
         <div className="flex items-center justify-between p-5 border-b border-white/5">
           <h3 className="font-bold text-lg text-slate-200">
@@ -128,7 +131,16 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
 
 
           <div className="flex flex-col gap-1.5 relative">
-            <label className="text-sm font-bold text-slate-400">Punto de Venta (Local)</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-bold text-slate-400">Punto de Venta (Local)</label>
+              <button 
+                type="button" 
+                onClick={() => setShowModalNuevoLocal(true)}
+                className="text-xs font-bold text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-1"
+              >
+                <Plus className="w-3.5 h-3.5" /> Nuevo
+              </button>
+            </div>
             <input 
               required
               type="text"
@@ -229,7 +241,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     value={ordenPedido}
                     onChange={e => setOrdenPedido(e.target.value)}
                     placeholder="Número de orden único"
-                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-[16px] sm:text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-11 pr-4 py-2.5 text-[16px] sm:text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
                   />
                 </div>
               </div>
@@ -254,5 +266,20 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
         </form>
       </div>
     </div>
+    
+    {showModalNuevoLocal && (
+      <ModalLocal 
+        onClose={() => setShowModalNuevoLocal(false)}
+        vendedores={vendedores}
+        onOptimisticUpdate={(data) => {
+          if (data.nombre_local) {
+            setSearchLocal(data.nombre_local);
+            // El ID real será asignado por la DB y llegará tras el revalidatePath
+            // Mientras tanto, se puede dejar el input con el texto.
+          }
+        }}
+      />
+    )}
+    </>
   );
 }
