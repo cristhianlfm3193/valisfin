@@ -895,6 +895,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <tr className="bg-white/5 text-slate-400 text-xs uppercase tracking-wider">
                     <th className="py-3 px-3 rounded-l-xl min-w-[150px]">Fecha / Vendedor</th>
                     <th className="py-3 px-3 min-w-[200px]">Local</th>
+                    <th className="py-3 px-3 text-center">Verificado</th>
                     <th className="py-3 px-3">Estado</th>
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px]">Acciones</th>
                   </tr>
@@ -902,7 +903,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <tbody className="divide-y divide-white/10 text-sm text-slate-200">
                   {visitasMostradas.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="py-8 text-center text-slate-400">
+                      <td colSpan={5} className="py-8 text-center text-slate-400">
                         {(fechaDesde || fechaHasta) ? 'No hay visitas registradas en este periodo.' : 'No hay visitas registradas este mes.'}
                       </td>
                     </tr>
@@ -916,6 +917,15 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <td className="py-3 px-3">
                           <span className="block font-bold">{visita.local?.nombre_local}</span>
                           <span className="text-xs text-slate-400">{visita.local?.tipo}</span>
+                        </td>
+                        <td className="py-3 px-3 text-center">
+                          {visita.local?.verificado ? (
+                            <div className="flex justify-center">
+                              <BadgeCheck className="w-5 h-5 text-blue-400" />
+                            </div>
+                          ) : (
+                            <div className="flex justify-center text-slate-600 font-bold">-</div>
+                          )}
                         </td>
                         <td className="py-3 px-3">
                           <span className={`text-[10px] font-bold px-2 py-1 rounded-full whitespace-nowrap ${visita.estado_visita === 'con_compra' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>

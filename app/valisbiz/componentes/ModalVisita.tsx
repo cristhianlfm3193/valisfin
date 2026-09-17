@@ -223,7 +223,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-bold text-slate-400">Orden de pedido</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">#</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">N°</span>
                   <input 
                     type="text"
                     value={ordenPedido}
