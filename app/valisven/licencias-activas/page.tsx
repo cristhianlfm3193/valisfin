@@ -297,8 +297,6 @@ export default function LicenciasActivasPage() {
                 LICENCIAS ACTIVAS
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl text-white font-bold tracking-tight">Gestión de Licencias Activas</h1>
-            <p className="text-sm text-slate-300 mt-1 max-w-3xl">Monitoreo táctico de claves criptográficas, vencimientos inminentes y provisión de credenciales seguras a clientes de la red ValisVen.</p>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">

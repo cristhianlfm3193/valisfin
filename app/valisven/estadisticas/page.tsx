@@ -229,43 +229,12 @@ export default function EstadisticasPage() {
         
         {/* Title & Export Utility */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 shadow-sm">
-              <BarChart className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-wider text-amber-400/90 font-bold">Valis Intelligence Studio</span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 font-mono text-[11px] font-semibold">v4.2 BI DirectQuery</span>
-              </div>
-              <p className="text-lg sm:text-xl text-white font-bold leading-tight">Dashboard Ejecutivo & Desempeño Comercial</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2 relative z-20">
-            <button 
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors shadow-sm"
-              onClick={() => { setPeriod('mes'); fetchData(); }}
-            >
-              <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin text-amber-400' : ''}`} />
-              <span className="text-xs font-semibold">{loading ? 'Actualizando...' : 'Restablecer'}</span>
-            </button>
-            <div className="relative inline-block text-left">
-              <button 
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 transition-all"
-                onClick={() => setShowExport(!showExport)}
-              >
-                <span>Exportar Reporte BI</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              
-              {showExport && (
-                <div className="absolute right-0 mt-1.5 w-48 rounded-lg bg-slate-900 shadow-2xl p-1.5 z-30">
-                  <button className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200 text-xs font-semibold">PDF Ejecutivo</button>
-                  <button className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200 text-xs font-semibold">Excel Matriz (.xlsx)</button>
-                  <button className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200 text-xs font-semibold">Power BI PBIX Feed</button>
-                </div>
-              )}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 text-xs uppercase tracking-wider font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                DASHBOARD
+              </span>
             </div>
           </div>
         </div>
