@@ -16,9 +16,7 @@ interface ModalVisitaProps {
 export default function ModalVisita({ onClose, locales, vendedores, localInicial, visitaAEditar }: ModalVisitaProps) {
   const isEditing = !!visitaAEditar;
 
-  const [tipoLocal, setTipoLocal] = useState<string>(
-    visitaAEditar?.local?.tipo || localInicial?.tipo || ''
-  );
+
   const [localId, setLocalId] = useState(
     visitaAEditar?.local_id || localInicial?.id || ''
   );
@@ -102,7 +100,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               required
               value={fecha}
               onChange={e => setFecha(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             />
           </div>
 
@@ -117,7 +115,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                 setLocalId('');
                 setSearchLocal('');
               }}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             >
               <option value="">¿Quién realizó la visita?</option>
               <option value="sin_vendedor">-- Filtrar locales sin vendedor --</option>
@@ -127,25 +125,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
             </select>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-400">Tipo de Local</label>
-            <select 
-              value={tipoLocal}
-              onChange={e => {
-                setTipoLocal(e.target.value);
-                setLocalId(''); // Resetear local si cambia el tipo
-                setSearchLocal('');
-              }}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
-            >
-              <option value="">Cualquier Tipo</option>
-              <option value="Supermercado">Supermercado</option>
-              <option value="Distribuidora">Distribuidora</option>
-              <option value="Tienda">Tienda</option>
-              <option value="Mini Super">Mini Super</option>
-              <option value="Restaurante">Restaurante</option>
-            </select>
-          </div>
+
 
           <div className="flex flex-col gap-1.5 relative">
             <label className="text-sm font-bold text-slate-400">Punto de Venta (Local)</label>
@@ -161,7 +141,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               onFocus={() => setShowDropdown(true)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               placeholder="Buscar local..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
             />
             {showDropdown && (
               <div className="absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-[#121c27] border border-white/10 rounded-xl shadow-lg z-50">
@@ -172,7 +152,6 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                   } else if (filtroVendedor && l.vendedor_id !== filtroVendedor) {
                     return false;
                   }
-                  if (tipoLocal && l.tipo !== tipoLocal) return false;
                   if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
                   return true;
                 }).map(l => (
@@ -192,7 +171,6 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                   if (l.activo === false) return false;
                   if (filtroVendedor === 'sin_vendedor' && l.vendedor_id !== null) return false;
                   if (filtroVendedor && filtroVendedor !== 'sin_vendedor' && l.vendedor_id !== filtroVendedor) return false;
-                  if (tipoLocal && l.tipo !== tipoLocal) return false;
                   if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
                   return true;
                 }).length === 0 && (
@@ -237,7 +215,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     value={montoReportado}
                     onChange={e => setMontoReportado(e.target.value)}
                     placeholder="0.00"
-                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-[16px] sm:text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
                   />
                 </div>
               </div>
@@ -251,7 +229,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     value={ordenPedido}
                     onChange={e => setOrdenPedido(e.target.value)}
                     placeholder="Número de orden único"
-                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-white/5 border border-pink-500/30 rounded-xl pl-8 pr-4 py-2.5 text-[16px] sm:text-sm font-medium text-pink-400 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all placeholder:text-slate-600"
                   />
                 </div>
               </div>
