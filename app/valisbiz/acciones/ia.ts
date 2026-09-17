@@ -4,7 +4,7 @@ import { GoogleGenAI, Type, Schema } from '@google/genai';
 import { createClient } from '@/lib/supabase/server';
 
 export interface DatosIAVendedor {
-  tipo: 'facturado' | 'vendido' | 'desconocido';
+  tipo: 'facturado' | 'vendido' | 'visita' | 'desconocido';
   vendedor_nombre?: string;
   fecha?: string;             // YYYY-MM-DD
   // Facturado
@@ -15,6 +15,10 @@ export interface DatosIAVendedor {
   sin_compra?: number;
   contado?: number;
   credito?: number;
+  // Visita (Facturas individuales)
+  local_nombre?: string;
+  monto_reportado?: number;
+  orden_pedido?: string;
 }
 
 export interface ResultadoIAValisBiz {
@@ -196,8 +200,8 @@ export async function analizarReporteValisBiz(
             properties: {
               tipo: {
                 type: Type.STRING,
-                enum: ['facturado', 'vendido', 'desconocido'],
-                description: "'facturado' para registros de Finanzas. 'vendido' para reportes diarios de vendedor."
+                enum: ['facturado', 'vendido', 'visita', 'desconocido'],
+                description: "'facturado' para registros de Finanzas. 'vendido' para reportes diarios de vendedor. 'visita' para recibos, facturas u órdenes de pedido individuales de clientes."
               },
               vendedor_nombre: {
                 type: Type.STRING,
@@ -213,6 +217,9 @@ export async function analizarReporteValisBiz(
               sin_compra: { type: Type.NUMBER, description: "Locales que no compraron." },
               contado: { type: Type.NUMBER, description: "Monto al contado en B/." },
               credito: { type: Type.NUMBER, description: "Monto a crédito en B/." },
+              local_nombre: { type: Type.STRING, description: "Nombre del Punto de Venta o Cliente en la factura/orden." },
+              monto_reportado: { type: Type.NUMBER, description: "Monto total de la orden o factura." },
+              orden_pedido: { type: Type.STRING, description: "Número de la Orden de Pedido, Factura o Recibo." },
             },
             required: ['tipo']
           }
@@ -231,6 +238,7 @@ La fecha de hoy es: ${today}.
 CONTEXTO DEL SISTEMA:
 - FACTURADO (Finanzas): facturación oficial de Excel. Campos: vendedor, fecha, contado (B/.), crédito (B/.), notas.
 - VENDIDO (Vendedor): reporte diario de campo. Campos: vendedor, fecha, vistas (locales visitados), con_compra (compraron), sin_compra (no compraron), contado (B/.), crédito (B/.).
+- VISITA (Órdenes/Facturas): Una fotografía de una factura u orden de pedido de un solo cliente. Campos: local_nombre (cliente), monto_reportado (total a pagar), orden_pedido (Nº orden), vendedor_nombre (si lo hay).
 - Vendedores del equipo: Andrés Chávez, Joseph Domínguez, Enrique del Rosario.
 
 MAPEO DE NOMBRES EN EXCEL DE FINANZAS:
@@ -289,13 +297,18 @@ Ejemplo 3 (imagen Excel Keiko con columnas):
   Enrique del Rosario | 0 | 0 | 0 | 0.00 |         | 0.00
 → 3 registros tipo='vendido', uno por vendedor.
 
+Ejemplo 4 (Foto de factura u Orden de Pedido):
+  "PRODUCTOS KEIKO Sucursal La Chorrera... S/Centro La Estrella ... TOTAL B/. 78.80 ... ORDEN DE PEDIDO Nº 157609 ... Vendedor: Carolina"
+→ 1 registro tipo='visita', local_nombre='S/Centro La Estrella', monto_reportado=78.80, orden_pedido='157609', vendedor_nombre='Joseph Domínguez' (Carolina mapea a Joseph).
+
 REGLAS ADICIONALES:
 1. Si ves una tabla con VARIOS vendedores → extrae UN registro por cada vendedor visible, devuélvelos TODOS.
 2. Si un vendedor tiene todos los valores en 0, inclúyelo igual.
 3. Lee la fecha impresa si existe (formato DD/MM/YYYY en Panamá → YYYY-MM-DD).
-4. Si hay una sola línea de monto sin actividad de campo → tipo='facturado'.
+4. Si ves una foto que es de UN SOLO CLIENTE con artículos, cantidades y precios (factura, orden de pedido) → usa tipo='visita' y extrae estrictamente el local_nombre, monto_reportado y orden_pedido.
+5. Si ves un reporte de facturación total por vendedor (sin visitas de campo) → usa tipo='facturado'.
 
-Analiza ahora: "${texto || 'Imagen adjunta, extrae todos los vendedores visibles.'}"`
+Analiza ahora: "${texto || 'Imagen adjunta, analiza y extrae la información requerida.'}"`
 
 
     const contenido: any[] = [prompt];

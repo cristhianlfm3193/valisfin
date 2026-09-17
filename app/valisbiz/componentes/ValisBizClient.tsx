@@ -217,6 +217,7 @@ export default function ValisBizClient({ initialData, user }: ValisBizClientProp
       {/* Widget IA flotante — siempre visible en ValisBiz */}
       <AccionesRapidasIA
         vendedores={initialData.vendedores.map(v => ({ id: v.id, nombre: v.nombre }))}
+        locales={initialData.locales.map(l => ({ id: l.id, nombre_local: l.nombre_local, vendedor_id: l.vendedor_id }))}
         onSuccess={() => startTransition(() => { router.refresh(); })}
       />
     </div>

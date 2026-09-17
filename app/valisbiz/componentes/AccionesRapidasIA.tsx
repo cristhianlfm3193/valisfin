@@ -9,10 +9,14 @@ import {
 } from 'lucide-react';
 import { analizarReporteValisBiz, type DatosIAVendedor } from '../acciones/ia';
 import { registrarVenta, registrarFacturado } from '../acciones/dashboard';
+import { registrarVisita } from '../acciones/crm';
 
 interface Vendedor { id: string; nombre: string; }
+interface Local { id: string; nombre_local: string; vendedor_id?: string | null; }
+
 interface AccionesRapidasIAProps {
   vendedores: Vendedor[];
+  locales: Local[];
   onSuccess: () => void;
 }
 
@@ -29,7 +33,13 @@ interface ItemCola extends DatosIAVendedor {
   _sinCompra: string;
   _contado: string;
   _credito: string;
-  _tab: 'facturado' | 'vendido';
+  _tab: 'facturado' | 'vendido' | 'visita';
+  
+  // Para visita
+  _localId: string;
+  _localNombreAI: string; // lo que extrajo la IA
+  _ordenPedido: string;
+  _montoReportado: string;
 }
 
 // ── Compresión de imagen en cliente (Canvas) ────────────────────────────────
@@ -75,7 +85,33 @@ function buscarVendedor(nombre: string | undefined, vendedores: Vendedor[]): str
   return parcial?.id || '';
 }
 
-function construirItem(d: DatosIAVendedor, vendedores: Vendedor[]): ItemCola {
+function buscarLocal(nombre: string | undefined, locales: Local[]): string {
+  if (!nombre) return '';
+  const n = nombre.toLowerCase().trim();
+  const exacto = locales.find(l => l.nombre_local.toLowerCase() === n);
+  if (exacto) return exacto.id;
+  
+  // Búsqueda parcial: contar cuántas palabras coinciden
+  const palabras = n.split(' ').filter(p => p.length > 2);
+  let mejorMatch = '';
+  let maxCoincidencias = 0;
+  
+  for (const l of locales) {
+    const nombreLocal = l.nombre_local.toLowerCase();
+    let coincidencias = 0;
+    for (const p of palabras) {
+      if (nombreLocal.includes(p)) coincidencias++;
+    }
+    if (coincidencias > maxCoincidencias) {
+      maxCoincidencias = coincidencias;
+      mejorMatch = l.id;
+    }
+  }
+  
+  return mejorMatch;
+}
+
+function construirItem(d: DatosIAVendedor, vendedores: Vendedor[], locales: Local[]): ItemCola {
   const today = new Date().toISOString().split('T')[0];
   return {
     ...d,
@@ -88,7 +124,11 @@ function construirItem(d: DatosIAVendedor, vendedores: Vendedor[]): ItemCola {
     _sinCompra: d.sin_compra?.toString() || '0',
     _contado: d.contado?.toString() || '0',
     _credito: d.credito?.toString() || '0',
-    _tab: d.tipo === 'facturado' ? 'facturado' : 'vendido',
+    _tab: d.tipo === 'facturado' ? 'facturado' : d.tipo === 'visita' ? 'visita' : 'vendido',
+    _localId: buscarLocal(d.local_nombre, locales),
+    _localNombreAI: d.local_nombre || '',
+    _ordenPedido: d.orden_pedido || '',
+    _montoReportado: d.monto_reportado?.toString() || '',
   };
 }
 
@@ -118,8 +158,8 @@ function ChipsProgreso({ cola, actual }: { cola: ItemCola[]; actual: number }) {
 }
 
 // ── Formulario de un ítem ─────────────────────────────────────────────────────
-function FormularioItem({ item, vendedores, onChange }: {
-  item: ItemCola; vendedores: Vendedor[]; onChange: (c: Partial<ItemCola>) => void;
+function FormularioItem({ item, vendedores, locales, onChange }: {
+  item: ItemCola; vendedores: Vendedor[]; locales: Local[]; onChange: (c: Partial<ItemCola>) => void;
 }) {
   const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
   const inp = "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all";
@@ -128,14 +168,22 @@ function FormularioItem({ item, vendedores, onChange }: {
     <div className="flex flex-col gap-3">
       {/* Tab tipo */}
       <div className="flex rounded-xl border border-white/10 overflow-hidden bg-white/5 text-xs">
-        <button onClick={() => onChange({ _tab: 'facturado' })}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-[#121c27] text-pink-400 shadow-sm' : 'text-slate-400'}`}>
-          <Building2 className="w-3.5 h-3.5" /> Facturado
-        </button>
-        <button onClick={() => onChange({ _tab: 'vendido' })}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'vendido' ? 'bg-[#121c27] text-blue-400 shadow-sm' : 'text-slate-400'}`}>
-          <FileText className="w-3.5 h-3.5" /> Vendido
-        </button>
+        {item._tab === 'visita' ? (
+          <div className="flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold bg-[#121c27] text-emerald-400 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" /> Visita / Factura
+          </div>
+        ) : (
+          <>
+            <button onClick={() => onChange({ _tab: 'facturado' })}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'facturado' ? 'bg-[#121c27] text-pink-400 shadow-sm' : 'text-slate-400'}`}>
+              <Building2 className="w-3.5 h-3.5" /> Facturado
+            </button>
+            <button onClick={() => onChange({ _tab: 'vendido' })}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 font-semibold transition-all ${item._tab === 'vendido' ? 'bg-[#121c27] text-blue-400 shadow-sm' : 'text-slate-400'}`}>
+              <FileText className="w-3.5 h-3.5" /> Vendido
+            </button>
+          </>
+        )}
       </div>
 
       {/* Vendedor + Fecha */}
@@ -152,6 +200,45 @@ function FormularioItem({ item, vendedores, onChange }: {
           <input type="date" value={item._fecha} onChange={e => onChange({ _fecha: e.target.value })} className={inp} />
         </div>
       </div>
+
+      {item._tab === 'visita' && (
+        <div className="flex flex-col gap-3">
+          <div>
+            <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">Punto de Venta (Local) *</label>
+            <select value={item._localId} onChange={e => {
+              const newLocalId = e.target.value;
+              const localSelected = locales.find(l => l.id === newLocalId);
+              onChange({ 
+                _localId: newLocalId,
+                ...(localSelected?.vendedor_id && { _vendedorId: localSelected.vendedor_id })
+              });
+            }} className={`${inp} text-slate-300 bg-emerald-500/10 border-emerald-500/30`}>
+              <option value="">Seleccionar local...</option>
+              {locales.map(l => <option key={l.id} value={l.id}>{l.nombre_local}</option>)}
+            </select>
+            {item._localNombreAI && !item._localId && (
+              <p className="text-[10px] text-amber-400 mt-1">La IA extrajo: "{item._localNombreAI}". Selecciónalo en la lista.</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Monto Facturado (B/.)</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">B/.</span>
+                <input type="number" step="0.01" min="0" value={item._montoReportado} onChange={e => onChange({ _montoReportado: e.target.value })} placeholder="0.00" className={`${inp} pl-9`} />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Orden de Pedido</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-xs">N°</span>
+                <input type="text" value={item._ordenPedido} onChange={e => onChange({ _ordenPedido: e.target.value })} placeholder="12345" className={`${inp} pl-8`} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {item._tab === 'facturado' && (
         <>
@@ -233,7 +320,7 @@ function FormularioItem({ item, vendedores, onChange }: {
 }
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRapidasIAProps) {
+export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: AccionesRapidasIAProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [texto, setTexto] = useState('');
   const [archivo, setArchivo] = useState<File | null>(null);
@@ -287,7 +374,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         setErrorMsg(r.error || 'No se encontraron datos');
         return;
       }
-      setCola(r.data.registros.map(d => construirItem(d, vendedores)));
+      setCola(r.data.registros.map(d => construirItem(d, vendedores, locales)));
       setResumen(r.data.resumen);
       setIndexActual(0);
       setEstado('cola');
@@ -311,6 +398,16 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         const credito = parseFloat(item._credito) || 0;
         if (contado + credito <= 0) { setErrorMsg('Contado + Crédito debe ser mayor a 0.'); setEstado('cola'); return; }
         res = await registrarFacturado(item._vendedorId, contado, credito, fecha, item._notas);
+      } else if (item._tab === 'visita') {
+        if (!item._localId) { setErrorMsg('Selecciona el local.'); setEstado('cola'); return; }
+        res = await registrarVisita({
+          local_id: item._localId,
+          vendedor_id: item._vendedorId,
+          estado_visita: 'Con Compra',
+          fecha: item._fecha,
+          monto_reportado: parseFloat(item._montoReportado) || null,
+          orden_pedido: item._ordenPedido || null,
+        }).then(() => ({ success: true })).catch((err) => ({ success: false, error: err.message }));
       } else {
         const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
         res = await registrarVenta(item._vendedorId, total, undefined, fecha, {
@@ -465,7 +562,7 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
             </div>
 
             <div className="bg-[#121c27] border border-white/10 rounded-2xl rounded-tl-sm p-4 shadow-sm">
-              <FormularioItem item={itemActual} vendedores={vendedores} onChange={updateItem} />
+              <FormularioItem item={itemActual} vendedores={vendedores} locales={locales} onChange={updateItem} />
             </div>
 
             {errorMsg && (
@@ -497,21 +594,25 @@ export default function AccionesRapidasIA({ vendedores, onSuccess }: AccionesRap
         {estado === 'exito' && (
           <div className="flex flex-col gap-3">
             <div className="flex justify-start">
-              <div className="bg-[#121c27] border border-white/10 rounded-2xl rounded-tl-sm px-4 py-4 shadow-sm">
+              <div className="bg-[#121c27] border border-white/10 rounded-2xl rounded-tl-sm px-4 py-4 shadow-sm max-w-[90%]">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  <span className="font-bold text-slate-200 text-sm">¡Todo procesado!</span>
+                  <span className="font-bold text-slate-200 text-sm">¡Listo! Guardado con éxito.</span>
                 </div>
-                <p className="text-xs text-slate-500 mb-3">
-                  ✅ {guardados} guardados{omitidos > 0 ? ` · ⏭ ${omitidos} omitidos` : ''}
+                <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+                  He procesado todo correctamente. ¿Necesitas que te ayude con otro registro o reporte?
                 </p>
-                <ChipsProgreso cola={cola} actual={-1} />
+                <div className="bg-white/5 border border-white/10 rounded-lg px-3 py-2">
+                  <p className="text-[11px] text-slate-500">
+                    ✅ {guardados} guardados{omitidos > 0 ? ` · ⏭ ${omitidos} omitidos` : ''}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-2">
               <button onClick={resetTodo}
-                className="text-xs text-purple-600 font-semibold hover:underline px-3 py-1.5 rounded-xl hover:bg-purple-50 transition-colors">
-                Analizar otro reporte →
+                className="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow shadow-pink-500/20 text-xs font-bold hover:from-purple-700 hover:to-pink-600 px-5 py-2.5 rounded-xl transition-all flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5" /> Claro, analizar otro
               </button>
             </div>
           </div>
