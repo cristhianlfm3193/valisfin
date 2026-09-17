@@ -268,12 +268,18 @@ export default function LicenciasActivasPage() {
     return { texto: 'Activa', color: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20', icon: CheckCircle2 };
   };
 
-  const filteredActivas = licenciasActivas.filter(l => {
-    const term = searchQuery.toLowerCase();
-    const clienteName = l.cliente?.nombre?.toLowerCase() || '';
-    const productName = l.licencia?.producto?.toLowerCase() || '';
-    return clienteName.includes(term) || productName.includes(term);
-  });
+  const filteredActivas = licenciasActivas
+    .filter(l => {
+      const term = searchQuery.toLowerCase();
+      const clienteName = l.cliente?.nombre?.toLowerCase() || '';
+      const productName = l.licencia?.producto?.toLowerCase() || '';
+      return clienteName.includes(term) || productName.includes(term);
+    })
+    .sort((a, b) => {
+      if (!a.fecha_vencimiento) return 1;
+      if (!b.fecha_vencimiento) return -1;
+      return new Date(a.fecha_vencimiento).getTime() - new Date(b.fecha_vencimiento).getTime();
+    });
 
   return (
     <div className="flex flex-col w-full">
