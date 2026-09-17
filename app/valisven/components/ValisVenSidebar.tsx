@@ -62,6 +62,8 @@ export function ValisVenSidebar() {
     return pathname?.startsWith(path);
   };
 
+  const effectivelyCollapsed = isCollapsed && !isOpen;
+
   return (
     <>
       {/* Mobile Toggle */}
@@ -81,10 +83,10 @@ export function ValisVenSidebar() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between bg-slate-950/70 lg:bg-slate-950/40 backdrop-blur-2xl border-r border-amber-500/20 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-72'} ${isOpen ? 'translate-x-0 shadow-[0_0_40px_rgba(0,0,0,0.85)]' : '-translate-x-full lg:translate-x-0'}`}>
+      <aside className={`fixed lg:sticky top-0 left-0 h-screen z-50 flex flex-col justify-between bg-slate-950/70 lg:bg-slate-950/40 backdrop-blur-2xl border-r border-amber-500/20 transition-all duration-300 ${effectivelyCollapsed ? 'w-20' : 'w-72'} ${isOpen ? 'translate-x-0 shadow-[0_0_40px_rgba(0,0,0,0.85)]' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
-          <div className={`h-20 px-6 flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between'} border-b border-amber-500/10 shrink-0`}>
-            {!isCollapsed ? (
+          <div className={`h-20 px-6 flex items-center ${effectivelyCollapsed ? 'justify-center px-0' : 'justify-between'} border-b border-amber-500/10 shrink-0`}>
+            {!effectivelyCollapsed ? (
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 p-[1.5px] shadow-[0_0_18px_rgba(245,158,11,0.45)]">
                   <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center">
@@ -107,17 +109,17 @@ export function ValisVenSidebar() {
               onClick={() => setIsCollapsed(!isCollapsed)}
               className={`hidden lg:block text-amber-500/70 hover:text-amber-400 p-1.5 rounded-lg transition-colors`}
             >
-              {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+              {effectivelyCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
             </button>
           </div>
 
-          {!isCollapsed && (
+          {!effectivelyCollapsed && (
             <div className="px-4 pt-6 pb-2">
               <span className="text-xs uppercase tracking-widest text-amber-500/70 px-2 font-semibold">Navegación Principal</span>
             </div>
           )}
           
-          <nav className={`flex flex-col gap-1 ${isCollapsed ? 'px-2 pt-6' : 'px-4'}`}>
+          <nav className={`flex flex-col gap-1 ${effectivelyCollapsed ? 'px-2 pt-6' : 'px-4'}`}>
             {navItems.map((item) => {
               const active = isActive(item.path);
               return (
@@ -129,12 +131,12 @@ export function ValisVenSidebar() {
                     active 
                       ? 'bg-gradient-to-r from-amber-500/20 to-amber-500/5 text-amber-300 font-bold border-l-2 border-amber-400 shadow-[inset_0_0_12px_rgba(245,158,11,0.15)]' 
                       : 'text-slate-300 hover:text-amber-300 hover:bg-slate-900/60'
-                  } ${isCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-3'}`}
+                  } ${effectivelyCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-3'}`}
                 >
                   <span className={`shrink-0 transition-colors ${active ? 'text-amber-400' : 'text-slate-400 group-hover:text-amber-400'}`}>
                     {item.icon}
                   </span>
-                  {!isCollapsed && (
+                  {!effectivelyCollapsed && (
                     <span className="text-sm truncate">{item.name}</span>
                   )}
                 </Link>
@@ -143,28 +145,28 @@ export function ValisVenSidebar() {
           </nav>
         </div>
 
-        <div className={`flex flex-col border-t border-amber-500/10 bg-slate-950/40 p-4 gap-3 shrink-0 ${isCollapsed ? 'items-center px-2' : ''}`}>
+        <div className={`flex flex-col border-t border-amber-500/10 bg-slate-950/40 p-4 gap-3 shrink-0 ${effectivelyCollapsed ? 'items-center px-2' : ''}`}>
           <Link 
             href="/"
-            title={isCollapsed ? "Volver a ValisHub" : undefined}
-            className={`group relative flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-indigo-500/20 hover:to-indigo-500/5 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-sm hover:shadow-indigo-500/10 overflow-hidden ${isCollapsed ? 'p-2' : 'px-4 py-2.5'}`}
+            title={effectivelyCollapsed ? "Volver a ValisHub" : undefined}
+            className={`group relative flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-indigo-500/20 hover:to-indigo-500/5 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-sm hover:shadow-indigo-500/10 overflow-hidden ${effectivelyCollapsed ? 'p-2' : 'px-4 py-2.5'}`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-            <LayoutDashboard className={`shrink-0 text-indigo-400 group-hover:text-indigo-300 transition-colors relative z-10 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
-            {!isCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Volver a ValisHub</span>}
+            <LayoutDashboard className={`shrink-0 text-indigo-400 group-hover:text-indigo-300 transition-colors relative z-10 ${effectivelyCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
+            {!effectivelyCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Volver a ValisHub</span>}
           </Link>
           
           <Link 
             href="/admin"
-            title={isCollapsed ? "Admin Panel" : undefined}
-            className={`group relative flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-amber-500/20 hover:to-amber-500/5 border border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 shadow-sm hover:shadow-amber-500/10 overflow-hidden ${isCollapsed ? 'p-2' : 'px-4 py-2.5'}`}
+            title={effectivelyCollapsed ? "Admin Panel" : undefined}
+            className={`group relative flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-slate-800/40 to-slate-800/10 hover:from-amber-500/20 hover:to-amber-500/5 border border-slate-700/50 hover:border-amber-500/30 transition-all duration-300 shadow-sm hover:shadow-amber-500/10 overflow-hidden ${effectivelyCollapsed ? 'p-2' : 'px-4 py-2.5'}`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-            <Shield className={`shrink-0 text-amber-500 group-hover:text-amber-400 transition-colors relative z-10 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
-            {!isCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Admin Panel</span>}
+            <Shield className={`shrink-0 text-amber-500 group-hover:text-amber-400 transition-colors relative z-10 ${effectivelyCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
+            {!effectivelyCollapsed && <span className="font-semibold text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">Admin Panel</span>}
           </Link>
 
-          <div className={`flex items-center rounded-xl bg-slate-900/40 border border-white/5 mt-1 ${isCollapsed ? 'justify-center p-1.5' : 'gap-3 px-2 py-2'}`} title={isCollapsed ? fullName : undefined}>
+          <div className={`flex items-center rounded-xl bg-slate-900/40 border border-white/5 mt-1 ${effectivelyCollapsed ? 'justify-center p-1.5' : 'gap-3 px-2 py-2'}`} title={effectivelyCollapsed ? fullName : undefined}>
             {user?.user_metadata?.avatar_url ? (
               <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-9 h-9 rounded-full border border-white/20 shrink-0" />
             ) : (
@@ -172,7 +174,7 @@ export function ValisVenSidebar() {
                 {initial}
               </div>
             )}
-            {!isCollapsed && (
+            {!effectivelyCollapsed && (
               <div className="overflow-hidden flex-1 min-w-0">
                 <p className="text-xs font-semibold text-white truncate">{fullName}</p>
                 <p className="text-[11px] text-gray-400 truncate">{user?.email ? user.email.split('@')[0] : 'Comandante'}</p>
@@ -182,11 +184,11 @@ export function ValisVenSidebar() {
           
           <button 
             onClick={handleSignOut}
-            title={isCollapsed ? "Cerrar Sesión" : undefined}
-            className={`flex items-center justify-center gap-2 w-full rounded-xl bg-slate-900/50 hover:bg-red-950/40 text-slate-400 hover:text-rose-400 border border-transparent hover:border-rose-900/30 transition-all group ${isCollapsed ? 'p-2' : 'py-2'}`}
+            title={effectivelyCollapsed ? "Cerrar Sesión" : undefined}
+            className={`flex items-center justify-center gap-2 w-full rounded-xl bg-slate-900/50 hover:bg-red-950/40 text-slate-400 hover:text-rose-400 border border-transparent hover:border-rose-900/30 transition-all group ${effectivelyCollapsed ? 'p-2' : 'py-2'}`}
           >
-            <LogOut className={`shrink-0 group-hover:text-rose-400 transition-colors ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
-            {!isCollapsed && <span className="text-xs font-semibold">Cerrar Sesión</span>}
+            <LogOut className={`shrink-0 group-hover:text-rose-400 transition-colors ${effectivelyCollapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
+            {!effectivelyCollapsed && <span className="text-xs font-semibold">Cerrar Sesión</span>}
           </button>
         </div>
       </aside>
