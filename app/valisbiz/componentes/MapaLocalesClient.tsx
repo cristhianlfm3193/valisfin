@@ -584,7 +584,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <FileDown className="w-4 h-4" />
               <span className="hidden sm:inline">Eficiencia</span>
             </Btn3D>
-            <Btn3D color="indigo" size="sm" onClick={() => setShowModalRuta(true)}>
+            <Btn3D color="blue" size="sm" onClick={() => setShowModalRuta(true)}>
               <Route className="w-4 h-4" />
               <span className="hidden sm:inline">Desempeño</span>
             </Btn3D>
