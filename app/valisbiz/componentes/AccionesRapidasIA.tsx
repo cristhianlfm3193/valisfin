@@ -797,7 +797,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
       {showModalNuevoLocal && (
         <ModalLocal 
           onClose={() => setShowModalNuevoLocal(false)}
-          vendedores={vendedores}
+          vendedores={vendedores as any}
           onOptimisticUpdate={(data) => {
             if (data.nombre_local) {
               updateItem({ _searchLocal: data.nombre_local });

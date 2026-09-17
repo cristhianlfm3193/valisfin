@@ -1,37 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ValisFin
 
-## Getting Started
+ValisFin es un ecosistema financiero integral diseñado para la gestión y administración de finanzas empresariales y familiares. La aplicación está dividida en múltiples submódulos especializados, apoyados por inteligencia artificial para agilizar la entrada de datos y el análisis.
 
-First, run the development server:
+## 🚀 Tecnologías Principales (Tech Stack)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Lenguaje**: TypeScript
+- **Estilos y UI**: Tailwind CSS, Lucide Icons (diseño oscuro/glassmorphism premium)
+- **Base de Datos & Backend**: [Supabase](https://supabase.com/) (PostgreSQL, Row Level Security, Edge Functions)
+- **Inteligencia Artificial**: Google Gemini 3.5 Flash Lite (procesamiento de imágenes, OCR para facturas/reportes y NLP)
+- **Despliegue**: Vercel (Frontend) y Supabase (Backend)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧩 Submódulos del Sistema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **ValisBiz (CRM y Control de Ventas)**
+   - Gestión de locales (puntos de venta), vendedores y visitas.
+   - **ValisAI (Asistente Flotante)**: Chatbot integrado capaz de leer fotografías de reportes de ventas (Excel/Keiko) y facturas de clientes, comprimir imágenes HEIC de iOS al vuelo, extraer montos y autocompletar formularios.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **ValisVen (Control de Vehículos y Flota)**
+   - Seguimiento de mantenimientos vehiculares, cambios de aceite y reparaciones.
 
-## Learn More
+3. **Gastos Diarios y Pagos Fijos**
+   - Control de presupuestos, gastos hormiga y visualización de tarjetas de crédito.
 
-To learn more about Next.js, take a look at the following resources:
+4. **ValisAN (Análisis y Reportes Avanzados)**
+   - Dashboard analítico general del estado de las finanzas y reportes mensuales automatizados.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚙️ Estructura del Proyecto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# valisfin
+- `/app`: Rutas de Next.js (App Router) y componentes de UI segmentados por submódulo.
+- `/lib/supabase`: Clientes de conexión e interacción con Supabase (Browser y Server).
+- `/app/valisbiz/acciones`: Server Actions (acciones de servidor) para validación y peticiones seguras a BD y Gemini.
