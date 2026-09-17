@@ -37,7 +37,7 @@ interface ItemCola extends DatosIAVendedor {
   
   // Para visita
   _localId: string;
-  _localNombreAI: string; // lo que extrajo la IA
+  _searchLocal: string; // texto del input de búsqueda
   _ordenPedido: string;
   _montoReportado: string;
 }
@@ -126,7 +126,7 @@ function construirItem(d: DatosIAVendedor, vendedores: Vendedor[], locales: Loca
     _credito: d.credito?.toString() || '0',
     _tab: d.tipo === 'facturado' ? 'facturado' : d.tipo === 'visita' ? 'visita' : 'vendido',
     _localId: buscarLocal(d.local_nombre, locales),
-    _localNombreAI: d.local_nombre || '',
+    _searchLocal: d.local_nombre || '',
     _ordenPedido: d.orden_pedido || '',
     _montoReportado: d.monto_reportado?.toString() || '',
   };
@@ -161,8 +161,10 @@ function ChipsProgreso({ cola, actual }: { cola: ItemCola[]; actual: number }) {
 function FormularioItem({ item, vendedores, locales, onChange }: {
   item: ItemCola; vendedores: Vendedor[]; locales: Local[]; onChange: (c: Partial<ItemCola>) => void;
 }) {
+  const [showDropdown, setShowDropdown] = useState(false);
   const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
   const inp = "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all";
+  const localSeleccionado = locales.find(l => l.id === item._localId);
 
   return (
     <div className="flex flex-col gap-3">
@@ -188,13 +190,15 @@ function FormularioItem({ item, vendedores, locales, onChange }: {
 
       {/* Vendedor + Fecha */}
       <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vendedor *</label>
-          <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300`}>
-            <option value="">Seleccionar...</option>
-            {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
-          </select>
-        </div>
+        {item._tab !== 'visita' ? (
+          <div>
+            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Vendedor *</label>
+            <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300`}>
+              <option value="">Seleccionar...</option>
+              {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
+            </select>
+          </div>
+        ) : <div />}
         <div>
           <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Fecha</label>
           <input type="date" value={item._fecha} onChange={e => onChange({ _fecha: e.target.value })} className={inp} />
@@ -202,26 +206,61 @@ function FormularioItem({ item, vendedores, locales, onChange }: {
       </div>
 
       {item._tab === 'visita' && (
-        <div className="flex flex-col gap-3">
-          <div>
+        <div className="flex flex-col gap-3 relative">
+          <div className="relative">
             <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">Punto de Venta (Local) *</label>
-            <select value={item._localId} onChange={e => {
-              const newLocalId = e.target.value;
-              const localSelected = locales.find(l => l.id === newLocalId);
-              onChange({ 
-                _localId: newLocalId,
-                ...(localSelected?.vendedor_id && { _vendedorId: localSelected.vendedor_id })
-              });
-            }} className={`${inp} text-slate-300 bg-emerald-500/10 border-emerald-500/30`}>
-              <option value="">Seleccionar local...</option>
-              {locales.map(l => <option key={l.id} value={l.id}>{l.nombre_local}</option>)}
-            </select>
-            {item._localNombreAI && !item._localId && (
-              <p className="text-[10px] text-amber-400 mt-1">La IA extrajo: "{item._localNombreAI}". Selecciónalo en la lista.</p>
+            <input 
+              required
+              type="text"
+              value={item._searchLocal}
+              onChange={e => {
+                onChange({ _searchLocal: e.target.value, _localId: '' });
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              placeholder="Buscar local..."
+              className={`${inp} text-slate-300 bg-emerald-500/10 border-emerald-500/30 relative z-[51]`}
+            />
+            {showDropdown && (
+              <div className="absolute top-[60px] left-0 right-0 max-h-48 overflow-y-auto bg-[#121c27] border border-white/10 rounded-xl shadow-xl z-[60]">
+                {locales.filter(l => !item._searchLocal || l.nombre_local.toLowerCase().includes(item._searchLocal.toLowerCase())).map(l => (
+                  <div 
+                    key={l.id} 
+                    className="px-3 py-2 text-xs hover:bg-emerald-500/20 cursor-pointer text-slate-300"
+                    onClick={() => {
+                      onChange({
+                        _localId: l.id,
+                        _searchLocal: l.nombre_local,
+                        _vendedorId: l.vendedor_id || item._vendedorId
+                      });
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {l.nombre_local} <span className="text-slate-500">({l.tipo || 'Local'})</span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          {localSeleccionado && localSeleccionado.vendedor_id && (
+            <div className="text-[10px] text-slate-400 px-1 -mt-2">
+              Vendedor asignado: <span className="font-bold text-slate-300">{vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre || '...'}</span>
+            </div>
+          )}
+
+          {(!item._localId || (localSeleccionado && !localSeleccionado.vendedor_id)) && (
+            <div className="p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+              <label className="block text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1">Asignar Vendedor *</label>
+              <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300 bg-amber-500/5 border-amber-500/30`}>
+                <option value="">Seleccionar quién realizó la visita...</option>
+                {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
+              </select>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-2 mt-1">
             <div>
               <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Monto Facturado (B/.)</label>
               <div className="relative">
@@ -403,7 +442,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
         res = await registrarVisita({
           local_id: item._localId,
           vendedor_id: item._vendedorId,
-          estado_visita: 'Con Compra',
+          estado_visita: 'con_compra',
           fecha: item._fecha,
           monto_reportado: parseFloat(item._montoReportado) || null,
           orden_pedido: item._ordenPedido || null,
