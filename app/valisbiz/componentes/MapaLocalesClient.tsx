@@ -895,6 +895,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <tr className="bg-white/5 text-slate-400 text-xs uppercase tracking-wider">
                     <th className="py-3 px-3 rounded-l-xl min-w-[150px]">Fecha / Vendedor</th>
                     <th className="py-3 px-3 min-w-[200px]">Local</th>
+                    <th className="py-3 px-3 min-w-[100px]">Orden</th>
                     <th className="py-3 px-3 text-center">Verificado</th>
                     <th className="py-3 px-3">Estado</th>
                     <th className="py-3 px-3 text-right rounded-r-xl min-w-[100px]">Acciones</th>
@@ -903,7 +904,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 <tbody className="divide-y divide-white/10 text-sm text-slate-200">
                   {visitasMostradas.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-slate-400">
+                      <td colSpan={6} className="py-8 text-center text-slate-400">
                         {(fechaDesde || fechaHasta) ? 'No hay visitas registradas en este periodo.' : 'No hay visitas registradas este mes.'}
                       </td>
                     </tr>
@@ -917,6 +918,13 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                         <td className="py-3 px-3">
                           <span className="block font-bold">{visita.local?.nombre_local}</span>
                           <span className="text-xs text-slate-400">{visita.local?.tipo}</span>
+                        </td>
+                        <td className="py-3 px-3">
+                          {visita.orden_pedido ? (
+                            <span className="font-mono text-sm text-slate-300">N° {visita.orden_pedido}</span>
+                          ) : (
+                            <span className="text-slate-600 font-bold">-</span>
+                          )}
                         </td>
                         <td className="py-3 px-3 text-center">
                           {visita.local?.verificado ? (
