@@ -10,6 +10,8 @@ import {
 import { analizarReporteValisBiz, type DatosIAVendedor } from '../acciones/ia';
 import { registrarVenta, registrarFacturado } from '../acciones/dashboard';
 import { registrarVisita } from '../acciones/crm';
+import ModalLocal from './ModalLocal';
+import { Plus } from 'lucide-react';
 
 interface Vendedor { id: string; nombre: string; }
 interface Local { id: string; nombre_local: string; vendedor_id?: string | null; tipo?: string; }
@@ -188,8 +190,8 @@ function ChipsProgreso({ cola, actual }: { cola: ItemCola[]; actual: number }) {
 }
 
 // ── Formulario de un ítem ─────────────────────────────────────────────────────
-function FormularioItem({ item, vendedores, locales, onChange }: {
-  item: ItemCola; vendedores: Vendedor[]; locales: Local[]; onChange: (c: Partial<ItemCola>) => void;
+function FormularioItem({ item, vendedores, locales, onChange, onOpenNuevoLocal }: {
+  item: ItemCola; vendedores: Vendedor[]; locales: Local[]; onChange: (c: Partial<ItemCola>) => void; onOpenNuevoLocal: () => void;
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const total = (parseFloat(item._contado) || 0) + (parseFloat(item._credito) || 0);
@@ -238,7 +240,16 @@ function FormularioItem({ item, vendedores, locales, onChange }: {
       {item._tab === 'visita' && (
         <div className="flex flex-col gap-3 relative">
           <div className="relative">
-            <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1">Punto de Venta (Local) *</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Punto de Venta (Local) *</label>
+              <button 
+                type="button" 
+                onClick={onOpenNuevoLocal}
+                className="text-[10px] font-bold text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-0.5"
+              >
+                <Plus className="w-3 h-3" /> Nuevo
+              </button>
+            </div>
             <input 
               required
               type="text"
@@ -399,6 +410,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
   const [resumen, setResumen] = useState('');
   const [cola, setCola] = useState<ItemCola[]>([]);
   const [indexActual, setIndexActual] = useState(0);
+  const [showModalNuevoLocal, setShowModalNuevoLocal] = useState(false);
   const [isPending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -412,6 +424,19 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [estado, cola, indexActual]);
+
+  // Auto-vincular locales recién creados
+  useEffect(() => {
+    setCola(prev => prev.map(item => {
+      if (item._tab === 'visita' && !item._localId && item._searchLocal) {
+        const match = locales.find(l => l.nombre_local.toLowerCase() === item._searchLocal.toLowerCase());
+        if (match) {
+          return { ...item, _localId: match.id, _vendedorId: item._vendedorId || match.vendedor_id || '' };
+        }
+      }
+      return item;
+    }));
+  }, [locales]);
 
   const resetTodo = () => {
     setTexto(''); setArchivo(null); setEstado('idle'); setIsDragging(false);
@@ -668,7 +693,7 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
             </div>
 
             <div className="bg-[#121c27] border border-white/10 rounded-2xl rounded-tl-sm p-4 shadow-sm">
-              <FormularioItem item={itemActual} vendedores={vendedores} locales={locales} onChange={updateItem} />
+              <FormularioItem item={itemActual} vendedores={vendedores} locales={locales} onChange={updateItem} onOpenNuevoLocal={() => setShowModalNuevoLocal(true)} />
             </div>
 
             {errorMsg && (
@@ -767,6 +792,19 @@ export default function AccionesRapidasIA({ vendedores, locales, onSuccess }: Ac
           La IA puede cometer errores · revisa antes de guardar
         </p>
       </div>
+
+      {/* Modal para Nuevo Local */}
+      {showModalNuevoLocal && (
+        <ModalLocal 
+          onClose={() => setShowModalNuevoLocal(false)}
+          vendedores={vendedores}
+          onOptimisticUpdate={(data) => {
+            if (data.nombre_local) {
+              updateItem({ _searchLocal: data.nombre_local });
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
