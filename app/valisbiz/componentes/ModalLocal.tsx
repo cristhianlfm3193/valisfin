@@ -45,14 +45,14 @@ export default function ModalLocal({ onClose, localAEditar, vendedores, onOptimi
       verificado: verificado
     };
 
-    if (onOptimisticUpdate) {
-      onOptimisticUpdate({ 
-        ...data, 
-        id: localAEditar ? localAEditar.id : crypto.randomUUID() 
-      });
-    }
-
     startTransition(async () => {
+      if (onOptimisticUpdate) {
+        onOptimisticUpdate({ 
+          ...data, 
+          id: localAEditar ? localAEditar.id : crypto.randomUUID() 
+        });
+      }
+      
       try {
         if (isEditing && localAEditar) {
           await editarLocal(localAEditar.id, data);
