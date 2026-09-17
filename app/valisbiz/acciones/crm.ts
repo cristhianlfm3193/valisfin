@@ -3,17 +3,27 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function registrarVisita(data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null }) {
+export async function registrarVisita(data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null; orden_pedido?: string | null }) {
   const supabase = await createClient();
   const { error } = await supabase.from('visitas_mensuales').insert(data);
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === '23505' && error.message.includes('orden_pedido')) {
+      throw new Error('La orden de pedido ya existe en la base de datos.');
+    }
+    throw new Error(error.message);
+  }
   revalidatePath('/valisbiz');
 }
 
-export async function editarVisita(id: string, data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null }) {
+export async function editarVisita(id: string, data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null; orden_pedido?: string | null }) {
   const supabase = await createClient();
   const { error } = await supabase.from('visitas_mensuales').update(data).eq('id', id);
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === '23505' && error.message.includes('orden_pedido')) {
+      throw new Error('La orden de pedido ya existe en la base de datos.');
+    }
+    throw new Error(error.message);
+  }
   revalidatePath('/valisbiz');
 }
 

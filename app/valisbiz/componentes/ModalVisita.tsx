@@ -41,33 +41,42 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   const [montoReportado, setMontoReportado] = useState<string>(
     visitaAEditar?.monto_reportado ? String(visitaAEditar.monto_reportado) : ''
   );
+  const [ordenPedido, setOrdenPedido] = useState<string>(
+    visitaAEditar?.orden_pedido || ''
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     if (!localId || !vendedorId || !estadoVisita) return;
     
     startTransition(async () => {
-      if (isEditing && visitaAEditar) {
-
-        await editarVisita(visitaAEditar.id, {
-          local_id: localId,
-          vendedor_id: vendedorId,
-          estado_visita: estadoVisita,
-          fecha: fecha,
-          monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null
-        });
-      } else {
-        await registrarVisita({
-          local_id: localId,
-          vendedor_id: vendedorId,
-          estado_visita: estadoVisita,
-          fecha: fecha,
-          monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null
-        });
-
+      try {
+        if (isEditing && visitaAEditar) {
+          await editarVisita(visitaAEditar.id, {
+            local_id: localId,
+            vendedor_id: vendedorId,
+            estado_visita: estadoVisita,
+            fecha: fecha,
+            monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null,
+            orden_pedido: estadoVisita === 'con_compra' && ordenPedido.trim() ? ordenPedido.trim() : null
+          });
+        } else {
+          await registrarVisita({
+            local_id: localId,
+            vendedor_id: vendedorId,
+            estado_visita: estadoVisita,
+            fecha: fecha,
+            monto_reportado: estadoVisita === 'con_compra' && montoReportado ? parseFloat(montoReportado) : null,
+            orden_pedido: estadoVisita === 'con_compra' && ordenPedido.trim() ? ordenPedido.trim() : null
+          });
+        }
+        onClose();
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Ocurrió un error inesperado al guardar la visita.');
       }
-      onClose();
     });
   };
 
@@ -199,7 +208,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('con_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50 text-emerald-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'con_compra' ? 'border-emerald-500 bg-emerald-50/10 text-emerald-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-emerald-200/20'}`}
               >
                 <CheckCircle2 className={`w-6 h-6 ${estadoVisita === 'con_compra' ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Con Compra</span>
@@ -207,7 +216,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <button 
                 type="button"
                 onClick={() => setEstadoVisita('sin_compra')}
-                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-red-50 text-red-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-amber-200'}`}
+                className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${estadoVisita === 'sin_compra' ? 'border-amber-500 bg-red-50/10 text-red-400' : 'border-white/5 bg-[#121c27] text-slate-500 hover:border-amber-200/20'}`}
               >
                 <XCircle className={`w-6 h-6 ${estadoVisita === 'sin_compra' ? 'text-red-500' : 'text-slate-400'}`} />
                 <span className="text-xs font-bold text-center leading-tight">Visitado<br/>Sin Compra</span>
@@ -216,20 +225,42 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
           </div>
 
           {estadoVisita === 'con_compra' && (
-            <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
-              <label className="text-sm font-bold text-slate-400">Monto Reportado ($)</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
-                <input 
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={montoReportado}
-                  onChange={e => setMontoReportado(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full bg-white/5 border border-emerald-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
-                />
+            <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-slate-400">Monto Reportado ($)</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                  <input 
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={montoReportado}
+                    onChange={e => setMontoReportado(e.target.value)}
+                    placeholder="0.00"
+                    className="w-full bg-white/5 border border-emerald-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
+                  />
+                </div>
               </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-slate-400">Orden de pedido</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">#</span>
+                  <input 
+                    type="text"
+                    value={ordenPedido}
+                    onChange={e => setOrdenPedido(e.target.value)}
+                    placeholder="Número de orden único"
+                    className="w-full bg-white/5 border border-emerald-500/30 rounded-xl pl-8 pr-4 py-2.5 text-sm font-medium text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-600"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className="p-3 mt-1 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm font-semibold text-center animate-in fade-in zoom-in">
+              {errorMsg}
             </div>
           )}
 

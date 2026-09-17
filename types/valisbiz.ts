@@ -74,6 +74,7 @@ export interface VisitaMensual {
   fecha: string;
   estado_visita: 'con_compra' | 'sin_compra';
   monto_reportado?: number | null;
+  orden_pedido?: string | null;
   created_at: string;
   local?: Local;
   vendedor?: Vendedor;
