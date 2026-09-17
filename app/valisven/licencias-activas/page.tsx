@@ -292,10 +292,13 @@ export default function LicenciasActivasPage() {
         <div className="relative z-10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 text-xs uppercase tracking-wider font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
                 LICENCIAS ACTIVAS
-              </span>
+              </h1>
             </div>
           </div>
           
