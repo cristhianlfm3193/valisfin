@@ -24,9 +24,6 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   const [vendedorId, setVendedorId] = useState(
     visitaAEditar?.vendedor_id || ''
   );
-  const [filtroVendedor, setFiltroVendedor] = useState(
-    visitaAEditar?.vendedor_id || ''
-  );
   const [searchLocal, setSearchLocal] = useState(
     visitaAEditar?.local?.nombre_local || localInicial?.nombre_local || ''
   );
@@ -46,6 +43,8 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [showModalNuevoLocal, setShowModalNuevoLocal] = useState(false);
+
+  const localSeleccionado = locales.find(l => l.id === localId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,27 +106,6 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
             />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-slate-400">Vendedor</label>
-            <select 
-              required
-              value={vendedorId}
-              onChange={e => {
-                setVendedorId(e.target.value);
-                setFiltroVendedor(e.target.value);
-                setLocalId('');
-                setSearchLocal('');
-              }}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all"
-            >
-              <option value="">¿Quién realizó la visita?</option>
-              <option value="sin_vendedor">-- Filtrar locales sin vendedor --</option>
-              {vendedores.map(v => (
-                <option key={v.id} value={v.id}>{v.nombre}</option>
-              ))}
-            </select>
-          </div>
-
 
 
           <div className="flex flex-col gap-1.5 relative">
@@ -159,11 +137,6 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               <div className="absolute top-full left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-[#121c27] border border-white/10 rounded-xl shadow-lg z-50">
                 {locales.filter(l => {
                   if (l.activo === false) return false;
-                  if (filtroVendedor === 'sin_vendedor') {
-                    if (l.vendedor_id !== null) return false;
-                  } else if (filtroVendedor && l.vendedor_id !== filtroVendedor) {
-                    return false;
-                  }
                   if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
                   return true;
                 }).map(l => (
@@ -173,6 +146,7 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                     onClick={() => {
                       setLocalId(l.id);
                       setSearchLocal(l.nombre_local);
+                      setVendedorId(l.vendedor_id || '');
                       setShowDropdown(false);
                     }}
                   >
@@ -181,13 +155,34 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
                 ))}
                 {locales.filter(l => {
                   if (l.activo === false) return false;
-                  if (filtroVendedor === 'sin_vendedor' && l.vendedor_id !== null) return false;
-                  if (filtroVendedor && filtroVendedor !== 'sin_vendedor' && l.vendedor_id !== filtroVendedor) return false;
                   if (searchLocal && !l.nombre_local.toLowerCase().includes(searchLocal.toLowerCase())) return false;
                   return true;
                 }).length === 0 && (
                   <div className="px-4 py-3 text-sm text-slate-500 text-center">No se encontraron locales.</div>
                 )}
+              </div>
+            )}
+            
+            {localSeleccionado && localSeleccionado.vendedor_id && (
+              <div className="text-xs text-slate-400 mt-1 px-1">
+                Vendedor asignado: <span className="font-bold text-slate-300">{localSeleccionado.vendedor?.nombre || vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre || '...'}</span>
+              </div>
+            )}
+
+            {localSeleccionado && !localSeleccionado.vendedor_id && (
+              <div className="flex flex-col gap-1.5 mt-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+                <label className="text-sm font-bold text-amber-400">Este local no tiene vendedor asignado</label>
+                <select 
+                  required
+                  value={vendedorId}
+                  onChange={e => setVendedorId(e.target.value)}
+                  className="w-full bg-white/5 border border-amber-500/30 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-amber-500 transition-all"
+                >
+                  <option value="">Selecciona quién realizó la visita...</option>
+                  {vendedores.map(v => (
+                    <option key={v.id} value={v.id}>{v.nombre}</option>
+                  ))}
+                </select>
               </div>
             )}
           </div>

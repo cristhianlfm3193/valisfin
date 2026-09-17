@@ -5,6 +5,13 @@ import { revalidatePath } from "next/cache";
 
 export async function registrarVisita(data: { local_id: string; vendedor_id: string; estado_visita: string; fecha: string; monto_reportado?: number | null; orden_pedido?: string | null }) {
   const supabase = await createClient();
+
+  // Verificar si el local tiene vendedor asignado; si no, asignarlo
+  const { data: local } = await supabase.from('locales').select('vendedor_id').eq('id', data.local_id).single();
+  if (local && !local.vendedor_id) {
+    await supabase.from('locales').update({ vendedor_id: data.vendedor_id }).eq('id', data.local_id);
+  }
+
   const { error } = await supabase.from('visitas_mensuales').insert(data);
   if (error) {
     if (error.code === '23505' && error.message.includes('orden_pedido')) {
