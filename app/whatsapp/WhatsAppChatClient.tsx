@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { sendWhatsAppMessage, markChatAsRead, toggleChatBot, toggleGlobalBot } from '@/app/actions/whatsapp'
 import { 
@@ -109,9 +109,46 @@ export default function WhatsAppChatClient({
     }
   }, [lastMessageId])
 
-  // Realtime subscription
+  // Client-side auto-sync function
+  const refreshMessagesAndChats = useCallback(async () => {
+    try {
+      const [chatsRes, messagesRes] = await Promise.all([
+        supabase
+          .from('whatsapp_chats')
+          .select('*')
+          .order('last_message_at', { ascending: false }),
+        supabase
+          .from('whatsapp_messages')
+          .select('*')
+          .order('created_at', { ascending: true })
+      ])
+
+      if (chatsRes.data) {
+        setChats(chatsRes.data as Chat[])
+      }
+      if (messagesRes.data) {
+        setMessages(prev => {
+          const incoming = messagesRes.data as Message[]
+          // Preserve any optimistic outbound messages that are still sending
+          const tempOutbounds = prev.filter(m => m.id.startsWith('temp-'))
+          const merged = [...incoming]
+          for (const temp of tempOutbounds) {
+            if (!merged.some(m => m.body === temp.body && m.chat_id === temp.chat_id)) {
+              merged.push(temp)
+            }
+          }
+          return merged.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        })
+      }
+    } catch (err) {
+      console.error('[ValisChat sync error]:', err)
+    }
+  }, [supabase])
+
+  // Realtime subscription + Auto-sync fallback
   useEffect(() => {
-    const channel = supabase.channel('whatsapp_realtime')
+    const channelName = `valischat_stream_${Date.now()}`
+    const channel = supabase.channel(channelName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_messages' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
           const newMsg = payload.new as Message
@@ -133,6 +170,8 @@ export default function WhatsAppChatClient({
 
             return [...prev, newMsg]
           })
+          // Actualizar hora del chat en la lista
+          setChats(prev => prev.map(c => c.id === newMsg.chat_id ? { ...c, last_message_at: newMsg.created_at } : c))
         } else if (payload.eventType === 'UPDATE') {
           const updatedMsg = payload.new as Message
           setMessages(prev => prev.map(m => m.id === updatedMsg.id ? updatedMsg : m))
@@ -140,7 +179,7 @@ export default function WhatsAppChatClient({
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_chats' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
-          setChats(prev => [payload.new as Chat, ...prev])
+          setChats(prev => [payload.new as Chat, ...prev.filter(c => c.id !== payload.new.id)])
         } else if (payload.eventType === 'UPDATE') {
           setChats(prev => {
             const newChats = prev.map(c => c.id === payload.new.id ? payload.new as Chat : c);
@@ -156,12 +195,34 @@ export default function WhatsAppChatClient({
           setAgentMode(payload.new.mode)
         }
       })
-      .subscribe()
+      .subscribe((status: string, err: any) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          console.warn('[ValisChat Realtime]:', status, err)
+          refreshMessagesAndChats()
+        }
+      })
+
+    // Sincronización continua de respaldo cada 3 segundos (para fluidez total sin recargar página)
+    const pollInterval = setInterval(() => {
+      refreshMessagesAndChats()
+    }, 3000)
+
+    // Sincronización inmediata al volver a la pestaña o desbloquear celular
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshMessagesAndChats()
+      }
+    }
+    window.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', refreshMessagesAndChats)
 
     return () => {
+      clearInterval(pollInterval)
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', refreshMessagesAndChats)
       supabase.removeChannel(channel)
     }
-  }, [supabase])
+  }, [supabase, refreshMessagesAndChats])
 
   const handleSelectChat = async (chatId: string) => {
     setActiveChatId(chatId)
