@@ -71,7 +71,9 @@ export async function runValisChatAgent({
     }
 
     const provider = forcedProvider || (config.model_provider as 'gemini' | 'openai') || 'gemini'
-    let modelName = forcedModel || config.model_name || (provider === 'gemini' ? 'gemini-3.5-flash-lite' : 'gpt-4o-mini')
+    let modelName = forcedModel || config.model_name || (provider === 'gemini' ? 'gemini-3.5-flash-lite' : (process.env.AIAPIFLOW_API_KEY ? 'gpt-5.5' : 'gpt-4o-mini'))
+
+    console.log(`🤖 [ValisChat Agent v2.6] Orquestando mensaje con proveedor: "${provider}" y modelo: "${modelName}"`)
 
     // 2.1 Conectar cliente con acceso completo a ValisVen
     const dbClient = (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)
