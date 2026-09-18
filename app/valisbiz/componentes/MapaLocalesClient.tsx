@@ -2,11 +2,11 @@
 
 import { useState, useTransition, useEffect, useOptimistic, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Local, VisitaMensual, Vendedor } from '@/types/valisbiz';
-import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route, BadgeCheck } from 'lucide-react';
+import { Search, MapPin, Plus, Edit2, Trash2, CalendarCheck2, Maximize, Minimize, X, Route, BadgeCheck, LocateFixed, Navigation } from 'lucide-react';
 import ModalVisita from './ModalVisita';
 import ModalLocal from './ModalLocal';
 import ModalReporteEficiencia from './ModalReporteEficiencia';
@@ -35,6 +35,41 @@ const markerIconHtml = (cadena: string, estadoVisita?: 'con_compra' | 'sin_compr
     iconAnchor: [12, 12],
   });
 };
+
+// Custom User Location Pin with pulsating radar animation
+const userLocationIcon = L.divIcon({
+  className: 'custom-user-location-marker',
+  html: `
+    <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;">
+      <style>
+        @keyframes user-loc-pulse {
+          0% { transform: scale(0.6); opacity: 0.9; }
+          100% { transform: scale(2.3); opacity: 0; }
+        }
+      </style>
+      <div style="position: absolute; width: 34px; height: 34px; border-radius: 9999px; background: rgba(56, 189, 248, 0.45); animation: user-loc-pulse 1.8s ease-out infinite;"></div>
+      <div style="position: relative; width: 18px; height: 18px; border-radius: 9999px; background: linear-gradient(135deg, #38bdf8, #0284c7); border: 3px solid #ffffff; box-shadow: 0 0 12px rgba(2, 132, 199, 0.9);"></div>
+    </div>
+  `,
+  iconSize: [34, 34],
+  iconAnchor: [17, 17],
+});
+
+function UserLocationFlyTo({ 
+  userLocation, 
+  flyTrigger 
+}: { 
+  userLocation: { lat: number; lng: number } | null; 
+  flyTrigger: number;
+}) {
+  const map = useMap();
+  useEffect(() => {
+    if (userLocation && flyTrigger > 0) {
+      map.flyTo([userLocation.lat, userLocation.lng], 16, { animate: true, duration: 1.2 });
+    }
+  }, [userLocation, flyTrigger, map]);
+  return null;
+}
 
 function MapFitter({ selectedLocales }: { selectedLocales: Local[] }) {
   const map = useMap();
@@ -100,6 +135,62 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
   const [search, setSearch] = useState('');
   const [selectedLocales, setSelectedLocales] = useState<Local[]>([]);
   const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
+
+  // User live geolocation state
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number; accuracy?: number } | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [flyTrigger, setFlyTrigger] = useState(0);
+
+  const obtenerUbicacion = (centerImmediately = true) => {
+    if (typeof window === 'undefined' || !('geolocation' in navigator)) {
+      alert('Tu navegador no soporta geolocalización o está deshabilitada.');
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsLocating(false);
+        const loc = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy
+        };
+        setUserLocation(loc);
+        if (centerImmediately) {
+          setFlyTrigger(prev => prev + 1);
+        }
+      },
+      (err) => {
+        setIsLocating(false);
+        console.warn('[ValisBiz Geolocation error]:', err);
+        if (centerImmediately) {
+          if (err.code === err.PERMISSION_DENIED) {
+            alert('Permiso de ubicación denegado. Para ver tu posición en el mapa, habilita el acceso en los ajustes de tu navegador.');
+          } else if (err.code === err.POSITION_UNAVAILABLE) {
+            alert('No se pudo determinar tu ubicación actual.');
+          } else if (err.code === err.TIMEOUT) {
+            alert('Tiempo de espera agotado al obtener tu ubicación.');
+          } else {
+            alert('No se pudo obtener tu ubicación actual.');
+          }
+        }
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
+
+  // Silently check if permission was already granted previously
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'navigator' in window && 'geolocation' in navigator && 'permissions' in navigator) {
+      navigator.permissions.query({ name: 'geolocation' as PermissionName })
+        .then((result) => {
+          if (result.state === 'granted') {
+            obtenerUbicacion(false);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   // Sorting and Column Filters
   const [sortConfig, setSortConfig] = useState<{ key: 'nombre' | 'vendedor' | 'estado' | null, direction: 'asc' | 'desc' }>({ key: null, direction: 'asc' });
@@ -429,12 +520,27 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
         
         {/* Interactive Map Container */}
         <div className="bg-[#121c27] rounded-2xl p-4 shadow-sm border border-white/5 flex flex-col">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-4 mb-3 px-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 mb-3 px-2">
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-indigo-500 shrink-0" />
               <span className="font-bold text-slate-200 leading-tight">Vista interactiva de visitas <span className="text-indigo-400 font-black">({filteredLocales.length})</span></span>
             </div>
-            <span className="font-mono text-xs text-slate-400 shrink-0">Panamá Oeste</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => obtenerUbicacion(true)}
+                disabled={isLocating}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-sm ${
+                  userLocation 
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 hover:bg-sky-500/30' 
+                    : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+                title="Detectar y centrar en mi ubicación actual vía GPS"
+              >
+                <LocateFixed className={`w-4 h-4 ${isLocating ? 'animate-spin text-sky-400' : userLocation ? 'text-sky-400' : ''}`} />
+                <span>{isLocating ? 'Detectando...' : userLocation ? 'Mi Ubicación (Activa)' : 'Mi Ubicación'}</span>
+              </button>
+              <span className="font-mono text-xs text-slate-400 shrink-0 hidden md:inline">Panamá Oeste</span>
+            </div>
           </div>
 
           <div className={isFullScreen 
@@ -449,6 +555,19 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                   <span className="font-bold text-slate-200 sm:hidden">Vista interactiva <span className="text-indigo-400 font-black">({filteredLocales.length})</span></span>
                 </div>
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => obtenerUbicacion(true)}
+                    disabled={isLocating}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all shadow-sm ${
+                      userLocation 
+                        ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 hover:bg-sky-500/30' 
+                        : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white'
+                    }`}
+                    title="Centrar en mi ubicación actual"
+                  >
+                    <LocateFixed className={`w-4 h-4 ${isLocating ? 'animate-spin text-sky-400' : userLocation ? 'text-sky-400' : ''}`} />
+                    <span>{isLocating ? 'Detectando...' : 'Mi Ubicación'}</span>
+                  </button>
                   <button 
                     onClick={() => { setVisitaAEditar(null); setShowVisitaModal(true); setIsFullScreen(false); }}
                     className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2 px-3 rounded-xl transition-all"
@@ -466,6 +585,7 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 style={{ height: '100%', width: '100%', zIndex: 1 }}
               >
                 <MapFitter selectedLocales={selectedLocales} />
+                <UserLocationFlyTo userLocation={userLocation} flyTrigger={flyTrigger} />
                 <LayersControl position="topleft">
                   <LayersControl.BaseLayer name="Mapa Estándar">
                     <TileLayer
@@ -487,6 +607,52 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                     pathOptions={{ color: '#4f46e5', weight: 6, opacity: 0.8, dashArray: '10, 15', lineCap: 'round' }} 
                   />
                 )}
+
+                {/* Marcador y Círculo de Precisión de la Ubicación del Usuario */}
+                {userLocation && userLocation.accuracy && (
+                  <Circle
+                    center={[userLocation.lat, userLocation.lng]}
+                    radius={userLocation.accuracy}
+                    pathOptions={{
+                      color: '#0284c7',
+                      fillColor: '#38bdf8',
+                      fillOpacity: 0.15,
+                      weight: 1.5,
+                      dashArray: '4, 4'
+                    }}
+                  />
+                )}
+                {userLocation && (
+                  <Marker
+                    position={[userLocation.lat, userLocation.lng]}
+                    icon={userLocationIcon}
+                    zIndexOffset={1000}
+                  >
+                    <Popup>
+                      <div className="font-sans min-w-[160px] text-xs">
+                        <div className="flex items-center gap-1.5 font-bold text-sky-400 mb-1">
+                          <span className="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
+                          <span>Tu Ubicación Actual</span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 m-0">
+                          Coordenadas: {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)}
+                        </p>
+                        {userLocation.accuracy && (
+                          <p className="text-[10px] text-slate-400 m-0 mt-1">
+                            Margen de precisión: ±{Math.round(userLocation.accuracy)} metros
+                          </p>
+                        )}
+                        <button
+                          onClick={() => setFlyTrigger(prev => prev + 1)}
+                          className="mt-2 w-full py-1 px-2 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-[10px] font-bold transition flex items-center justify-center gap-1"
+                        >
+                          Centrar aquí
+                        </button>
+                      </div>
+                    </Popup>
+                  </Marker>
+                )}
+
                 {filteredLocales.map((local) => {
                   const resumen = getResumenVisitas(local.id);
                   return (
@@ -536,17 +702,30 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
                 })}
               </MapContainer>
 
-              <button 
-                onClick={handleToggleFullScreen}
-                className="absolute top-3 right-3 z-[400] p-2 bg-[#121c27]/95 backdrop-blur shadow-sm border border-white/10 hover:bg-white/5 rounded-xl text-slate-300 transition-colors flex items-center gap-2 group"
-                title={isFullScreen ? "Reducir mapa" : "Ampliar mapa"}
-              >
-                {isFullScreen ? (
-                  <Minimize className="w-5 h-5 group-hover:scale-90 transition-transform" />
-                ) : (
-                  <Maximize className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                )}
-              </button>
+              <div className="absolute top-3 right-3 z-[400] flex flex-col gap-2">
+                <button 
+                  onClick={handleToggleFullScreen}
+                  className="p-2 bg-[#121c27]/95 backdrop-blur shadow-sm border border-white/10 hover:bg-white/5 rounded-xl text-slate-300 transition-colors flex items-center justify-center group"
+                  title={isFullScreen ? "Reducir mapa" : "Ampliar mapa"}
+                >
+                  {isFullScreen ? (
+                    <Minimize className="w-5 h-5 group-hover:scale-90 transition-transform" />
+                  ) : (
+                    <Maximize className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  )}
+                </button>
+
+                <button 
+                  onClick={() => obtenerUbicacion(true)}
+                  disabled={isLocating}
+                  className={`p-2 bg-[#121c27]/95 backdrop-blur shadow-sm border border-white/10 hover:bg-white/5 rounded-xl transition-colors flex items-center justify-center group ${
+                    userLocation ? 'text-sky-400 border-sky-500/40' : 'text-slate-300 hover:text-white'
+                  }`}
+                  title={userLocation ? "Centrar en mi ubicación actual" : "Obtener mi ubicación actual vía GPS"}
+                >
+                  <LocateFixed className={`w-5 h-5 ${isLocating ? 'animate-spin text-sky-400' : userLocation ? 'text-sky-400' : 'group-hover:scale-110 transition-transform'}`} />
+                </button>
+              </div>
             </div>
           </div>
 

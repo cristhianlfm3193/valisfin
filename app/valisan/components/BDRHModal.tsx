@@ -2,6 +2,7 @@
 
 import { X, User, Shield, Briefcase, MapPin, Calendar, FileText, BadgeDollarSign, AlignLeft, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface BDRHModalProps {
   isOpen: boolean;
@@ -12,8 +13,13 @@ interface BDRHModalProps {
 }
 
 export default function BDRHModal({ isOpen, onClose, person, mode, onSave }: BDRHModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (person) {
@@ -21,7 +27,7 @@ export default function BDRHModal({ isOpen, onClose, person, mode, onSave }: BDR
     }
   }, [person]);
 
-  if (!isOpen || !person || !formData) return null;
+  if (!mounted || !isOpen || !person || !formData) return null;
 
   const isEdit = mode === 'edit';
 
@@ -39,8 +45,8 @@ export default function BDRHModal({ isOpen, onClose, person, mode, onSave }: BDR
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
@@ -270,6 +276,7 @@ export default function BDRHModal({ isOpen, onClose, person, mode, onSave }: BDR
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle, Clock, Calendar, Shield, Save, FileText, Loader2, Sparkles, UserCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { LoadingCube } from '@/app/components/LoadingCube';
@@ -12,11 +13,16 @@ interface ModalProps {
   initialData?: any;
 }
 
-  export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, initialData }: ModalProps) {
+export default function ReporteOperativoModal({ isOpen, onClose, onSuccess, initialData }: ModalProps) {
+  const [mounted, setMounted] = useState(false);
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Form State
   const [departamento, setDepartamento] = useState('POLICÍA AEROPORTUARIA');
@@ -81,7 +87,7 @@ interface ModalProps {
     }
   }, [initialData, isOpen]);
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
   const handleGuardar = async () => {
     setLoading(true);
@@ -123,24 +129,23 @@ interface ModalProps {
         reporteId = reporteData.id;
       }
 
-      setSuccessMessage(isEditing ? 'Reporte actualizado con éxito' : 'Reporte creado con éxito');
+      setSuccessMessage(isEditing ? 'Reporte actualizado con éxito' : 'Reporte guardado con éxito');
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
         if (onSuccess) onSuccess();
-        if (isEditing) {
-          onClose();
-        } else {
-          setDepartamento('POLICÍA AEROPORTUARIA');
-          setAsunto('');
-          const now = new Date();
-          setFecha(now.toISOString().split('T')[0]);
-          setHora(now.toTimeString().split(' ')[0].substring(0, 5));
-          setNarrativa('');
-          setReporta({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
-          setInforma({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
-        }
-      }, 2000);
+        onClose(); // Siempre cerrar la ventana emergente al guardar
+        
+        // Limpiar formulario para la próxima apertura
+        setDepartamento('POLICÍA AEROPORTUARIA');
+        setAsunto('');
+        const now = new Date();
+        setFecha(now.toISOString().split('T')[0]);
+        setHora(now.toTimeString().split(' ')[0].substring(0, 5));
+        setNarrativa('');
+        setReporta({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+        setInforma({ rango: '', placa: '', nombre: '', verificado_bdrh: false });
+      }, 700);
     } catch (error) {
       console.error("Error guardando reporte:", error);
       alert("Hubo un error al guardar el reporte. Verifique la consola.");
@@ -149,8 +154,8 @@ interface ModalProps {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {showSuccess && <LoadingCube text={successMessage} theme="an" />}
       {/* Backdrop */}
       <div 
@@ -365,11 +370,12 @@ interface ModalProps {
             disabled={loading}
             className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-slate-950 text-sm font-bold shadow-[0_0_20px_rgba(6,182,212,0.4)] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {loading ? 'Guardando...' : 'Guardar Reporte'}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+            {loading ? 'Guardando...' : (initialData?.id ? 'Aceptar y Actualizar' : 'Aceptar y Guardar')}
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

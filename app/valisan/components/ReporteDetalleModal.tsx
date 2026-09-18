@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Calendar, Clock, Shield, Users, Truck, FileText, AlignLeft, User } from 'lucide-react';
 
 interface ReporteDetalleModalProps {
@@ -9,10 +11,16 @@ interface ReporteDetalleModalProps {
 }
 
 export default function ReporteDetalleModal({ isOpen, onClose, reporte }: ReporteDetalleModalProps) {
-  if (!isOpen || !reporte) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !isOpen || !reporte) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
@@ -102,6 +110,7 @@ export default function ReporteDetalleModal({ isOpen, onClose, reporte }: Report
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
