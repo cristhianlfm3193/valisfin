@@ -4,7 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 // Usamos el cliente de Supabase con Service Role para guardar mensajes desde el Webhook 
 // ya que el Webhook no tiene una sesión de usuario de Next.js
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SECRET_KEY!; // Debe ser el service_role key
+const supabaseKey =
+  process.env.SUPABASE_SECRET_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // GET: Verificación del Webhook por parte de Meta
@@ -14,13 +17,14 @@ export async function GET(request: Request) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
-  const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
+  const expectedToken = (process.env.WHATSAPP_VERIFY_TOKEN || 'valishub_seguro_2026').trim().replace(/['"]/g, '');
 
-  if (mode === "subscribe" && token === verifyToken) {
+  if (mode === "subscribe" && token && token.trim() === expectedToken) {
     console.log("Webhook de WhatsApp verificado exitosamente.");
     return new NextResponse(challenge, { status: 200 });
   }
 
+  console.warn("Verificación de webhook fallida. Token recibido:", token, "Esperado:", expectedToken);
   return new NextResponse("Forbidden", { status: 403 });
 }
 
@@ -34,93 +38,113 @@ export async function POST(request: Request) {
     if (body.object === "whatsapp_business_account") {
       for (const entry of body.entry || []) {
         for (const change of entry.changes || []) {
-          if (change.value && change.value.messages && change.value.messages[0]) {
-            const message = change.value.messages[0];
-            const contact = change.value.contacts?.[0];
-            
-            // Datos básicos
-            const phoneNumber = message.from; // Número del cliente
-            const contactName = contact?.profile?.name || "Desconocido";
-            const messageId = message.id;
-            
-            // Extraer texto
-            let messageText = "";
-            if (message.type === "text") {
-              messageText = message.text.body;
-            } else if (message.type === "image") {
-              messageText = "📷 [Imagen]";
-            } else if (message.type === "document") {
-              messageText = "📄 [Documento]";
-            } else if (message.type === "audio") {
-              messageText = "🎵 [Nota de voz]";
-            } else {
-              messageText = `[Formato no soportado: ${message.type}]`;
-            }
+          const value = change.value;
+          if (!value) continue;
 
-            console.log(`Mensaje recibido de ${contactName} (${phoneNumber}): ${messageText}`);
+          // 1. Procesar mensajes entrantes del cliente
+          if (value.messages && Array.isArray(value.messages)) {
+            for (const message of value.messages) {
+              const contact = value.contacts?.find((c: any) => c.wa_id === message.from) || value.contacts?.[0];
+              
+              // Datos básicos
+              const phoneNumber = message.from; // Número del cliente
+              const contactName = contact?.profile?.name || "Desconocido";
+              const messageId = message.id;
+              
+              // Extraer texto o tipo de contenido
+              let messageText = "";
+              if (message.type === "text") {
+                messageText = message.text?.body || "";
+              } else if (message.type === "image") {
+                messageText = message.image?.caption ? `📷 ${message.image.caption}` : "📷 [Imagen]";
+              } else if (message.type === "document") {
+                messageText = message.document?.filename ? `📄 ${message.document.filename}` : "📄 [Documento]";
+              } else if (message.type === "audio") {
+                messageText = "🎵 [Nota de voz]";
+              } else if (message.type === "location") {
+                messageText = `📍 [Ubicación]`;
+              } else {
+                messageText = `[Formato: ${message.type}]`;
+              }
 
-            // 1. Buscar el Chat
-            let { data: chat, error: chatError } = await supabase
-              .from('whatsapp_chats')
-              .select('id, unread_count')
-              .eq('phone_number', phoneNumber)
-              .single();
-            
-            if (chatError && chatError.code !== 'PGRST116') {
-              console.error("Error buscando chat:", chatError);
-            }
+              console.log(`Mensaje recibido de ${contactName} (${phoneNumber}): ${messageText}`);
 
-            // 2. Si no existe, crearlo
-            if (!chat) {
-              const { data: newChat, error: insertChatError } = await supabase
+              // 1.1 Buscar el Chat
+              let { data: chat, error: chatError } = await supabase
                 .from('whatsapp_chats')
-                .insert({
-                  phone_number: phoneNumber,
-                  contact_name: contactName,
-                  unread_count: 1
-                })
                 .select('id, unread_count')
+                .eq('phone_number', phoneNumber)
                 .single();
               
-              if (insertChatError) {
-                console.error("Error creando chat:", insertChatError);
+              if (chatError && chatError.code !== 'PGRST116') {
+                console.error("Error buscando chat:", chatError);
               }
-              chat = newChat;
-            } else {
-              // Actualizar el chat existente
-              await supabase
-                .from('whatsapp_chats')
-                .update({
-                  contact_name: contactName,
-                  last_message_at: new Date().toISOString(),
-                  unread_count: (chat.unread_count || 0) + 1
-                })
-                .eq('id', chat.id);
-            }
 
-            if (chat) {
-              // 3. Insertar el Mensaje
-              // Verificamos primero si el mensaje ya existe (para evitar duplicados por reintentos del webhook)
-              const { data: existingMessage } = await supabase
-                .from('whatsapp_messages')
-                .select('id')
-                .eq('wa_message_id', messageId)
-                .single();
-
-              if (!existingMessage) {
-                const { error: insertMsgError } = await supabase
-                  .from('whatsapp_messages')
+              // 1.2 Si no existe el chat, crearlo
+              if (!chat) {
+                const { data: newChat, error: insertChatError } = await supabase
+                  .from('whatsapp_chats')
                   .insert({
-                    chat_id: chat.id,
-                    wa_message_id: messageId,
-                    body: messageText,
-                    direction: 'inbound',
-                    status: 'received'
-                  });
-                  
-                if (insertMsgError) {
-                  console.error("Error insertando mensaje:", insertMsgError);
+                    phone_number: phoneNumber,
+                    contact_name: contactName,
+                    unread_count: 1,
+                    last_message_at: new Date().toISOString()
+                  })
+                  .select('id, unread_count')
+                  .single();
+                
+                if (insertChatError) {
+                  console.error("Error creando chat:", insertChatError);
                 }
+                chat = newChat;
+              } else {
+                // Actualizar el chat existente
+                await supabase
+                  .from('whatsapp_chats')
+                  .update({
+                    contact_name: contactName,
+                    last_message_at: new Date().toISOString(),
+                    unread_count: (chat.unread_count || 0) + 1
+                  })
+                  .eq('id', chat.id);
+              }
+
+              if (chat) {
+                // 1.3 Insertar el Mensaje (evitando duplicados por reintentos de Meta)
+                const { data: existingMessage } = await supabase
+                  .from('whatsapp_messages')
+                  .select('id')
+                  .eq('wa_message_id', messageId)
+                  .single();
+
+                if (!existingMessage) {
+                  const { error: insertMsgError } = await supabase
+                    .from('whatsapp_messages')
+                    .insert({
+                      chat_id: chat.id,
+                      wa_message_id: messageId,
+                      body: messageText,
+                      direction: 'inbound',
+                      status: 'received'
+                    });
+                    
+                  if (insertMsgError) {
+                    console.error("Error insertando mensaje:", insertMsgError);
+                  }
+                }
+              }
+            }
+          }
+
+          // 2. Procesar actualizaciones de estado de mensajes salientes (sent -> delivered -> read)
+          if (value.statuses && Array.isArray(value.statuses)) {
+            for (const statusObj of value.statuses) {
+              const { id: waMessageId, status } = statusObj;
+              if (waMessageId && status) {
+                await supabase
+                  .from('whatsapp_messages')
+                  .update({ status })
+                  .eq('wa_message_id', waMessageId);
               }
             }
           }

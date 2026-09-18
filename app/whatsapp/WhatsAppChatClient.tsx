@@ -54,7 +54,28 @@ export default function WhatsAppChatClient({
     const channel = supabase.channel('whatsapp_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_messages' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
-          setMessages(prev => [...prev, payload.new as Message])
+          const newMsg = payload.new as Message
+          setMessages(prev => {
+            // Evitar duplicados por ID
+            if (prev.some(m => m.id === newMsg.id)) return prev
+
+            // Si es saliente, reemplazar el mensaje temporal optimista
+            if (newMsg.direction === 'outbound') {
+              const pendingIdx = prev.findIndex(
+                m => m.id.startsWith('temp-') && m.chat_id === newMsg.chat_id && m.body === newMsg.body
+              )
+              if (pendingIdx !== -1) {
+                const copy = [...prev]
+                copy[pendingIdx] = newMsg
+                return copy
+              }
+            }
+
+            return [...prev, newMsg]
+          })
+        } else if (payload.eventType === 'UPDATE') {
+          const updatedMsg = payload.new as Message
+          setMessages(prev => prev.map(m => m.id === updatedMsg.id ? updatedMsg : m))
         }
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_chats' }, (payload: any) => {
@@ -86,13 +107,14 @@ export default function WhatsAppChatClient({
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!inputText.trim() || !activeChatId) return
+    if (!inputText.trim() || !activeChatId || isSending) return
 
+    const textToSend = inputText.trim()
     const tempId = `temp-${Date.now()}`
     const newMessage: Message = {
       id: tempId,
       chat_id: activeChatId,
-      body: inputText,
+      body: textToSend,
       direction: 'outbound',
       status: 'sending',
       created_at: new Date().toISOString()
@@ -102,12 +124,21 @@ export default function WhatsAppChatClient({
     setInputText('')
     setIsSending(true)
 
-    const res = await sendWhatsAppMessage(activeChatId, newMessage.body)
+    const res = await sendWhatsAppMessage(activeChatId, textToSend)
     setIsSending(false)
 
     if (!res.success) {
       // Mark failed
       setMessages(prev => prev.map(m => m.id === tempId ? { ...m, status: 'failed', body: `${m.body} (Error: ${res.error})` } : m))
+    } else if (res.message) {
+      // Reemplazar el mensaje optimista con el registro real de la base de datos
+      setMessages(prev => {
+        const alreadyExists = prev.some(m => m.id === res.message.id)
+        if (alreadyExists) {
+          return prev.filter(m => m.id !== tempId)
+        }
+        return prev.map(m => m.id === tempId ? (res.message as Message) : m)
+      })
     }
   }
 
@@ -250,7 +281,7 @@ export default function WhatsAppChatClient({
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
+                      if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
                         e.preventDefault()
                         handleSendMessage(e as any)
                       }

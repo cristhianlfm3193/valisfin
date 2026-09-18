@@ -57,7 +57,7 @@ export async function sendWhatsAppMessage(chatId: string, messageText: string) {
     // 3. Guardar el mensaje saliente en nuestra base de datos local
     const metaMessageId = data.messages?.[0]?.id; // El ID que retorna Meta
 
-    await supabase
+    const { data: insertedMessage, error: insertError } = await supabase
       .from('whatsapp_messages')
       .insert({
         chat_id: chatId,
@@ -66,6 +66,12 @@ export async function sendWhatsAppMessage(chatId: string, messageText: string) {
         direction: 'outbound',
         status: 'sent'
       })
+      .select()
+      .single()
+
+    if (insertError) {
+      console.error("Error guardando mensaje saliente en DB:", insertError)
+    }
 
     // Actualizar el last_message_at en el chat
     await supabase
@@ -75,7 +81,7 @@ export async function sendWhatsAppMessage(chatId: string, messageText: string) {
 
     revalidatePath('/whatsapp')
     
-    return { success: true }
+    return { success: true, message: insertedMessage }
   } catch (error: any) {
     console.error("Error en sendWhatsAppMessage:", error);
     return { success: false, error: error.message || 'Error interno del servidor.' }
