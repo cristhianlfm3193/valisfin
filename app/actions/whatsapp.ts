@@ -102,3 +102,42 @@ export async function markChatAsRead(chatId: string) {
     return { success: false }
   }
 }
+
+export async function toggleChatBot(chatId: string, isBotActive: boolean) {
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase
+      .from('whatsapp_chats')
+      .update({ is_bot_active: isBotActive })
+      .eq('id', chatId)
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    revalidatePath('/whatsapp')
+    return { success: true }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}
+
+export async function toggleGlobalBot(isBotActive: boolean) {
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase
+      .from('valischat_agent_config')
+      .update({ is_active: isBotActive, updated_at: new Date().toISOString() })
+      .eq('id', 'default_agent')
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    revalidatePath('/whatsapp')
+    revalidatePath('/agente')
+    return { success: true }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+}

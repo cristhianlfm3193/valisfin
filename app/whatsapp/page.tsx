@@ -14,22 +14,32 @@ export default async function WhatsAppPage() {
     redirect('/login')
   }
 
-  // Cargar lista de chats
-  const { data: chats } = await supabase
-    .from('whatsapp_chats')
-    .select('*')
-    .order('last_message_at', { ascending: false })
+  // Cargar lista de chats, mensajes y configuración del agente en paralelo
+  const [chatsRes, messagesRes, agentRes] = await Promise.all([
+    supabase
+      .from('whatsapp_chats')
+      .select('*')
+      .order('last_message_at', { ascending: false }),
+    supabase
+      .from('whatsapp_messages')
+      .select('*')
+      .order('created_at', { ascending: true }),
+    supabase
+      .from('valischat_agent_config')
+      .select('is_active')
+      .eq('id', 'default_agent')
+      .single()
+  ])
 
-  // Cargar todos los mensajes de todos los chats para inicializar el estado
-  // (En una app de producción muy grande, esto se cargaría perezosamente por chat)
-  const { data: messages } = await supabase
-    .from('whatsapp_messages')
-    .select('*')
-    .order('created_at', { ascending: true })
+  const initialGlobalBotActive = agentRes.data?.is_active ?? true
 
   return (
     <div className="flex h-screen bg-[#090a0f] text-white overflow-hidden">
-      <WhatsAppChatClient initialChats={chats || []} initialMessages={messages || []} />
+      <WhatsAppChatClient 
+        initialChats={chatsRes.data || []} 
+        initialMessages={messagesRes.data || []}
+        initialGlobalBotActive={initialGlobalBotActive}
+      />
     </div>
   )
 }
