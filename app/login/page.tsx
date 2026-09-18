@@ -12,7 +12,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [settings, setSettings] = useState<any>(null)
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
   useEffect(() => {
     getAppSettings('login_page').then(setSettings)
@@ -226,10 +225,10 @@ export default function LoginPage() {
                 <span className="text-[11px] text-gray-500">Panamá • Entorno Confidencial</span>
               </div>
               <div className="flex justify-center sm:justify-start relative z-20 mt-2">
-                <button type="button" onClick={() => setShowPrivacyModal(true)} className="px-4 py-2 bg-[#121c27]/50 hover:bg-[#121c27] text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-2 cursor-pointer relative z-50">
+                <Link href="/politica-de-seguridad" className="px-4 py-2 bg-[#121c27]/50 hover:bg-[#121c27] text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-2 cursor-pointer relative z-50">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   Política de Privacidad
-                </button>
+                </Link>
               </div>
             </footer>
           </section>
@@ -241,83 +240,6 @@ export default function LoginPage() {
           <span>{toastMessage}</span>
         </div>
 
-        {/* Privacy Policy Modal */}
-        {showPrivacyModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-[#121c27] border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="p-5 border-b border-white/10 flex items-center justify-between bg-black/20">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <svg className="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                  Política de Privacidad
-                </h3>
-                <button onClick={() => setShowPrivacyModal(false)} className="text-gray-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full p-1.5">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-              </div>
-              
-              <div className="p-5 sm:p-6 overflow-y-auto custom-scrollbar flex-1 text-sm text-gray-300 space-y-6">
-                <p><strong>Última actualización:</strong> 17 de septiembre de 2026</p>
-                
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">1. Introducción</h4>
-                  <p>Bienvenido a ValisHub. Esta Política de Privacidad describe cómo recopilamos, utilizamos, procesamos y protegemos su información personal y comercial cuando utiliza nuestro ecosistema de aplicaciones web y sus módulos integrados.</p>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">2. Información que Recopilamos</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Recopilamos información de finanzas personales, presupuestos familiares y control de gastos a través del módulo ValisFin.</li>
-                    <li>Procesamos datos comerciales, métricas de ventas, gestión de locales, clientes e inventario a través de los módulos ValisBiz y ValisVen.</li>
-                    <li>Almacenamos información relacionada con la venta de licencias digitales y suscripciones, incluyendo fechas de expiración y credenciales.</li>
-                    <li>Recopilamos fotografías e imágenes de documentos físicos, como facturas de clientes y reportes de ventas en Excel (Keiko), que usted suba voluntariamente al sistema.</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">3. Cómo Utilizamos su Información e Inteligencia Artificial</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Utilizamos los datos recopilados para generar tableros analíticos (dashboards) y reportes automatizados sobre el estado general de sus finanzas o métricas de negocio.</li>
-                    <li>Empleamos inteligencia artificial mediante Google Gemini 3.5 Flash Lite exclusivamente para el procesamiento de imágenes y reconocimiento óptico de caracteres (OCR).</li>
-                    <li>Este asistente de inteligencia artificial (ValisAI) lee las fotografías de sus recibos para extraer montos y autocompletar formularios, agilizando la entrada de datos.</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">4. Proveedores de Servicios de Terceros</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>El frontend de nuestra aplicación está desplegado y alojado en los servidores de Vercel.</li>
-                    <li>Toda la base de datos y la gestión de autenticación de usuarios operan a través de Supabase, utilizando bases de datos PostgreSQL.</li>
-                    <li>Las funciones de inteligencia artificial y lectura de imágenes son procesadas a través de la API de Google Gemini.</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">5. Seguridad de los Datos</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Garantizamos el acceso restringido a los datos en la base de datos mediante políticas de Row Level Security (RLS) en Supabase.</li>
-                    <li>Toda comunicación y petición de datos desde la interfaz de usuario hacia la base de datos se realiza de forma protegida utilizando Server Actions.</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">6. Retención y Derechos del Usuario</h4>
-                  <p>Usted tiene el derecho de acceder, modificar o solicitar la eliminación de su información y de los archivos subidos a la plataforma en cualquier momento. Los datos serán retenidos únicamente durante el tiempo que su cuenta permanezca activa o mientras sea necesario para brindarle el servicio de monitoreo y soporte.</p>
-                </section>
-
-                <section>
-                  <h4 className="text-teal-300 font-semibold mb-2">7. Contacto</h4>
-                  <p>Si tiene alguna duda sobre esta Política de Privacidad o el manejo de sus datos, por favor contacte al administrador del sistema o al soporte técnico designado para su cuenta.</p>
-                </section>
-              </div>
-              
-              <div className="p-5 border-t border-white/10 flex justify-end bg-black/20">
-                <button onClick={() => setShowPrivacyModal(false)} className="px-5 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg font-semibold text-sm transition-colors">
-                  Entendido
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   )
