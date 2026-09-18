@@ -679,12 +679,22 @@ export default function MapaLocalesClient({ locales, visitas, vendedores }: Mapa
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-white/5 text-slate-400 text-xs uppercase tracking-wider">
-                    <th className="py-3 px-3 rounded-l-xl min-w-[200px] cursor-pointer hover:hover:bg-indigo-500/10 transition-colors" onClick={() => handleSort('nombre')}>
-                      <div className="flex items-center gap-1">
+                    <th className="py-2 px-3 align-top min-w-[200px]">
+                      <div className="flex items-center gap-1 mb-1 cursor-pointer hover:text-indigo-400 transition-colors" onClick={() => handleSort('nombre')}>
                         Tipo / Local
                         {sortConfig.key === 'nombre' && (
                           <span className="text-indigo-500 text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
                         )}
+                      </div>
+                      <div className="relative" onClick={(e) => e.stopPropagation()}>
+                        <Search className="w-3.5 h-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="text"
+                          placeholder="Buscar cliente..."
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                          className="w-full bg-[#1e293b] border border-slate-700/50 rounded-lg pl-7 pr-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-normal normal-case"
+                        />
                       </div>
                     </th>
                     <th className="py-2 px-3 align-top min-w-[140px]">
