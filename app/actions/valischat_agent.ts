@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { AgentConfig } from '@/lib/valischat'
 import { sendWhatsAppMessage } from '@/app/actions/whatsapp'
+import { runValisChatAgent } from '@/lib/valischat/agent'
 
 export type { AgentConfig }
 
@@ -357,37 +358,39 @@ export async function generateAgentReplyForChat(
   try {
     const supabase = customClient || await createClient()
 
-    // Obtener los últimos mensajes de este chat
-    const { data: recentMsgs, error } = await supabase
+    // Obtener datos del chat
+    const { data: chat } = await supabase
+      .from('whatsapp_chats')
+      .select('phone_number, contact_name')
+      .eq('id', chatId)
+      .maybeSingle()
+
+    // Buscar el último mensaje entrante del cliente
+    const { data: lastCustomerMsg } = await supabase
       .from('whatsapp_messages')
-      .select('direction, body, created_at')
+      .select('body')
       .eq('chat_id', chatId)
-      .order('created_at', { ascending: true })
-      .limit(10)
+      .eq('direction', 'inbound')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-    if (error) {
-      return { success: false, error: 'Error al consultar mensajes del chat.' }
+    const promptText = lastCustomerMsg?.body || 'Hola, ¿en qué me pueden colaborar hoy?'
+
+    const res = await runValisChatAgent({
+      userMessage: promptText,
+      chatId,
+      phoneNumber: chat?.phone_number || '',
+      contactName: chat?.contact_name || 'Cliente',
+      supabase
+    })
+
+    return {
+      success: res.success,
+      reply: res.reply,
+      latencyMs: res.latencyMs,
+      error: res.error
     }
-
-    // Buscar el último mensaje del cliente
-    const lastCustomerMsg = recentMsgs && recentMsgs.length > 0
-      ? [...recentMsgs].reverse().find(m => m.direction === 'inbound')
-      : null
-
-    // Si no hay mensajes entrantes del cliente, generar saludo inicial cordial
-    const promptText = lastCustomerMsg
-      ? lastCustomerMsg.body
-      : 'Inicia la conversación saludando amablemente al cliente y ofreciendo asistencia con sus consultas o servicios de la empresa.'
-
-    // Historial para contexto
-    const history = (recentMsgs || [])
-      .filter((m: any) => !lastCustomerMsg || m.body !== lastCustomerMsg.body)
-      .map((m: any) => ({
-        role: (m.direction === 'inbound' ? 'user' : 'assistant') as 'user' | 'assistant',
-        content: m.body
-      }))
-
-    return await testAgentInSandbox(promptText, history, supabase)
   } catch (err: any) {
     return { success: false, error: err.message || 'Error al generar sugerencia de IA.' }
   }

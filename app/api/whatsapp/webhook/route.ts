@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { runValisChatAgent } from '@/lib/valischat/agent';
 import { generateAgentReplyForChat } from '@/app/actions/valischat_agent';
 import { sendWhatsAppMessage } from '@/app/actions/whatsapp';
 
@@ -155,13 +156,19 @@ export async function POST(request: Request) {
 
                     // Si el bot está activo globalmente y en esta conversación (no pausado) y en modo autónomo
                     if (isGlobalActive && isChatBotActive && agentConfig?.mode === 'autonomous') {
-                      console.log(`🤖 [Bot Autónomo Activo] Generando respuesta contextual con IA para ${phoneNumber}...`);
-                      const aiRes = await generateAgentReplyForChat(chat.id, supabase);
+                      console.log(`🤖 [Bot Autónomo Activo] Generando respuesta con Cerebro IA (${agentConfig?.model_provider || 'gemini'} / ${agentConfig?.model_name || 'flash'}) para ${phoneNumber}...`);
+                      const aiRes = await runValisChatAgent({
+                        userMessage: messageText,
+                        chatId: chat.id,
+                        phoneNumber,
+                        contactName,
+                        supabase
+                      });
                       
                       if (aiRes.success && aiRes.reply) {
                         const sendRes = await sendWhatsAppMessage(chat.id, aiRes.reply, supabase);
                         if (sendRes.success) {
-                          console.log(`🤖 [Bot Autónomo] Respuesta enviada con éxito a ${phoneNumber} (${aiRes.latencyMs || 0}ms)`);
+                          console.log(`🤖 [Bot Autónomo] Respuesta enviada con éxito a ${phoneNumber} (${aiRes.latencyMs || 0}ms)${aiRes.toolExecuted ? ` [Tool: ${aiRes.toolExecuted.name}]` : ''}`);
                         } else {
                           console.error("Error al enviar respuesta por Meta WhatsApp API:", sendRes.error);
                         }
