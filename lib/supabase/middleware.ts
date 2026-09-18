@@ -50,7 +50,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Si no hay usuario y no estamos en la página de login o api, redirigir a login
-  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth') && !request.nextUrl.pathname.startsWith('/api')) {
+  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth') && !request.nextUrl.pathname.startsWith('/api') && !request.nextUrl.pathname.startsWith('/politica')) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)

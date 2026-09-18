@@ -7,8 +7,8 @@ export const metadata = {
 
 export default function PoliticaPrivacidadPage() {
   return (
-    <div className="min-h-screen bg-[#090a0f] text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-[#090a0f] text-white py-12 px-4 sm:px-6 lg:px-8 relative z-50">
+      <div className="max-w-3xl mx-auto relative">
         <div className="mb-8">
           <Link href="/login" className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors text-sm font-semibold">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -16,7 +16,7 @@ export default function PoliticaPrivacidadPage() {
           </Link>
         </div>
 
-        <div className="bg-[#121c27]/40 backdrop-blur-md rounded-3xl border border-white/10 p-8 sm:p-12 shadow-2xl">
+        <div className="bg-[#121c27]/40 backdrop-blur-md rounded-3xl border border-white/10 p-8 sm:p-12 shadow-2xl relative">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-full p-[2px] bg-gradient-to-tr from-teal-400 via-emerald-400 to-pink-400 shadow-[0_0_15px_rgba(45,212,191,0.2)] shrink-0">
               <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
