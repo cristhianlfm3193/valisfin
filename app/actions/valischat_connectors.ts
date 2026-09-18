@@ -94,24 +94,31 @@ export async function updateConnector(
   }
 }
 
-export async function testOpenAIConnection(apiKey?: string, model: string = 'gpt-4o-mini') {
+export async function testOpenAIConnection(apiKey?: string, model: string = 'gpt-5.5') {
   try {
-    const key = apiKey?.trim() || process.env.OPENAI_API_KEY
+    const key = apiKey?.trim() || process.env.AIAPIFLOW_API_KEY || process.env.OPENAI_API_KEY
     if (!key) {
       return { 
         success: false, 
-        error: 'No se encontró una API Key de OpenAI (ni en formulario ni en .env.local).' 
+        error: 'No se encontró una API Key de OpenAI o Aiapiflow (ni en formulario ni en .env.local).' 
       }
     }
 
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const isAiapiflow = !!process.env.AIAPIFLOW_API_KEY || key.startsWith('sk-812') || !process.env.OPENAI_API_KEY
+    const url = isAiapiflow 
+      ? 'https://aiapiflow.com/v1/chat/completions' 
+      : 'https://api.openai.com/v1/chat/completions'
+
+    const targetModel = model || (isAiapiflow ? 'gpt-5.5' : 'gpt-4o-mini')
+
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${key.trim()}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: model || 'gpt-4o-mini',
+        model: targetModel,
         messages: [{ role: 'user', content: 'Ping' }],
         max_tokens: 5
       })
@@ -119,12 +126,15 @@ export async function testOpenAIConnection(apiKey?: string, model: string = 'gpt
 
     const data = await res.json()
     if (!res.ok) {
-      return { success: false, error: data.error?.message || 'Error al conectar con OpenAI.' }
+      return { success: false, error: data.error?.message || 'Error al conectar con el proveedor.' }
     }
 
-    return { success: true, message: `Conexión exitosa con OpenAI (${model}).` }
+    return { 
+      success: true, 
+      message: `Conexión exitosa con ${isAiapiflow ? 'Aiapiflow Codex' : 'OpenAI'} (${targetModel}).` 
+    }
   } catch (err: any) {
-    return { success: false, error: err.message || 'Error de red con OpenAI.' }
+    return { success: false, error: err.message || 'Error de red.' }
   }
 }
 

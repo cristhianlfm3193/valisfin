@@ -494,12 +494,12 @@ export default function ConnectorsClient({ initialConnectors, envStatus }: Props
                 {envStatus.openai.hasKey ? (
                   <>
                     <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
-                    <span className="font-semibold text-emerald-400">Detectada en .env.local (OPENAI_API_KEY)</span>
+                    <span className="font-semibold text-emerald-400">Detectada y activa: {envStatus.openai.source || '.env.local / Vercel'}</span>
                   </>
                 ) : (
                   <>
                     <Info className="w-4 h-4 shrink-0 text-gray-400" />
-                    <span>Puedes agregar <code className="text-emerald-400">OPENAI_API_KEY</code> a tu .env.local o ingresarla abajo.</span>
+                    <span>Puedes agregar <code className="text-emerald-400">AIAPIFLOW_API_KEY</code> a tu .env.local o ingresarla abajo.</span>
                   </>
                 )}
               </div>
@@ -507,7 +507,7 @@ export default function ConnectorsClient({ initialConnectors, envStatus }: Props
               {/* API Key Input */}
               <div>
                 <label className="text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
-                  <span>API Key de OpenAI</span>
+                  <span>API Key de OpenAI / Aiapiflow</span>
                   <button
                     type="button"
                     onClick={() => setShowKeys(prev => ({ ...prev, openai: !prev.openai }))}
@@ -520,7 +520,7 @@ export default function ConnectorsClient({ initialConnectors, envStatus }: Props
                   type={showKeys.openai ? 'text' : 'password'}
                   value={openai.config?.api_key || ''}
                   onChange={e => updateConfig('openai', 'api_key', e.target.value)}
-                  placeholder={envStatus.openai.hasKey ? 'Usando OPENAI_API_KEY de .env.local' : 'sk-proj-...'}
+                  placeholder={envStatus.openai.hasKey ? 'Usando API Key de .env.local / Vercel' : 'sk-812... / sk-proj-...'}
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 font-mono"
                 />
               </div>
