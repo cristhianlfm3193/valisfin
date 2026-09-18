@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { sendWhatsAppMessage, markChatAsRead, toggleChatBot, toggleGlobalBot } from '@/app/actions/whatsapp'
 import { 
@@ -73,15 +73,16 @@ export default function WhatsAppChatClient({
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
-  const activeChat = chats.find(c => c.id === activeChatId)
-  const activeMessages = messages.filter(m => m.chat_id === activeChatId)
+  const activeChat = useMemo(() => chats.find(c => c.id === activeChatId), [chats, activeChatId])
+  const activeMessages = useMemo(() => messages.filter(m => m.chat_id === activeChatId), [messages, activeChatId])
 
-  // Scroll to bottom when new messages arrive
+  // Scroll to bottom when new messages arrive or activeChatId changes (not on every keystroke)
+  const lastMessageId = activeMessages[activeMessages.length - 1]?.id
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [activeMessages])
+  }, [lastMessageId, activeChatId])
 
   // Realtime subscription
   useEffect(() => {
@@ -321,7 +322,7 @@ export default function WhatsAppChatClient({
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Buscar un chat..." 
-              className="w-full bg-[#121c27] text-xs text-white rounded-xl pl-9 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
+              className="w-full bg-[#121c27] text-base md:text-xs text-white rounded-xl pl-9 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
             />
           </div>
         </div>
@@ -399,35 +400,40 @@ export default function WhatsAppChatClient({
       </div>
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex flex-col bg-[url('https://static.whatsapp.net/rsrc.php/v3/yl/r/gi_DckOUM5a.png')] bg-repeat relative ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`flex-1 flex flex-col bg-[url('https://static.whatsapp.net/rsrc.php/v3/yl/r/gi_DckOUM5a.png')] bg-repeat relative ${!activeChatId ? 'hidden md:flex' : 'fixed inset-0 z-50 md:static flex flex-col h-[100dvh] md:h-full w-full bg-[#090a0f]'}`}>
         <div className="absolute inset-0 bg-[#090a0f]/90 z-0"></div>
 
         {activeChatId && activeChat ? (
           <>
             {/* Top Chat Header with Contact Info & INDIVIDUAL BOT TOGGLE BUTTON */}
-            <div className="p-3 bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm">
+            <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm shrink-0">
               
               {/* Left Contact Info */}
-              <div className="flex items-center gap-3">
-                <button onClick={() => setActiveChatId(null)} className="md:hidden text-gray-400 hover:text-white p-1">
+              <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
+                <button 
+                  type="button"
+                  onClick={() => setActiveChatId(null)} 
+                  className="md:hidden text-gray-400 hover:text-white p-1.5 -ml-1 rounded-lg hover:bg-white/5 transition-colors shrink-0"
+                  aria-label="Volver a lista de chats"
+                >
                   <ArrowLeft className="w-5 h-5" />
                 </button>
-                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold border border-white/10 relative">
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold border border-white/10 relative shrink-0">
                   {activeChat.contact_name.charAt(0).toUpperCase()}
                   <div className={`w-2.5 h-2.5 rounded-full border-2 border-[#121c27] absolute -bottom-0.5 -right-0.5 ${
                     isCurrentChatBotActive ? 'bg-emerald-400' : 'bg-amber-400'
                   }`} />
                 </div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-white text-sm">{activeChat.contact_name}</h3>
+                    <h3 className="font-bold text-white text-sm truncate">{activeChat.contact_name}</h3>
                   </div>
-                  <p className="text-xs text-gray-400">{activeChat.phone_number}</p>
+                  <p className="text-[11px] md:text-xs text-gray-400 truncate">{activeChat.phone_number}</p>
                 </div>
               </div>
 
               {/* Right Controls: BOTÓN PARA PAUSAR BOT Y MODO */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
                 {/* Selector de Modo: Autónomo 24/7 vs Copiloto */}
                 {isCurrentChatBotActive && (
                   <button
@@ -456,7 +462,7 @@ export default function WhatsAppChatClient({
                   onClick={() => handleToggleChatBot(activeChat.id)}
                   disabled={togglingChatId === activeChat.id}
                   title={isCurrentChatBotActive ? "Pausar bot en esta conversación para tomar el mando como humano" : "Reactivar bot para que vuelva a responder"}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-sm select-none ${
+                  className={`flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-sm select-none ${
                     isCurrentChatBotActive
                       ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
                       : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40 shadow-amber-500/10'
@@ -472,30 +478,26 @@ export default function WhatsAppChatClient({
                     </>
                   ) : (
                     <>
-                      <UserCheck className="w-4 h-4 text-amber-400" />
-                      <span className="hidden sm:inline">Modo Humano (Pausado)</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-200 font-bold">
-                        Reanudar Bot
+                      <UserCheck className="w-4 h-4 text-amber-300" />
+                      <span className="hidden sm:inline text-amber-300">Manual (Tú)</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 font-semibold">
+                        Reanudar
                       </span>
                     </>
                   )}
-                </button>
-
-                <button className="text-gray-400 hover:text-white p-2">
-                  <MoreVertical className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 z-10 custom-scrollbar flex flex-col">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar z-10 overscroll-contain">
               
               {/* Human Mode / Paused Notification Banner */}
               {!isCurrentChatBotActive && (
-                <div className="bg-amber-500/15 border border-amber-500/30 rounded-xl p-2.5 px-3 mb-2 flex items-center justify-between text-xs text-amber-300 shadow-sm animate-in fade-in duration-200">
-                  <div className="flex items-center gap-2">
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 flex items-center justify-between text-xs text-amber-300 backdrop-blur-md mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <UserCheck className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>
+                    <span className="truncate">
                       {!isGlobalBotActive 
                         ? 'El Bot está pausado globalmente. Tienes el mando en todas las conversaciones.' 
                         : 'Bot pausado en esta conversación. Tienes el mando manual para responder directamente al cliente.'}
@@ -528,7 +530,7 @@ export default function WhatsAppChatClient({
                         ? 'bg-emerald-600 text-white rounded-tr-sm shadow-md' 
                         : 'bg-[#182330] text-gray-100 rounded-tl-sm shadow-md border border-white/5'
                     }`}>
-                      <p className="text-xs md:text-sm whitespace-pre-wrap break-words">{msg.body}</p>
+                      <p className="text-sm whitespace-pre-wrap break-words">{msg.body}</p>
                       <div className={`flex items-center justify-end gap-1 mt-1 ${isOutbound ? 'text-emerald-200' : 'text-gray-400'}`}>
                         <span className="text-[9px]">{msgTime}</span>
                         {isOutbound && (
@@ -549,13 +551,13 @@ export default function WhatsAppChatClient({
             </div>
 
             {/* Input Bar & AI Copilot Action Bar */}
-            <div className="bg-[#121c27] z-10 border-t border-white/5 shadow-lg">
+            <div className="bg-[#121c27] z-10 border-t border-white/5 shadow-lg shrink-0">
               {/* Quick AI Bar */}
-              <div className="px-3 py-2 flex items-center justify-between border-b border-white/5 bg-[#0b121a]/80 text-xs">
-                <div className="flex items-center gap-2 overflow-hidden mr-2">
+              <div className="px-3 py-1.5 md:py-2 flex items-center justify-between border-b border-white/5 bg-[#0b121a]/80 text-xs overflow-x-auto no-scrollbar gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2 overflow-hidden min-w-0">
                   <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400 shrink-0">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Copiloto IA</span>
+                    <span className="hidden sm:inline">Copiloto IA</span>
                   </div>
                   {aiLatency && (
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-mono shrink-0">
@@ -569,13 +571,13 @@ export default function WhatsAppChatClient({
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
                   {/* Botón: Sugerir con IA (Borrador en el input) */}
                   <button
                     type="button"
                     onClick={handleGenerateAiSuggestion}
                     disabled={isGeneratingAi || isAutoReplying || isSending}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all disabled:opacity-40 cursor-pointer shadow-sm"
+                    className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all disabled:opacity-40 cursor-pointer shadow-sm shrink-0"
                     title="Analizar conversación con IA y base de datos para redactar un borrador en el cuadro de texto"
                   >
                     {isGeneratingAi ? (
@@ -583,7 +585,7 @@ export default function WhatsAppChatClient({
                     ) : (
                       <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                     )}
-                    <span>{isGeneratingAi ? 'Pensando...' : 'Sugerir con IA'}</span>
+                    <span>Sugerir<span className="hidden sm:inline"> con IA</span></span>
                   </button>
 
                   {/* Botón: Responder con IA (Directo a WhatsApp) */}
@@ -591,7 +593,7 @@ export default function WhatsAppChatClient({
                     type="button"
                     onClick={handleAutoReplyWithAi}
                     disabled={isGeneratingAi || isAutoReplying || isSending}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/15 transition-all disabled:opacity-40 cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/15 transition-all disabled:opacity-40 cursor-pointer shrink-0"
                     title="Generar respuesta inteligente y enviarla directamente al cliente por WhatsApp"
                   >
                     {isAutoReplying ? (
@@ -599,24 +601,32 @@ export default function WhatsAppChatClient({
                     ) : (
                       <Zap className="w-3.5 h-3.5 text-amber-300" />
                     )}
-                    <span>{isAutoReplying ? 'Enviando...' : 'Responder con IA'}</span>
+                    <span>{isAutoReplying ? 'Enviando...' : <>Responder<span className="hidden sm:inline"> con IA</span></>}</span>
                   </button>
                 </div>
               </div>
 
               {/* Form Input */}
-              <form onSubmit={handleSendMessage} className="p-3 flex items-center gap-2">
+              <form 
+                onSubmit={handleSendMessage} 
+                className="p-2.5 md:p-3 flex items-center gap-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+              >
                 <input
                   type="text"
                   value={inputText}
                   onChange={e => setInputText(e.target.value)}
+                  onFocus={() => {
+                    setTimeout(() => {
+                      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    }, 120)
+                  }}
                   placeholder={
                     !isCurrentChatBotActive 
-                      ? "Escribe como operador humano (o usa Sugerir con IA)..." 
+                      ? "Escribe como operador humano (o usa Sugerir)..." 
                       : "Escribe un mensaje o pulsa Sugerir con IA..."
                   }
                   disabled={isSending || isAutoReplying}
-                  className="flex-1 bg-[#090a0f] text-xs md:text-sm text-white rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
+                  className="flex-1 bg-[#090a0f] text-base md:text-sm text-white rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
                 />
                 <button
                   type="submit"
