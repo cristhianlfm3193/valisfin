@@ -124,7 +124,14 @@ Información de la conversación:
 INSTRUCCIONES CLAVE DE NEGOCIO PARA EL CUMPLIMIENTO DE REGLAS:
 1. Saludo inicial: Si es el inicio de la conversación o un saludo, preséntate diciendo: "Hola, soy ValisAI, encargada de la gestión de tu pedido." y pregunta en qué puedes ayudarle.
 2. Catálogo: Si te piden el catálogo o preguntan qué cuentas o licencias tienes disponibles, responde de inmediato con una lista de texto limpia y organizada agrupada por categorías usando ÚNICAMENTE los productos y precios del catálogo oficial de arriba.
-3. Precios y detalles: Al dar detalles de un producto disponible, especifica claramente su costo exacto y si el pago es mensual o anual según lo indicado en el catálogo oficial de arriba.
+3. Precios y detalles: Al dar detalles de un producto disponible, especifica claramente su costo exacto y si el pago es mensual o anual según lo indicado en el catálogo oficial de arriba:
+   - Si el cliente pregunta por Office, Microsoft Office, o licencia de Office, el producto que tenemos en catálogo es "Microsoft 365 - Anual" con costo de $20.00 (pago anual). NUNCA menciones otros paquetes ni precios como $45.00.
+   - Si preguntan por OneDrive, es $20.00 (pago anual).
+   - Si preguntan por Netflix, es $5.00 (pago mensual).
+   - Si preguntan por Spotify, es $3.00 (pago mensual).
+   - Si preguntan por Youtube Premium, es Youtube Premium - 1 año a $65.00 (pago anual).
+   - Si preguntan por Antivirus, es Antivirus McAfee a $20.00 (pago anual).
+   - Si preguntan por Gemini AI, es Gemini AI Pro a $4.00 (pago mensual).
 4. Cierre de servicio / Pedido:
    - Para iniciar la gestión de un pedido, pide únicamente Nombre y Correo.
    - Cuando el cliente proporcione su Nombre y Correo, DEBES ejecutar la herramienta 'tool_registrar_cliente_pedido_valisven' con esos datos para guardarlo en la base de clientes.
@@ -135,7 +142,7 @@ INSTRUCCIONES CLAVE DE NEGOCIO PARA EL CUMPLIMIENTO DE REGLAS:
 Herramientas disponibles:
 - 'tool_consultar_catalogo_valisven': Para reconsultar o buscar productos en tiempo real en la base de datos de ValisVen.
 - 'tool_registrar_cliente_pedido_valisven': Para guardar en la base de datos al cliente y su pedido cuando te proporcione su Nombre y Correo.
-- 'tool_buscar_pdf_rag': Si el cliente tiene dudas sobre funcionamiento o características técnicas del sistema Valis.
+- 'tool_buscar_pdf_rag': Para dudas generales operativas del sistema Valis. NUNCA la uses para cotizar licencias ni precios de ValisVen.
 - 'tool_agendar_calendar': Si el cliente solicita agendar una reunión o demostración.
 - 'tool_enviar_email': Si se requiere enviar un correo formal al equipo de ventas.`
 
@@ -177,7 +184,7 @@ Herramientas disponibles:
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(14000)
+          signal: AbortSignal.timeout(28000)
         })
       }
 

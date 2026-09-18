@@ -37,39 +37,44 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
   // 1. Tool RAG / Búsqueda en Manuales y Documentos
   tool_buscar_pdf_rag: {
     name: 'tool_buscar_pdf_rag',
-    description: 'Busca en la base de conocimientos documental, manuales de usuario de ValisFin/ValisVen, catálogo de precios de licencias y preguntas frecuentes para resolver dudas del cliente con exactitud.',
+    description: 'Busca en la base de conocimientos y guías operativas de Valis. Para consultar precios de licencias y cuentas de ValisVen, usa prioritariamente tool_consultar_catalogo_valisven.',
     parameters: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
-          description: 'Pregunta o término de búsqueda sobre el cual se requiere contexto (ej. "precio licencia office", "cómo exportar reportes", "requisitos de instalación").'
+          description: 'Pregunta o término de búsqueda sobre el cual se requiere contexto.'
         }
       },
       required: ['query']
     },
     execute: async ({ query }: { query: string }, context?: any) => {
-      console.log(`🔍 [Tool RAG] Ejecutando búsqueda vectorial para: "${query}"`);
+      console.log(`🔍 [Tool RAG] Ejecutando búsqueda para: "${query}"`);
       const q = query.toLowerCase();
 
-      // Simulación de búsqueda semántica / pgvector sobre base de conocimiento
-      if (q.includes('office') || q.includes('licencia') || q.includes('precio') || q.includes('costo')) {
-        return {
-          encontrado: true,
-          fuente: 'Catalogo_Licencias_ValisFin_2026.pdf (Pág 1-3)',
-          coincidencia_vectorial: 0.94,
-          fragmentos: [
-            {
-              titulo: 'Licencias Microsoft 365 / Office Pro Plus',
-              contenido: 'Licencia original Microsoft 365 Apps for Enterprise para 5 dispositivos (PC/Mac/Móvil). Precio regular: $45.00/año. Incluye Word, Excel, PowerPoint, Outlook y 1TB de almacenamiento en OneDrive.',
-              garantia: '12 meses con soporte técnico e instalación remota incluida.'
-            },
-            {
-              titulo: 'Licencia ValisVen POS & CRM',
-              contenido: 'Módulo integral de facturación electrónica, ventas en ruta y control de clientes por $25.00/mes o $240.00/año.',
-              soporte: 'Soporte vía WhatsApp y sincronización con Supabase.'
-            }
-          ]
+      // Si consulta sobre licencias, precios o software, consultar la base de datos real de ValisVen
+      if (q.includes('office') || q.includes('licencia') || q.includes('precio') || q.includes('costo') || q.includes('microsoft') || q.includes('365')) {
+        const supabase = getSupabaseClient(context);
+        if (supabase) {
+          const { data } = await supabase.from('valisven_licencias').select('tipo, producto, costo_venta');
+          if (data && data.length > 0) {
+            const matches = data.filter((d: any) => q.includes(d.producto.toLowerCase()) || d.producto.toLowerCase().includes(q) || (d.tipo && d.tipo.toLowerCase().includes(q)));
+            const items = matches.length > 0 ? matches : data;
+            return {
+              encontrado: true,
+              fuente: 'Base de Datos Oficial ValisVen (valisven_licencias)',
+              productos: items.map((d: any) => {
+                const prodLower = d.producto.toLowerCase();
+                const esAnual = prodLower.includes('año') || prodLower.includes('anual') || (d.tipo && (d.tipo.includes('Office') || d.tipo.includes('Seguridad') || d.tipo.includes('Software')));
+                return {
+                  producto: d.producto,
+                  categoria: d.tipo,
+                  precio: `$${Number(d.costo_venta).toFixed(2)}`,
+                  modalidad: esAnual ? 'pago anual' : 'pago mensual'
+                };
+              })
+            };
+          }
         }
       }
 
