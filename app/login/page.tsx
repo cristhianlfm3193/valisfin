@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { useState, useEffect } from 'react'
 import { getAppSettings } from '@/app/actions/admin'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -223,11 +224,11 @@ export default function LoginPage() {
                 </div>
                 <span className="text-[11px] text-gray-500">Panamá • Entorno Confidencial</span>
               </div>
-              <div className="flex justify-center sm:justify-start">
-                <a href="/politica-privacidad" className="px-4 py-2 bg-[#121c27]/50 hover:bg-[#121c27] text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-2">
+              <div className="flex justify-center sm:justify-start relative z-20 mt-2">
+                <Link href="/politica-privacidad" className="px-4 py-2 bg-[#121c27]/50 hover:bg-[#121c27] text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-2 cursor-pointer relative z-50">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   Política de Privacidad
-                </a>
+                </Link>
               </div>
             </footer>
           </section>
