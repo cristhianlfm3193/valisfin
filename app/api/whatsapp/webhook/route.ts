@@ -59,15 +59,19 @@ export async function POST(request: Request) {
             console.log(`Mensaje recibido de ${contactName} (${phoneNumber}): ${messageText}`);
 
             // 1. Buscar el Chat
-            let { data: chat } = await supabase
+            let { data: chat, error: chatError } = await supabase
               .from('whatsapp_chats')
               .select('id, unread_count')
               .eq('phone_number', phoneNumber)
               .single();
+            
+            if (chatError && chatError.code !== 'PGRST116') {
+              console.error("Error buscando chat:", chatError);
+            }
 
             // 2. Si no existe, crearlo
             if (!chat) {
-              const { data: newChat } = await supabase
+              const { data: newChat, error: insertChatError } = await supabase
                 .from('whatsapp_chats')
                 .insert({
                   phone_number: phoneNumber,
@@ -76,6 +80,10 @@ export async function POST(request: Request) {
                 })
                 .select('id, unread_count')
                 .single();
+              
+              if (insertChatError) {
+                console.error("Error creando chat:", insertChatError);
+              }
               chat = newChat;
             } else {
               // Actualizar el chat existente
@@ -99,7 +107,7 @@ export async function POST(request: Request) {
                 .single();
 
               if (!existingMessage) {
-                await supabase
+                const { error: insertMsgError } = await supabase
                   .from('whatsapp_messages')
                   .insert({
                     chat_id: chat.id,
@@ -108,6 +116,10 @@ export async function POST(request: Request) {
                     direction: 'inbound',
                     status: 'received'
                   });
+                  
+                if (insertMsgError) {
+                  console.error("Error insertando mensaje:", insertMsgError);
+                }
               }
             }
           }
