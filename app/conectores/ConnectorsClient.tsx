@@ -33,11 +33,13 @@ import {
   testOpenAIConnection, 
   testGeminiConnection, 
   testPineconeConnection, 
-  testGoogleCalendarConnection,
+  testGoogleCalendarConnection
+} from '@/app/actions/valischat_connectors'
+import {
   Connector,
   ConnectorEnvStatus,
   KNOWN_SUPABASE_TABLES
-} from '@/app/actions/valischat_connectors'
+} from '@/lib/valischat'
 
 interface Props {
   initialConnectors: Connector[]

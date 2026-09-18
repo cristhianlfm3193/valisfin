@@ -3,21 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export type AgentConfig = {
-  id: string
-  agent_name: string
-  role_description: string
-  system_prompt: string
-  model_provider: string
-  model_name: string
-  temperature: number
-  max_tokens: number
-  selected_connectors: string[]
-  pinecone_index: string
-  mode: 'copilot' | 'autonomous'
-  is_active: boolean
-  updated_at: string
-}
+import { AgentConfig } from '@/lib/valischat'
+
+export type { AgentConfig }
 
 export async function getAgentConfig(): Promise<{ success: boolean; config?: AgentConfig; error?: string }> {
   try {
