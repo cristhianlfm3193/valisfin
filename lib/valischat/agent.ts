@@ -281,13 +281,17 @@ Herramientas disponibles:
     }
 
     // =========================================================================
-    // CEREBRO 2: OPENAI / CHATGPT (GPT-4o / GPT-4o-mini) con Function Calling
+    // CEREBRO 2: OPENAI / CHATGPT / AIAPIFLOW (CODEX) con Function Calling
     // =========================================================================
     else if (provider === 'openai') {
-      const openAiKey = process.env.OPENAI_API_KEY?.trim()
+      const openAiKey = (process.env.AIAPIFLOW_API_KEY || process.env.OPENAI_API_KEY)?.trim()
       if (!openAiKey) {
-        throw new Error('OPENAI_API_KEY no configurada en las variables de entorno.')
+        throw new Error('Ni AIAPIFLOW_API_KEY ni OPENAI_API_KEY configuradas en las variables de entorno.')
       }
+
+      const baseUrl = process.env.AIAPIFLOW_API_KEY
+        ? 'https://aiapiflow.com/v1/chat/completions'
+        : 'https://api.openai.com/v1/chat/completions'
 
       const messages: any[] = [
         { role: 'system', content: systemPrompt },
@@ -298,14 +302,14 @@ Herramientas disponibles:
       const openAiTools = getOpenAIToolDeclarations()
 
       const callOpenAi = async (bodyPayload: any) => {
-        return await fetch('https://api.openai.com/v1/chat/completions', {
+        return await fetch(baseUrl, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${openAiKey}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(bodyPayload),
-          signal: AbortSignal.timeout(15000)
+          signal: AbortSignal.timeout(28000)
         })
       }
 

@@ -186,7 +186,18 @@ Pautas:
 
   const availableModels = config.model_provider === 'gemini' 
     ? (geminiConn?.config?.models || ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3.6-flash'])
-    : (openaiConn?.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1'])
+    : [
+        'gpt-5.5',
+        'gpt-5.6-sol',
+        'gpt-5.6-terra',
+        'gpt-5.6-luna',
+        'gpt-6-astra',
+        'gpt-4o',
+        'gpt-4o-mini',
+        'claude-sonnet-5',
+        'claude-sonnet-4-6',
+        'claude-opus-5'
+      ]
 
   return (
     <div className="min-h-screen bg-[#090a0f] text-gray-100 flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300">
@@ -650,7 +661,7 @@ Pautas:
                       setConfig(prev => ({
                         ...prev,
                         model_provider: 'openai',
-                        model_name: openaiConn?.config?.active_model || 'gpt-4o'
+                        model_name: 'gpt-5.5'
                       }))
                     }}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
@@ -660,13 +671,13 @@ Pautas:
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-purple-300">OpenAI</span>
+                      <span className="text-xs font-bold text-purple-300">OpenAI / Aiapiflow (Codex)</span>
                       {config.model_provider === 'openai' && (
                         <CheckCircle2 className="w-4 h-4 text-purple-400" />
                       )}
                     </div>
                     <p className="text-[11px] text-gray-400">
-                      Modelos insignia GPT-4o y mini, alto seguimiento estricto de directivas de sistema.
+                      Modelos Codex (GPT-5.5, GPT-5.6, GPT-6 Astra) y OpenAI GPT-4o con Function Calling.
                     </p>
                   </div>
                 </div>

@@ -18,8 +18,8 @@ export async function getConnectorEnvStatus(): Promise<ConnectorEnvStatus> {
       source: process.env.GEMINI_API_KEY ? '.env.local / Servidor' : ''
     },
     openai: {
-      hasKey: !!process.env.OPENAI_API_KEY,
-      source: process.env.OPENAI_API_KEY ? '.env.local / Servidor' : ''
+      hasKey: !!(process.env.OPENAI_API_KEY || process.env.AIAPIFLOW_API_KEY),
+      source: process.env.AIAPIFLOW_API_KEY ? 'Aiapiflow Codex (.env.local)' : (process.env.OPENAI_API_KEY ? '.env.local / Servidor' : '')
     },
     pinecone: {
       hasKey: !!process.env.PINECONE_API_KEY,
