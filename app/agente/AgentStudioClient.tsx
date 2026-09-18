@@ -41,6 +41,7 @@ interface SandboxMessage {
   content: string
   timestamp: string
   usedContext?: string
+  latencyMs?: number
 }
 
 export default function AgentStudioClient({ initialConfig, connectors }: Props) {
@@ -153,7 +154,8 @@ Pautas:
           role: 'assistant',
           content: res.reply,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          usedContext: res.usedContext
+          usedContext: res.usedContext,
+          latencyMs: res.latencyMs
         }
         setSandboxMessages(prev => [...prev, assistantMsg])
       } else {
@@ -183,7 +185,7 @@ Pautas:
   const openaiConn = connectors.find(c => c.id === 'openai')
 
   const availableModels = config.model_provider === 'gemini' 
-    ? (geminiConn?.config?.models || ['gemini-3.6-flash', 'gemini-2.5-pro', 'gemini-flash-latest', 'gemini-1.5-pro'])
+    ? (geminiConn?.config?.models || ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3.6-flash'])
     : (openaiConn?.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1'])
 
   return (
@@ -962,6 +964,11 @@ Pautas:
                         {msg.role === 'user' ? 'Cliente Simulado' : (config.agent_name || 'Agente')}
                       </span>
                       <span className="text-[9px] text-gray-600">{msg.timestamp}</span>
+                      {msg.latencyMs !== undefined && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-semibold">
+                          ⚡ {(msg.latencyMs / 1000).toFixed(2)}s
+                        </span>
+                      )}
                     </div>
 
                     <div

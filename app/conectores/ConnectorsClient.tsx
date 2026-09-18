@@ -346,11 +346,11 @@ export default function ConnectorsClient({ initialConnectors, envStatus }: Props
                   Modelo Predeterminado para ValisChat
                 </label>
                 <select
-                  value={gemini.config?.active_model || 'gemini-3.6-flash'}
+                  value={gemini.config?.active_model || 'gemini-3.5-flash-lite'}
                   onChange={e => updateConfig('gemini', 'active_model', e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500/50"
                 >
-                  {(gemini.config?.models || ['gemini-3.6-flash', 'gemini-2.5-pro', 'gemini-flash-latest', 'gemini-1.5-pro']).map((m: string) => (
+                  {(gemini.config?.models || ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3.6-flash']).map((m: string) => (
                     <option key={m} value={m} className="bg-[#11131a] text-white">{m}</option>
                   ))}
                 </select>

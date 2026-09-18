@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-
 import { AgentConfig } from '@/lib/valischat'
 
 export type { AgentConfig }
@@ -54,7 +53,7 @@ export async function updateAgentConfig(
 }
 
 /**
- * Consulta las tablas seleccionadas de Supabase en tiempo real para alimentar el contexto del LLM.
+ * Consulta las tablas seleccionadas de Supabase en paralelo ultra-rápido con Promise.all
  */
 async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<string> {
   if (!selectedTables || selectedTables.length === 0) {
@@ -62,117 +61,148 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
   }
 
   const supabase = await createClient()
-  const sections: string[] = []
+  const promises: Promise<string | null>[] = []
 
   // 1. Gastos Diarios
   if (selectedTables.includes('daily_expenses')) {
-    const { data: expenses } = await supabase
-      .from('daily_expenses')
-      .select('description, amount, date, category')
-      .order('date', { ascending: false })
-      .limit(6)
-
-    if (expenses && expenses.length > 0) {
-      const list = expenses.map(e => `• ${e.description || 'Gasto'}: $${Number(e.amount || 0).toFixed(2)} (${e.date || 'Sin fecha'}${e.category ? `, ${e.category}` : ''})`).join('\n')
-      sections.push(`[Gastos Recientes (daily_expenses)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('daily_expenses')
+          .select('description, amount, date, category')
+          .order('date', { ascending: false })
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(e => `• ${e.description || 'Gasto'}: $${Number(e.amount || 0).toFixed(2)} (${e.date || 'Sin fecha'}${e.category ? `, ${e.category}` : ''})`).join('\n')
+        return `[Gastos Recientes (daily_expenses)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
   // 2. Pagos Fijos
   if (selectedTables.includes('fixed_payments')) {
-    const { data: payments } = await supabase
-      .from('fixed_payments')
-      .select('name, amount, due_date, is_paid')
-      .limit(6)
-
-    if (payments && payments.length > 0) {
-      const list = payments.map(p => `• ${p.name || 'Pago'}: $${Number(p.amount || 0).toFixed(2)} (Vence: ${p.due_date || 'N/A'}${p.is_paid ? ', Pagado' : ', Pendiente'})`).join('\n')
-      sections.push(`[Pagos Fijos (fixed_payments)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('fixed_payments')
+          .select('name, amount, due_date, is_paid')
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(p => `• ${p.name || 'Pago'}: $${Number(p.amount || 0).toFixed(2)} (Vence: ${p.due_date || 'N/A'}${p.is_paid ? ', Pagado' : ', Pendiente'})`).join('\n')
+        return `[Pagos Fijos (fixed_payments)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
   // 3. Ingresos
   if (selectedTables.includes('incomes')) {
-    const { data: incomes } = await supabase
-      .from('incomes')
-      .select('source, amount, date')
-      .order('date', { ascending: false })
-      .limit(6)
-
-    if (incomes && incomes.length > 0) {
-      const list = incomes.map(i => `• ${i.source || 'Ingreso'}: $${Number(i.amount || 0).toFixed(2)} (${i.date || 'N/A'})`).join('\n')
-      sections.push(`[Ingresos Recientes (incomes)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('incomes')
+          .select('source, amount, date')
+          .order('date', { ascending: false })
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(i => `• ${i.source || 'Ingreso'}: $${Number(i.amount || 0).toFixed(2)} (${i.date || 'N/A'})`).join('\n')
+        return `[Ingresos Recientes (incomes)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
   // 4. Clientes ValisVen
   if (selectedTables.includes('valisven_clientes')) {
-    const { data: clients } = await supabase
-      .from('valisven_clientes')
-      .select('nombre_completo, empresa, telefono, estado')
-      .limit(6)
-
-    if (clients && clients.length > 0) {
-      const list = clients.map(c => `• ${c.nombre_completo || 'Cliente'}${c.empresa ? ` (${c.empresa})` : ''} - Tel: ${c.telefono || 'N/A'} [Estado: ${c.estado || 'Activo'}]`).join('\n')
-      sections.push(`[Clientes ValisVen (valisven_clientes)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('valisven_clientes')
+          .select('nombre_completo, empresa, telefono, estado')
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(c => `• ${c.nombre_completo || 'Cliente'}${c.empresa ? ` (${c.empresa})` : ''} - Tel: ${c.telefono || 'N/A'} [Estado: ${c.estado || 'Activo'}]`).join('\n')
+        return `[Clientes ValisVen (valisven_clientes)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
   // 5. Vehículos
   if (selectedTables.includes('vehicles')) {
-    const { data: vehicles } = await supabase
-      .from('vehicles')
-      .select('brand, model, plate, year')
-      .limit(5)
-
-    if (vehicles && vehicles.length > 0) {
-      const list = vehicles.map(v => `• ${v.brand || ''} ${v.model || ''} (${v.year || ''}) - Placa: ${v.plate || 'N/A'}`).join('\n')
-      sections.push(`[Vehículos Registrados (vehicles)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('vehicles')
+          .select('brand, model, plate, year')
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(v => `• ${v.brand || ''} ${v.model || ''} (${v.year || ''}) - Placa: ${v.plate || 'N/A'}`).join('\n')
+        return `[Vehículos Registrados (vehicles)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
   // 6. Metas de Ahorro
   if (selectedTables.includes('savings_goals')) {
-    const { data: goals } = await supabase
-      .from('savings_goals')
-      .select('name, target_amount, current_amount')
-      .limit(5)
-
-    if (goals && goals.length > 0) {
-      const list = goals.map(g => `• ${g.name || 'Meta'}: Actual $${Number(g.current_amount || 0).toFixed(2)} de Meta $${Number(g.target_amount || 0).toFixed(2)}`).join('\n')
-      sections.push(`[Metas de Ahorro (savings_goals)]:\n${list}`)
-    }
+    promises.push((async () => {
+      try {
+        const { data } = await supabase
+          .from('savings_goals')
+          .select('name, target_amount, current_amount')
+          .limit(5)
+        if (!data || data.length === 0) return null
+        const list = data.map(g => `• ${g.name || 'Meta'}: Actual $${Number(g.current_amount || 0).toFixed(2)} de Meta $${Number(g.target_amount || 0).toFixed(2)}`).join('\n')
+        return `[Metas de Ahorro (savings_goals)]:\n${list}`
+      } catch {
+        return null
+      }
+    })())
   }
 
-  if (sections.length === 0) {
+  const results = await Promise.all(promises)
+  const activeSections = results.filter((s): s is string => typeof s === 'string')
+
+  if (activeSections.length === 0) {
     return 'Tablas conectadas pero sin registros recientes para mostrar.'
   }
 
-  return sections.join('\n\n')
+  return activeSections.join('\n\n')
 }
 
 export async function testAgentInSandbox(
   userMessage: string,
   history: Array<{ role: 'user' | 'assistant'; content: string }> = []
-): Promise<{ success: boolean; reply?: string; usedContext?: string; error?: string }> {
+): Promise<{ success: boolean; reply?: string; usedContext?: string; latencyMs?: number; error?: string }> {
+  const startTime = Date.now()
   try {
     const supabase = await createClient()
     
-    // 1. Obtener configuración activa del agente
-    const { data: agent } = await supabase
-      .from('valischat_agent_config')
-      .select('*')
-      .eq('id', 'default_agent')
-      .single()
+    // 1. Obtener configuración activa del agente y conectores en paralelo
+    const [agentRes, connectorsRes] = await Promise.all([
+      supabase.from('valischat_agent_config').select('*').eq('id', 'default_agent').single(),
+      supabase.from('valischat_connectors').select('*')
+    ])
+
+    const agent = agentRes.data
+    const connectors = connectorsRes.data
 
     const systemPrompt = agent?.system_prompt || 'Eres el asistente oficial de ValisChat.'
     const modelProvider = agent?.model_provider || 'gemini'
-    const modelName = agent?.model_name || (modelProvider === 'gemini' ? 'gemini-3.6-flash' : 'gpt-4o-mini')
-
-    // 2. Obtener conectores para llaves y tablas seleccionadas
-    const { data: connectors } = await supabase
-      .from('valischat_connectors')
-      .select('*')
+    
+    // Por defecto usar gemini-3.5-flash-lite que responde en ~700ms
+    let modelName = agent?.model_name || (modelProvider === 'gemini' ? 'gemini-3.5-flash-lite' : 'gpt-4o-mini')
+    if (modelName === 'gemini-3.6-flash') {
+      // Si estaba en gemini-3.6-flash (que tiene cola de razonamiento de 60s), preferir 3.5-flash-lite
+      modelName = 'gemini-3.5-flash-lite'
+    }
 
     const supabaseConn = connectors?.find((c: any) => c.id === 'supabase')
     const selectedTables = supabaseConn?.config?.tables || [
@@ -182,12 +212,12 @@ export async function testAgentInSandbox(
       'valisven_clientes'
     ]
 
-    // 3. Obtener contexto de Supabase real
+    // 2. Obtener contexto de Supabase real en paralelo ultra-rápido
     const liveDbContext = await fetchSupabaseLiveContext(selectedTables)
 
     const contextNote = `[Contexto de Supabase en vivo (Tablas: ${selectedTables.join(', ')}):\n${liveDbContext}\n\nNúmero WhatsApp oficial: +507 6234-6917 | Índice Vectorial Pinecone: ${agent?.pinecone_index || 'valis-docs-index'}]`
 
-    // 4. Invocación de Google Gemini
+    // 3. Invocación de Google Gemini con Timeout de 10 segundos
     if (modelProvider === 'gemini') {
       const geminiConn = connectors?.find((c: any) => c.id === 'gemini')
       const geminiKey = geminiConn?.config?.api_key?.trim() || process.env.GEMINI_API_KEY
@@ -195,12 +225,10 @@ export async function testAgentInSandbox(
       if (!geminiKey) {
         return { 
           success: false, 
-          error: 'No se encontró la clave de Gemini ni en .env.local (GEMINI_API_KEY) ni en la página de Conectores.' 
+          error: 'No se encontró la clave de Gemini en .env.local (GEMINI_API_KEY).' 
         }
       }
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey.trim()}`
-      
       const contents = [
         ...history.map(m => ({
           role: m.role === 'user' ? 'user' : 'model',
@@ -212,20 +240,44 @@ export async function testAgentInSandbox(
         }
       ]
 
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents,
-          systemInstruction: {
-            parts: [{ text: `${systemPrompt}\n\nInstrucción adicional: Eres el agente oficial de ValisChat en WhatsApp. Puedes responder preguntas sobre los datos de la empresa o finanzas utilizando la información de la sección [Contexto de Supabase en vivo]. Sé cordial, conciso y directo.` }]
-          },
-          generationConfig: {
-            temperature: Number(agent?.temperature) || 0.7,
-            maxOutputTokens: Number(agent?.max_tokens) || 800
-          }
+      const requestBody = {
+        contents,
+        systemInstruction: {
+          parts: [{ text: `${systemPrompt}\n\nInstrucción adicional: Eres el agente oficial de ValisChat en WhatsApp. Puedes responder preguntas sobre los datos de la empresa o finanzas utilizando la información de la sección [Contexto de Supabase en vivo]. Sé cordial, conciso y directo.` }]
+        },
+        generationConfig: {
+          temperature: Number(agent?.temperature) || 0.7,
+          maxOutputTokens: Number(agent?.max_tokens) || 600
+        }
+      }
+
+      // Función con intento principal y fallback ultra rápido si la API de Google satura
+      const callGemini = async (targetModel: string) => {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${geminiKey.trim()}`
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+          signal: AbortSignal.timeout(12000) // 12s timeout max
         })
-      })
+        return res
+      }
+
+      let res = await callGemini(modelName).catch(() => null)
+      
+      // Si el modelo falló por alta demanda o timeout, intentar de inmediato con gemini-3.5-flash-lite
+      if (!res || !res.ok) {
+        if (modelName !== 'gemini-3.5-flash-lite') {
+          res = await callGemini('gemini-3.5-flash-lite').catch(() => null)
+        }
+      }
+
+      if (!res) {
+        return { 
+          success: false, 
+          error: 'Tiempo de espera agotado con la API de Google Gemini. Por favor intenta de nuevo.' 
+        }
+      }
 
       const data = await res.json()
       if (!res.ok) {
@@ -233,10 +285,11 @@ export async function testAgentInSandbox(
       }
 
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se obtuvo respuesta del modelo.'
-      return { success: true, reply, usedContext: contextNote }
+      const latencyMs = Date.now() - startTime
+      return { success: true, reply, usedContext: contextNote, latencyMs }
     } 
     
-    // 5. Invocación de OpenAI
+    // 4. Invocación de OpenAI
     else if (modelProvider === 'openai') {
       const openAiConn = connectors?.find((c: any) => c.id === 'openai')
       const apiKey = openAiConn?.config?.api_key?.trim() || process.env.OPENAI_API_KEY
@@ -264,8 +317,9 @@ export async function testAgentInSandbox(
           model: modelName,
           messages,
           temperature: Number(agent?.temperature) || 0.7,
-          max_tokens: Number(agent?.max_tokens) || 800
-        })
+          max_tokens: Number(agent?.max_tokens) || 600
+        }),
+        signal: AbortSignal.timeout(12000)
       })
 
       const data = await res.json()
@@ -274,13 +328,16 @@ export async function testAgentInSandbox(
       }
 
       const reply = data.choices?.[0]?.message?.content || 'Sin respuesta de OpenAI.'
-      return { success: true, reply, usedContext: contextNote }
+      const latencyMs = Date.now() - startTime
+      return { success: true, reply, usedContext: contextNote, latencyMs }
     }
 
+    const latencyMs = Date.now() - startTime
     return {
       success: true,
       reply: `[${agent?.agent_name || 'Agente'}]: Mensaje procesado exitosamente.`,
-      usedContext: contextNote
+      usedContext: contextNote,
+      latencyMs
     }
   } catch (err: any) {
     return { success: false, error: err.message || 'Error al procesar el mensaje en el sandbox.' }
