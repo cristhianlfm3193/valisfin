@@ -265,3 +265,13 @@
   html, body {
     touch-action: manipulation;
   }
+
+  /* Ocultar barra externa de la app en móvil cuando un chat está abierto para dar experiencia nativa */
+  body[data-chat-active="true"] [data-mobile-header] {
+    display: none !important;
+  }
+
+  body[data-chat-active="true"] .whatsapp-page-container {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+  }

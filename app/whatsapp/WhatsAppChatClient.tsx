@@ -70,19 +70,44 @@ export default function WhatsAppChatClient({
   const [aiStatusMsg, setAiStatusMsg] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
   const activeChat = useMemo(() => chats.find(c => c.id === activeChatId), [chats, activeChatId])
   const activeMessages = useMemo(() => messages.filter(m => m.chat_id === activeChatId), [messages, activeChatId])
 
-  // Scroll to bottom when new messages arrive or activeChatId changes (not on every keystroke)
+  const scrollToBottom = (smooth = true) => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      })
+    }
+  }
+
+  // Handle activeChatId change, sync body attribute, and scroll messages
+  useEffect(() => {
+    if (activeChatId) {
+      window.scrollTo(0, 0)
+      document.body.setAttribute('data-chat-active', 'true')
+      setTimeout(() => scrollToBottom(false), 50)
+    } else {
+      document.body.removeAttribute('data-chat-active')
+    }
+
+    return () => {
+      document.body.removeAttribute('data-chat-active')
+    }
+  }, [activeChatId])
+
+  // Scroll to bottom when new messages arrive
   const lastMessageId = activeMessages[activeMessages.length - 1]?.id
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (lastMessageId) {
+      scrollToBottom(true)
     }
-  }, [lastMessageId, activeChatId])
+  }, [lastMessageId])
 
   // Realtime subscription
   useEffect(() => {
@@ -406,19 +431,19 @@ export default function WhatsAppChatClient({
         {activeChatId && activeChat ? (
           <>
             {/* Top Chat Header with Contact Info & INDIVIDUAL BOT TOGGLE BUTTON */}
-            <div className="p-3 bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm shrink-0">
+            <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm shrink-0">
               
-              {/* Left Contact Info */}
+              {/* Left Contact Info & Back to All Chats Button */}
               <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
                 <button 
                   type="button"
                   onClick={() => setActiveChatId(null)} 
-                  className="text-emerald-400 hover:text-white hover:bg-emerald-500/10 px-2 py-1.5 -ml-1 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer border border-emerald-500/20 active:scale-95"
-                  title="Volver a todas las conversaciones"
-                  aria-label="Volver a lista de chats"
+                  className="text-emerald-400 hover:text-white hover:bg-emerald-500/20 px-2.5 py-1.5 -ml-1 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer border border-emerald-500/30 active:scale-95 bg-emerald-500/10 shadow-sm"
+                  title="Volver a lista de conversaciones"
+                  aria-label="Volver a lista de conversaciones"
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span className="text-xs font-semibold">Chats</span>
+                  <ArrowLeft className="w-4 h-4 text-emerald-400" />
+                  <span className="text-xs font-bold text-emerald-300">Conversaciones</span>
                 </button>
                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold border border-white/10 relative shrink-0">
                   {activeChat.contact_name.charAt(0).toUpperCase()}
@@ -492,7 +517,7 @@ export default function WhatsAppChatClient({
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar z-10 overscroll-contain">
+            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar z-10 overscroll-contain">
               
               {/* Human Mode / Paused Notification Banner */}
               {!isCurrentChatBotActive && (
@@ -619,7 +644,7 @@ export default function WhatsAppChatClient({
                   onChange={e => setInputText(e.target.value)}
                   onFocus={() => {
                     setTimeout(() => {
-                      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+                      scrollToBottom(true)
                     }, 120)
                   }}
                   placeholder={

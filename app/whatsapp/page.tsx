@@ -35,7 +35,7 @@ export default async function WhatsAppPage() {
   const initialAgentMode = agentRes.data?.mode || 'autonomous'
 
   return (
-    <div className="flex flex-1 h-[calc(100dvh-5rem)] lg:h-screen max-h-[100dvh] bg-[#090a0f] text-white overflow-hidden">
+    <div className="flex flex-1 h-[calc(100dvh-5rem)] lg:h-screen max-h-[100dvh] bg-[#090a0f] text-white overflow-hidden whatsapp-page-container">
       <WhatsAppChatClient 
         initialChats={chatsRes.data || []} 
         initialMessages={messagesRes.data || []}

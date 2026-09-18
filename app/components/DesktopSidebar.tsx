@@ -135,7 +135,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
   return (
     <>
       {/* Mobile Header */}
-      <div className="lg:hidden w-full h-20 bg-[#090a0f]/95 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+      <div data-mobile-header className="lg:hidden w-full h-20 bg-[#090a0f]/95 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
         <Link href="/" title="Ir a ValisHub" className="flex items-center gap-3">
           {isValisChat ? (
             <div className="flex items-center gap-3">
