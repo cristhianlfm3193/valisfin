@@ -188,11 +188,21 @@ Herramientas disponibles:
         })
       }
 
-      let res = await callGeminiApi(modelName, requestPayload).catch(() => null)
+      let res: Response | null = null
+      try {
+        res = await callGeminiApi(modelName, requestPayload)
+        if (!res.ok) {
+          const errTxt = await res.text()
+          console.warn(`[ValisChat Agent] Error llamando a ${modelName} (${res.status}): ${errTxt}`)
+        }
+      } catch (fetchErr: any) {
+        console.warn(`[ValisChat Agent] Excepción llamando a ${modelName}:`, fetchErr.message)
+      }
+
       if (!res || !res.ok) {
-        // Fallback a modelo de alta disponibilidad si el principal satura
-        console.warn(`[ValisChat Agent] Fallback en Gemini de ${modelName} a gemini-3.5-flash-lite`)
-        modelName = 'gemini-3.5-flash-lite'
+        const fallbackModel = modelName === 'gemini-3.5-flash-lite' ? 'gemini-flash-latest' : 'gemini-3.5-flash-lite'
+        console.warn(`[ValisChat Agent] Fallback en Gemini de ${modelName} a ${fallbackModel}`)
+        modelName = fallbackModel
         res = await callGeminiApi(modelName, requestPayload).catch(() => null)
       }
 

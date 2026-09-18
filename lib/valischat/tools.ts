@@ -250,19 +250,38 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
       }
 
       try {
-        let query = supabase
+        const { data, error } = await supabase
           .from('valisven_licencias')
           .select('id, tipo, producto, costo_venta')
           .order('tipo', { ascending: true });
 
-        if (termino_busqueda && termino_busqueda.toLowerCase() !== 'todos') {
-          query = query.ilike('producto', `%${termino_busqueda.trim()}%`);
-        }
-
-        const { data, error } = await query;
         if (error) throw error;
 
-        const productos = (data || []).map((p: any) => {
+        let filtered = data || [];
+        const rawTerm = (termino_busqueda || '').toLowerCase().trim();
+
+        if (rawTerm && rawTerm !== 'todos' && rawTerm !== 'todo' && rawTerm !== 'todas') {
+          const stopwords = new Set([
+            'cuenta', 'cuentas', 'de', 'un', 'una', 'el', 'la', 'los', 'las',
+            'para', 'licencia', 'licencias', 'servicio', 'servicios', 'precio',
+            'costo', 'venden', 'tienen', 'quiero', 'quisiera', 'deseo', 'comprar'
+          ]);
+          const keywords = rawTerm.split(/\s+/).filter((w: string) => !stopwords.has(w) && w.length >= 2);
+
+          const matches = filtered.filter((p: any) => {
+            const pName = (p.producto || '').toLowerCase();
+            const pTipo = (p.tipo || '').toLowerCase();
+            // Match directo si el término contiene el nombre del producto o viceversa
+            if (rawTerm.includes(pName) || pName.includes(rawTerm)) return true;
+            // Match por palabras clave extraídas (ej. 'spotify', 'netflix', 'office', '365')
+            if (keywords.length > 0 && keywords.some((k: string) => pName.includes(k) || pTipo.includes(k))) return true;
+            return false;
+          });
+
+          filtered = matches;
+        }
+
+        const productos = filtered.map((p: any) => {
           const esAnual = p.producto.toLowerCase().includes('año') || p.producto.toLowerCase().includes('anual') || (p.tipo && (p.tipo.toLowerCase().includes('office') || p.tipo.toLowerCase().includes('seguridad') || p.tipo.toLowerCase().includes('software')));
           return {
             id: p.id,
@@ -278,7 +297,7 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
           total_encontrados: productos.length,
           productos,
           mensaje: productos.length > 0 
-            ? `Se encontraron ${productos.length} productos en el catálogo oficial de ValisVen.`
+            ? `Se encontraron ${productos.length} productos en el catálogo oficial de ValisVen: ${productos.map((p: any) => `${p.producto} (${p.precio} ${p.modalidad})`).join(', ')}`
             : `El producto "${termino_busqueda}" no está en el catálogo oficial de ValisVen.`
         };
       } catch (err: any) {
