@@ -392,6 +392,26 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
             .eq('id', cliente.id);
         }
 
+        // Enviar correo de notificación de nueva compra al equipo comercial
+        const destinatario = process.env.COMMERCIAL_EMAIL || 'cristhianf3193@gmail.com'
+        const asunto = `[ValisVen] Nueva Solicitud de Compra - ${nombre}`
+        const htmlBody = `
+          <h2>Nueva Solicitud de Compra Registrada</h2>
+          <p><strong>Cliente:</strong> ${nombre}</p>
+          <p><strong>Correo:</strong> ${correo}</p>
+          <p><strong>Teléfono/WhatsApp:</strong> ${telefono}</p>
+          <p><strong>Producto Solicitado:</strong> ${producto_solicitado}</p>
+          <br/>
+          <p><em>Este pedido ya está guardado en Supabase (valisven_clientes). Por favor, gestionarlo a la brevedad.</em></p>
+        `
+
+        await sendEmail({
+          to: destinatario,
+          subject: asunto,
+          text: `Nueva Solicitud de Compra de ${nombre}. Producto: ${producto_solicitado}. Correo: ${correo}, Teléfono: ${telefono}`,
+          html: htmlBody
+        }).catch(e => console.error('Error enviando correo de notificación de compra:', e))
+
         return {
           success: true,
           cliente_id: cliente?.id || null,
