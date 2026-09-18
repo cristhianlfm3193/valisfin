@@ -284,7 +284,7 @@ export default function WhatsAppChatClient({
     <div className="flex w-full h-full border-r border-white/10 bg-[#090a0f] relative z-10">
       
       {/* Sidebar - Chats List */}
-      <div className={`w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex flex-col ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex flex-col bg-[#090a0f] z-10 ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
         
         {/* Top Header with Title, Count, and Global Bot Button */}
         <div className="p-3.5 bg-[#121c27] flex items-center justify-between sticky top-0 z-20 shadow-sm border-b border-white/5">
@@ -400,23 +400,25 @@ export default function WhatsAppChatClient({
       </div>
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex flex-col bg-[url('https://static.whatsapp.net/rsrc.php/v3/yl/r/gi_DckOUM5a.png')] bg-repeat relative ${!activeChatId ? 'hidden md:flex' : 'fixed inset-0 z-50 md:static flex flex-col h-[100dvh] md:h-full w-full bg-[#090a0f]'}`}>
-        <div className="absolute inset-0 bg-[#090a0f]/90 z-0"></div>
+      <div className={`flex-1 flex flex-col bg-[url('https://static.whatsapp.net/rsrc.php/v3/yl/r/gi_DckOUM5a.png')] bg-repeat relative h-full min-w-0 ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+        <div className="absolute inset-0 bg-[#090a0f]/90 z-0 pointer-events-none"></div>
 
         {activeChatId && activeChat ? (
           <>
             {/* Top Chat Header with Contact Info & INDIVIDUAL BOT TOGGLE BUTTON */}
-            <div className="p-3 pt-[max(0.75rem,env(safe-area-inset-top))] bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm shrink-0">
+            <div className="p-3 bg-[#121c27] flex items-center justify-between z-10 border-b border-white/5 sticky top-0 shadow-sm shrink-0">
               
               {/* Left Contact Info */}
-              <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
                 <button 
                   type="button"
                   onClick={() => setActiveChatId(null)} 
-                  className="md:hidden text-gray-400 hover:text-white p-1.5 -ml-1 rounded-lg hover:bg-white/5 transition-colors shrink-0"
+                  className="text-emerald-400 hover:text-white hover:bg-emerald-500/10 px-2 py-1.5 -ml-1 rounded-xl flex items-center gap-1.5 transition-all shrink-0 cursor-pointer border border-emerald-500/20 active:scale-95"
+                  title="Volver a todas las conversaciones"
                   aria-label="Volver a lista de chats"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-4 h-4" />
+                  <span className="text-xs font-semibold">Chats</span>
                 </button>
                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400 font-bold border border-white/10 relative shrink-0">
                   {activeChat.contact_name.charAt(0).toUpperCase()}

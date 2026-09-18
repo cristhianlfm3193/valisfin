@@ -108,7 +108,6 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
     { href: "/valisbiz?tab=ventas", label: "Ventas & Métricas", icon: TrendingUp, id: 'ventas' },
     { href: "/valisbiz?tab=estadisticas", label: "Estadísticas", icon: BarChart2, id: 'estadisticas' },
     { href: "/valisbiz?tab=mapa", label: "Mapa de Visitas", icon: MapPin, id: 'mapa' },
-    { href: "/whatsapp", label: "ValisChat", icon: Phone, id: 'whatsapp' },
   ];
 
   const valisANNavItems = [
