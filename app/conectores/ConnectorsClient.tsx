@@ -20,7 +20,6 @@ import {
   MessageSquare,
   Server,
   ArrowRight,
-  ShieldCheck,
   Zap,
   BookOpen,
   Calendar,
@@ -247,16 +246,6 @@ export default function ConnectorsClient({ initialConnectors, envStatus }: Props
           </p>
         </div>
 
-        {/* Global Security / Env info badge */}
-        <div className="p-3.5 rounded-2xl bg-[#11131a] border border-white/10 flex items-center gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-            <ShieldCheck className="w-5 h-5" />
-          </div>
-          <div className="text-xs">
-            <p className="font-semibold text-white">Variables de Entorno</p>
-            <p className="text-gray-400 text-[11px]">Protección activa con <code className="text-emerald-400">.env.local</code> y Vercel</p>
-          </div>
-        </div>
       </div>
 
       {/* Notice about .env.local vs UI */}
