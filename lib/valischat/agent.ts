@@ -210,6 +210,18 @@ Herramientas disponibles:
 
       if (!res || !res.ok) {
         const errText = res ? await res.text() : 'Timeout'
+        if (!forcedProvider && (process.env.AIAPIFLOW_API_KEY || process.env.OPENAI_API_KEY)) {
+          console.warn(`[ValisChat Agent] Gemini no respondió (${errText}). Activando fallback cruzado a OpenAI/Aiapiflow...`)
+          return await runValisChatAgent({
+            userMessage,
+            chatId,
+            phoneNumber,
+            contactName,
+            supabase,
+            forcedProvider: 'openai',
+            forcedModel: process.env.AIAPIFLOW_API_KEY ? 'gpt-5.5' : 'gpt-4o-mini'
+          })
+        }
         throw new Error(`Error en API de Google Gemini: ${errText}`)
       }
 
@@ -324,10 +336,28 @@ Herramientas disponibles:
         max_tokens: Number(config.max_tokens) || 600
       }
 
-      const res = await callOpenAi(initialPayload)
-      if (!res.ok) {
-        const errText = await res.text()
-        throw new Error(`Error en API de OpenAI: ${errText}`)
+      let res: Response
+      try {
+        res = await callOpenAi(initialPayload)
+        if (!res.ok) {
+          const errText = await res.text()
+          throw new Error(`Error en API de OpenAI/Aiapiflow (${res.status}): ${errText}`)
+        }
+      } catch (openAiErr: any) {
+        console.warn(`[ValisChat Agent] Error llamando a OpenAI/Aiapiflow (${openAiErr.message}). Evaluando fallback...`)
+        if (!forcedProvider && process.env.GEMINI_API_KEY) {
+          console.log('[ValisChat Agent] Activando fallback automático a Google Gemini para garantizar respuesta...')
+          return await runValisChatAgent({
+            userMessage,
+            chatId,
+            phoneNumber,
+            contactName,
+            supabase,
+            forcedProvider: 'gemini',
+            forcedModel: 'gemini-2.5-flash'
+          })
+        }
+        throw openAiErr
       }
 
       const data = await res.json()
