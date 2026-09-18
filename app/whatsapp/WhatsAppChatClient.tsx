@@ -52,17 +52,19 @@ export default function WhatsAppChatClient({
   // Realtime subscription
   useEffect(() => {
     const channel = supabase.channel('whatsapp_realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_messages' }, payload => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_messages' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
           setMessages(prev => [...prev, payload.new as Message])
         }
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_chats' }, payload => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'whatsapp_chats' }, (payload: any) => {
         if (payload.eventType === 'INSERT') {
           setChats(prev => [payload.new as Chat, ...prev])
         } else if (payload.eventType === 'UPDATE') {
-          setChats(prev => prev.map(c => c.id === payload.new.id ? payload.new as Chat : c))
-            .sort((a, b) => new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime())
+          setChats(prev => {
+            const newChats = prev.map(c => c.id === payload.new.id ? payload.new as Chat : c);
+            return newChats.sort((a, b) => new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime());
+          })
         }
       })
       .subscribe()
