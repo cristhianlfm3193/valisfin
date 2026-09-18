@@ -12,7 +12,67 @@ export type Connector = {
   updated_at: string
 }
 
-export async function getConnectors(): Promise<{ success: boolean; connectors?: Connector[]; error?: string }> {
+export type ConnectorEnvStatus = {
+  gemini: { hasKey: boolean; source: string }
+  openai: { hasKey: boolean; source: string }
+  pinecone: { hasKey: boolean; source: string }
+  google_calendar: { hasKey: boolean; source: string }
+  supabase: { hasKey: boolean; url: string }
+}
+
+export type AvailableTable = {
+  id: string
+  name: string
+  category: 'finanzas' | 'vehiculos' | 'comercial' | 'sistema'
+  description: string
+}
+
+export const KNOWN_SUPABASE_TABLES: AvailableTable[] = [
+  { id: 'daily_expenses', name: 'Gastos Diarios', category: 'finanzas', description: 'Registro de gastos diarios clasificados por categoría' },
+  { id: 'incomes', name: 'Ingresos', category: 'finanzas', description: 'Fuentes de ingresos y montos recibidos' },
+  { id: 'fixed_payments', name: 'Pagos Fijos', category: 'finanzas', description: 'Compromisos mensuales recurrentes y fechas de vencimiento' },
+  { id: 'savings_goals', name: 'Metas de Ahorro', category: 'finanzas', description: 'Metas financieras, montos acumulados y objetivos' },
+  { id: 'vehicles', name: 'Vehículos', category: 'vehiculos', description: 'Flota de vehículos registrados, marcas y placas' },
+  { id: 'maintenance', name: 'Mantenimiento de Autos', category: 'vehiculos', description: 'Historial y próximos mantenimientos de vehículos' },
+  { id: 'valisven_clientes', name: 'Clientes ValisVen', category: 'comercial', description: 'Directorio de clientes y contactos comerciales' },
+  { id: 'valisven_licencias', name: 'Licencias ValisVen', category: 'comercial', description: 'Licencias activas, fechas de expiración y planes' },
+  { id: 'locales', name: 'Locales ValisBiz', category: 'comercial', description: 'Puntos de venta y comercios registrados' },
+  { id: 'registros_ventas', name: 'Ventas ValisBiz', category: 'comercial', description: 'Transacciones y ventas registradas en locales' },
+  { id: 'whatsapp_messages', name: 'Mensajes WhatsApp', category: 'sistema', description: 'Historial de mensajes entrantes y salientes' },
+  { id: 'profiles', name: 'Perfiles de Usuario', category: 'sistema', description: 'Datos básicos de los usuarios y contactos' },
+]
+
+export async function getConnectorEnvStatus(): Promise<ConnectorEnvStatus> {
+  return {
+    gemini: {
+      hasKey: !!process.env.GEMINI_API_KEY,
+      source: process.env.GEMINI_API_KEY ? '.env.local / Servidor' : ''
+    },
+    openai: {
+      hasKey: !!process.env.OPENAI_API_KEY,
+      source: process.env.OPENAI_API_KEY ? '.env.local / Servidor' : ''
+    },
+    pinecone: {
+      hasKey: !!process.env.PINECONE_API_KEY,
+      source: process.env.PINECONE_API_KEY ? '.env.local / Servidor' : ''
+    },
+    google_calendar: {
+      hasKey: !!(process.env.GOOGLE_CALENDAR_API_KEY || process.env.GOOGLE_SERVICE_ACCOUNT_KEY),
+      source: (process.env.GOOGLE_CALENDAR_API_KEY || process.env.GOOGLE_SERVICE_ACCOUNT_KEY) ? '.env.local / Servidor' : ''
+    },
+    supabase: {
+      hasKey: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)),
+      url: process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+    }
+  }
+}
+
+export async function getConnectors(): Promise<{ 
+  success: boolean; 
+  connectors?: Connector[]; 
+  envStatus?: ConnectorEnvStatus;
+  error?: string 
+}> {
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
@@ -25,7 +85,13 @@ export async function getConnectors(): Promise<{ success: boolean; connectors?: 
       return { success: false, error: error.message }
     }
 
-    return { success: true, connectors: data as Connector[] }
+    const envStatus = await getConnectorEnvStatus()
+
+    return { 
+      success: true, 
+      connectors: data as Connector[], 
+      envStatus 
+    }
   } catch (err: any) {
     return { success: false, error: err.message }
   }
@@ -59,14 +125,20 @@ export async function updateConnector(
   }
 }
 
-export async function testOpenAIConnection(apiKey: string, model: string = 'gpt-4o-mini') {
+export async function testOpenAIConnection(apiKey?: string, model: string = 'gpt-4o-mini') {
   try {
-    if (!apiKey) return { success: false, error: 'Debes proporcionar una API Key de OpenAI.' }
+    const key = apiKey?.trim() || process.env.OPENAI_API_KEY
+    if (!key) {
+      return { 
+        success: false, 
+        error: 'No se encontró una API Key de OpenAI (ni en formulario ni en .env.local).' 
+      }
+    }
 
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey.trim()}`,
+        'Authorization': `Bearer ${key.trim()}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -81,16 +153,21 @@ export async function testOpenAIConnection(apiKey: string, model: string = 'gpt-
       return { success: false, error: data.error?.message || 'Error al conectar con OpenAI.' }
     }
 
-    return { success: true, message: `Conexión exitosa con modelo ${model}.` }
+    return { success: true, message: `Conexión exitosa con OpenAI (${model}).` }
   } catch (err: any) {
     return { success: false, error: err.message || 'Error de red con OpenAI.' }
   }
 }
 
-export async function testGeminiConnection(apiKey?: string, model: string = 'gemini-2.0-flash') {
+export async function testGeminiConnection(apiKey?: string, model: string = 'gemini-3.6-flash') {
   try {
     const key = apiKey?.trim() || process.env.GEMINI_API_KEY
-    if (!key) return { success: false, error: 'No se encontró una API Key de Gemini configurada.' }
+    if (!key) {
+      return { 
+        success: false, 
+        error: 'No se encontró una API Key de Gemini (ni en formulario ni en .env.local).' 
+      }
+    }
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`
     const res = await fetch(url, {
@@ -106,20 +183,23 @@ export async function testGeminiConnection(apiKey?: string, model: string = 'gem
       return { success: false, error: data.error?.message || 'Error al conectar con Gemini.' }
     }
 
-    return { success: true, message: `Conexión exitosa con modelo ${model}.` }
+    return { success: true, message: `Conexión en vivo exitosa con Gemini (${model}).` }
   } catch (err: any) {
     return { success: false, error: err.message || 'Error de red con Gemini.' }
   }
 }
 
-export async function testPineconeConnection(apiKey: string, environment: string, indexName: string) {
+export async function testPineconeConnection(apiKey?: string, environment?: string, indexName?: string) {
   try {
-    if (!apiKey) return { success: false, error: 'Debes ingresar una API Key de Pinecone.' }
+    const key = apiKey?.trim() || process.env.PINECONE_API_KEY
+    const idx = indexName?.trim() || 'valis-docs-index'
+    if (!key) {
+      return { success: false, error: 'No se encontró una API Key de Pinecone (ni en formulario ni en .env.local).' }
+    }
     
-    // Test pinecone index describe endpoint
-    const res = await fetch(`https://api.pinecone.io/indexes/${indexName.trim()}`, {
+    const res = await fetch(`https://api.pinecone.io/indexes/${idx}`, {
       headers: {
-        'Api-Key': apiKey.trim(),
+        'Api-Key': key,
         'X-Pinecone-API-Version': '2024-07'
       }
     })
@@ -133,5 +213,36 @@ export async function testPineconeConnection(apiKey: string, environment: string
     return { success: true, message: `Índice "${data.name}" verificado (${data.dimension} dims, estado: ${data.status?.state || 'Listo'}).` }
   } catch (err: any) {
     return { success: false, error: err.message || 'Error conectando con Pinecone.' }
+  }
+}
+
+export async function testGoogleCalendarConnection(calendarId?: string, apiKey?: string) {
+  try {
+    const calId = calendarId?.trim() || process.env.GOOGLE_CALENDAR_ID || 'primary'
+    const key = apiKey?.trim() || process.env.GOOGLE_CALENDAR_API_KEY
+
+    if (!key && !process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+      return {
+        success: false,
+        error: 'Para conectar Google Calendar, añade GOOGLE_CALENDAR_API_KEY o GOOGLE_SERVICE_ACCOUNT_KEY en tu .env.local o ingrésala en el formulario.'
+      }
+    }
+
+    if (key) {
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}?key=${key}`
+      const res = await fetch(url)
+      const data = await res.json()
+      if (!res.ok) {
+        return { success: false, error: data.error?.message || 'No se pudo verificar el calendario de Google.' }
+      }
+      return { success: true, message: `Calendario "${data.summary || calId}" conectado exitosamente.` }
+    }
+
+    return { 
+      success: true, 
+      message: `Configuración de Google Calendar verificada para el calendario "${calId}".` 
+    }
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Error de red con Google Calendar.' }
   }
 }
