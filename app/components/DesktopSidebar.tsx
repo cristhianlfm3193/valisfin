@@ -24,7 +24,10 @@ import {
   Store,
   Menu,
   X,
-  Phone
+  Phone,
+  MessageSquare,
+  Plug,
+  Bot
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -320,7 +323,7 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
                   isActive ? activeBgClass : inactiveClass
                 } ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3.5 py-2.5 lg:py-2.5 py-3'}`}
               >
-                <Icon className={`shrink-0 w-5 h-5 transition-colors ${isActive ? (isValisBiz ? "text-pink-400" : isValisAN ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]" : "text-emerald-400") : (isValisAN ? "text-slate-500 group-hover:text-cyan-400" : "text-gray-500 group-hover:text-gray-300")}`} />
+                <Icon className={`shrink-0 w-5 h-5 transition-colors ${isActive ? (isValisChat ? "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]" : isValisBiz ? "text-pink-400" : isValisAN ? "text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]" : "text-emerald-400") : (isValisChat ? "text-gray-400 group-hover:text-emerald-300" : isValisAN ? "text-slate-500 group-hover:text-cyan-400" : "text-gray-500 group-hover:text-gray-300")}`} />
                 {!isCollapsed && (
                   <span className="truncate whitespace-nowrap opacity-100 transition-opacity duration-300">
                     {item.label}

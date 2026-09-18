@@ -148,16 +148,11 @@ export default function WhatsAppChatClient({
       {/* Sidebar - Chats List */}
       <div className={`w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex flex-col ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-4 bg-[#121c27] flex items-center justify-between sticky top-0 z-20 shadow-sm border-b border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500 p-[2px]">
-              <div className="w-full h-full rounded-full bg-[#090a0f] flex items-center justify-center">
-                <Phone className="w-4 h-4 text-emerald-400" />
-              </div>
-            </div>
-            <div>
-              <h2 className="font-bold text-white text-lg">ValisChat</h2>
-              <p className="text-xs text-emerald-400 font-medium">WhatsApp Business</p>
-            </div>
+          <div className="flex items-center gap-2.5">
+            <h2 className="font-bold text-white text-lg tracking-tight">Conversaciones</h2>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30">
+              {chats.length}
+            </span>
           </div>
         </div>
 

@@ -19,7 +19,10 @@ import {
   MapPin,
   Heart,
   Orbit,
-  Sparkles
+  Sparkles,
+  MessageSquare,
+  Plug,
+  Bot
 } from 'lucide-react';
 import { LogoutButton } from './LogoutButton';
 import type { User } from '@supabase/supabase-js';
@@ -74,6 +77,7 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
 
   const isValisBiz = pathname.startsWith('/valisbiz');
   const isValisAN = pathname.startsWith('/valisan');
+  const isValisChat = pathname.startsWith('/whatsapp') || pathname.startsWith('/conectores') || pathname.startsWith('/agente');
   const currentTab = searchParams.get('tab') || 'ventas';
   const valisANCurrentTab = searchParams.get('tab') || 'dashboard';
 
@@ -96,8 +100,23 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
     { href: "/valisan?tab=bdrh", label: "BD-RH", icon: Shield, id: 'bdrh' },
   ];
 
-  const currentBottomItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : valisFinBottomItems);
-  const currentAllNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : allNavItems);
+  const valisChatNavItems = [
+    { href: "/whatsapp", label: "Chat", icon: MessageSquare },
+    { href: "/conectores", label: "Conectores", icon: Plug },
+    { href: "/agente", label: "Agente IA", icon: Bot },
+  ];
+
+  const currentBottomItems = isValisBiz 
+    ? valisBizNavItems 
+    : (isValisAN 
+        ? valisANNavItems 
+        : (isValisChat ? valisChatNavItems : valisFinBottomItems));
+
+  const currentAllNavItems = isValisBiz 
+    ? valisBizNavItems 
+    : (isValisAN 
+        ? valisANNavItems 
+        : (isValisChat ? valisChatNavItems : allNavItems));
 
   if (pathname === '/' || pathname.startsWith('/valisven')) {
     return null;
@@ -117,14 +136,20 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
         <div className="pointer-events-auto mx-auto max-w-md bg-[#090a0f]/90 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
           <div className="flex items-center justify-around px-2 py-1.5">
             {currentBottomItems.map((item: any) => {
-              const isActive = isValisBiz ? item.id === currentTab : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
+              const isActive = isValisBiz 
+                ? item.id === currentTab 
+                : (isValisAN 
+                    ? item.id === valisANCurrentTab 
+                    : pathname === item.href);
               const Icon = item.icon;
               
               const activeClass = isValisBiz 
                 ? 'bg-pink-500/20 text-pink-400 scale-105' 
                 : isValisAN 
                   ? 'bg-sky-950 text-cyan-400 shadow-[0_0_15px_rgba(14,165,233,0.3)] scale-105' 
-                  : 'bg-[#121c27]/10 text-white scale-105';
+                  : isValisChat
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 scale-105'
+                    : 'bg-[#121c27]/10 text-white scale-105';
               
               return (
                 <Link
@@ -134,8 +159,8 @@ function MobileNavigationInner({ user, profile }: { user?: User, profile?: any }
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex flex-col items-center justify-center px-4 py-2 rounded-3xl min-w-[72px] transition-all duration-300 ${isActive ? activeClass : 'text-gray-400 hover:text-white'}`}
                 >
-                  <Icon className={`w-6 h-6 mb-1 transition-all ${isActive ? (isValisBiz ? 'fill-pink-500/20 text-pink-400' : isValisAN ? 'fill-sky-500/20 text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]' : 'fill-white/20 text-white') : ''}`} />
-                  <span className={`text-[10px] font-bold transition-all ${isActive ? (isValisBiz ? 'text-pink-400' : isValisAN ? 'text-cyan-400' : 'text-white') : 'text-gray-400'}`}>{item.label}</span>
+                  <Icon className={`w-6 h-6 mb-1 transition-all ${isActive ? (isValisBiz ? 'fill-pink-500/20 text-pink-400' : isValisAN ? 'fill-sky-500/20 text-cyan-400 drop-shadow-[0_0_6px_rgba(0,240,255,0.7)]' : isValisChat ? 'fill-emerald-500/20 text-emerald-400' : 'fill-white/20 text-white') : ''}`} />
+                  <span className={`text-[10px] font-bold transition-all ${isActive ? (isValisBiz ? 'text-pink-400' : isValisAN ? 'text-cyan-400' : isValisChat ? 'text-emerald-400' : 'text-white') : 'text-gray-400'}`}>{item.label}</span>
                 </Link>
               );
             })}
