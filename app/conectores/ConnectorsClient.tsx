@@ -22,19 +22,31 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
-  BookOpen
+  BookOpen,
+  Calendar,
+  Check,
+  AlertTriangle,
+  Info
 } from 'lucide-react'
 import { 
   updateConnector, 
   testOpenAIConnection, 
   testGeminiConnection, 
   testPineconeConnection, 
-  Connector 
+  testGoogleCalendarConnection,
+  Connector,
+  ConnectorEnvStatus,
+  KNOWN_SUPABASE_TABLES
 } from '@/app/actions/valischat_connectors'
 
-export default function ConnectorsClient({ initialConnectors }: { initialConnectors: Connector[] }) {
+interface Props {
+  initialConnectors: Connector[]
+  envStatus: ConnectorEnvStatus
+}
+
+export default function ConnectorsClient({ initialConnectors, envStatus }: Props) {
   const [connectors, setConnectors] = useState<Connector[]>(initialConnectors)
-  const [activeTab, setActiveTab] = useState<'all' | 'ai' | 'database' | 'channels'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'ai' | 'database' | 'tools' | 'channels'>('all')
   const [savingId, setSavingId] = useState<string | null>(null)
   const [testingId, setTestingId] = useState<string | null>(null)
   const [testResult, setTestResult] = useState<{ id: string; success: boolean; message: string } | null>(null)
@@ -74,6 +86,20 @@ export default function ConnectorsClient({ initialConnectors }: { initialConnect
     }))
   }
 
+  const toggleSupabaseTable = (tableId: string) => {
+    const supabaseConn = getConn('supabase')
+    const currentTables: string[] = supabaseConn.config?.tables || []
+    let updated: string[]
+
+    if (currentTables.includes(tableId)) {
+      updated = currentTables.filter(t => t !== tableId)
+    } else {
+      updated = [...currentTables, tableId]
+    }
+
+    updateConfig('supabase', 'tables', updated)
+  }
+
   const addCustomModel = (connId: string) => {
     const custom = (newModelInputs[connId] || '').trim()
     if (!custom) return
@@ -98,267 +124,325 @@ export default function ConnectorsClient({ initialConnectors }: { initialConnect
   }
 
   const handleSave = async (id: string) => {
-    const conn = getConn(id)
     setSavingId(id)
-    setTestResult(null)
-    const res = await updateConnector(id, conn.config, conn.is_active)
-    setSavingId(null)
+    const conn = getConn(id)
+    try {
+      const res = await updateConnector(id, conn.config, conn.is_active)
+      if (res.success) {
+        setTestResult({ id, success: true, message: 'Configuración guardada exitosamente.' })
+        setTimeout(() => setTestResult(null), 3500)
+      } else {
+        setTestResult({ id, success: false, message: res.error || 'Error al guardar.' })
+      }
+    } catch (err: any) {
+      setTestResult({ id, success: false, message: err.message })
+    } finally {
+      setSavingId(null)
+    }
+  }
 
-    if (res.success) {
-      setTestResult({ id, success: true, message: '¡Configuración guardada exitosamente!' })
-    } else {
-      setTestResult({ id, success: false, message: res.error || 'Error al guardar configuración.' })
+  const handleTestGemini = async () => {
+    setTestingId('gemini')
+    const conn = getConn('gemini')
+    const model = conn.config?.active_model || 'gemini-3.6-flash'
+    const apiKey = conn.config?.api_key || ''
+
+    try {
+      const res = await testGeminiConnection(apiKey, model)
+      setTestResult({
+        id: 'gemini',
+        success: res.success,
+        message: res.success ? res.message! : (res.error || 'Fallo de prueba.')
+      })
+    } finally {
+      setTestingId(null)
     }
   }
 
   const handleTestOpenAI = async () => {
-    const conn = getConn('openai')
     setTestingId('openai')
-    setTestResult(null)
-    const res = await testOpenAIConnection(conn.config?.api_key, conn.config?.active_model)
-    setTestingId(null)
-    setTestResult({
-      id: 'openai',
-      success: res.success,
-      message: res.success ? (res.message || 'Conexión exitosa.') : (res.error || 'Fallo de conexión.')
-    })
-  }
+    const conn = getConn('openai')
+    const model = conn.config?.active_model || 'gpt-4o-mini'
+    const apiKey = conn.config?.api_key || ''
 
-  const handleTestGemini = async () => {
-    const conn = getConn('gemini')
-    setTestingId('gemini')
-    setTestResult(null)
-    const res = await testGeminiConnection(conn.config?.api_key, conn.config?.active_model)
-    setTestingId(null)
-    setTestResult({
-      id: 'gemini',
-      success: res.success,
-      message: res.success ? (res.message || 'Conexión exitosa.') : (res.error || 'Fallo de conexión.')
-    })
+    try {
+      const res = await testOpenAIConnection(apiKey, model)
+      setTestResult({
+        id: 'openai',
+        success: res.success,
+        message: res.success ? res.message! : (res.error || 'Fallo de prueba.')
+      })
+    } finally {
+      setTestingId(null)
+    }
   }
 
   const handleTestPinecone = async () => {
-    const conn = getConn('pinecone')
     setTestingId('pinecone')
-    setTestResult(null)
-    const res = await testPineconeConnection(
-      conn.config?.api_key,
-      conn.config?.environment,
-      conn.config?.index_name || 'valischat-knowledge'
-    )
-    setTestingId(null)
-    setTestResult({
-      id: 'pinecone',
-      success: res.success,
-      message: res.success ? (res.message || 'Conexión exitosa.') : (res.error || 'Fallo de conexión.')
-    })
+    const conn = getConn('pinecone')
+    const apiKey = conn.config?.api_key || ''
+    const env = conn.config?.environment || 'us-east-1'
+    const indexName = conn.config?.index_name || 'valis-docs-index'
+
+    try {
+      const res = await testPineconeConnection(apiKey, env, indexName)
+      setTestResult({
+        id: 'pinecone',
+        success: res.success,
+        message: res.success ? res.message! : (res.error || 'Fallo de prueba.')
+      })
+    } finally {
+      setTestingId(null)
+    }
   }
 
+  const handleTestGoogleCalendar = async () => {
+    setTestingId('google_calendar')
+    const conn = getConn('google_calendar')
+    const calId = conn.config?.calendar_id || 'primary'
+    const apiKey = conn.config?.api_key || ''
+
+    try {
+      const res = await testGoogleCalendarConnection(calId, apiKey)
+      setTestResult({
+        id: 'google_calendar',
+        success: res.success,
+        message: res.success ? res.message! : (res.error || 'Fallo de prueba.')
+      })
+    } finally {
+      setTestingId(null)
+    }
+  }
+
+  // Connectors
   const gemini = getConn('gemini')
   const openai = getConn('openai')
   const supabaseConn = getConn('supabase')
   const pinecone = getConn('pinecone')
   const whatsapp = getConn('whatsapp')
+  const googleCalendar = getConn('google_calendar')
+
+  const selectedTablesCount = (supabaseConn.config?.tables || []).length
 
   return (
-    <div className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
+    <div className="max-w-7xl mx-auto w-full p-4 md:p-8 flex flex-col gap-8 selection:bg-emerald-500/30 selection:text-emerald-300">
       
-      {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-950/40 via-[#121c27] to-teal-950/30 border border-emerald-500/20 p-6 md:p-8 shadow-2xl backdrop-blur-xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-              <Plug className="w-3.5 h-3.5" />
-              Ecosistema de Conectividad & IA
-            </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-              Centro de Conectores ValisChat
-            </h1>
-            <p className="text-gray-400 text-sm md:text-base max-w-2xl leading-relaxed">
-              Integra modelos de Inteligencia Artificial (OpenAI, Gemini), almacenes de datos relacionales (Supabase) y bases de datos vectoriales semánticas (Pinecone) para nutrir de contexto real a tu agente de WhatsApp.
-            </p>
+      {/* Top Banner & Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs uppercase tracking-widest text-emerald-400 font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              ValisChat Ecosystem
+            </span>
+            <span className="text-xs text-gray-500">•</span>
+            <span className="text-xs text-gray-400">Multi-Model & Database Hub</span>
           </div>
-
-          <div className="flex items-center gap-3">
-            <a 
-              href="/agente" 
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg shadow-emerald-500/20 transition-all"
-            >
-              <span>Ir al Estudio de Agente</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+          <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-3">
+            Conectores de Inteligencia & Datos
+          </h1>
+          <p className="text-sm text-gray-400 mt-1 max-w-2xl">
+            Gestiona las conexiones a modelos LLM, bases vectoriales para documentos largos, tablas vivas de Supabase y herramientas como Google Calendar.
+          </p>
         </div>
 
-        {/* Tab Filters */}
-        <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-white/10">
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${activeTab === 'all' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-gray-400 hover:bg-white/5'}`}
-          >
-            Todos los Conectores
-          </button>
-          <button
-            onClick={() => setActiveTab('ai')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${activeTab === 'ai' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-gray-400 hover:bg-white/5'}`}
-          >
-            <Cpu className="w-3.5 h-3.5" />
-            Modelos de IA (OpenAI / Gemini)
-          </button>
-          <button
-            onClick={() => setActiveTab('database')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${activeTab === 'database' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-gray-400 hover:bg-white/5'}`}
-          >
-            <Database className="w-3.5 h-3.5" />
-            Bases de Datos & Pinecone (RAG)
-          </button>
-          <button
-            onClick={() => setActiveTab('channels')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${activeTab === 'channels' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-gray-400 hover:bg-white/5'}`}
-          >
-            <MessageSquare className="w-3.5 h-3.5" />
-            Canales de Mensajería
-          </button>
+        {/* Global Security / Env info badge */}
+        <div className="p-3.5 rounded-2xl bg-[#11131a] border border-white/10 flex items-center gap-3 shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+          <div className="text-xs">
+            <p className="font-semibold text-white">Variables de Entorno</p>
+            <p className="text-gray-400 text-[11px]">Protección activa con <code className="text-emerald-400">.env.local</code> y Vercel</p>
+          </div>
         </div>
       </div>
 
-      {/* Grid of Connectors */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Notice about .env.local vs UI */}
+      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 to-indigo-950/20 border border-emerald-500/20 flex items-start gap-3 text-xs">
+        <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+        <div className="leading-relaxed text-gray-300">
+          <strong className="text-white font-semibold">¿Dónde configurar las claves?</strong> La forma más recomendada y segura es colocar tus llaves en tu archivo <code className="text-emerald-300 bg-black/40 px-1.5 py-0.5 rounded border border-white/10 font-mono">.env.local</code> (en tu máquina) o en las Variables de Entorno de Vercel (en producción). El sistema detecta automáticamente si la clave existe en el servidor y te permite usarla sin necesidad de escribirla en formularios web.
+        </div>
+      </div>
 
-        {/* 1. GOOGLE GEMINI */}
+      {/* Tabs Filter */}
+      <div className="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+        {[
+          { id: 'all', label: 'Todos los Conectores', icon: Plug, count: 6 },
+          { id: 'ai', label: 'Modelos de IA', icon: Cpu, count: 2 },
+          { id: 'database', label: 'Bases de Datos & RAG', icon: Database, count: 2 },
+          { id: 'tools', label: 'Herramientas & Agenda', icon: Calendar, count: 1 },
+          { id: 'channels', label: 'Canales de Mensajería', icon: MessageSquare, count: 1 },
+        ].map(tab => {
+          const Icon = tab.icon
+          const isActive = activeTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                isActive
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full ${isActive ? 'bg-emerald-500/30 text-emerald-200' : 'bg-white/10 text-gray-400'}`}>
+                {tab.count}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Grid of Connectors */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* 1. GOOGLE GEMINI CARD */}
         {(activeTab === 'all' || activeTab === 'ai') && (
-          <div className="rounded-2xl bg-[#121c27]/60 border border-white/10 p-6 flex flex-col justify-between space-y-6 backdrop-blur-xl relative hover:border-emerald-500/30 transition-all shadow-lg">
-            <div>
-              <div className="flex items-center justify-between mb-4">
+          <div className="bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-emerald-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-500 via-sky-400 to-indigo-500 p-[2px] shadow-md shadow-sky-500/20">
-                    <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 text-sky-400" />
-                    </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500/20 to-indigo-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 shadow-md">
+                    <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
                       Google Gemini
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30 font-semibold">
-                        Nativo
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-semibold">
+                        Multimodal
                       </span>
                     </h3>
-                    <p className="text-xs text-gray-400">Modelos multimodales rápidos y de alto razonamiento</p>
+                    <p className="text-xs text-gray-400">Modelos Gemini de Google con ventana de contexto ultra amplia.</p>
                   </div>
                 </div>
 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={gemini.is_active} 
-                    onChange={() => toggleActive('gemini')}
-                    className="sr-only peer" 
-                  />
-                  <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                </label>
+                <button
+                  type="button"
+                  onClick={() => toggleActive('gemini')}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    gemini.is_active ? 'bg-emerald-500' : 'bg-gray-700'
+                  }`}
+                >
+                  <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
+                    gemini.is_active ? 'left-6' : 'left-1'
+                  }`} />
+                </button>
               </div>
 
-              {/* API Key Input */}
-              <div className="space-y-2 mt-4">
-                <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                  <Key className="w-3.5 h-3.5 text-sky-400" />
-                  API Key de Gemini
-                  <span className="text-[10px] text-gray-500 font-normal">(Usa GEMINI_API_KEY del servidor por defecto)</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showKeys['gemini'] ? 'text' : 'password'}
-                    value={gemini.config?.api_key || ''}
-                    onChange={(e) => updateConfig('gemini', 'api_key', e.target.value)}
-                    placeholder="AQ.Ab8RN6... (o deja en blanco para usar la del servidor)"
-                    className="w-full bg-[#090a0f] text-sm text-white rounded-xl pl-3.5 pr-10 py-2.5 border border-white/10 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/50 outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowKeys(prev => ({ ...prev, gemini: !prev.gemini }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                  >
-                    {showKeys['gemini'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+              {/* Status Badge from Env */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span className="font-semibold">Detectada y activa en .env.local (GEMINI_API_KEY)</span>
               </div>
 
-              {/* Model selection */}
-              <div className="space-y-2 mt-4">
-                <label className="text-xs font-semibold text-gray-300">Modelos disponibles</label>
-                <div className="flex flex-wrap gap-2">
-                  {(gemini.config?.models || ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash']).map((m: string) => (
-                    <div 
-                      key={m}
-                      onClick={() => updateConfig('gemini', 'active_model', m)}
-                      className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border ${
-                        gemini.config?.active_model === m 
-                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 shadow-sm' 
-                          : 'bg-[#090a0f] text-gray-400 border-white/5 hover:border-white/20'
-                      }`}
-                    >
-                      <span>{m}</span>
-                      {gemini.config?.active_model === m && <CheckCircle2 className="w-3 h-3 text-sky-400" />}
-                      <button 
-                        type="button" 
-                        onClick={(e) => { e.stopPropagation(); removeModel('gemini', m); }}
-                        className="text-gray-500 hover:text-rose-400 ml-1"
-                        title="Eliminar modelo"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
+              {/* Active Model Selector */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1.5 block">
+                  Modelo Predeterminado para ValisChat
+                </label>
+                <select
+                  value={gemini.config?.active_model || 'gemini-3.6-flash'}
+                  onChange={e => updateConfig('gemini', 'active_model', e.target.value)}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500/50"
+                >
+                  {(gemini.config?.models || ['gemini-3.6-flash', 'gemini-2.5-pro', 'gemini-flash-latest', 'gemini-1.5-pro']).map((m: string) => (
+                    <option key={m} value={m} className="bg-[#11131a] text-white">{m}</option>
                   ))}
-                </div>
+                </select>
+              </div>
 
-                {/* Add Custom Model Manually */}
-                <div className="flex gap-2 mt-3">
+              {/* Manual Model Addition */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1.5 block">
+                  Agregar Modelo de Gemini Manualmente
+                </label>
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
                     value={newModelInputs['gemini'] || ''}
-                    onChange={(e) => setNewModelInputs(prev => ({ ...prev, gemini: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomModel('gemini'); } }}
-                    placeholder="Agregar modelo manualmente (ej. gemini-2.0-flash-exp)..."
-                    className="flex-1 bg-[#090a0f] text-xs text-white rounded-lg px-3 py-2 border border-white/10 outline-none focus:border-sky-500/50"
+                    onChange={e => setNewModelInputs(prev => ({ ...prev, gemini: e.target.value }))}
+                    placeholder="Ej: gemini-2.5-flash, gemma-4-31b-it"
+                    className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/50"
                   />
                   <button
                     type="button"
                     onClick={() => addCustomModel('gemini')}
-                    className="px-3 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1"
+                    className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-xl text-xs font-semibold border border-purple-500/30 flex items-center gap-1 transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    Añadir
+                    <span>Agregar</span>
                   </button>
                 </div>
               </div>
+
+              {/* Models list tags */}
+              <div className="flex flex-wrap gap-1.5">
+                {(gemini.config?.models || ['gemini-3.6-flash', 'gemini-2.5-pro', 'gemini-flash-latest', 'gemini-1.5-pro']).map((m: string) => (
+                  <div key={m} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-[11px] text-gray-300">
+                    <span>{m}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeModel('gemini', m)}
+                      className="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Optional Key Override */}
+              <div>
+                <label className="text-xs font-semibold text-gray-400 mb-1 flex items-center justify-between">
+                  <span>Sobrescribir API Key (Opcional si usas .env.local)</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowKeys(prev => ({ ...prev, gemini: !prev.gemini }))}
+                    className="text-gray-500 hover:text-white"
+                  >
+                    {showKeys.gemini ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </label>
+                <input
+                  type={showKeys.gemini ? 'text' : 'password'}
+                  value={gemini.config?.api_key || ''}
+                  onChange={e => updateConfig('gemini', 'api_key', e.target.value)}
+                  placeholder="Dejar vacío para usar GEMINI_API_KEY de .env.local"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-purple-500/50 font-mono"
+                />
+              </div>
             </div>
 
-            {/* Actions & Result */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+            {/* Actions */}
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={handleTestGemini}
                 disabled={testingId === 'gemini'}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-200 text-xs font-semibold flex items-center gap-2 transition-all"
+                className="px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 rounded-xl text-xs font-semibold border border-purple-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                {testingId === 'gemini' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5 text-amber-400" />}
-                Probar Conexión
+                {testingId === 'gemini' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                <span>Probar Conexión en Vivo</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSave('gemini')}
                 disabled={savingId === 'gemini'}
-                className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md transition-all"
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
               >
                 {savingId === 'gemini' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                Guardar
+                <span>Guardar</span>
               </button>
             </div>
 
             {testResult?.id === 'gemini' && (
-              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${testResult.success ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'}`}>
+              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
+                testResult.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
+              }`}>
                 {testResult.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
                 <span>{testResult.message}</span>
               </div>
@@ -366,138 +450,163 @@ export default function ConnectorsClient({ initialConnectors }: { initialConnect
           </div>
         )}
 
-        {/* 2. OPENAI */}
+        {/* 2. OPENAI CARD */}
         {(activeTab === 'all' || activeTab === 'ai') && (
-          <div className="rounded-2xl bg-[#121c27]/60 border border-white/10 p-6 flex flex-col justify-between space-y-6 backdrop-blur-xl relative hover:border-emerald-500/30 transition-all shadow-lg">
-            <div>
-              <div className="flex items-center justify-between mb-4">
+          <div className="bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-emerald-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-green-600 p-[2px] shadow-md shadow-emerald-500/20">
-                    <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
-                      <Cpu className="w-6 h-6 text-emerald-400" />
-                    </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-md">
+                    <Cpu className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
                       OpenAI
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">
-                        GPT-4o & Reasoning
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold">
+                        GPT-4o
                       </span>
                     </h3>
-                    <p className="text-xs text-gray-400">Modelos GPT y modelos de razonamiento avanzado</p>
+                    <p className="text-xs text-gray-400">Modelos insignia GPT-4o, GPT-4o-mini y modelos de razonamiento o1/o3.</p>
                   </div>
                 </div>
 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={openai.is_active} 
-                    onChange={() => toggleActive('openai')}
-                    className="sr-only peer" 
-                  />
-                  <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                </label>
+                <button
+                  type="button"
+                  onClick={() => toggleActive('openai')}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    openai.is_active ? 'bg-emerald-500' : 'bg-gray-700'
+                  }`}
+                >
+                  <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
+                    openai.is_active ? 'left-6' : 'left-1'
+                  }`} />
+                </button>
+              </div>
+
+              {/* Status Badge from Env */}
+              <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs ${
+                envStatus.openai.hasKey 
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                  : 'bg-white/5 border-white/10 text-gray-400'
+              }`}>
+                {envStatus.openai.hasKey ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                    <span className="font-semibold text-emerald-400">Detectada en .env.local (OPENAI_API_KEY)</span>
+                  </>
+                ) : (
+                  <>
+                    <Info className="w-4 h-4 shrink-0 text-gray-400" />
+                    <span>Puedes agregar <code className="text-emerald-400">OPENAI_API_KEY</code> a tu .env.local o ingresarla abajo.</span>
+                  </>
+                )}
               </div>
 
               {/* API Key Input */}
-              <div className="space-y-2 mt-4">
-                <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                  <Key className="w-3.5 h-3.5 text-emerald-400" />
-                  API Key de OpenAI
-                </label>
-                <div className="relative">
-                  <input
-                    type={showKeys['openai'] ? 'text' : 'password'}
-                    value={openai.config?.api_key || ''}
-                    onChange={(e) => updateConfig('openai', 'api_key', e.target.value)}
-                    placeholder="sk-proj-..."
-                    className="w-full bg-[#090a0f] text-sm text-white rounded-xl pl-3.5 pr-10 py-2.5 border border-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 outline-none"
-                  />
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                  <span>API Key de OpenAI</span>
                   <button
                     type="button"
                     onClick={() => setShowKeys(prev => ({ ...prev, openai: !prev.openai }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                    className="text-gray-500 hover:text-white"
                   >
-                    {showKeys['openai'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showKeys.openai ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
-                </div>
+                </label>
+                <input
+                  type={showKeys.openai ? 'text' : 'password'}
+                  value={openai.config?.api_key || ''}
+                  onChange={e => updateConfig('openai', 'api_key', e.target.value)}
+                  placeholder={envStatus.openai.hasKey ? 'Usando OPENAI_API_KEY de .env.local' : 'sk-proj-...'}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 font-mono"
+                />
               </div>
 
-              {/* Model selection */}
-              <div className="space-y-2 mt-4">
-                <label className="text-xs font-semibold text-gray-300">Modelos disponibles</label>
-                <div className="flex flex-wrap gap-2">
-                  {(openai.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o1', 'o3-mini']).map((m: string) => (
-                    <div 
-                      key={m}
-                      onClick={() => updateConfig('openai', 'active_model', m)}
-                      className={`cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all border ${
-                        openai.config?.active_model === m 
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm' 
-                          : 'bg-[#090a0f] text-gray-400 border-white/5 hover:border-white/20'
-                      }`}
-                    >
-                      <span>{m}</span>
-                      {openai.config?.active_model === m && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
-                      <button 
-                        type="button" 
-                        onClick={(e) => { e.stopPropagation(); removeModel('openai', m); }}
-                        className="text-gray-500 hover:text-rose-400 ml-1"
-                        title="Eliminar modelo"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
+              {/* Active Model Selector */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1.5 block">
+                  Modelo Predeterminado
+                </label>
+                <select
+                  value={openai.config?.active_model || 'gpt-4o-mini'}
+                  onChange={e => updateConfig('openai', 'active_model', e.target.value)}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                >
+                  {(openai.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1']).map((m: string) => (
+                    <option key={m} value={m} className="bg-[#11131a] text-white">{m}</option>
                   ))}
-                </div>
+                </select>
+              </div>
 
-                {/* Add Custom Model Manually */}
-                <div className="flex gap-2 mt-3">
+              {/* Manual Model Addition */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1.5 block">
+                  Agregar Modelo Personalizado
+                </label>
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
                     value={newModelInputs['openai'] || ''}
-                    onChange={(e) => setNewModelInputs(prev => ({ ...prev, openai: e.target.value }))}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomModel('openai'); } }}
-                    placeholder="Agregar modelo manualmente (ej. gpt-4.5-preview o fine-tune)..."
-                    className="flex-1 bg-[#090a0f] text-xs text-white rounded-lg px-3 py-2 border border-white/10 outline-none focus:border-emerald-500/50"
+                    onChange={e => setNewModelInputs(prev => ({ ...prev, openai: e.target.value }))}
+                    placeholder="Ej: ft:gpt-4o-mini:custom"
+                    className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50"
                   />
                   <button
                     type="button"
                     onClick={() => addCustomModel('openai')}
-                    className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1"
+                    className="px-3 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 rounded-xl text-xs font-semibold border border-emerald-500/30 flex items-center gap-1 transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    Añadir
+                    <span>Agregar</span>
                   </button>
                 </div>
               </div>
+
+              {/* Models tags */}
+              <div className="flex flex-wrap gap-1.5">
+                {(openai.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1']).map((m: string) => (
+                  <div key={m} className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-[11px] text-gray-300">
+                    <span>{m}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeModel('openai', m)}
+                      className="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Actions & Result */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+            {/* Actions */}
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={handleTestOpenAI}
                 disabled={testingId === 'openai'}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-200 text-xs font-semibold flex items-center gap-2 transition-all"
+                className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 rounded-xl text-xs font-semibold border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                {testingId === 'openai' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5 text-amber-400" />}
-                Probar Conexión
+                {testingId === 'openai' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                <span>Probar Conexión</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSave('openai')}
                 disabled={savingId === 'openai'}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md transition-all"
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
               >
                 {savingId === 'openai' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                Guardar
+                <span>Guardar</span>
               </button>
             </div>
 
             {testResult?.id === 'openai' && (
-              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${testResult.success ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'}`}>
+              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
+                testResult.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
+              }`}>
                 {testResult.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
                 <span>{testResult.message}</span>
               </div>
@@ -505,120 +614,244 @@ export default function ConnectorsClient({ initialConnectors }: { initialConnect
           </div>
         )}
 
-        {/* 3. PINECONE (Vector Database para RAG de Textos Largos) */}
+        {/* 3. SUPABASE REAL DATABASE & TABLES CARD */}
         {(activeTab === 'all' || activeTab === 'database') && (
-          <div className="rounded-2xl bg-[#121c27]/60 border border-white/10 p-6 flex flex-col justify-between space-y-6 backdrop-blur-xl relative hover:border-amber-500/30 transition-all shadow-lg">
-            <div>
-              <div className="flex items-center justify-between mb-4">
+          <div className="md:col-span-2 bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-emerald-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-400 to-yellow-500 p-[2px] shadow-md shadow-amber-500/20">
-                    <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
-                      <Layers className="w-6 h-6 text-amber-400" />
-                    </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-md">
+                    <Database className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      Pinecone Vector DB
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold">
-                        RAG Semántico
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      Supabase (PostgreSQL) — Conexión de Tablas en Vivo
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">
+                        {selectedTablesCount} tablas conectadas
                       </span>
                     </h3>
-                    <p className="text-xs text-gray-400">Almacenamiento de textos largos, manuales y catálogos en vectores</p>
+                    <p className="text-xs text-gray-400">
+                      Selecciona qué tablas vivas de tu negocio y finanzas puede consultar el Agente de ValisChat en tiempo real.
+                    </p>
                   </div>
                 </div>
 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={pinecone.is_active} 
-                    onChange={() => toggleActive('pinecone')}
-                    className="sr-only peer" 
-                  />
-                  <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-                </label>
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs text-emerald-400 font-semibold font-mono">vwzpsykgebxxkokpfgeq</span>
+                </div>
               </div>
 
-              {/* RAG Description Box */}
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/90 leading-relaxed flex items-start gap-2.5">
-                <BookOpen className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              {/* Explanatory note */}
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-gray-300 flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <p>
-                  <strong>¿Para qué sirve Pinecone?</strong> Permite dividir documentos extensos (catálogos de precios, manuales de servicio, políticas de garantía) en fragmentos semánticos. Cuando el cliente pregunte por WhatsApp, la IA buscará en milisegundos los párrafos exactos relevantes para responder con total precisión.
+                  Cuando un cliente o tú pregunten por WhatsApp sobre gastos, pagos fijos, clientes o inventario, el Agente extraerá la información viva de las tablas marcadas y responderá con precisión.
                 </p>
               </div>
 
-              {/* Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-300">API Key de Pinecone</label>
-                  <input
-                    type={showKeys['pinecone'] ? 'text' : 'password'}
-                    value={pinecone.config?.api_key || ''}
-                    onChange={(e) => updateConfig('pinecone', 'api_key', e.target.value)}
-                    placeholder="pcsk_..."
-                    className="w-full bg-[#090a0f] text-xs text-white rounded-xl px-3 py-2.5 border border-white/10 outline-none focus:border-amber-500/50"
-                  />
+              {/* Tables selector with interactive checkboxes */}
+              <div>
+                <label className="text-xs font-bold text-white mb-2 block uppercase tracking-wider">
+                  Tablas Disponibles para Consulta del Agente IA:
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {KNOWN_SUPABASE_TABLES.map(table => {
+                    const isChecked = (supabaseConn.config?.tables || []).includes(table.id)
+                    return (
+                      <div
+                        key={table.id}
+                        onClick={() => toggleSupabaseTable(table.id)}
+                        className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-start gap-3 select-none ${
+                          isChecked
+                            ? 'bg-emerald-950/30 border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/30'
+                            : 'bg-black/40 border-white/10 hover:border-white/20 hover:bg-white/[0.02]'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                          isChecked ? 'bg-emerald-500 border-emerald-500 text-black' : 'border-gray-600 bg-transparent'
+                        }`}>
+                          {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-1 mb-1">
+                            <span className={`text-xs font-bold truncate ${isChecked ? 'text-emerald-300' : 'text-gray-200'}`}>
+                              {table.name}
+                            </span>
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 font-mono">
+                              {table.category}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-gray-400 leading-tight">
+                            {table.description}
+                          </p>
+                          <code className="text-[10px] text-gray-500 font-mono mt-1 block">
+                            {table.id}
+                          </code>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
+              <span className="text-xs text-gray-400">
+                URL del Proyecto: <code className="text-gray-300 font-mono">https://vwzpsykgebxxkokpfgeq.supabase.co</code>
+              </span>
+
+              <button
+                type="button"
+                onClick={() => handleSave('supabase')}
+                disabled={savingId === 'supabase'}
+                className="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+              >
+                {savingId === 'supabase' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                <span>Guardar Tablas Conectadas</span>
+              </button>
+            </div>
+
+            {testResult?.id === 'supabase' && (
+              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
+                testResult.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
+              }`}>
+                {testResult.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+                <span>{testResult.message}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 4. PINECONE VECTOR DB CARD */}
+        {(activeTab === 'all' || activeTab === 'database') && (
+          <div className="bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-indigo-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500/20 to-blue-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-md">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      Pinecone (Vector DB)
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold">
+                        RAG Textos Largos
+                      </span>
+                    </h3>
+                    <p className="text-xs text-gray-400">Recuperación semántica de catálogos extensos, PDFs y reglamentos.</p>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-300">Nombre del Índice (Index)</label>
+                <button
+                  type="button"
+                  onClick={() => toggleActive('pinecone')}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    pinecone.is_active ? 'bg-indigo-500' : 'bg-gray-700'
+                  }`}
+                >
+                  <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
+                    pinecone.is_active ? 'left-6' : 'left-1'
+                  }`} />
+                </button>
+              </div>
+
+              {/* Status Badge from Env */}
+              <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs ${
+                envStatus.pinecone.hasKey 
+                  ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' 
+                  : 'bg-white/5 border-white/10 text-gray-400'
+              }`}>
+                {envStatus.pinecone.hasKey ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-indigo-400" />
+                    <span className="font-semibold text-indigo-400">Detectada en .env.local (PINECONE_API_KEY)</span>
+                  </>
+                ) : (
+                  <>
+                    <Info className="w-4 h-4 shrink-0 text-gray-400" />
+                    <span>Configura <code className="text-indigo-400">PINECONE_API_KEY</code> en tu .env.local o ingrésala abajo.</span>
+                  </>
+                )}
+              </div>
+
+              {/* API Key */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1 flex items-center justify-between">
+                  <span>API Key de Pinecone</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowKeys(prev => ({ ...prev, pinecone: !prev.pinecone }))}
+                    className="text-gray-500 hover:text-white"
+                  >
+                    {showKeys.pinecone ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </label>
+                <input
+                  type={showKeys.pinecone ? 'text' : 'password'}
+                  value={pinecone.config?.api_key || ''}
+                  onChange={e => updateConfig('pinecone', 'api_key', e.target.value)}
+                  placeholder={envStatus.pinecone.hasKey ? 'Usando PINECONE_API_KEY de .env.local' : 'pcsk_...'}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500/50 font-mono"
+                />
+              </div>
+
+              {/* Index Name & Dimension */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-gray-300 mb-1.5 block">Nombre del Índice</label>
                   <input
                     type="text"
-                    value={pinecone.config?.index_name || 'valischat-knowledge'}
-                    onChange={(e) => updateConfig('pinecone', 'index_name', e.target.value)}
-                    placeholder="valischat-knowledge"
-                    className="w-full bg-[#090a0f] text-xs text-white rounded-xl px-3 py-2.5 border border-white/10 outline-none focus:border-amber-500/50"
+                    value={pinecone.config?.index_name || 'valis-docs-index'}
+                    onChange={e => updateConfig('pinecone', 'index_name', e.target.value)}
+                    placeholder="valis-docs-index"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500/50 font-mono"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-300">Host / Environment (Opcional)</label>
+                <div>
+                  <label className="text-xs font-semibold text-gray-300 mb-1.5 block">Región / Entorno</label>
                   <input
                     type="text"
-                    value={pinecone.config?.environment || ''}
-                    onChange={(e) => updateConfig('pinecone', 'environment', e.target.value)}
-                    placeholder="us-east-1 o aws"
-                    className="w-full bg-[#090a0f] text-xs text-white rounded-xl px-3 py-2.5 border border-white/10 outline-none focus:border-amber-500/50"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-300">Dimensiones vectoriales</label>
-                  <input
-                    type="number"
-                    value={pinecone.config?.dimension || 1536}
-                    onChange={(e) => updateConfig('pinecone', 'dimension', Number(e.target.value))}
-                    placeholder="1536 (OpenAI) / 768 (Gemini)"
-                    className="w-full bg-[#090a0f] text-xs text-white rounded-xl px-3 py-2.5 border border-white/10 outline-none focus:border-amber-500/50"
+                    value={pinecone.config?.environment || 'us-east-1'}
+                    onChange={e => updateConfig('pinecone', 'environment', e.target.value)}
+                    placeholder="us-east-1"
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500/50 font-mono"
                   />
                 </div>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={handleTestPinecone}
                 disabled={testingId === 'pinecone'}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-gray-200 text-xs font-semibold flex items-center gap-2 transition-all"
+                className="px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 rounded-xl text-xs font-semibold border border-indigo-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
-                {testingId === 'pinecone' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5 text-amber-400" />}
-                Verificar Índice
+                {testingId === 'pinecone' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                <span>Probar Índice</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSave('pinecone')}
                 disabled={savingId === 'pinecone'}
-                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md transition-all"
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
               >
                 {savingId === 'pinecone' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                Guardar
+                <span>Guardar</span>
               </button>
             </div>
 
             {testResult?.id === 'pinecone' && (
-              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${testResult.success ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'}`}>
+              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
+                testResult.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
+              }`}>
                 {testResult.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
                 <span>{testResult.message}</span>
               </div>
@@ -626,122 +859,168 @@ export default function ConnectorsClient({ initialConnectors }: { initialConnect
           </div>
         )}
 
-        {/* 4. SUPABASE DATABASE */}
-        {(activeTab === 'all' || activeTab === 'database') && (
-          <div className="rounded-2xl bg-[#121c27]/60 border border-white/10 p-6 flex flex-col justify-between space-y-6 backdrop-blur-xl relative hover:border-emerald-500/30 transition-all shadow-lg">
-            <div>
-              <div className="flex items-center justify-between mb-4">
+        {/* 5. GOOGLE CALENDAR CARD (NEW) */}
+        {(activeTab === 'all' || activeTab === 'tools') && (
+          <div className="bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-amber-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-green-600 p-[2px] shadow-md shadow-emerald-500/20">
-                    <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
-                      <Database className="w-6 h-6 text-emerald-400" />
-                    </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-md">
+                    <Calendar className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      Supabase PostgreSQL
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">
-                        Activa & Conectada
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      Google Calendar
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold">
+                        Agenda & Citas
                       </span>
                     </h3>
-                    <p className="text-xs text-gray-400">Base de datos transaccional relacional del ecosistema Valis</p>
+                    <p className="text-xs text-gray-400">Permite al Agente consultar disponibilidad y agendar citas desde WhatsApp.</p>
                   </div>
                 </div>
 
-                <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse"></div>
+                <button
+                  type="button"
+                  onClick={() => toggleActive('google_calendar')}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    googleCalendar.is_active ? 'bg-amber-500' : 'bg-gray-700'
+                  }`}
+                >
+                  <div className={`w-4 h-4 rounded-full bg-white transition-transform absolute top-1 ${
+                    googleCalendar.is_active ? 'left-6' : 'left-1'
+                  }`} />
+                </button>
               </div>
 
-              <div className="space-y-3 mt-4">
-                <div className="p-3 bg-[#090a0f] rounded-xl border border-white/5 space-y-1">
-                  <p className="text-[11px] text-gray-400">Instancia conectada</p>
-                  <p className="text-xs font-mono text-emerald-400 truncate">https://vwzpsykgebxxkokpfgeq.supabase.co</p>
-                </div>
+              {/* Status Badge from Env */}
+              <div className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs ${
+                envStatus.google_calendar.hasKey 
+                  ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' 
+                  : 'bg-white/5 border-white/10 text-gray-400'
+              }`}>
+                {envStatus.google_calendar.hasKey ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-400" />
+                    <span className="font-semibold text-amber-400">Credenciales detectadas en .env.local</span>
+                  </>
+                ) : (
+                  <>
+                    <Info className="w-4 h-4 shrink-0 text-gray-400" />
+                    <span>Configura <code className="text-amber-400">GOOGLE_CALENDAR_API_KEY</code> o Service Account en .env.local.</span>
+                  </>
+                )}
+              </div>
 
-                <div>
-                  <label className="text-xs font-semibold text-gray-300 block mb-2">Tablas accesibles para contexto del Agente</label>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { name: 'whatsapp_messages', desc: 'Historial de chats' },
-                      { name: 'whatsapp_chats', desc: 'Directorio de clientes' },
-                      { name: 'valisbiz_ventas', desc: 'Registros de ventas' },
-                      { name: 'pagos_fijos', desc: 'Suscripciones y cuotas' }
-                    ].map(t => (
-                      <span key={t.name} className="px-3 py-1.5 rounded-lg bg-[#090a0f] border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-1.5 font-mono">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        {t.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+              {/* Calendar ID */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1.5 block">ID de Calendario</label>
+                <input
+                  type="text"
+                  value={googleCalendar.config?.calendar_id || 'primary'}
+                  onChange={e => updateConfig('google_calendar', 'calendar_id', e.target.value)}
+                  placeholder="primary o tunombre@gmail.com"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500/50 font-mono"
+                />
+              </div>
+
+              {/* Optional API Key */}
+              <div>
+                <label className="text-xs font-semibold text-gray-300 mb-1 block">Google API Key / Token de Servicio</label>
+                <input
+                  type="password"
+                  value={googleCalendar.config?.api_key || ''}
+                  onChange={e => updateConfig('google_calendar', 'api_key', e.target.value)}
+                  placeholder={envStatus.google_calendar.hasKey ? 'Configurado en .env.local' : 'AIzaSy...'}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500/50 font-mono"
+                />
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <ShieldCheck className="w-4 h-4" />
-                Seguridad RLS y Service Role activa
-              </span>
-              <span className="text-[11px] text-gray-500">Totalmente integrado</span>
+            {/* Actions */}
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={handleTestGoogleCalendar}
+                disabled={testingId === 'google_calendar'}
+                className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 rounded-xl text-xs font-semibold border border-amber-500/30 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {testingId === 'google_calendar' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                <span>Probar Calendario</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSave('google_calendar')}
+                disabled={savingId === 'google_calendar'}
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+              >
+                {savingId === 'google_calendar' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                <span>Guardar</span>
+              </button>
             </div>
+
+            {testResult?.id === 'google_calendar' && (
+              <div className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
+                testResult.success ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400' : 'bg-red-500/10 border border-red-500/30 text-red-400'
+              }`}>
+                {testResult.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+                <span>{testResult.message}</span>
+              </div>
+            )}
           </div>
         )}
 
-        {/* 5. WHATSAPP CLOUD API CHANNEL */}
+        {/* 6. WHATSAPP BUSINESS CLOUD API CARD */}
         {(activeTab === 'all' || activeTab === 'channels') && (
-          <div className="rounded-2xl bg-[#121c27]/60 border border-white/10 p-6 flex flex-col justify-between space-y-6 backdrop-blur-xl relative hover:border-emerald-500/30 transition-all shadow-lg lg:col-span-2">
-            <div>
-              <div className="flex items-center justify-between mb-4">
+          <div className="bg-[#11131a] border border-white/10 rounded-2xl p-6 flex flex-col justify-between gap-6 hover:border-emerald-500/30 transition-all shadow-xl">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-[2px] shadow-md shadow-emerald-500/20">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md">
                     <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
                       <MessageSquare className="w-6 h-6 text-emerald-400" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      WhatsApp Business Cloud API (Meta)
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">
-                        Enlace Bidireccional Activo
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      WhatsApp Cloud API (Meta)
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold">
+                        Activo en Vivo
                       </span>
                     </h3>
-                    <p className="text-xs text-gray-400">Canal oficial de entrada y salida conectado mediante Meta Graph API</p>
+                    <p className="text-xs text-gray-400">Canal oficial de mensajería empresarial de Meta.</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Conectado (Live)
+                <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[11px] text-emerald-400 font-semibold">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>En Línea</span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
-                <div className="p-3 bg-[#090a0f] rounded-xl border border-white/5 space-y-1">
-                  <p className="text-[11px] text-gray-400">Número de WhatsApp</p>
-                  <p className="text-sm font-semibold text-white">+507 6234-6917</p>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-3 bg-black/40 border border-white/5 rounded-xl">
+                  <span className="text-gray-500 text-[10px] block">Número Conectado:</span>
+                  <span className="text-white font-bold font-mono">+507 6234-6917</span>
                 </div>
-                <div className="p-3 bg-[#090a0f] rounded-xl border border-white/5 space-y-1">
-                  <p className="text-[11px] text-gray-400">WABA ID (WhatsApp Account)</p>
-                  <p className="text-sm font-mono text-gray-300">1634312344945614</p>
+
+                <div className="p-3 bg-black/40 border border-white/5 rounded-xl">
+                  <span className="text-gray-500 text-[10px] block">Phone Number ID:</span>
+                  <span className="text-white font-mono text-[11px]">1337365866128316</span>
                 </div>
-                <div className="p-3 bg-[#090a0f] rounded-xl border border-white/5 space-y-1">
-                  <p className="text-[11px] text-gray-400">Webhook Endpoint</p>
-                  <p className="text-xs font-mono text-emerald-400 truncate">https://valisfin-9opw.vercel.app/api/whatsapp/webhook</p>
-                </div>
+              </div>
+
+              <div className="p-3 bg-black/40 border border-white/5 rounded-xl text-xs">
+                <span className="text-gray-500 text-[10px] block mb-1">Webhook Endpoint Activo en Vercel:</span>
+                <code className="text-emerald-400 font-mono text-[11px] break-all">
+                  https://valisfin-9opw.vercel.app/api/webhooks/whatsapp
+                </code>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs text-gray-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                Suscrito a eventos: <strong>messages</strong>, statuses (sent, delivered, read)
-              </span>
-              <a 
-                href="/whatsapp" 
-                className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1"
-              >
-                Abrir ValisChat
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+            <div className="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-gray-400">
+              <span>WABA ID: 1634312344945614 (ValisVen)</span>
+              <span className="text-emerald-400 font-medium">Suscripción verificada 100%</span>
             </div>
           </div>
         )}

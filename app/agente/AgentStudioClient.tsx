@@ -183,7 +183,7 @@ Pautas:
   const openaiConn = connectors.find(c => c.id === 'openai')
 
   const availableModels = config.model_provider === 'gemini' 
-    ? (geminiConn?.config?.models || ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-1.5-flash'])
+    ? (geminiConn?.config?.models || ['gemini-3.6-flash', 'gemini-2.5-pro', 'gemini-flash-latest', 'gemini-1.5-pro'])
     : (openaiConn?.config?.models || ['gpt-4o', 'gpt-4o-mini', 'o3-mini', 'o1'])
 
   return (
@@ -623,7 +623,7 @@ Pautas:
                       setConfig(prev => ({
                         ...prev,
                         model_provider: 'gemini',
-                        model_name: geminiConn?.config?.active_model || 'gemini-2.0-flash'
+                        model_name: geminiConn?.config?.active_model || 'gemini-3.6-flash'
                       }))
                     }}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${
@@ -806,30 +806,37 @@ Pautas:
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-emerald-300 flex items-center gap-2">
                       <Database className="w-4 h-4 text-emerald-400" />
-                      Tablas Relacionales de Supabase
+                      Tablas de Supabase Conectadas para el Agente
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">
-                      Conectado Activo
-                    </span>
+                    <Link
+                      href="/conectores"
+                      className="text-[11px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold"
+                    >
+                      <span>Modificar en Conectores</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                    <div className="p-2.5 bg-black/40 border border-white/5 rounded-lg flex items-center gap-2 text-gray-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <div>
-                        <p className="font-semibold text-white">whatsapp_messages</p>
-                        <p className="text-[10px] text-gray-500">Historial reciente de la conversación</p>
+                    {(connectors.find(c => c.id === 'supabase')?.config?.tables || [
+                      'daily_expenses', 
+                      'fixed_payments', 
+                      'incomes', 
+                      'valisven_clientes'
+                    ]).map((tbl: string) => (
+                      <div key={tbl} className="p-2.5 bg-black/40 border border-white/5 rounded-lg flex items-center gap-2 text-gray-300">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <div>
+                          <p className="font-semibold text-white font-mono">{tbl}</p>
+                          <p className="text-[10px] text-gray-400">Lectura de datos en vivo</p>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="p-2.5 bg-black/40 border border-white/5 rounded-lg flex items-center gap-2 text-gray-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <div>
-                        <p className="font-semibold text-white">profiles</p>
-                        <p className="text-[10px] text-gray-500">Nombre y número del contacto</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
+
+                  <p className="text-[10px] text-gray-400">
+                    El Agente consulta estas tablas en vivo para responder con exactitud preguntas sobre gastos, pagos fijos pendientes o clientes registrados.
+                  </p>
                 </div>
               </div>
             )}
