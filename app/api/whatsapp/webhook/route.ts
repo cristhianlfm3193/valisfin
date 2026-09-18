@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { generateAgentReplyForChat } from '@/app/actions/valischat_agent';
+import { sendWhatsAppMessage } from '@/app/actions/whatsapp';
 
 // Usamos el cliente de Supabase con Service Role para guardar mensajes desde el Webhook 
 // ya que el Webhook no tiene una sesión de usuario de Next.js
@@ -137,6 +139,40 @@ export async function POST(request: Request) {
                     
                   if (insertMsgError) {
                     console.error("Error insertando mensaje:", insertMsgError);
+                  }
+
+                  // 1.4 Auto-respuesta del Agente si el bot está activo en este chat y en modo autónomo
+                  try {
+                    const [agentRes, chatRes] = await Promise.all([
+                      supabase.from('valischat_agent_config').select('*').eq('id', 'default_agent').single(),
+                      supabase.from('whatsapp_chats').select('is_bot_active').eq('id', chat.id).single()
+                    ]);
+
+                    const agentConfig = agentRes.data;
+                    const chatData = chatRes.data;
+                    const isGlobalActive = agentConfig?.is_active ?? true;
+                    const isChatBotActive = chatData?.is_bot_active ?? true;
+
+                    // Si el bot está activo globalmente y en esta conversación (no pausado) y en modo autónomo
+                    if (isGlobalActive && isChatBotActive && agentConfig?.mode === 'autonomous') {
+                      console.log(`🤖 [Bot Autónomo Activo] Generando respuesta contextual con IA para ${phoneNumber}...`);
+                      const aiRes = await generateAgentReplyForChat(chat.id, supabase);
+                      
+                      if (aiRes.success && aiRes.reply) {
+                        const sendRes = await sendWhatsAppMessage(chat.id, aiRes.reply, supabase);
+                        if (sendRes.success) {
+                          console.log(`🤖 [Bot Autónomo] Respuesta enviada con éxito a ${phoneNumber} (${aiRes.latencyMs || 0}ms)`);
+                        } else {
+                          console.error("Error al enviar respuesta por Meta WhatsApp API:", sendRes.error);
+                        }
+                      } else {
+                        console.warn("No se pudo generar respuesta del agente:", aiRes.error);
+                      }
+                    } else {
+                      console.log(`⏸️ [Bot no activo para este chat] isGlobalActive: ${isGlobalActive}, isChatBotActive: ${isChatBotActive}, mode: ${agentConfig?.mode}`);
+                    }
+                  } catch (autoErr) {
+                    console.error("Error en auto-respuesta autónoma del agente:", autoErr);
                   }
                 }
               }

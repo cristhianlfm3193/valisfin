@@ -26,12 +26,13 @@ export default async function WhatsAppPage() {
       .order('created_at', { ascending: true }),
     supabase
       .from('valischat_agent_config')
-      .select('is_active')
+      .select('is_active, mode')
       .eq('id', 'default_agent')
       .single()
   ])
 
   const initialGlobalBotActive = agentRes.data?.is_active ?? true
+  const initialAgentMode = agentRes.data?.mode || 'autonomous'
 
   return (
     <div className="flex h-screen bg-[#090a0f] text-white overflow-hidden">
@@ -39,6 +40,7 @@ export default async function WhatsAppPage() {
         initialChats={chatsRes.data || []} 
         initialMessages={messagesRes.data || []}
         initialGlobalBotActive={initialGlobalBotActive}
+        initialAgentMode={initialAgentMode}
       />
     </div>
   )

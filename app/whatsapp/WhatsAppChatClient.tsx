@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { sendWhatsAppMessage, markChatAsRead, toggleChatBot, toggleGlobalBot } from '@/app/actions/whatsapp'
 import { 
+  generateAgentReplyForChat, 
+  triggerAgentReplyAndSend, 
+  toggleAgentMode 
+} from '@/app/actions/valischat_agent'
+import { 
   Send, 
   Phone, 
   Search, 
@@ -41,11 +46,13 @@ type Message = {
 export default function WhatsAppChatClient({ 
   initialChats, 
   initialMessages,
-  initialGlobalBotActive = true
+  initialGlobalBotActive = true,
+  initialAgentMode = 'autonomous'
 }: { 
   initialChats: Chat[], 
   initialMessages: Message[],
-  initialGlobalBotActive?: boolean
+  initialGlobalBotActive?: boolean,
+  initialAgentMode?: 'autonomous' | 'copilot'
 }) {
   const [chats, setChats] = useState<Chat[]>(initialChats)
   const [messages, setMessages] = useState<Message[]>(initialMessages)
@@ -55,6 +62,12 @@ export default function WhatsAppChatClient({
   const [isGlobalBotActive, setIsGlobalBotActive] = useState(initialGlobalBotActive)
   const [isTogglingGlobal, setIsTogglingGlobal] = useState(false)
   const [togglingChatId, setTogglingChatId] = useState<string | null>(null)
+  const [agentMode, setAgentMode] = useState<'autonomous' | 'copilot'>(initialAgentMode)
+  const [isTogglingMode, setIsTogglingMode] = useState(false)
+  const [isGeneratingAi, setIsGeneratingAi] = useState(false)
+  const [isAutoReplying, setIsAutoReplying] = useState(false)
+  const [aiLatency, setAiLatency] = useState<number | null>(null)
+  const [aiStatusMsg, setAiStatusMsg] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -113,6 +126,9 @@ export default function WhatsAppChatClient({
         if (payload.new && typeof payload.new.is_active === 'boolean') {
           setIsGlobalBotActive(payload.new.is_active)
         }
+        if (payload.new && payload.new.mode) {
+          setAgentMode(payload.new.mode)
+        }
       })
       .subscribe()
 
@@ -158,6 +174,66 @@ export default function WhatsAppChatClient({
       await toggleChatBot(chatId, nextState)
     } finally {
       setTogglingChatId(null)
+    }
+  }
+
+  // Toggle Agent Mode (Autonomous vs Copilot)
+  const handleToggleAgentMode = async () => {
+    if (isTogglingMode) return
+    setIsTogglingMode(true)
+    const nextMode = agentMode === 'autonomous' ? 'copilot' : 'autonomous'
+    setAgentMode(nextMode)
+    try {
+      await toggleAgentMode(nextMode)
+    } finally {
+      setIsTogglingMode(false)
+    }
+  }
+
+  // Generate AI Suggestion (Draft in Input)
+  const handleGenerateAiSuggestion = async () => {
+    if (!activeChatId || isGeneratingAi || isSending) return
+    setIsGeneratingAi(true)
+    setAiStatusMsg('Analizando conversación con IA...')
+    try {
+      const res = await generateAgentReplyForChat(activeChatId)
+      if (res.success && res.reply) {
+        setInputText(res.reply)
+        setAiLatency(res.latencyMs ? Number((res.latencyMs / 1000).toFixed(2)) : null)
+        setAiStatusMsg(`Sugerencia lista en ${((res.latencyMs || 800) / 1000).toFixed(1)}s con datos de Supabase.`)
+        setTimeout(() => setAiStatusMsg(null), 5000)
+      } else {
+        setAiStatusMsg(res.error || 'No se pudo generar sugerencia')
+        setTimeout(() => setAiStatusMsg(null), 4000)
+      }
+    } catch (err: any) {
+      setAiStatusMsg('Error de conexión con el agente')
+      setTimeout(() => setAiStatusMsg(null), 4000)
+    } finally {
+      setIsGeneratingAi(false)
+    }
+  }
+
+  // Instant Auto-Reply with AI (Generate & Send)
+  const handleAutoReplyWithAi = async () => {
+    if (!activeChatId || isAutoReplying || isSending) return
+    setIsAutoReplying(true)
+    setAiStatusMsg('Generando y enviando respuesta a WhatsApp...')
+    try {
+      const res = await triggerAgentReplyAndSend(activeChatId)
+      if (res.success && res.reply) {
+        setAiLatency(res.latencyMs ? Number((res.latencyMs / 1000).toFixed(2)) : null)
+        setAiStatusMsg(`¡Respuesta de IA enviada en ${((res.latencyMs || 800) / 1000).toFixed(1)}s!`)
+        setTimeout(() => setAiStatusMsg(null), 5000)
+      } else {
+        setAiStatusMsg(res.error || 'Error al responder con IA')
+        setTimeout(() => setAiStatusMsg(null), 4000)
+      }
+    } catch (err: any) {
+      setAiStatusMsg('Error de conexión al enviar respuesta')
+      setTimeout(() => setAiStatusMsg(null), 4000)
+    } finally {
+      setIsAutoReplying(false)
     }
   }
 
@@ -350,8 +426,31 @@ export default function WhatsAppChatClient({
                 </div>
               </div>
 
-              {/* Right Controls: BOTÓN PARA PAUSAR BOT Y TOMAR EL MANDO */}
+              {/* Right Controls: BOTÓN PARA PAUSAR BOT Y MODO */}
               <div className="flex items-center gap-2">
+                {/* Selector de Modo: Autónomo 24/7 vs Copiloto */}
+                {isCurrentChatBotActive && (
+                  <button
+                    type="button"
+                    onClick={handleToggleAgentMode}
+                    disabled={isTogglingMode}
+                    title={agentMode === 'autonomous' ? "Modo Autónomo 24/7 activo: El bot responde automáticamente a los mensajes entrantes. Clic para cambiar a modo Copiloto (solo sugerencias)." : "Modo Copiloto activo: El bot solo sugiere respuestas al operador. Clic para cambiar a modo Autónomo 24/7."}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-gray-300 transition-all cursor-pointer select-none"
+                  >
+                    {agentMode === 'autonomous' ? (
+                      <>
+                        <Zap className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="hidden sm:inline text-[11px] font-medium text-amber-300">Auto 24/7</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="hidden sm:inline text-[11px] font-medium text-emerald-300">Copiloto</span>
+                      </>
+                    )}
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={() => handleToggleChatBot(activeChat.id)}
@@ -449,24 +548,85 @@ export default function WhatsAppChatClient({
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Bar */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-[#121c27] flex items-center gap-2 z-10 border-t border-white/5">
-              <input
-                type="text"
-                value={inputText}
-                onChange={e => setInputText(e.target.value)}
-                placeholder={!isCurrentChatBotActive ? "Escribe un mensaje como operador humano..." : "Escribe un mensaje en WhatsApp..."}
-                disabled={isSending}
-                className="flex-1 bg-[#090a0f] text-xs md:text-sm text-white rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
-              />
-              <button
-                type="submit"
-                disabled={!inputText.trim() || isSending}
-                className="p-2.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-black rounded-xl font-bold transition-colors shrink-0 cursor-pointer shadow-md shadow-emerald-500/20"
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </form>
+            {/* Input Bar & AI Copilot Action Bar */}
+            <div className="bg-[#121c27] z-10 border-t border-white/5 shadow-lg">
+              {/* Quick AI Bar */}
+              <div className="px-3 py-2 flex items-center justify-between border-b border-white/5 bg-[#0b121a]/80 text-xs">
+                <div className="flex items-center gap-2 overflow-hidden mr-2">
+                  <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400 shrink-0">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Copiloto IA</span>
+                  </div>
+                  {aiLatency && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-mono shrink-0">
+                      ⚡ {aiLatency}s
+                    </span>
+                  )}
+                  {aiStatusMsg && (
+                    <span className="text-[11px] text-gray-300 italic truncate animate-pulse">
+                      {aiStatusMsg}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* Botón: Sugerir con IA (Borrador en el input) */}
+                  <button
+                    type="button"
+                    onClick={handleGenerateAiSuggestion}
+                    disabled={isGeneratingAi || isAutoReplying || isSending}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all disabled:opacity-40 cursor-pointer shadow-sm"
+                    title="Analizar conversación con IA y base de datos para redactar un borrador en el cuadro de texto"
+                  >
+                    {isGeneratingAi ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400" />
+                    ) : (
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    )}
+                    <span>{isGeneratingAi ? 'Pensando...' : 'Sugerir con IA'}</span>
+                  </button>
+
+                  {/* Botón: Responder con IA (Directo a WhatsApp) */}
+                  <button
+                    type="button"
+                    onClick={handleAutoReplyWithAi}
+                    disabled={isGeneratingAi || isAutoReplying || isSending}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/15 transition-all disabled:opacity-40 cursor-pointer"
+                    title="Generar respuesta inteligente y enviarla directamente al cliente por WhatsApp"
+                  >
+                    {isAutoReplying ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                    ) : (
+                      <Zap className="w-3.5 h-3.5 text-amber-300" />
+                    )}
+                    <span>{isAutoReplying ? 'Enviando...' : 'Responder con IA'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Form Input */}
+              <form onSubmit={handleSendMessage} className="p-3 flex items-center gap-2">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={e => setInputText(e.target.value)}
+                  placeholder={
+                    !isCurrentChatBotActive 
+                      ? "Escribe como operador humano (o usa Sugerir con IA)..." 
+                      : "Escribe un mensaje o pulsa Sugerir con IA..."
+                  }
+                  disabled={isSending || isAutoReplying}
+                  className="flex-1 bg-[#090a0f] text-xs md:text-sm text-white rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 border border-white/5 placeholder-gray-500"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputText.trim() || isSending || isAutoReplying}
+                  className="p-2.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-black rounded-xl font-bold transition-colors shrink-0 cursor-pointer shadow-md shadow-emerald-500/20"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </div>
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10">

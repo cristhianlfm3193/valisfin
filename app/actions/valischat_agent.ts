@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { AgentConfig } from '@/lib/valischat'
+import { sendWhatsAppMessage } from '@/app/actions/whatsapp'
 
 export type { AgentConfig }
 
@@ -55,12 +56,12 @@ export async function updateAgentConfig(
 /**
  * Consulta las tablas seleccionadas de Supabase en paralelo ultra-rápido con Promise.all
  */
-async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<string> {
+async function fetchSupabaseLiveContext(selectedTables: string[] = [], customClient?: any): Promise<string> {
   if (!selectedTables || selectedTables.length === 0) {
     return 'No hay tablas de Supabase seleccionadas para lectura.'
   }
 
-  const supabase = await createClient()
+  const supabase = customClient || await createClient()
   const promises: Promise<string | null>[] = []
 
   // 1. Gastos Diarios
@@ -73,7 +74,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .order('date', { ascending: false })
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(e => `• ${e.description || 'Gasto'}: $${Number(e.amount || 0).toFixed(2)} (${e.date || 'Sin fecha'}${e.category ? `, ${e.category}` : ''})`).join('\n')
+        const list = data.map((e: any) => `• ${e.description || 'Gasto'}: $${Number(e.amount || 0).toFixed(2)} (${e.date || 'Sin fecha'}${e.category ? `, ${e.category}` : ''})`).join('\n')
         return `[Gastos Recientes (daily_expenses)]:\n${list}`
       } catch {
         return null
@@ -90,7 +91,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .select('name, amount, due_date, is_paid')
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(p => `• ${p.name || 'Pago'}: $${Number(p.amount || 0).toFixed(2)} (Vence: ${p.due_date || 'N/A'}${p.is_paid ? ', Pagado' : ', Pendiente'})`).join('\n')
+        const list = data.map((p: any) => `• ${p.name || 'Pago'}: $${Number(p.amount || 0).toFixed(2)} (Vence: ${p.due_date || 'N/A'}${p.is_paid ? ', Pagado' : ', Pendiente'})`).join('\n')
         return `[Pagos Fijos (fixed_payments)]:\n${list}`
       } catch {
         return null
@@ -108,7 +109,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .order('date', { ascending: false })
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(i => `• ${i.source || 'Ingreso'}: $${Number(i.amount || 0).toFixed(2)} (${i.date || 'N/A'})`).join('\n')
+        const list = data.map((i: any) => `• ${i.source || 'Ingreso'}: $${Number(i.amount || 0).toFixed(2)} (${i.date || 'N/A'})`).join('\n')
         return `[Ingresos Recientes (incomes)]:\n${list}`
       } catch {
         return null
@@ -125,7 +126,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .select('nombre_completo, empresa, telefono, estado')
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(c => `• ${c.nombre_completo || 'Cliente'}${c.empresa ? ` (${c.empresa})` : ''} - Tel: ${c.telefono || 'N/A'} [Estado: ${c.estado || 'Activo'}]`).join('\n')
+        const list = data.map((c: any) => `• ${c.nombre_completo || 'Cliente'}${c.empresa ? ` (${c.empresa})` : ''} - Tel: ${c.telefono || 'N/A'} [Estado: ${c.estado || 'Activo'}]`).join('\n')
         return `[Clientes ValisVen (valisven_clientes)]:\n${list}`
       } catch {
         return null
@@ -142,7 +143,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .select('brand, model, plate, year')
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(v => `• ${v.brand || ''} ${v.model || ''} (${v.year || ''}) - Placa: ${v.plate || 'N/A'}`).join('\n')
+        const list = data.map((v: any) => `• ${v.brand || ''} ${v.model || ''} (${v.year || ''}) - Placa: ${v.plate || 'N/A'}`).join('\n')
         return `[Vehículos Registrados (vehicles)]:\n${list}`
       } catch {
         return null
@@ -159,7 +160,7 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
           .select('name, target_amount, current_amount')
           .limit(5)
         if (!data || data.length === 0) return null
-        const list = data.map(g => `• ${g.name || 'Meta'}: Actual $${Number(g.current_amount || 0).toFixed(2)} de Meta $${Number(g.target_amount || 0).toFixed(2)}`).join('\n')
+        const list = data.map((g: any) => `• ${g.name || 'Meta'}: Actual $${Number(g.current_amount || 0).toFixed(2)} de Meta $${Number(g.target_amount || 0).toFixed(2)}`).join('\n')
         return `[Metas de Ahorro (savings_goals)]:\n${list}`
       } catch {
         return null
@@ -179,11 +180,12 @@ async function fetchSupabaseLiveContext(selectedTables: string[] = []): Promise<
 
 export async function testAgentInSandbox(
   userMessage: string,
-  history: Array<{ role: 'user' | 'assistant'; content: string }> = []
+  history: Array<{ role: 'user' | 'assistant'; content: string }> = [],
+  customClient?: any
 ): Promise<{ success: boolean; reply?: string; usedContext?: string; latencyMs?: number; error?: string }> {
   const startTime = Date.now()
   try {
-    const supabase = await createClient()
+    const supabase = customClient || await createClient()
     
     // 1. Obtener configuración activa del agente y conectores en paralelo
     const [agentRes, connectorsRes] = await Promise.all([
@@ -213,7 +215,7 @@ export async function testAgentInSandbox(
     ]
 
     // 2. Obtener contexto de Supabase real en paralelo ultra-rápido
-    const liveDbContext = await fetchSupabaseLiveContext(selectedTables)
+    const liveDbContext = await fetchSupabaseLiveContext(selectedTables, supabase)
 
     const contextNote = `[Contexto de Supabase en vivo (Tablas: ${selectedTables.join(', ')}):\n${liveDbContext}\n\nNúmero WhatsApp oficial: +507 6234-6917 | Índice Vectorial Pinecone: ${agent?.pinecone_index || 'valis-docs-index'}]`
 
@@ -341,5 +343,101 @@ export async function testAgentInSandbox(
     }
   } catch (err: any) {
     return { success: false, error: err.message || 'Error al procesar el mensaje en el sandbox.' }
+  }
+}
+
+/**
+ * Genera una sugerencia de respuesta inteligente para un chat específico de WhatsApp,
+ * analizando el historial reciente y aplicando el contexto de negocio.
+ */
+export async function generateAgentReplyForChat(
+  chatId: string,
+  customClient?: any
+): Promise<{ success: boolean; reply?: string; latencyMs?: number; error?: string }> {
+  try {
+    const supabase = customClient || await createClient()
+
+    // Obtener los últimos mensajes de este chat
+    const { data: recentMsgs, error } = await supabase
+      .from('whatsapp_messages')
+      .select('direction, body, created_at')
+      .eq('chat_id', chatId)
+      .order('created_at', { ascending: true })
+      .limit(10)
+
+    if (error) {
+      return { success: false, error: 'Error al consultar mensajes del chat.' }
+    }
+
+    // Buscar el último mensaje del cliente
+    const lastCustomerMsg = recentMsgs && recentMsgs.length > 0
+      ? [...recentMsgs].reverse().find(m => m.direction === 'inbound')
+      : null
+
+    // Si no hay mensajes entrantes del cliente, generar saludo inicial cordial
+    const promptText = lastCustomerMsg
+      ? lastCustomerMsg.body
+      : 'Inicia la conversación saludando amablemente al cliente y ofreciendo asistencia con sus consultas o servicios de la empresa.'
+
+    // Historial para contexto
+    const history = (recentMsgs || [])
+      .filter((m: any) => !lastCustomerMsg || m.body !== lastCustomerMsg.body)
+      .map((m: any) => ({
+        role: (m.direction === 'inbound' ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: m.body
+      }))
+
+    return await testAgentInSandbox(promptText, history, supabase)
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Error al generar sugerencia de IA.' }
+  }
+}
+
+/**
+ * Genera la respuesta inteligente del agente y la envía de inmediato a WhatsApp
+ */
+export async function triggerAgentReplyAndSend(
+  chatId: string,
+  customClient?: any
+): Promise<{ success: boolean; reply?: string; latencyMs?: number; error?: string }> {
+  try {
+    const res = await generateAgentReplyForChat(chatId, customClient)
+    if (!res.success || !res.reply) {
+      return { success: false, error: res.error || 'No se pudo generar la respuesta del agente IA.' }
+    }
+
+    const sendRes = await sendWhatsAppMessage(chatId, res.reply, customClient)
+    if (!sendRes.success) {
+      return { success: false, error: sendRes.error || 'No se pudo enviar el mensaje a WhatsApp.' }
+    }
+
+    return { success: true, reply: res.reply, latencyMs: res.latencyMs }
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Error al ejecutar respuesta del agente.' }
+  }
+}
+
+/**
+ * Cambia el modo de operación del agente (autonomous vs copilot)
+ */
+export async function toggleAgentMode(
+  mode: 'autonomous' | 'copilot'
+): Promise<{ success: boolean; mode?: 'autonomous' | 'copilot'; error?: string }> {
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase
+      .from('valischat_agent_config')
+      .update({ mode, updated_at: new Date().toISOString() })
+      .eq('id', 'default_agent')
+
+    if (error) {
+      return { success: false, error: error.message }
+    }
+
+    revalidatePath('/whatsapp')
+    revalidatePath('/agente')
+    return { success: true, mode }
+  } catch (err: any) {
+    return { success: false, error: err.message }
   }
 }

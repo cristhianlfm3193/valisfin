@@ -3,9 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function sendWhatsAppMessage(chatId: string, messageText: string) {
+export async function sendWhatsAppMessage(chatId: string, messageText: string, customClient?: any) {
   try {
-    const supabase = await createClient()
+    const supabase = customClient || await createClient()
 
     // 1. Obtener el número de teléfono del chat
     const { data: chat, error: chatError } = await supabase
