@@ -163,28 +163,29 @@ export default function ModalVisita({ onClose, locales, vendedores, localInicial
               </div>
             )}
             
-            {localSeleccionado && localSeleccionado.vendedor_id && (
-              <div className="text-xs text-slate-400 mt-1 px-1">
-                Vendedor asignado: <span className="font-bold text-slate-300">{localSeleccionado.vendedor?.nombre || vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre || '...'}</span>
+            <div className="mt-2">
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-sm font-bold text-slate-400">Vendedor (Quien visitó)</label>
+                {!localSeleccionado?.vendedor_id && (
+                  <span className="text-[10px] font-bold text-amber-400">Sin vendedor base</span>
+                )}
               </div>
-            )}
-
-            {localSeleccionado && !localSeleccionado.vendedor_id && (
-              <div className="flex flex-col gap-1.5 mt-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="text-sm font-bold text-amber-400">Este local no tiene vendedor asignado</label>
-                <select 
-                  required
-                  value={vendedorId}
-                  onChange={e => setVendedorId(e.target.value)}
-                  className="w-full bg-white/5 border border-amber-500/30 rounded-xl px-4 py-2.5 text-[16px] sm:text-sm font-medium text-slate-200 focus:outline-none focus:border-amber-500 transition-all"
-                >
-                  <option value="">Selecciona quién realizó la visita...</option>
-                  {vendedores.map(v => (
-                    <option key={v.id} value={v.id}>{v.nombre}</option>
-                  ))}
-                </select>
-              </div>
-            )}
+              <select 
+                className="w-full bg-[#121c27] border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+                value={vendedorId}
+                onChange={e => setVendedorId(e.target.value)}
+              >
+                <option value="sin_vendedor">-- Seleccionar Vendedor --</option>
+                {vendedores.map(v => (
+                  <option key={v.id} value={v.id}>{v.nombre}</option>
+                ))}
+              </select>
+              {localSeleccionado?.vendedor_id && vendedorId !== localSeleccionado.vendedor_id && vendedorId !== 'sin_vendedor' && vendedorId !== '' && (
+                <p className="text-[10px] text-amber-500 mt-1.5 flex items-center gap-1">
+                  ⚠ Diferente al vendedor base ({localSeleccionado.vendedor?.nombre || vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre})
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col gap-1.5">

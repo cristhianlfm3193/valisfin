@@ -285,21 +285,19 @@ function FormularioItem({ item, vendedores, locales, onChange, onOpenNuevoLocal 
             )}
           </div>
 
-          {localSeleccionado && localSeleccionado.vendedor_id && (
-            <div className="text-[10px] text-slate-400 px-1 -mt-2">
-              Vendedor asignado: <span className="font-bold text-slate-300">{vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre || '...'}</span>
-            </div>
-          )}
-
-          {(!item._localId || (localSeleccionado && !localSeleccionado.vendedor_id)) && (
-            <div className="p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-              <label className="block text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1">Asignar Vendedor *</label>
-              <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300 bg-amber-500/5 border-amber-500/30`}>
-                <option value="">Seleccionar quién realizó la visita...</option>
-                {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
-              </select>
-            </div>
-          )}
+          <div className="p-2 bg-white/5 border border-white/10 rounded-lg">
+            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Vendedor (quien visitó) *</label>
+            <select value={item._vendedorId} onChange={e => onChange({ _vendedorId: e.target.value })} className={`${inp} text-slate-300`}>
+              <option value="">Seleccionar quién realizó la visita...</option>
+              {vendedores.map(v => <option key={v.id} value={v.id}>{v.nombre}</option>)}
+            </select>
+            {localSeleccionado && localSeleccionado.vendedor_id && item._vendedorId !== localSeleccionado.vendedor_id && (
+              <p className="text-[9px] text-amber-500 mt-1.5 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                Diferente al asignado ({vendedores.find(v => v.id === localSeleccionado.vendedor_id)?.nombre})
+              </p>
+            )}
+          </div>
 
           <div className="grid grid-cols-2 gap-2 mt-1">
             <div>
