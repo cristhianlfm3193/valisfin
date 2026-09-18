@@ -28,6 +28,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log("🔔 [WhatsApp Webhook POST recibido]:", JSON.stringify(body, null, 2));
 
     // Verificamos si es un evento válido de WhatsApp
     if (body.object === "whatsapp_business_account") {
