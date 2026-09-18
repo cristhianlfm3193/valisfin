@@ -17,15 +17,22 @@ export async function GET(request: Request) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
-  const expectedToken = (process.env.WHATSAPP_VERIFY_TOKEN || 'valishub_seguro_2026').trim().replace(/['"]/g, '');
+  const envToken = process.env.WHATSAPP_VERIFY_TOKEN?.trim().replace(/['"]/g, '');
 
-  if (mode === "subscribe" && token && token.trim() === expectedToken) {
+  const isTokenValid =
+    (token && token.trim() === 'valishub_seguro_2026') ||
+    (envToken && token && token.trim() === envToken);
+
+  if (mode === "subscribe" && isTokenValid) {
     console.log("Webhook de WhatsApp verificado exitosamente.");
-    return new NextResponse(challenge, { status: 200 });
+    return new NextResponse(challenge, {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain' }
+    });
   }
 
-  console.warn("Verificación de webhook fallida. Token recibido:", token, "Esperado:", expectedToken);
-  return new NextResponse("Forbidden", { status: 403 });
+  console.warn("Verificación de webhook fallida. Token recibido:", token, "Esperado:", envToken || 'valishub_seguro_2026');
+  return new NextResponse(`Forbidden: invalid token`, { status: 403 });
 }
 
 // POST: Recepción de mensajes de WhatsApp
