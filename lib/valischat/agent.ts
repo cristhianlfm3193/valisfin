@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient, createClient } from '@supabase/supabase-js'
 import { getChatMemory } from './memory'
 import { getGeminiToolDeclarations, getOpenAIToolDeclarations, executeTool } from './tools'
 import { AgentConfig } from '@/lib/valischat'
@@ -71,19 +71,73 @@ export async function runValisChatAgent({
     }
 
     const provider = forcedProvider || (config.model_provider as 'gemini' | 'openai') || 'gemini'
-    let modelName = forcedModel || config.model_name || (provider === 'gemini' ? 'gemini-2.5-flash' : 'gpt-4o-mini')
+    let modelName = forcedModel || config.model_name || (provider === 'gemini' ? 'gemini-3.5-flash-lite' : 'gpt-4o-mini')
 
-    const systemPrompt = `${config.system_prompt || 'Eres el agente comercial y de atención al cliente de ValisChat.'}
+    // 2.1 Conectar cliente con acceso completo a ValisVen
+    const dbClient = (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)
+      ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)!)
+      : supabase
+
+    // 2.2 Obtener catálogo en vivo desde valisven_licencias
+    let catalogoContexto = ''
+    try {
+      const { data: licencias } = await dbClient
+        .from('valisven_licencias')
+        .select('tipo, producto, costo_venta')
+        .order('tipo', { ascending: true })
+
+      if (licencias && licencias.length > 0) {
+        const porCategoria: Record<string, string[]> = {}
+        for (const item of licencias) {
+          const cat = item.tipo || 'Otras Licencias'
+          if (!porCategoria[cat]) porCategoria[cat] = []
+          const prodLower = item.producto.toLowerCase()
+          const esAnual = prodLower.includes('año') || prodLower.includes('anual') || cat.includes('Office') || cat.includes('Seguridad') || cat.includes('Software')
+          const modalidad = esAnual ? 'pago anual' : 'pago mensual'
+          porCategoria[cat].push(`• ${item.producto}: $${Number(item.costo_venta).toFixed(2)} (${modalidad})`)
+        }
+
+        catalogoContexto = Object.entries(porCategoria)
+          .map(([categoria, items]) => `[${categoria}]\n${items.join('\n')}`)
+          .join('\n\n')
+      }
+    } catch (catErr) {
+      console.warn('[ValisChat Agent] Error consultando catálogo ValisVen:', catErr)
+    }
+
+    if (!catalogoContexto) {
+      catalogoContexto = `[Streaming]\n• Netflix: $5.00 (pago mensual)\n• Spotify: $3.00 (pago mensual)\n• Youtube Premium - 1 año: $65.00 (pago anual)\n\n[Office & Windows]\n• Microsoft 365 - Anual: $20.00 (pago anual)\n\n[Seguridad y Antivirus]\n• Antivirus McAfee: $20.00 (pago anual)\n\n[AI]\n• Gemini AI Pro: $4.00 (pago mensual)\n\n[Software]\n• OneDrive: $20.00 (pago anual)`
+    }
+
+    const systemPrompt = `${config.system_prompt || 'Eres ValisAI, asistente virtual de ValisVen encargada de la gestión de pedidos. Sé breve, amable y ve directo al grano.'}
+
+============================================================
+CATÁLOGO OFICIAL Y EN VIVO DE VALISVEN (Consultado desde la Base de Datos):
+${catalogoContexto}
+============================================================
+
 Información de la conversación:
 - Cliente: ${contactName}
 - Teléfono/WhatsApp: ${phoneNumber || 'No proporcionado'}
 - Nueva sesión iniciada (24h): ${memory.isNewSession ? 'Sí (la conversación previa expiró o es primer contacto)' : 'No (conversación activa)'}
 
-Directrices de herramientas:
-1. Si el cliente pregunta sobre precios de licencias, requisitos o cómo usar el sistema, usa 'tool_buscar_pdf_rag'.
-2. Si el cliente solicita agendar una reunión, llamada o demo, usa 'tool_agendar_calendar'.
-3. Si el cliente expresa clara intención de compra o pide que lo contacte un asesor para pagar, usa 'tool_enviar_email'.
-Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp.`
+INSTRUCCIONES CLAVE DE NEGOCIO PARA EL CUMPLIMIENTO DE REGLAS:
+1. Saludo inicial: Si es el inicio de la conversación o un saludo, preséntate diciendo: "Hola, soy ValisAI, encargada de la gestión de tu pedido." y pregunta en qué puedes ayudarle.
+2. Catálogo: Si te piden el catálogo o preguntan qué cuentas o licencias tienes disponibles, responde de inmediato con una lista de texto limpia y organizada agrupada por categorías usando ÚNICAMENTE los productos y precios del catálogo oficial de arriba.
+3. Precios y detalles: Al dar detalles de un producto disponible, especifica claramente su costo exacto y si el pago es mensual o anual según lo indicado en el catálogo oficial de arriba.
+4. Cierre de servicio / Pedido:
+   - Para iniciar la gestión de un pedido, pide únicamente Nombre y Correo.
+   - Cuando el cliente proporcione su Nombre y Correo, DEBES ejecutar la herramienta 'tool_registrar_cliente_pedido_valisven' con esos datos para guardarlo en la base de clientes.
+   - Explícale al usuario que sus datos se guardarán de forma segura en la base de clientes y que su pedido será gestionado en unos minutos.
+5. No disponible: Si piden una licencia, producto o servicio de streaming que NO esté en la lista oficial anterior (por ejemplo Disney+, HBO Max, Canva, Paramount, etc.), responde EXACTAMENTE la siguiente frase literal:
+"Verificaré esto; en unos minutos un asesor humano revisará el caso para buscarte una solución."
+
+Herramientas disponibles:
+- 'tool_consultar_catalogo_valisven': Para reconsultar o buscar productos en tiempo real en la base de datos de ValisVen.
+- 'tool_registrar_cliente_pedido_valisven': Para guardar en la base de datos al cliente y su pedido cuando te proporcione su Nombre y Correo.
+- 'tool_buscar_pdf_rag': Si el cliente tiene dudas sobre funcionamiento o características técnicas del sistema Valis.
+- 'tool_agendar_calendar': Si el cliente solicita agendar una reunión o demostración.
+- 'tool_enviar_email': Si se requiere enviar un correo formal al equipo de ventas.`
 
     // =========================================================================
     // CEREBRO 1: GOOGLE GEMINI (Flash / Pro) con Function Calling
@@ -130,8 +184,8 @@ Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp
       let res = await callGeminiApi(modelName, requestPayload).catch(() => null)
       if (!res || !res.ok) {
         // Fallback a modelo de alta disponibilidad si el principal satura
-        console.warn(`[ValisChat Agent] Fallback en Gemini de ${modelName} a gemini-1.5-flash`)
-        modelName = 'gemini-1.5-flash'
+        console.warn(`[ValisChat Agent] Fallback en Gemini de ${modelName} a gemini-3.5-flash-lite`)
+        modelName = 'gemini-3.5-flash-lite'
         res = await callGeminiApi(modelName, requestPayload).catch(() => null)
       }
 
@@ -154,8 +208,8 @@ Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp
         const { name, args } = functionCallPart.functionCall
         console.log(`⚡ [Gemini Function Calling] El modelo decidió ejecutar: "${name}"`, args)
 
-        // Ejecutar la herramienta en nuestro servidor
-        const toolResult = await executeTool(name, args, { chatId, phoneNumber, contactName, supabase })
+        // Ejecutar la herramienta en nuestro servidor con acceso a base de datos
+        const toolResult = await executeTool(name, args, { chatId, phoneNumber, contactName, supabase: dbClient })
         toolExecutedInfo = { name, args, result: toolResult }
 
         // Turno de respuesta de la herramienta para que Gemini formule la respuesta en lenguaje natural
@@ -163,7 +217,7 @@ Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp
           ...contents,
           {
             role: 'model',
-            parts: [functionCallPart]
+            parts: parts
           },
           {
             role: 'user',
@@ -171,7 +225,8 @@ Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp
               {
                 functionResponse: {
                   name,
-                  response: toolResult
+                  response: toolResult,
+                  ...(functionCallPart.functionCall.id ? { id: functionCallPart.functionCall.id } : {})
                 }
               }
             ]
@@ -268,7 +323,7 @@ Sé siempre conciso, profesional y cordial en tus respuestas finales de WhatsApp
         }
 
         console.log(`⚡ [OpenAI Tool Calling] El modelo decidió ejecutar: "${toolName}"`, toolArgs)
-        const toolResult = await executeTool(toolName, toolArgs, { chatId, phoneNumber, contactName, supabase })
+        const toolResult = await executeTool(toolName, toolArgs, { chatId, phoneNumber, contactName, supabase: dbClient })
         toolExecutedInfo = { name: toolName, args: toolArgs, result: toolResult }
 
         // Segundo turno con el resultado de la herramienta

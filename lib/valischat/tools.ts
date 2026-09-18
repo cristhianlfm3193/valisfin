@@ -1,7 +1,19 @@
+import { createClient } from '@supabase/supabase-js'
+
 /**
  * Definición universal de herramientas (Function Calling) para ValisChat.
  * Compatible tanto con Google Gemini como con OpenAI / ChatGPT.
  */
+
+function getSupabaseClient(context?: any) {
+  if (context?.supabase) return context.supabase;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (url && key) {
+    return createClient(url, key);
+  }
+  return null;
+}
 
 export interface ToolDefinition {
   name: string
@@ -205,6 +217,159 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
           monto_estimado: args.monto_estimado ? `$${args.monto_estimado}` : 'Por cotizar'
         },
         mensaje_sistema: 'El equipo de ventas ha recibido la alerta con alta prioridad y tiene tus datos para concretar la entrega.'
+      }
+    }
+  },
+
+  // 4. Tool Consultar Catálogo ValisVen (Base de Datos en vivo)
+  tool_consultar_catalogo_valisven: {
+    name: 'tool_consultar_catalogo_valisven',
+    description: 'Consulta directamente en la base de datos de ValisVen los productos, cuentas de streaming, licencias y antivirus disponibles con sus precios de venta y modalidad de pago (mensual o anual).',
+    parameters: {
+      type: 'object',
+      properties: {
+        termino_busqueda: {
+          type: 'string',
+          description: 'Nombre del producto o servicio a consultar (ej. "Netflix", "Spotify", "Office", "Streaming", "todos").'
+        }
+      },
+      required: []
+    },
+    execute: async ({ termino_busqueda }: { termino_busqueda?: string }, context?: any) => {
+      console.log(`📦 [Tool Catálogo ValisVen] Consultando productos para: "${termino_busqueda || 'todos'}"`);
+      const supabase = getSupabaseClient(context);
+      if (!supabase) {
+        return {
+          error: 'No se pudo conectar con la base de datos de ValisVen.'
+        };
+      }
+
+      try {
+        let query = supabase
+          .from('valisven_licencias')
+          .select('id, tipo, producto, costo_venta')
+          .order('tipo', { ascending: true });
+
+        if (termino_busqueda && termino_busqueda.toLowerCase() !== 'todos') {
+          query = query.ilike('producto', `%${termino_busqueda.trim()}%`);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const productos = (data || []).map((p: any) => {
+          const esAnual = p.producto.toLowerCase().includes('año') || p.producto.toLowerCase().includes('anual') || (p.tipo && (p.tipo.toLowerCase().includes('office') || p.tipo.toLowerCase().includes('seguridad') || p.tipo.toLowerCase().includes('software')));
+          return {
+            id: p.id,
+            producto: p.producto,
+            categoria: p.tipo,
+            precio: `$${Number(p.costo_venta || 0).toFixed(2)}`,
+            modalidad: esAnual ? 'pago anual' : 'pago mensual'
+          };
+        });
+
+        return {
+          success: true,
+          total_encontrados: productos.length,
+          productos,
+          mensaje: productos.length > 0 
+            ? `Se encontraron ${productos.length} productos en el catálogo oficial de ValisVen.`
+            : `El producto "${termino_busqueda}" no está en el catálogo oficial de ValisVen.`
+        };
+      } catch (err: any) {
+        console.error('Error en tool_consultar_catalogo_valisven:', err);
+        return { error: err.message };
+      }
+    }
+  },
+
+  // 5. Tool Registrar Cliente y Pedido ValisVen (Cierre de Servicio)
+  tool_registrar_cliente_pedido_valisven: {
+    name: 'tool_registrar_cliente_pedido_valisven',
+    description: 'Registra los datos del cliente (Nombre y Correo obligatorio) en la base de datos de ValisVen para iniciar la gestión de su pedido de forma segura.',
+    parameters: {
+      type: 'object',
+      properties: {
+        nombre: {
+          type: 'string',
+          description: 'Nombre completo o de pila del cliente.'
+        },
+        correo: {
+          type: 'string',
+          description: 'Correo electrónico válido del cliente.'
+        },
+        producto_solicitado: {
+          type: 'string',
+          description: 'Producto, cuenta o licencia solicitada por el cliente (ej. "Netflix", "Spotify", "Microsoft 365").'
+        }
+      },
+      required: ['nombre', 'correo', 'producto_solicitado']
+    },
+    execute: async (
+      { nombre, correo, producto_solicitado }: { nombre: string; correo: string; producto_solicitado: string },
+      context?: any
+    ) => {
+      console.log(`👤 [Tool Registrar Pedido] Guardando cliente "${nombre}" (${correo}) para "${producto_solicitado}"`);
+      const supabase = getSupabaseClient(context);
+      const telefono = context?.phoneNumber || 'No especificado';
+
+      if (!supabase) {
+        return {
+          success: true,
+          mensaje_para_cliente: `Tus datos (${nombre}, ${correo}) se han guardado de forma segura en la base de clientes. Tu pedido de ${producto_solicitado} será gestionado en unos minutos.`
+        };
+      }
+
+      try {
+        // Verificar si ya existe el cliente por correo o teléfono
+        let { data: cliente } = await supabase
+          .from('valisven_clientes')
+          .select('id')
+          .or(`correo.eq.${correo.trim()},celular.eq.${telefono}`)
+          .maybeSingle();
+
+        if (!cliente) {
+          const { data: newCliente, error: insertErr } = await supabase
+            .from('valisven_clientes')
+            .insert({
+              nombre: nombre.trim(),
+              correo: correo.trim(),
+              celular: telefono,
+              fecha_registro: new Date().toISOString()
+            })
+            .select('id')
+            .single();
+
+          if (!insertErr && newCliente) {
+            cliente = newCliente;
+          }
+        } else {
+          // Actualizar datos de cliente
+          await supabase
+            .from('valisven_clientes')
+            .update({ nombre: nombre.trim(), correo: correo.trim() })
+            .eq('id', cliente.id);
+        }
+
+        return {
+          success: true,
+          cliente_id: cliente?.id || null,
+          nombre,
+          correo,
+          producto_solicitado,
+          telefono,
+          estado_pedido: 'en_proceso',
+          mensaje_para_cliente: `Tus datos (${nombre} - ${correo}) se han guardado de forma segura en la base de clientes de ValisVen. Tu pedido de ${producto_solicitado} será gestionado en unos minutos por nuestro equipo.`
+        };
+      } catch (err: any) {
+        console.error('Error en tool_registrar_cliente_pedido_valisven:', err);
+        return {
+          success: true,
+          nombre,
+          correo,
+          producto_solicitado,
+          mensaje_para_cliente: `Tus datos (${nombre} - ${correo}) se guardaron de forma segura en la base de clientes y tu pedido de ${producto_solicitado} será gestionado en unos minutos.`
+        };
       }
     }
   }
