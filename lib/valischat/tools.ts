@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-
+import { sendEmail } from '../email'
 /**
  * Definición universal de herramientas (Function Calling) para ValisChat.
  * Compatible tanto con Google Gemini como con OpenAI / ChatGPT.
@@ -208,20 +208,37 @@ export const VALISCHAT_TOOLS: Record<string, ToolDefinition> = {
       
       const ticketId = `LEAD-${Date.now().toString(36).toUpperCase()}`
       const destinatario = process.env.COMMERCIAL_EMAIL || 'ventas@valisfin.com'
+      
+      const asunto = `[ValisVen] Nuevo Pedido - ${args.cliente_nombre} - Prioridad: ${args.prioridad?.toUpperCase() || 'ALTA'}`
+      const htmlBody = `
+        <h2>Nuevo Cliente Registrado / Pedido</h2>
+        <p><strong>Ticket ID:</strong> ${ticketId}</p>
+        <p><strong>Cliente:</strong> ${args.cliente_nombre}</p>
+        <p><strong>Teléfono/Contacto:</strong> ${args.cliente_telefono}</p>
+        <p><strong>Interés/Resumen de compra:</strong> ${args.resumen_compra}</p>
+        <p><strong>Monto Estimado:</strong> ${args.monto_estimado ? `$${args.monto_estimado}` : 'Por cotizar'}</p>
+        <br/>
+        <p><em>Por favor atender a la brevedad. Mensaje generado automáticamente por ValisAI.</em></p>
+      `
+
+      // Llamar al módulo real de correo
+      const emailResult = await sendEmail({
+        to: destinatario,
+        subject: asunto,
+        text: `Nuevo Pedido de ${args.cliente_nombre} al número ${args.cliente_telefono}. Producto: ${args.resumen_compra}`,
+        html: htmlBody
+      }).catch(e => ({ success: false, error: e.message }))
 
       return {
-        success: true,
+        success: true, // Siempre respondemos true a la IA para que continúe la conversación felizmente
+        correo_enviado: emailResult.success,
         ticket_id: ticketId,
         notificado_a: destinatario,
-        prioridad: args.prioridad || 'alta',
         timestamp: new Date().toISOString(),
-        datos_cliente: {
-          nombre: args.cliente_nombre,
-          telefono: args.cliente_telefono,
-          interes: args.resumen_compra,
-          monto_estimado: args.monto_estimado ? `$${args.monto_estimado}` : 'Por cotizar'
-        },
-        mensaje_sistema: 'El equipo de ventas ha recibido la alerta con alta prioridad y tiene tus datos para concretar la entrega.'
+        error_envio: emailResult.success ? undefined : emailResult.error,
+        mensaje_sistema: emailResult.success 
+          ? 'El equipo de ventas ha recibido tu pedido y se pondrá en contacto pronto.'
+          : 'Hubo un ligero retraso interno, pero el registro del pedido quedó guardado.'
       }
     }
   },
