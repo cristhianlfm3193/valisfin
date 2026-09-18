@@ -23,7 +23,8 @@ import {
   BarChart3,
   Store,
   Menu,
-  X
+  X,
+  Phone
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { LogoutButton } from "./LogoutButton";
@@ -90,12 +91,14 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
     { href: "/valisfin", label: "ValisFin", icon: Home, id: 'valisfin' },
     { href: "/valisbiz", label: "ValisBiz", icon: Store, id: 'valisbiz' },
     { href: "/valisan", label: "ValisAN", icon: BarChart3, id: 'valisan' },
+    { href: "/whatsapp", label: "ValisChat", icon: Phone, id: 'whatsapp' },
   ];
 
   const valisBizNavItems = [
     { href: "/valisbiz?tab=ventas", label: "Ventas & Métricas", icon: TrendingUp, id: 'ventas' },
     { href: "/valisbiz?tab=estadisticas", label: "Estadísticas", icon: BarChart2, id: 'estadisticas' },
     { href: "/valisbiz?tab=mapa", label: "Mapa de Visitas", icon: MapPin, id: 'mapa' },
+    { href: "/whatsapp", label: "ValisChat", icon: Phone, id: 'whatsapp' },
   ];
 
   const valisANNavItems = [

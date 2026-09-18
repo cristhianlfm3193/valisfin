@@ -12,7 +12,8 @@ import {
   RefreshCw,
   LogOut,
   Orbit,
-  Shield
+  Shield,
+  Phone
 } from 'lucide-react';
 import { getCachedUser, getCachedProfile } from '@/lib/supabase/server';
 import { PortalButton } from '@/app/components/PortalButton';
@@ -195,6 +196,15 @@ export default async function PortalPage() {
             title={<>Valis<span className="text-amber-400">Ven</span></>}
             icon={<Shield className="w-10 h-10 sm:w-12 sm:h-12" />}
             colorClass="bg-amber-500/5 border-amber-500/40 text-amber-400 group-hover:bg-amber-500/20 group-hover:border-amber-400/60 group-hover:shadow-[0_0_30px_rgba(251,191,36,0.3)]"
+          />
+
+          {/* ValisChat (WhatsApp) */}
+          <PortalButton 
+            href="/whatsapp"
+            hasAccess={appAccess.includes('whatsapp')}
+            title={<>Valis<span className="text-emerald-300">Chat</span></>}
+            icon={<Phone className="w-10 h-10 sm:w-12 sm:h-12" />}
+            colorClass="bg-emerald-600/5 border-emerald-600/40 text-emerald-300 group-hover:bg-emerald-600/20 group-hover:border-emerald-500/60 group-hover:shadow-[0_0_30px_rgba(5,150,105,0.3)]"
           />
 
         </div>
