@@ -213,14 +213,22 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <footer className="mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
-              <div className="flex items-center gap-1.5 text-gray-300 font-medium">
-                <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clipRule="evenodd"></path>
-                </svg>
-                <span>Acceso privado exclusivo para Cristhian y Jennifer</span>
+            <footer className="mt-8 pt-5 border-t border-white/10 flex flex-col gap-5 text-xs text-gray-400">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 text-gray-300 font-medium">
+                  <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" clipRule="evenodd"></path>
+                  </svg>
+                  <span>Acceso privado exclusivo para Cristhian y Jennifer</span>
+                </div>
+                <span className="text-[11px] text-gray-500">Panamá • Entorno Confidencial</span>
               </div>
-              <span className="text-[11px] text-gray-500">Panamá • Entorno Confidencial</span>
+              <div className="flex justify-center sm:justify-start">
+                <a href="/politica-privacidad" className="px-4 py-2 bg-[#121c27]/50 hover:bg-[#121c27] text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-2">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                  Política de Privacidad
+                </a>
+              </div>
             </footer>
           </section>
         </div>
