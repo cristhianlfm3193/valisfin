@@ -83,9 +83,16 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
 
   const isValisBiz = pathname.startsWith('/valisbiz');
   const isValisAN = pathname.startsWith('/valisan');
+  const isValisChat = pathname.startsWith('/whatsapp') || pathname.startsWith('/conectores') || pathname.startsWith('/agente');
   const currentTab = searchParams.get('tab') || 'ventas';
   const valisANCurrentTab = searchParams.get('tab') || 'dashboard';
   const isAdmin = pathname.startsWith('/admin');
+
+  const valisChatNavItems = [
+    { href: "/whatsapp", label: "Chat", icon: MessageSquare, id: 'chat' },
+    { href: "/conectores", label: "Conectores", icon: Plug, id: 'conectores' },
+    { href: "/agente", label: "Agente IA", icon: Bot, id: 'agente' },
+  ];
 
   const valisHubNavItems = [
     { href: "/valisfin", label: "ValisFin", icon: Home, id: 'valisfin' },
@@ -107,13 +114,17 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
     { href: "/valisan?tab=bdrh", label: "BD-RH (Personal)", icon: Shield, id: 'bdrh' },
   ];
 
-  const currentNavItems = isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : (isAdmin ? valisHubNavItems : navItems));
+  const currentNavItems = isValisChat 
+    ? valisChatNavItems 
+    : (isValisBiz ? valisBizNavItems : (isValisAN ? valisANNavItems : (isAdmin ? valisHubNavItems : navItems)));
 
-  const colorClasses = isValisBiz 
-    ? { text: 'text-pink-400', border: 'border-pink-500/20', bg: 'bg-pink-500/10' }
-    : isValisAN
-      ? { text: 'text-cyan-400', border: 'border-cyan-500/20', bg: 'bg-cyan-500/10' }
-      : { text: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10' };
+  const colorClasses = isValisChat
+    ? { text: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10' }
+    : isValisBiz 
+      ? { text: 'text-pink-400', border: 'border-pink-500/20', bg: 'bg-pink-500/10' }
+      : isValisAN
+        ? { text: 'text-cyan-400', border: 'border-cyan-500/20', bg: 'bg-cyan-500/10' }
+        : { text: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/10' };
 
   if (pathname === '/' || pathname.startsWith('/valisven')) {
     return null;
@@ -124,7 +135,24 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
       {/* Mobile Header */}
       <div className="lg:hidden w-full h-20 bg-[#090a0f]/95 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between px-6 shrink-0 z-40 sticky top-0 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
         <Link href="/" title="Ir a ValisHub" className="flex items-center gap-3">
-          {isValisBiz ? (
+          {isValisChat ? (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-[1.5px] shadow-lg shadow-emerald-500/20">
+                <div className="w-full h-full bg-[#090a0f] rounded-[14px] flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-emerald-400" />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl font-black text-white tracking-tight">Valis<span className="text-emerald-400">Chat</span></span>
+                </div>
+                <p className="text-[10px] text-emerald-400 font-semibold tracking-wide flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  WhatsApp Business
+                </p>
+              </div>
+            </div>
+          ) : isValisBiz ? (
             <img src="/valisbiz-logo.png" alt="ValisBiz" className="w-36 h-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
           ) : isValisAN ? (
             <div className="flex items-center gap-3">
@@ -170,7 +198,24 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
         <div className={`flex items-center mb-6 px-2 shrink-0 ${isCollapsed ? 'flex-col gap-2 justify-center mt-2' : 'justify-between'}`}>
           {!isCollapsed ? (
             <Link href="/" title="Ir a ValisHub" className="shrink-0 overflow-hidden rounded-xl hover:opacity-90 transition-all cursor-pointer">
-              {isValisBiz ? (
+              {isValisChat ? (
+                <div className="flex items-center gap-3 relative z-10 px-1 py-1 group">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-[2px] shadow-lg shadow-emerald-500/25 shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-full h-full rounded-[14px] bg-[#090a0f] flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xl font-black text-white tracking-tight">Valis<span className="text-emerald-400">Chat</span></span>
+                    </div>
+                    <p className="text-[11px] text-emerald-400 font-semibold tracking-wide flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      WhatsApp Business
+                    </p>
+                  </div>
+                </div>
+              ) : isValisBiz ? (
                 <img 
                   src="/valisbiz-logo.png" 
                   alt="ValisBiz Logo" 
@@ -208,7 +253,13 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
             </Link>
           ) : (
             <Link href="/" title="Ir a ValisHub" className="p-1.5 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center">
-              {isValisBiz ? (
+              {isValisChat ? (
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-[1.5px] flex items-center justify-center shadow-sm">
+                  <div className="w-full h-full rounded-[10px] bg-[#090a0f] flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-emerald-400" />
+                  </div>
+                </div>
+              ) : isValisBiz ? (
                 <div className="w-8 h-8 rounded-xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-400 font-bold text-xs shadow-sm">
                   K
                 </div>
@@ -237,18 +288,26 @@ function DesktopSidebarInner({ user, profile }: { user?: User, profile?: any }) 
 
         <nav aria-label="Navegación principal" className="space-y-1.5 flex-1">
           {currentNavItems.map((item: any) => {
-            const isActive = isValisBiz ? item.id === currentTab : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
+            const isActive = isValisChat
+              ? (item.href === '/whatsapp' ? pathname === '/whatsapp' : pathname.startsWith(item.href))
+              : isValisBiz 
+                ? item.id === currentTab 
+                : (isValisAN ? item.id === valisANCurrentTab : pathname === item.href);
             const Icon = item.icon;
             
-            const activeBgClass = isValisBiz 
-              ? "bg-pink-500/20 text-pink-400 border-pink-500/30" 
-              : isValisAN
-                ? "bg-gradient-to-r from-sky-950/90 to-blue-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
-                : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            const activeBgClass = isValisChat
+              ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+              : isValisBiz 
+                ? "bg-pink-500/20 text-pink-400 border-pink-500/30" 
+                : isValisAN
+                  ? "bg-gradient-to-r from-sky-950/90 to-blue-900/40 text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+                  : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
             
-            const inactiveClass = isValisAN 
-              ? "text-slate-400 hover:bg-sky-950/40 hover:text-white border-transparent hover:border-sky-500/30"
-              : "text-gray-400 hover:bg-white/5 hover:text-white border-transparent";
+            const inactiveClass = isValisChat
+              ? "text-gray-400 hover:bg-emerald-500/10 hover:text-emerald-300 border-transparent hover:border-emerald-500/20"
+              : isValisAN 
+                ? "text-slate-400 hover:bg-sky-950/40 hover:text-white border-transparent hover:border-sky-500/30"
+                : "text-gray-400 hover:bg-white/5 hover:text-white border-transparent";
             
             return (
               <Link
